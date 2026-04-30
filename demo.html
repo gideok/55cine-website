@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>55CINE — Demo</title>
+  <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /*
+     * 컬러 팔레트: images/logo.png 에서 불투명 픽셀 k-means(5) 추출 후
+     * 대표색 보정 — 골드 #F0AB2A · 브론즈 #8B6E3E · 딥 월넛 #4A3D27
+     */
+    :root {
+      --brand-gold: #f0ab2a;
+      --brand-gold-mid: #ca9128;
+      --brand-gold-soft: #f5d78a;
+      --brand-bronze: #8b6e3e;
+      --brand-bronze-deep: #5c4a2e;
+      --brand-ink: #1c1610;
+      --brand-walnut: #4a3d27;
+      --bg: #faf8f4;
+      --bg-elevated: #ffffff;
+      --text: var(--brand-ink);
+      --muted: #6b5d48;
+      --line: #e8e2d6;
+      --pill-bg: #f3efe6;
+      --accent: var(--brand-gold);
+      --accent-hover: #d99920;
+      --accent-secondary: var(--brand-bronze);
+      --tab-active: var(--brand-ink);
+      --tab-inactive-bg: #ede8de;
+      --tab-inactive-text: #7a6e5c;
+      --menu-card: #f3efe6;
+      --shadow: rgba(28, 22, 16, 0.12);
+      --shadow-deep: rgba(28, 22, 16, 0.35);
+      --radius: 15px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Pretendard", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+    }
+
+    main {
+      background: var(--bg-elevated);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 24px;
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      line-height: 0;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-main {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .nav-main a:hover {
+      color: var(--accent);
+    }
+
+    .btn-menu {
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: var(--pill-bg);
+      color: var(--text);
+    }
+
+    .btn-menu:hover {
+      border-color: var(--brand-bronze);
+      color: var(--brand-bronze-deep);
+    }
+
+    /* Hero Carousel */
+    .hero {
+      padding: 20px 24px 32px;
+      background: linear-gradient(180deg, var(--pill-bg) 0%, var(--bg-elevated) 100%);
+    }
+
+    .carousel-wrap {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 8px 32px var(--shadow);
+      background: var(--brand-ink);
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.45s ease;
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+      min-height: 280px;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .slide-nowplaying {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      padding: 24px;
+      width: 100%;
+      background: linear-gradient(160deg, #2a2318 0%, var(--brand-ink) 55%, #0f0c09 100%);
+    }
+
+    .slide-nowplaying figure {
+      margin: 0;
+      text-align: center;
+    }
+
+    .slide-nowplaying img {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 20px var(--shadow-deep);
+    }
+
+    .slide-nowplaying figcaption {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: color-mix(in srgb, var(--brand-gold-soft) 75%, transparent);
+    }
+
+    .slide-placeholder {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .slide-placeholder strong {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .slide-placeholder p {
+      margin: 0;
+      opacity: 0.85;
+      font-size: 0.95rem;
+    }
+
+    .slide-booking {
+      background: linear-gradient(135deg, var(--brand-bronze) 0%, var(--brand-bronze-deep) 100%);
+    }
+
+    .slide-timetable {
+      background: linear-gradient(135deg, #3a3228 0%, var(--brand-ink) 55%, #15120e 100%);
+    }
+
+    .slide-event {
+      background: linear-gradient(125deg, var(--brand-gold) 0%, var(--brand-gold-mid) 42%, var(--brand-bronze) 100%);
+    }
+
+    .slide-event.slide-placeholder {
+      color: var(--brand-ink);
+      text-shadow: 0 1px 0 color-mix(in srgb, var(--bg-elevated) 35%, transparent);
+    }
+
+    .slide-event.slide-placeholder p {
+      opacity: 0.9;
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 0 0;
+    }
+
+    .carousel-dots button {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: none;
+      background: color-mix(in srgb, var(--brand-bronze) 35%, #fff);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .carousel-dots button[aria-current="true"] {
+      background: var(--accent);
+      transform: scale(1.15);
+    }
+
+    .carousel-arrows {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      pointer-events: none;
+    }
+
+    .carousel-arrows button {
+      pointer-events: auto;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .carousel-arrows button:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    /* Main 시간표 */
+    .section-timetable {
+      padding: 8px 24px 40px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title::after {
+      content: "›";
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .ref-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: -8px 0 16px;
+    }
+
+    .day-tabs-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 20px;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    .day-tabs-wrap::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .day-tabs-wrap::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--brand-bronze) 45%, var(--line));
+      border-radius: 3px;
+    }
+
+    .day-tabs {
+      display: inline-flex;
+      gap: 8px;
+      padding: 4px;
+      min-width: min-content;
+    }
+
+    .day-tab {
+      flex-shrink: 0;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--tab-inactive-bg);
+      color: var(--tab-inactive-text);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .day-tab:hover {
+      background: color-mix(in srgb, var(--brand-gold-soft) 55%, var(--tab-inactive-bg));
+      color: var(--brand-ink);
+    }
+
+    .day-tab[aria-selected="true"] {
+      background: var(--tab-active);
+      color: #fffef8;
+    }
+
+    .day-tab[aria-selected="true"]:hover {
+      background: var(--brand-walnut);
+      color: #fffef8;
+    }
+
+    .schedule-panel {
+      display: none;
+    }
+
+    .schedule-panel.is-active {
+      display: block;
+    }
+
+    .schedule-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .schedule-row:last-child {
+      border-bottom: none;
+    }
+
+    .slot-label {
+      flex: 0 0 52px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .poster-badge {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--bg-elevated);
+      box-shadow: 0 2px 10px var(--shadow);
+    }
+
+    .movie-title {
+      flex: 1;
+      min-width: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .movie-title-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .movie-status-badge {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      line-height: 1.4;
+      border: 1px solid transparent;
+    }
+
+    .movie-status-badge--open {
+      background: color-mix(in srgb, var(--brand-gold) 20%, var(--bg-elevated));
+      color: var(--brand-walnut);
+      border-color: color-mix(in srgb, var(--brand-gold) 55%, transparent);
+    }
+
+    .movie-status-badge--end {
+      background: color-mix(in srgb, var(--brand-bronze) 18%, var(--bg-elevated));
+      color: var(--brand-bronze-deep);
+      border-color: color-mix(in srgb, var(--brand-bronze) 45%, transparent);
+    }
+
+    .time-pill {
+      margin-left: auto;
+      padding: 10px 16px;
+      background: var(--pill-bg);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .booking-btn {
+      padding: 9px 14px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--brand-ink);
+      font-size: 0.84rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    .booking-btn:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 14px var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .booking-btn:focus-visible {
+      outline: 2px solid var(--brand-walnut);
+      outline-offset: 2px;
+    }
+
+    /* Menu cards */
+    .section-menu {
+      padding: 16px 24px 48px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .menu-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      background: var(--menu-card);
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      color: inherit;
+      text-align: left;
+      width: 100%;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--shadow);
+      border: 1px solid color-mix(in srgb, var(--brand-bronze) 28%, transparent);
+    }
+
+    .menu-card:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .menu-card .icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      stroke: var(--brand-bronze);
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .menu-card:hover .icon {
+      stroke: var(--brand-bronze-deep);
+    }
+
+    /* Footer */
+    .site-footer {
+      padding: 32px 24px 40px;
+      background: color-mix(in srgb, var(--brand-bronze-deep) 8%, var(--pill-bg));
+      border-top: 1px solid var(--line);
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .site-footer .biz {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .footer-logo-box {
+      width: 210px;
+      min-width: 210px;
+      height: 160px;
+      border: 0px solid #cf877e;
+      border-radius: 2px;
+      background: whitesmoke;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .footer-logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+
+    .footer-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .site-footer strong {
+      color: var(--brand-walnut);
+      font-weight: 600;
+    }
+
+    .copyright {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: color-mix(in srgb, var(--muted) 80%, var(--brand-bronze));
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 640px) {
+      .site-header {
+        flex-wrap: wrap;
+      }
+
+      .nav-main {
+        width: 100%;
+        order: 3;
+        justify-content: flex-start;
+      }
+
+      .slide-nowplaying {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .site-footer .biz {
+        flex-direction: column;
+      }
+
+      .footer-logo-box {
+        width: 190px;
+        min-width: 190px;
+        height: 145px;
+        background-color: white;;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="#" class="logo"><img src="images/logo.png" width="142" height="100" alt="55CINE 오오극장" decoding="async" /></a>
+    <nav class="nav-main" aria-label="주 메뉴">
+      <a href="#hero">영화</a>
+      <a href="#timetable">시간표</a>
+      <a href="#hero">이벤트</a>
+      <a href="#">오오프렌즈</a>
+    </nav>
+    <button type="button" class="btn-menu" aria-label="메뉴">MENU</button>
+  </header>
+
+  <main>
+    <section class="hero" id="hero" aria-labelledby="hero-heading">
+      <h2 id="hero-heading" class="visually-hidden" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">메인 캐러셀</h2>
+      <div class="carousel-wrap" role="region" aria-roledescription="carousel" aria-label="상영·예매·시간표·이벤트">
+        <div class="carousel-track" id="carouselTrack">
+          <div class="carousel-slide">
+            <div class="slide-nowplaying">
+              <figure>
+                <img src="images/movie001.jpg" alt="상영작 포스터 1" />
+                <figcaption>상영작 1</figcaption>
+              </figure>
+              <figure>
+                <img src="images/movie002.jpg" alt="상영작 포스터 2" />
+                <figcaption>상영작 2</figcaption>
+              </figure>
+              <figure>
+                <img src="images/movie003.jpg" alt="상영작 포스터 3" />
+                <figcaption>상영작 3</figcaption>
+              </figure>
+              <figure>
+                <img src="images/movie004.jpg" alt="상영작 포스터 4" />
+                <figcaption>상영작 4</figcaption>
+              </figure>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-placeholder slide-booking">
+              <strong>예매</strong>
+              <p>빠른 예매와 좌석 선택을 이용해 보세요.</p>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-placeholder slide-timetable">
+              <strong>시간표</strong>
+              <p>아래에서 요일별 상영 일정을 확인할 수 있습니다.</p>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-placeholder slide-event">
+              <strong>이벤트</strong>
+              <p>진행 중인 이벤트와 혜택을 만나보세요.</p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-arrows">
+          <button type="button" id="carouselPrev" aria-label="이전 슬라이드">‹</button>
+          <button type="button" id="carouselNext" aria-label="다음 슬라이드">›</button>
+        </div>
+      </div>
+      <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="슬라이드 선택"></div>
+    </section>
+
+    <section class="section-timetable" id="timetable" aria-labelledby="timetable-title">
+      <h2 class="section-title" id="timetable-title">이번주 시간표</h2>
+      <div class="day-tabs-wrap">
+        <div class="day-tabs" id="dayTabs" role="tablist" aria-label="요일 선택"></div>
+      </div>
+      <div id="schedulePanels"></div>
+    </section>
+
+    <section class="section-menu" aria-labelledby="menu-title">
+      <h2 class="section-title" id="menu-title">메뉴</h2>
+      <div class="menu-grid">
+        <a class="menu-card" href="#">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 6v12H3V9l9-6z"/><path d="M9 12h6M12 9v6"/></svg>
+          에티켓
+        </a>
+        <a class="menu-card" href="#">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20v-1a8 8 0 0116 0v1"/></svg>
+          멤버쉽
+        </a>
+        <a class="menu-card" href="#">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-8h6v8"/></svg>
+          개관
+        </a>
+        <a class="menu-card" href="#">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          매거진3355
+        </a>
+        <a class="menu-card" href="#">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
+          예매안내
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="biz">
+      <div class="footer-logo-box" aria-hidden="true">
+        <img src="images/logo_footer.png" alt="" width="526" height="948" decoding="async" />
+      </div>
+      <div class="footer-text">
+        <p>사업자등록번호 <strong>369-82-00211</strong></p>
+        <p>대구경북영화영상사회적협동조합</p>
+        <p>대표 <strong>손영득</strong></p>
+        <p>대구광역시 중구 국채보상로 537<br />(수동 1-6번지), 곽병원과 만경관 사이</p>
+        <p>T. <strong>053 425 3553</strong></p>
+        <p class="copyright">Copyright © All Rights Reserved 오오극장 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const MOVIE_IMAGES = [
+        "images/movie001.jpg",
+        "images/movie002.jpg",
+        "images/movie003.jpg",
+        "images/movie004.jpg"
+      ];
+      const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
+
+      /* Carousel */
+      const track = document.getElementById("carouselTrack");
+      const dotsWrap = document.getElementById("carouselDots");
+      const slides = track.querySelectorAll(".carousel-slide");
+      let slideIndex = 0;
+
+      slides.forEach(function (_, i) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("role", "tab");
+        b.setAttribute("aria-label", "슬라이드 " + (i + 1));
+        b.addEventListener("click", function () { goTo(i); });
+        dotsWrap.appendChild(b);
+      });
+
+      const dots = dotsWrap.querySelectorAll("button");
+
+      function goTo(i) {
+        slideIndex = (i + slides.length) % slides.length;
+        track.style.transform = "translateX(-" + slideIndex * 100 + "%)";
+        dots.forEach(function (d, j) {
+          d.setAttribute("aria-current", j === slideIndex ? "true" : "false");
+        });
+      }
+
+      document.getElementById("carouselPrev").addEventListener("click", function () {
+        goTo(slideIndex - 1);
+      });
+      document.getElementById("carouselNext").addEventListener("click", function () {
+        goTo(slideIndex + 1);
+      });
+
+      goTo(0);
+
+      let carouselTimer = setInterval(function () { goTo(slideIndex + 1); }, 6000);
+      track.parentElement.addEventListener("mouseenter", function () { clearInterval(carouselTimer); });
+      track.parentElement.addEventListener("mouseleave", function () {
+        carouselTimer = setInterval(function () { goTo(slideIndex + 1); }, 6000);
+      });
+
+      /* 이번 주 시간표: 제공 이미지 기준 정적 데이터 */
+      const WEEK_SCHEDULE = [
+        {
+          label: "4/30(목)",
+          weekday: "목",
+          entries: [
+            { time: "11:30", title: "빨간 나리를 보았니" },
+            { time: "13:50", title: "세계의 주인" },
+            { time: "16:15", title: "극장의 시간들" },
+            { time: "18:20", title: "힌드의 목소리" },
+            { time: "20:05", title: "새벽의 Tango" }
+          ]
+        },
+        {
+          label: "5/1(금)",
+          weekday: "금",
+          entries: [
+            { time: "11:30", title: "누륵" },
+            { time: "13:10", title: "센티멘탈 밸류" },
+            { time: "15:40", title: "힌드의 목소리" },
+            { time: "17:25", title: "새벽의 Tango" },
+            { time: "19:40", title: "세계의 주인" }
+          ]
+        },
+        {
+          label: "5/2(토)",
+          weekday: "토",
+          entries: [
+            { time: "11:30", title: "세계의 주인" },
+            { time: "13:45", title: "힌드의 목소리" },
+            { time: "15:30", title: "새벽의 Tango" },
+            { time: "17:45", title: "센티멘탈 밸류" },
+            { time: "20:15", title: "누륵" }
+          ]
+        },
+        {
+          label: "5/3(일)",
+          weekday: "일",
+          entries: [
+            { time: "11:30", title: "새벽의 Tango" },
+            { time: "13:45", title: "센티멘탈 밸류" },
+            { time: "16:15", title: "힌드의 목소리" },
+            { time: "18:00", title: "세계의 주인" },
+            { time: "20:15", title: "주의에게" }
+          ]
+        },
+        {
+          label: "5/4(월)",
+          weekday: "월",
+          entries: [
+            { time: "11:30", title: "주의에게" },
+            { time: "13:30", title: "누륵" },
+            { time: "15:10", title: "새벽의 Tango" },
+            { time: "17:25", title: "빨간 나리를 보았니" },
+            { time: "19:40", title: "극장의 시간들 (중영)" }
+          ]
+        },
+        {
+          label: "5/5(화)",
+          weekday: "화",
+          entries: [
+            { time: "11:30", title: "누륵" },
+            { time: "13:10", title: "새벽의 Tango" },
+            { time: "15:25", title: "힌드의 목소리" },
+            { time: "17:10", title: "센티멘탈 밸류 (중영)" },
+            { time: "19:40", title: "세계의 주인" }
+          ]
+        },
+        {
+          label: "5/6(수)",
+          weekday: "수",
+          entries: [
+            { time: "11:15", title: "새벽의 Tango" },
+            { time: "13:30", title: "세계의 주인" },
+            { time: "15:45", title: "누륵" },
+            { time: "17:30", title: "그녀가 돌아온 날 (개봉)" },
+            { time: "19:15", title: "달갈 원정대 (개봉)" }
+          ]
+        }
+      ];
+
+      const MOVIE_POSTER_BY_TITLE = {
+        "빨간 나리를 보았니": "images/movie001.jpg",
+        "세계의 주인": "images/movie002.jpg",
+        "극장의 시간들": "images/movie003.jpg",
+        "극장의 시간들 (중영)": "images/movie003.jpg",
+        "힌드의 목소리": "images/movie004.jpg",
+        "새벽의 Tango": "images/movie001.jpg",
+        "누륵": "images/movie002.jpg",
+        "센티멘탈 밸류": "images/movie003.jpg",
+        "센티멘탈 밸류 (중영)": "images/movie003.jpg",
+        "주의에게": "images/movie004.jpg",
+        "그녀가 돌아온 날 (개봉)": "images/movie001.jpg",
+        "달갈 원정대 (개봉)": "images/movie002.jpg"
+      };
+
+      function parseMovieTitleWithStatus(title) {
+        const suffixMatch = title.match(/\s*\((개봉|종영|중영)\)\s*$/);
+        if (!suffixMatch) {
+          return { cleanTitle: title, badgeLabel: "", badgeClass: "" };
+        }
+        const rawStatus = suffixMatch[1];
+        const badgeLabel = rawStatus === "중영" ? "종영" : rawStatus;
+        const badgeClass = badgeLabel === "개봉" ? "movie-status-badge--open" : "movie-status-badge--end";
+        return {
+          cleanTitle: title.replace(/\s*\((개봉|종영|중영)\)\s*$/, ""),
+          badgeLabel: badgeLabel,
+          badgeClass: badgeClass
+        };
+      }
+
+      const dayTabs = document.getElementById("dayTabs");
+      const panelsWrap = document.getElementById("schedulePanels");
+      const todayWeekdayLabel = WEEKDAY_LABELS[new Date().getDay()];
+      const defaultIndex = Math.max(0, WEEK_SCHEDULE.findIndex(function (day) {
+        return day.weekday === todayWeekdayLabel;
+      }));
+
+      WEEK_SCHEDULE.forEach(function (day, i) {
+        const tab = document.createElement("button");
+        tab.type = "button";
+        tab.className = "day-tab";
+        tab.setAttribute("role", "tab");
+        tab.id = "tab-day-" + i;
+        tab.setAttribute("aria-controls", "panel-day-" + i);
+        tab.textContent = day.label;
+        tab.setAttribute("aria-selected", i === defaultIndex ? "true" : "false");
+        dayTabs.appendChild(tab);
+
+        const panel = document.createElement("div");
+        panel.className = "schedule-panel" + (i === defaultIndex ? " is-active" : "");
+        panel.id = "panel-day-" + i;
+        panel.setAttribute("role", "tabpanel");
+        panel.setAttribute("aria-labelledby", "tab-day-" + i);
+        panel.hidden = i !== defaultIndex;
+
+        day.entries.forEach(function (entry, entryIndex) {
+          const row = document.createElement("div");
+          row.className = "schedule-row";
+          const titleInfo = parseMovieTitleWithStatus(entry.title);
+          const poster = MOVIE_POSTER_BY_TITLE[entry.title] || MOVIE_POSTER_BY_TITLE[titleInfo.cleanTitle] || MOVIE_IMAGES[entryIndex % MOVIE_IMAGES.length];
+          const badgeHtml = titleInfo.badgeLabel
+            ? '<span class="movie-status-badge ' + titleInfo.badgeClass + '">' + titleInfo.badgeLabel + "</span>"
+            : "";
+          row.innerHTML =
+            '<span class="slot-label">' + (entryIndex + 1) + "회차</span>" +
+            '<img class="poster-badge" src="' + poster + '" alt="' + entry.title + ' 포스터" width="52" height="52" />' +
+            '<span class="movie-title"><span class="movie-title-text">' + titleInfo.cleanTitle + "</span>" + badgeHtml + "</span>" +
+            '<span class="time-pill">' + entry.time + "</span>" +
+            '<button type="button" class="booking-btn" aria-label="' + entry.title + " " + entry.time + ' 예매하기">예매하기</button>';
+          panel.appendChild(row);
+        });
+        panelsWrap.appendChild(panel);
+
+        tab.addEventListener("click", function () {
+          dayTabs.querySelectorAll(".day-tab").forEach(function (t) {
+            t.setAttribute("aria-selected", "false");
+          });
+          tab.setAttribute("aria-selected", "true");
+          panelsWrap.querySelectorAll(".schedule-panel").forEach(function (p, idx) {
+            const active = idx === i;
+            p.classList.toggle("is-active", active);
+            p.hidden = !active;
+          });
+        });
+      });
+
+      /* 초기 포커스: 오늘 탭이 보이도록 스크롤 */
+      const selected = dayTabs.querySelector('[aria-selected="true"]');
+      if (selected) {
+        selected.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    })();
+  </script>
+</body>
+</html>
