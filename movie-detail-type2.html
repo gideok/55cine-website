@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>55CINE — Demo</title>
+  <title>새벽의 탱고 — 상세 레이아웃 B — 55CINE</title>
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -429,18 +429,6 @@
       color: color-mix(in srgb, var(--brand-gold-soft) 75%, transparent);
     }
 
-    .slide-poster-link {
-      display: block;
-      color: inherit;
-      text-decoration: none;
-      border-radius: var(--radius-sm);
-    }
-
-    .slide-poster-link:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
-
     .slide-placeholder {
       flex: 1;
       display: flex;
@@ -786,6 +774,262 @@
       border-radius: 2px;
     }
 
+    /* 영화 상세 type2: PC에서 C2는 오른쪽 열 전체에 sticky, C1·C3~C5만 세로 스크롤 */
+    .section-movie-detail-type2 {
+      padding: 8px 24px 48px;
+      max-width: 1040px;
+      margin: 0 auto;
+      scroll-margin-top: 88px;
+    }
+
+    .md2-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 340px);
+      grid-template-areas:
+        "md2c1 md2c2"
+        "md2c3 md2c2"
+        "md2c4 md2c2"
+        "md2c5 md2c2";
+      gap: 20px;
+      align-items: start;
+    }
+
+    .md2-c1 {
+      grid-area: md2c1;
+    }
+
+    .md2-c2 {
+      grid-area: md2c2;
+      position: sticky;
+      top: 72px;
+      align-self: start;
+      z-index: 2;
+      max-height: calc(100vh - 88px);
+      overflow-y: auto;
+    }
+
+    .md2-c3 {
+      grid-area: md2c3;
+    }
+
+    .md2-c4 {
+      grid-area: md2c4;
+    }
+
+    .md2-c5 {
+      grid-area: md2c5;
+    }
+
+    .movie-detail-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--bg-elevated) 88%, var(--pill-bg));
+    }
+
+    .md2-c1 .movie-detail-box-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 16px;
+    }
+
+    .movie-detail-poster {
+      width: 260px;
+      height: 368px;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .md2-c2 .movie-detail-box-inner {
+      padding: 20px 22px;
+      box-sizing: border-box;
+    }
+
+    .md2-film-title {
+      margin: 0 0 16px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--brand-ink);
+    }
+
+    .movie-detail-meta {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .movie-detail-meta .meta-row {
+      display: grid;
+      grid-template-columns: 3.5rem 1fr;
+      gap: 8px 12px;
+      margin: 0 0 12px;
+    }
+
+    .movie-detail-meta .meta-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .movie-detail-meta dt {
+      margin: 0;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .movie-detail-meta dd {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .md2-booking-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px 14px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--brand-ink);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    .md2-booking-btn:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 14px var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .md2-booking-btn:focus-visible {
+      outline: 2px solid var(--brand-walnut);
+      outline-offset: 2px;
+    }
+
+    .md2-block-title {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--brand-ink);
+    }
+
+    .md2-c3 .movie-detail-box-inner,
+    .md2-c4 .movie-detail-box-inner,
+    .md2-c5 .movie-detail-box-inner {
+      padding: 18px 20px 22px;
+    }
+
+    .movie-detail-synopsis {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre-line;
+    }
+
+    .movie-detail-trailer-frame {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--brand-ink);
+    }
+
+    .movie-detail-trailer-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .movie-detail-schedule-title {
+      margin: 0 0 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--brand-ink);
+    }
+
+    .movie-detail-badge-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px 12px;
+    }
+
+    .movie-detail-time-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px 10px;
+      border-radius: 10px;
+      border: 1px solid color-mix(in srgb, var(--line) 80%, var(--brand-bronze));
+      background: var(--bg-elevated);
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .movie-detail-time-badge .badge-date {
+      font-weight: 700;
+      color: var(--brand-walnut);
+      margin-bottom: 4px;
+    }
+
+    .movie-detail-time-badge .badge-time {
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .md2-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "md2c1"
+          "md2c2"
+          "md2c3"
+          "md2c4"
+          "md2c5";
+      }
+
+      .md2-c2 {
+        position: static;
+        max-height: none;
+        overflow: visible;
+      }
+
+      .md2-c1 .movie-detail-box-inner {
+        min-height: 200px;
+        padding: 20px;
+      }
+
+      .movie-detail-poster {
+        width: auto;
+        height: auto;
+        max-height: 320px;
+      }
+
+      .movie-detail-badge-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     /* Menu cards */
     .section-menu {
       padding: 16px 24px 48px;
@@ -870,7 +1114,6 @@
       border-radius: 2px;
       background: whitesmoke;
       overflow: hidden;
-      /* 높이: .footer-text와 동일(flex stretch). 가로: 그 높이에서 526:948 비율로 필요한 표시 폭(원본 픽셀 폭이 아님) */
       aspect-ratio: 526 / 948;
       width: auto;
       max-width: none;
@@ -936,90 +1179,112 @@
   <div id="site-header-mount"></div>
 
   <main>
-    <section class="hero" id="hero" aria-labelledby="hero-heading">
-      <h2 id="hero-heading" class="visually-hidden" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">메인 캐러셀</h2>
-      <div class="carousel-wrap" role="region" aria-roledescription="carousel" aria-label="상영·예매·시간표·이벤트">
-        <div class="carousel-track" id="carouselTrack">
-          <div class="carousel-slide">
-            <div class="slide-nowplaying">
-              <figure>
-                <img src="images/movie001.jpg" alt="상영작 포스터 1" />
-                <figcaption>상영작 1</figcaption>
-              </figure>
-              <a class="slide-poster-link" href="movie-detail-type2.html">
-                <figure>
-                  <img src="images/movie002.jpg" alt="상영작 포스터 2" />
-                  <figcaption>상영작 2</figcaption>
-                </figure>
-              </a>
-              <figure>
-                <img src="images/movie003.jpg" alt="상영작 포스터 3" />
-                <figcaption>상영작 3</figcaption>
-              </figure>
-              <figure>
-                <img src="images/movie004.jpg" alt="상영작 포스터 4" />
-                <figcaption>상영작 4</figcaption>
-              </figure>
-            </div>
+    <section class="section-movie-detail-type2" aria-labelledby="movie-detail-type2-page-title">
+      <h2 class="section-title" id="movie-detail-type2-page-title">새벽의 탱고</h2>
+      <div class="md2-grid">
+        <div class="md2-c1 movie-detail-box">
+          <div class="movie-detail-box-inner">
+            <img class="movie-detail-poster" src="images/movie002.jpg" width="260" height="368" alt="르누아르 포스터" decoding="async" />
           </div>
-          <div class="carousel-slide">
-            <div class="slide-placeholder slide-booking">
-              <strong>예매</strong>
-              <p>빠른 예매와 좌석 선택을 이용해 보세요.</p>
-            </div>
+        </div>
+        <aside class="md2-c2 movie-detail-box" aria-label="작품 기본 정보">
+          <div class="movie-detail-box-inner">
+            <h3 class="md2-film-title">새벽의 탱고</h3>
+            <dl class="movie-detail-meta">
+              <div class="meta-row">
+                <dt>감독</dt>
+                <dd>김효은</dd>
+              </div>
+              <div class="meta-row">
+                <dt>출연</dt>
+                <dd>이연</dd>
+              </div>
+              <div class="meta-row">
+                <dt>정보</dt>
+                <dd>15세이상 관람가 117분 드라마</dd>
+              </div>
+              <div class="meta-row">
+                <dt>개봉</dt>
+                <dd>2026.4.22</dd>
+              </div>
+            </dl>
+            <a class="md2-booking-btn" href="#" aria-label="새벽의 탱고 예매하기">예매하기</a>
           </div>
-          <div class="carousel-slide">
-            <div class="slide-placeholder slide-timetable">
-              <strong>시간표</strong>
-              <p>아래에서 요일별 상영 일정을 확인할 수 있습니다.</p>
-            </div>
+        </aside>
+        <div class="md2-c3 movie-detail-box">
+          <div class="movie-detail-box-inner">
+            <h3 class="md2-block-title">줄거리</h3>
+            <p class="movie-detail-synopsis">믿었던 친구의 배신으로 깊은 상처를 입은 ‘지원‘.
+
+              세상으로부터 도망치듯 들어간 공장에서
+              누구보다 긍정과 다정함의 힘을 믿는 룸메이트 ‘주희‘를 만나는데,
+              갑자기 ‘Tango’를 함께 추자는 제안이 부담스럽기만 하다.
+              
+              하지만 ‘지원’은 자신을 기다리며 건네는
+              ‘주희‘의 서툰 스텝을 따라가며
+              굳게 닫았던 마음의 문을 용기 내어 조금씩 열기 시작한다.
+              
+              마침내 다시 누군가를 믿어보려던 찰나,
+              어린 조장 ‘한별’이 일으킨 사고에
+              ‘주희’와 함께 휘말린 ‘지원’의 일상은 흔들리기 시작하는데…
+              
+              차가운 새벽 같은 삶에 따뜻한 햇살처럼 다가온 ‘Tango’.
+              완벽하지 않아도 괜찮다고 말할 수 있는 첫 스텝이 시작된다!</p>
           </div>
-          <div class="carousel-slide">
-            <div class="slide-placeholder slide-event">
-              <strong>이벤트</strong>
-              <p>진행 중인 이벤트와 혜택을 만나보세요.</p>
+        </div>
+        <div class="md2-c4 movie-detail-box">
+          <div class="movie-detail-box-inner">
+            <h3 class="md2-block-title">예고편</h3>
+            <div class="movie-detail-trailer-frame">
+              <iframe
+                src="https://youtu.be/JFMb5Tb3ag8?si=3XWe67pRhsvcWtDn"
+                title="〈새벽의 Tango〉 예고편"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
             </div>
           </div>
         </div>
-        <div class="carousel-arrows">
-          <button type="button" id="carouselPrev" aria-label="이전 슬라이드">‹</button>
-          <button type="button" id="carouselNext" aria-label="다음 슬라이드">›</button>
+        <div class="md2-c5 movie-detail-box">
+          <div class="movie-detail-box-inner">
+            <h3 class="movie-detail-schedule-title">상영시간표</h3>
+            <div class="movie-detail-badge-grid">
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">2026.05.01.(금)</span>
+                <span class="badge-time">20:40 - 22:40</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">2026.05.01.(금)</span>
+                <span class="badge-time">20:40 - 22:40</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">2026.05.01.(금)</span>
+                <span class="badge-time">20:40 - 22:40</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">2026.05.01.(금)</span>
+                <span class="badge-time">20:40 - 22:40</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">2026.05.01.(금)</span>
+                <span class="badge-time">20:40 - 22:40</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">2026.05.01.(금)</span>
+                <span class="badge-time">20:40 - 22:40</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">2026.05.01.(금)</span>
+                <span class="badge-time">20:40 - 22:40</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">2026.05.01.(금)</span>
+                <span class="badge-time">20:40 - 22:40</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="슬라이드 선택"></div>
-    </section>
-
-    <section class="section-timetable" id="timetable" aria-labelledby="timetable-title">
-      <h2 class="section-title" id="timetable-title">이번주 시간표</h2>
-      <div class="day-tabs-wrap">
-        <div class="day-tabs" id="dayTabs" role="tablist" aria-label="요일 선택"></div>
-      </div>
-      <div id="schedulePanels"></div>
-    </section>
-
-    <section class="section-menu" aria-labelledby="menu-title">
-      <h2 class="section-title" id="menu-title">메뉴</h2>
-      <div class="menu-grid">
-        <a class="menu-card" href="#">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 6v12H3V9l9-6z"/><path d="M9 12h6M12 9v6"/></svg>
-          에티켓
-        </a>
-        <a class="menu-card" href="#">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20v-1a8 8 0 0116 0v1"/></svg>
-          멤버쉽
-        </a>
-        <a class="menu-card" href="#">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-8h6v8"/></svg>
-          개관
-        </a>
-        <a class="menu-card" href="#">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-          매거진3355
-        </a>
-        <a class="menu-card" href="#">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
-          예매안내
-        </a>
       </div>
     </section>
   </main>
@@ -1030,7 +1295,7 @@
   <script defer src="components/site-font-switcher.js"></script>
   <script>
     (function () {
-      function runDemoApp() {
+      function runMovieDetailType2App() {
       const gnbToggle = document.getElementById("gnbToggle");
       const gnbPanel = document.getElementById("gnb-panel");
       if (gnbToggle && gnbPanel) {
@@ -1074,321 +1339,17 @@
         });
       });
 
-      const MOVIE_IMAGES = [
-        "images/movie001.jpg",
-        "images/movie002.jpg",
-        "images/movie003.jpg",
-        "images/movie004.jpg"
-      ];
-      const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
-
-      /* Carousel */
-      const track = document.getElementById("carouselTrack");
-      const carouselWrap = track.parentElement;
-      const dotsWrap = document.getElementById("carouselDots");
-      const slides = track.querySelectorAll(".carousel-slide");
-      let slideIndex = 0;
-      let carouselTimer = null;
-
-      function pauseCarouselAuto() {
-        if (carouselTimer) {
-          clearInterval(carouselTimer);
-          carouselTimer = null;
-        }
-      }
-
-      function resumeCarouselAutoIfAllowed() {
-        if (carouselWrap.matches(":hover")) return;
-        pauseCarouselAuto();
-        carouselTimer = setInterval(function () { goTo(slideIndex + 1); }, 6000);
-      }
-
-      slides.forEach(function (_, i) {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.setAttribute("role", "tab");
-        b.setAttribute("aria-label", "슬라이드 " + (i + 1));
-        b.addEventListener("click", function () { goTo(i); });
-        dotsWrap.appendChild(b);
-      });
-
-      const dots = dotsWrap.querySelectorAll("button");
-
-      function goTo(i) {
-        slideIndex = (i + slides.length) % slides.length;
-        track.style.transform = "translateX(-" + slideIndex * 100 + "%)";
-        dots.forEach(function (d, j) {
-          d.setAttribute("aria-current", j === slideIndex ? "true" : "false");
-        });
-      }
-
-      document.getElementById("carouselPrev").addEventListener("click", function () {
-        goTo(slideIndex - 1);
-      });
-      document.getElementById("carouselNext").addEventListener("click", function () {
-        goTo(slideIndex + 1);
-      });
-
-      goTo(0);
-      resumeCarouselAutoIfAllowed();
-
-      carouselWrap.addEventListener("mouseenter", pauseCarouselAuto);
-      carouselWrap.addEventListener("mouseleave", resumeCarouselAutoIfAllowed);
-
-      /* PC: 마우스 드래그 · 모바일: 터치 스와이프 (Pointer Events) */
-      var SWIPE_THRESHOLD_PX = 48;
-      var dragPointerId = null;
-      var dragStartX = 0;
-      var dragLastX = 0;
-      var dragActive = false;
-
-      function onCarouselPointerDown(e) {
-        if (e.pointerType === "mouse" && e.button !== 0) return;
-        if (e.target.closest && e.target.closest(".carousel-arrows button")) return;
-        dragPointerId = e.pointerId;
-        dragStartX = dragLastX = e.clientX;
-        dragActive = true;
-        pauseCarouselAuto();
-        track.style.transition = "none";
-        carouselWrap.classList.add("is-dragging");
-        try {
-          carouselWrap.setPointerCapture(e.pointerId);
-        } catch (err) {}
-      }
-
-      function onCarouselPointerMove(e) {
-        if (!dragActive || e.pointerId !== dragPointerId) return;
-        dragLastX = e.clientX;
-        var w = carouselWrap.offsetWidth || 1;
-        var pct = -slideIndex * 100 + ((dragLastX - dragStartX) / w) * 100;
-        track.style.transform = "translateX(" + pct + "%)";
-        if (e.pointerType === "touch" && Math.abs(dragLastX - dragStartX) > 8) {
-          e.preventDefault();
-        }
-      }
-
-      function onCarouselPointerUp(e) {
-        if (!dragActive || e.pointerId !== dragPointerId) return;
-        var dx = dragLastX - dragStartX;
-        dragActive = false;
-        dragPointerId = null;
-        track.style.transition = "";
-        carouselWrap.classList.remove("is-dragging");
-        try {
-          carouselWrap.releasePointerCapture(e.pointerId);
-        } catch (err2) {}
-        if (Math.abs(dx) >= SWIPE_THRESHOLD_PX) {
-          if (dx < 0) goTo(slideIndex + 1);
-          else goTo(slideIndex - 1);
-        } else {
-          goTo(slideIndex);
-        }
-        resumeCarouselAutoIfAllowed();
-      }
-
-      carouselWrap.addEventListener("pointerdown", onCarouselPointerDown);
-      carouselWrap.addEventListener("pointermove", onCarouselPointerMove, { passive: false });
-      carouselWrap.addEventListener("pointerup", onCarouselPointerUp);
-      carouselWrap.addEventListener("pointercancel", onCarouselPointerUp);
-
-      /* 이번 주 시간표: 제공 이미지 기준 정적 데이터 */
-      const WEEK_SCHEDULE = [
-        {
-          label: "4/30(목)",
-          weekday: "목",
-          entries: [
-            { time: "11:30", title: "빨간 나리를 보았니" },
-            { time: "13:50", title: "세계의 주인" },
-            { time: "16:15", title: "극장의 시간들" },
-            { time: "18:20", title: "힌드의 목소리" },
-            { time: "20:05", title: "새벽의 Tango" }
-          ]
-        },
-        {
-          label: "5/1(금)",
-          weekday: "금",
-          entries: [
-            { time: "11:30", title: "누륵" },
-            { time: "13:10", title: "센티멘탈 밸류" },
-            { time: "14:00", title: "르누아르" },
-            { time: "15:40", title: "힌드의 목소리" },
-            { time: "17:25", title: "새벽의 Tango" },
-            { time: "19:40", title: "세계의 주인" }
-          ]
-        },
-        {
-          label: "5/2(토)",
-          weekday: "토",
-          entries: [
-            { time: "11:30", title: "세계의 주인" },
-            { time: "13:45", title: "힌드의 목소리" },
-            { time: "15:30", title: "새벽의 Tango" },
-            { time: "17:45", title: "센티멘탈 밸류" },
-            { time: "20:15", title: "누륵" }
-          ]
-        },
-        {
-          label: "5/3(일)",
-          weekday: "일",
-          entries: [
-            { time: "11:30", title: "새벽의 Tango" },
-            { time: "13:45", title: "센티멘탈 밸류" },
-            { time: "16:15", title: "힌드의 목소리" },
-            { time: "18:00", title: "세계의 주인" },
-            { time: "20:15", title: "주의에게" }
-          ]
-        },
-        {
-          label: "5/4(월)",
-          weekday: "월",
-          entries: [
-            { time: "11:30", title: "주의에게" },
-            { time: "13:30", title: "누륵" },
-            { time: "15:10", title: "새벽의 Tango" },
-            { time: "17:25", title: "빨간 나리를 보았니" },
-            { time: "19:40", title: "극장의 시간들 (중영)" }
-          ]
-        },
-        {
-          label: "5/5(화)",
-          weekday: "화",
-          entries: [
-            { time: "11:30", title: "누륵" },
-            { time: "13:10", title: "새벽의 Tango" },
-            { time: "15:25", title: "힌드의 목소리" },
-            { time: "17:10", title: "센티멘탈 밸류 (중영)" },
-            { time: "19:40", title: "세계의 주인" }
-          ]
-        },
-        {
-          label: "5/6(수)",
-          weekday: "수",
-          entries: [
-            { time: "11:15", title: "새벽의 Tango" },
-            { time: "13:30", title: "세계의 주인" },
-            { time: "15:45", title: "누륵" },
-            { time: "17:30", title: "그녀가 돌아온 날 (개봉)" },
-            { time: "19:15", title: "달갈 원정대 (개봉)" }
-          ]
-        }
-      ];
-
-      function movieDetailUrlForPoster(posterUrl) {
-        if (posterUrl.indexOf("movie001.jpg") !== -1) return "movie-detail.html";
-        if (posterUrl.indexOf("movie002.jpg") !== -1) return "movie-detail-type2.html";
-        return "";
-      }
-
-      const MOVIE_POSTER_BY_TITLE = {
-        "르누아르": "images/movie001.jpg",
-        "빨간 나리를 보았니": "images/movie001.jpg",
-        "세계의 주인": "images/movie002.jpg",
-        "극장의 시간들": "images/movie003.jpg",
-        "극장의 시간들 (중영)": "images/movie003.jpg",
-        "힌드의 목소리": "images/movie004.jpg",
-        "새벽의 Tango": "images/movie001.jpg",
-        "누륵": "images/movie002.jpg",
-        "센티멘탈 밸류": "images/movie003.jpg",
-        "센티멘탈 밸류 (중영)": "images/movie003.jpg",
-        "주의에게": "images/movie004.jpg",
-        "그녀가 돌아온 날 (개봉)": "images/movie001.jpg",
-        "달갈 원정대 (개봉)": "images/movie002.jpg"
-      };
-
-      function parseMovieTitleWithStatus(title) {
-        const suffixMatch = title.match(/\s*\((개봉|종영|중영)\)\s*$/);
-        if (!suffixMatch) {
-          return { cleanTitle: title, badgeLabel: "", badgeClass: "" };
-        }
-        const rawStatus = suffixMatch[1];
-        const badgeLabel = rawStatus === "중영" ? "종영" : rawStatus;
-        const badgeClass = badgeLabel === "개봉" ? "movie-status-badge--open" : "movie-status-badge--end";
-        return {
-          cleanTitle: title.replace(/\s*\((개봉|종영|중영)\)\s*$/, ""),
-          badgeLabel: badgeLabel,
-          badgeClass: badgeClass
-        };
-      }
-
-      const dayTabs = document.getElementById("dayTabs");
-      const panelsWrap = document.getElementById("schedulePanels");
-      const todayWeekdayLabel = WEEKDAY_LABELS[new Date().getDay()];
-      const defaultIndex = Math.max(0, WEEK_SCHEDULE.findIndex(function (day) {
-        return day.weekday === todayWeekdayLabel;
-      }));
-
-      WEEK_SCHEDULE.forEach(function (day, i) {
-        const tab = document.createElement("button");
-        tab.type = "button";
-        tab.className = "day-tab";
-        tab.setAttribute("role", "tab");
-        tab.id = "tab-day-" + i;
-        tab.setAttribute("aria-controls", "panel-day-" + i);
-        tab.textContent = day.label;
-        tab.setAttribute("aria-selected", i === defaultIndex ? "true" : "false");
-        dayTabs.appendChild(tab);
-
-        const panel = document.createElement("div");
-        panel.className = "schedule-panel" + (i === defaultIndex ? " is-active" : "");
-        panel.id = "panel-day-" + i;
-        panel.setAttribute("role", "tabpanel");
-        panel.setAttribute("aria-labelledby", "tab-day-" + i);
-        panel.hidden = i !== defaultIndex;
-
-        day.entries.forEach(function (entry, entryIndex) {
-          const row = document.createElement("div");
-          row.className = "schedule-row";
-          const titleInfo = parseMovieTitleWithStatus(entry.title);
-          const poster = MOVIE_POSTER_BY_TITLE[entry.title] || MOVIE_POSTER_BY_TITLE[titleInfo.cleanTitle] || MOVIE_IMAGES[entryIndex % MOVIE_IMAGES.length];
-          const badgeHtml = titleInfo.badgeLabel
-            ? '<span class="movie-status-badge ' + titleInfo.badgeClass + '">' + titleInfo.badgeLabel + "</span>"
-            : "";
-          var detailUrl = movieDetailUrlForPoster(poster);
-          var posterInner = '<img class="poster-badge" src="' + poster + '" alt="' + entry.title + ' 포스터" width="52" height="52" />';
-          var posterBlock = detailUrl
-            ? '<a class="schedule-poster-link" href="' + detailUrl + '">' + posterInner + "</a>"
-            : posterInner;
-          var titleBlock = detailUrl
-            ? '<a class="movie-title-link movie-title-text" href="' + detailUrl + '">' + titleInfo.cleanTitle + "</a>"
-            : '<span class="movie-title-text">' + titleInfo.cleanTitle + "</span>";
-          row.innerHTML =
-            '<span class="slot-label" aria-label="' + (entryIndex + 1) + '회차">' + (entryIndex + 1) + "</span>" +
-            posterBlock +
-            '<span class="movie-title">' + titleBlock + badgeHtml + "</span>" +
-            '<span class="time-pill">' + entry.time + "</span>" +
-            '<button type="button" class="booking-btn" aria-label="' + entry.title + " " + entry.time + ' 예매하기">예매</button>';
-          panel.appendChild(row);
-        });
-        panelsWrap.appendChild(panel);
-
-        tab.addEventListener("click", function () {
-          dayTabs.querySelectorAll(".day-tab").forEach(function (t) {
-            t.setAttribute("aria-selected", "false");
-          });
-          tab.setAttribute("aria-selected", "true");
-          panelsWrap.querySelectorAll(".schedule-panel").forEach(function (p, idx) {
-            const active = idx === i;
-            p.classList.toggle("is-active", active);
-            p.hidden = !active;
-          });
-        });
-      });
-
-      /* 초기 포커스: 오늘 탭이 보이도록 스크롤 */
-      const selected = dayTabs.querySelector('[aria-selected="true"]');
-      if (selected) {
-        selected.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      }
       }
 
       var needsSiteChrome = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
       if (needsSiteChrome) {
-        document.addEventListener("sitechrome:ready", runDemoApp, { once: true });
-        document.addEventListener("sitechrome:error", runDemoApp, { once: true });
+        document.addEventListener("sitechrome:ready", runMovieDetailType2App, { once: true });
+        document.addEventListener("sitechrome:error", runMovieDetailType2App, { once: true });
       } else {
-        runDemoApp();
+        runMovieDetailType2App();
       }
     })();
   </script>
+
 </body>
 </html>
