@@ -8,13 +8,16 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Asta+Sans:wght@400;500;600;700&family=Do+Hyeon&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin />
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css" />
   <style>
     /*
      * 컬러 팔레트: images/logo.png 에서 불투명 픽셀 k-means(5) 추출 후
      * 대표색 보정 — 골드 #F0AB2A · 브론즈 #8B6E3E · 딥 월넛 #4A3D27
      */
     :root {
+      --site-font-family: "Noto Sans KR", system-ui, sans-serif;
       --brand-gold: #f0ab2a;
       --brand-gold-mid: #ca9128;
       --brand-gold-soft: #f5d78a;
@@ -47,10 +50,55 @@
 
     body {
       margin: 0;
-      font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Pretendard", sans-serif;
+      font-family: var(--site-font-family);
       color: var(--text);
       background: var(--bg);
       line-height: 1.5;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .header-brand-tools {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .font-test-select-wrap {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .font-test-select {
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg-elevated);
+      color: var(--text);
+      cursor: pointer;
+      max-width: min(168px, 38vw);
+    }
+
+    .font-test-select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
     main {
@@ -84,8 +132,12 @@
     .logo {
       display: flex;
       align-items: center;
-      line-height: 0;
+      gap: 8px;
+      line-height: 1.25;
       flex-shrink: 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
     }
 
     .logo img {
@@ -1233,6 +1285,7 @@
   <div id="site-footer-mount"></div>
 
   <script defer src="components/site-chrome.js"></script>
+  <script defer src="components/site-font-switcher.js"></script>
   <script>
     (function () {
       function runMovieDetailApp() {

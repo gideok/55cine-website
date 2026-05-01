@@ -1,6 +1,18 @@
 <header class="site-header">
   <div class="header-top">
-    <a href="demo.html" class="logo"><img src="images/logo.png" width="142" height="100" alt="55CINE 오오극장" decoding="async" /></a>
+    <div class="header-brand-tools">
+      <a href="demo.html" class="logo"><img src="images/logo.png" width="142" height="100" alt="55CINE 오오극장" decoding="async" /> 독립영화전용관 오오극장</a>
+      <label class="font-test-select-wrap" for="siteFontSelect">
+        <span class="visually-hidden">폰트 테스트</span>
+        <select id="siteFontSelect" class="font-test-select" aria-label="폰트 테스트">
+          <option value="noto">Noto Sans</option>
+          <option value="asta">Asta Sans</option>
+          <option value="dohyeon">Do Hyun</option>
+          <option value="pretendard">Pretendard</option>
+          <option value="spoqa">Spoqa Han Sans</option>
+        </select>
+      </label>
+    </div>
     <button type="button" class="btn-menu" id="gnbToggle" aria-controls="gnb-panel" aria-expanded="false" aria-label="메뉴 열기">MENU</button>
     <div id="gnb-panel" class="gnb-panel">
       <nav class="gnb" aria-label="주 메뉴">
