@@ -62,25 +62,30 @@
       text-decoration: none;
     }
 
-    /* Header */
+    /* Header + GNB (1차 가로 · 2차 hover 드롭다운, cinecube 스타일 참고) */
     .site-header {
       position: sticky;
       top: 0;
       z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 24px;
-      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      padding: 0;
+      background: color-mix(in srgb, var(--bg) 94%, transparent);
       border-bottom: 1px solid var(--line);
       backdrop-filter: blur(8px);
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 16px;
+      padding: 14px 24px;
     }
 
     .logo {
       display: flex;
       align-items: center;
       line-height: 0;
+      flex-shrink: 0;
     }
 
     .logo img {
@@ -89,19 +94,8 @@
       display: block;
     }
 
-    .nav-main {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 20px;
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    .nav-main a:hover {
-      color: var(--accent);
-    }
-
     .btn-menu {
+      margin-left: auto;
       padding: 8px 14px;
       border: 1px solid var(--line);
       border-radius: 999px;
@@ -109,11 +103,211 @@
       font-weight: 600;
       background: var(--pill-bg);
       color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
     }
 
     .btn-menu:hover {
       border-color: var(--brand-bronze);
       color: var(--brand-bronze-deep);
+    }
+
+    .gnb-panel {
+      flex: 1 0 100%;
+      border-top: 1px solid var(--line);
+      margin: 0 -24px;
+      padding: 0 24px;
+      background: color-mix(in srgb, var(--bg-elevated) 96%, transparent);
+    }
+
+    .gnb {
+      font-size: 0.95rem;
+    }
+
+    .gnb-depth1-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 20px;
+    }
+
+    .gnb-item {
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .gnb-depth1 {
+      display: block;
+      font-weight: 500;
+      color: var(--text);
+      padding: 8px 2px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .gnb-depth1:hover {
+      color: var(--accent);
+    }
+
+    .gnb-item:hover > .gnb-depth1,
+    .gnb-item:focus-within > .gnb-depth1 {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .gnb-dropdown {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0px);
+      padding-top: 6px;
+      min-width: 200px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(4px);
+      transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
+      z-index: 120;
+      pointer-events: none;
+    }
+
+    .gnb-dropdown-inner {
+      margin: 0;
+      padding: 8px 0;
+      list-style: none;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 12px 40px var(--shadow);
+    }
+
+    .gnb-depth2 a {
+      display: block;
+      padding: 10px 18px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .gnb-depth2 a:hover {
+      background: color-mix(in srgb, var(--pill-bg) 85%, var(--bg-elevated));
+      color: var(--brand-bronze-deep);
+    }
+
+    .gnb-depth2 a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
+
+    @media (min-width: 901px) {
+      .header-top {
+        flex-wrap: nowrap;
+      }
+
+      .btn-menu {
+        display: none;
+      }
+
+      .gnb-panel {
+        flex: 0 1 auto;
+        flex-basis: auto;
+        margin-left: auto;
+        margin-right: 0;
+        padding: 0;
+        border-top: none;
+        background: transparent;
+      }
+
+      .gnb-panel,
+      .gnb-panel.is-open {
+        display: block !important;
+      }
+
+      .gnb-item:hover > .gnb-dropdown,
+      .gnb-item:focus-within > .gnb-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .gnb-item:last-child .gnb-dropdown {
+        left: auto;
+        right: 0;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .gnb-panel {
+        display: none;
+        margin-top: 4px;
+      }
+
+      .gnb-panel.is-open {
+        display: block;
+      }
+
+      .gnb-depth1-list {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 4px 0 12px;
+      }
+
+      .gnb-item {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .gnb-item:last-child {
+        border-bottom: none;
+      }
+
+      .gnb-depth1 {
+        white-space: normal;
+        padding: 12px 4px;
+      }
+
+      .gnb-item.is-open > .gnb-depth1 {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+
+      .gnb-dropdown {
+        position: static;
+        padding-top: 0;
+        opacity: 0;
+        visibility: hidden;
+        max-height: 0;
+        overflow: hidden;
+        transform: none;
+        transition: max-height 0.25s ease, opacity 0.2s ease, visibility 0.2s ease;
+        pointer-events: none;
+      }
+
+      .gnb-item.is-open > .gnb-dropdown {
+        opacity: 1;
+        visibility: visible;
+        max-height: 480px;
+        padding-bottom: 8px;
+        pointer-events: auto;
+      }
+
+      .gnb-dropdown-inner {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0 0 4px 12px;
+        background: transparent;
+      }
+
+      .gnb-depth2 a {
+        padding: 8px 12px;
+        white-space: normal;
+      }
     }
 
     /* Hero Carousel */
@@ -128,6 +322,18 @@
       overflow: hidden;
       box-shadow: 0 8px 32px var(--shadow);
       background: var(--brand-ink);
+      touch-action: pan-y pinch-zoom;
+      cursor: grab;
+    }
+
+    .carousel-wrap.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .carousel-wrap.is-dragging .carousel-slide img {
+      pointer-events: none;
     }
 
     .carousel-track {
@@ -369,10 +575,20 @@
     }
 
     .slot-label {
-      flex: 0 0 52px;
-      font-size: 0.85rem;
+      flex: 0 0 2.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 6px 0;
+      font-size: 0.8rem;
       font-weight: 600;
+      font-variant-numeric: tabular-nums;
       color: var(--muted);
+      line-height: 1;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--bg-elevated);
     }
 
     .poster-badge {
@@ -576,16 +792,6 @@
     }
 
     @media (max-width: 640px) {
-      .site-header {
-        flex-wrap: wrap;
-      }
-
-      .nav-main {
-        width: 100%;
-        order: 3;
-        justify-content: flex-start;
-      }
-
       .slide-nowplaying {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -605,14 +811,67 @@
 </head>
 <body>
   <header class="site-header">
-    <a href="#" class="logo"><img src="images/logo.png" width="142" height="100" alt="55CINE 오오극장" decoding="async" /></a>
-    <nav class="nav-main" aria-label="주 메뉴">
-      <a href="#hero">영화</a>
-      <a href="#timetable">시간표</a>
-      <a href="#hero">이벤트</a>
-      <a href="#">오오프렌즈</a>
-    </nav>
-    <button type="button" class="btn-menu" aria-label="메뉴">MENU</button>
+    <div class="header-top">
+      <a href="#" class="logo"><img src="images/logo.png" width="142" height="100" alt="55CINE 오오극장" decoding="async" /></a>
+      <button type="button" class="btn-menu" id="gnbToggle" aria-controls="gnb-panel" aria-expanded="false" aria-label="메뉴 열기">MENU</button>
+      <div id="gnb-panel" class="gnb-panel">
+        <nav class="gnb" aria-label="주 메뉴">
+          <ul class="gnb-depth1-list">
+            <li class="gnb-item">
+              <a class="gnb-depth1" href="#">오오극장</a>
+              <div class="gnb-dropdown">
+                <ul class="gnb-depth2 gnb-dropdown-inner">
+                  <li><a href="#">오오극장 소개</a></li>
+                  <li><a href="#">관람 안내</a></li>
+                  <li><a href="#">멤버십</a></li>
+                  <li><a href="#">대관</a></li>
+                  <li><a href="#">오시는 길</a></li>
+                  <li><a href="#">공지사항</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="gnb-item">
+              <a class="gnb-depth1" href="#hero">상영작</a>
+              <div class="gnb-dropdown">
+                <ul class="gnb-depth2 gnb-dropdown-inner">
+                  <li><a href="#hero">현재 상영작</a></li>
+                  <li><a href="#">상영 예정작</a></li>
+                  <li><a href="#">지난 상영작</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="gnb-item">
+              <a class="gnb-depth1" href="#">예매</a>
+              <div class="gnb-dropdown">
+                <ul class="gnb-depth2 gnb-dropdown-inner">
+                  <li><a href="#">예매하기</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="gnb-item">
+              <a class="gnb-depth1" href="#">기획전·행사</a>
+              <div class="gnb-dropdown">
+                <ul class="gnb-depth2 gnb-dropdown-inner">
+                  <li><a href="#">기획전</a></li>
+                  <li><a href="#">행사</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="gnb-item">
+              <a class="gnb-depth1" href="#">매거진 삼삼오오</a>
+              <div class="gnb-dropdown">
+                <ul class="gnb-depth2 gnb-dropdown-inner">
+                  <li><a href="#">프리뷰</a></li>
+                  <li><a href="#">연재</a></li>
+                  <li><a href="#">GV 모먼트</a></li>
+                  <li><a href="#">지난 기사</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -720,6 +979,49 @@
 
   <script>
     (function () {
+      const gnbToggle = document.getElementById("gnbToggle");
+      const gnbPanel = document.getElementById("gnb-panel");
+      if (gnbToggle && gnbPanel) {
+        gnbToggle.addEventListener("click", function () {
+          var open = gnbPanel.classList.toggle("is-open");
+          gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
+          gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+          if (!open) {
+            gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+              li.classList.remove("is-open");
+            });
+          }
+        });
+        gnbPanel.querySelectorAll(".gnb-depth2 a").forEach(function (a) {
+          a.addEventListener("click", function () {
+            if (window.matchMedia("(max-width: 900px)").matches) {
+              gnbPanel.classList.remove("is-open");
+              gnbToggle.setAttribute("aria-expanded", "false");
+              gnbToggle.setAttribute("aria-label", "메뉴 열기");
+              gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+                li.classList.remove("is-open");
+              });
+            }
+          });
+        });
+      }
+
+      document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
+        depth1.addEventListener("click", function (e) {
+          if (!window.matchMedia("(max-width: 900px)").matches) return;
+          var panel = document.getElementById("gnb-panel");
+          if (!panel || !panel.classList.contains("is-open")) return;
+          var item = depth1.closest(".gnb-item");
+          if (!item || !item.querySelector(".gnb-dropdown")) return;
+          e.preventDefault();
+          var wasOpen = item.classList.contains("is-open");
+          document.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+            li.classList.remove("is-open");
+          });
+          if (!wasOpen) item.classList.add("is-open");
+        });
+      });
+
       const MOVIE_IMAGES = [
         "images/movie001.jpg",
         "images/movie002.jpg",
@@ -730,9 +1032,24 @@
 
       /* Carousel */
       const track = document.getElementById("carouselTrack");
+      const carouselWrap = track.parentElement;
       const dotsWrap = document.getElementById("carouselDots");
       const slides = track.querySelectorAll(".carousel-slide");
       let slideIndex = 0;
+      let carouselTimer = null;
+
+      function pauseCarouselAuto() {
+        if (carouselTimer) {
+          clearInterval(carouselTimer);
+          carouselTimer = null;
+        }
+      }
+
+      function resumeCarouselAutoIfAllowed() {
+        if (carouselWrap.matches(":hover")) return;
+        pauseCarouselAuto();
+        carouselTimer = setInterval(function () { goTo(slideIndex + 1); }, 6000);
+      }
 
       slides.forEach(function (_, i) {
         const b = document.createElement("button");
@@ -761,12 +1078,66 @@
       });
 
       goTo(0);
+      resumeCarouselAutoIfAllowed();
 
-      let carouselTimer = setInterval(function () { goTo(slideIndex + 1); }, 6000);
-      track.parentElement.addEventListener("mouseenter", function () { clearInterval(carouselTimer); });
-      track.parentElement.addEventListener("mouseleave", function () {
-        carouselTimer = setInterval(function () { goTo(slideIndex + 1); }, 6000);
-      });
+      carouselWrap.addEventListener("mouseenter", pauseCarouselAuto);
+      carouselWrap.addEventListener("mouseleave", resumeCarouselAutoIfAllowed);
+
+      /* PC: 마우스 드래그 · 모바일: 터치 스와이프 (Pointer Events) */
+      var SWIPE_THRESHOLD_PX = 48;
+      var dragPointerId = null;
+      var dragStartX = 0;
+      var dragLastX = 0;
+      var dragActive = false;
+
+      function onCarouselPointerDown(e) {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        if (e.target.closest && e.target.closest(".carousel-arrows button")) return;
+        dragPointerId = e.pointerId;
+        dragStartX = dragLastX = e.clientX;
+        dragActive = true;
+        pauseCarouselAuto();
+        track.style.transition = "none";
+        carouselWrap.classList.add("is-dragging");
+        try {
+          carouselWrap.setPointerCapture(e.pointerId);
+        } catch (err) {}
+      }
+
+      function onCarouselPointerMove(e) {
+        if (!dragActive || e.pointerId !== dragPointerId) return;
+        dragLastX = e.clientX;
+        var w = carouselWrap.offsetWidth || 1;
+        var pct = -slideIndex * 100 + ((dragLastX - dragStartX) / w) * 100;
+        track.style.transform = "translateX(" + pct + "%)";
+        if (e.pointerType === "touch" && Math.abs(dragLastX - dragStartX) > 8) {
+          e.preventDefault();
+        }
+      }
+
+      function onCarouselPointerUp(e) {
+        if (!dragActive || e.pointerId !== dragPointerId) return;
+        var dx = dragLastX - dragStartX;
+        dragActive = false;
+        dragPointerId = null;
+        track.style.transition = "";
+        carouselWrap.classList.remove("is-dragging");
+        try {
+          carouselWrap.releasePointerCapture(e.pointerId);
+        } catch (err2) {}
+        if (Math.abs(dx) >= SWIPE_THRESHOLD_PX) {
+          if (dx < 0) goTo(slideIndex + 1);
+          else goTo(slideIndex - 1);
+        } else {
+          goTo(slideIndex);
+        }
+        resumeCarouselAutoIfAllowed();
+      }
+
+      carouselWrap.addEventListener("pointerdown", onCarouselPointerDown);
+      carouselWrap.addEventListener("pointermove", onCarouselPointerMove, { passive: false });
+      carouselWrap.addEventListener("pointerup", onCarouselPointerUp);
+      carouselWrap.addEventListener("pointercancel", onCarouselPointerUp);
 
       /* 이번 주 시간표: 제공 이미지 기준 정적 데이터 */
       const WEEK_SCHEDULE = [
@@ -913,11 +1284,11 @@
             ? '<span class="movie-status-badge ' + titleInfo.badgeClass + '">' + titleInfo.badgeLabel + "</span>"
             : "";
           row.innerHTML =
-            '<span class="slot-label">' + (entryIndex + 1) + "회차</span>" +
+            '<span class="slot-label" aria-label="' + (entryIndex + 1) + '회차">' + (entryIndex + 1) + "</span>" +
             '<img class="poster-badge" src="' + poster + '" alt="' + entry.title + ' 포스터" width="52" height="52" />' +
             '<span class="movie-title"><span class="movie-title-text">' + titleInfo.cleanTitle + "</span>" + badgeHtml + "</span>" +
             '<span class="time-pill">' + entry.time + "</span>" +
-            '<button type="button" class="booking-btn" aria-label="' + entry.title + " " + entry.time + ' 예매하기">예매하기</button>';
+            '<button type="button" class="booking-btn" aria-label="' + entry.title + " " + entry.time + ' 예매하기">예매</button>';
           panel.appendChild(row);
         });
         panelsWrap.appendChild(panel);
