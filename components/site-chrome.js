@@ -66,10 +66,10 @@
     "</div>" +
     "</li>" +
     '<li class="gnb-item">' +
-    '<a class="gnb-depth1" href="#">기획전·행사</a>' +
+    '<a class="gnb-depth1" href="special-exhibition.html">기획전·행사</a>' +
     '<div class="gnb-dropdown">' +
     '<ul class="gnb-depth2 gnb-dropdown-inner">' +
-    '<li><a href="#">기획전</a></li>' +
+    '<li><a href="special-exhibition.html">기획전</a></li>' +
     '<li><a href="#">행사</a></li>' +
     "</ul>" +
     "</div>" +
