@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오시는 길 — 55CINE 오오극장</title>
+  <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Asta+Sans:wght@400;500;600;700&family=Do+Hyeon&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin />
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css" />
+  <link rel="stylesheet" href="components/site-common.css" />
+  <style>
+    :root {
+      --site-font-family: "Noto Sans KR", system-ui, sans-serif;
+      --brand-gold: #f0ab2a;
+      --brand-gold-mid: #ca9128;
+      --brand-gold-soft: #f5d78a;
+      --brand-bronze: #8b6e3e;
+      --brand-bronze-deep: #5c4a2e;
+      --brand-ink: #1c1610;
+      --brand-walnut: #4a3d27;
+      --bg: #faf8f4;
+      --bg-elevated: #ffffff;
+      --text: var(--brand-ink);
+      --muted: #6b5d48;
+      --line: #e8e2d6;
+      --pill-bg: #f3efe6;
+      --accent: var(--brand-gold);
+      --accent-hover: #d99920;
+      --accent-secondary: var(--brand-bronze);
+      --shadow: rgba(28, 22, 16, 0.12);
+      --radius: 15px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--site-font-family);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .font-test-select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    main {
+      background: var(--bg-elevated);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .btn-menu:hover {
+      border-color: var(--brand-bronze);
+      color: var(--brand-bronze-deep);
+    }
+    }
+
+    .page-direction {
+      padding: 28px 24px 56px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .page-direction h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 0 0 20px;
+      color: var(--brand-walnut);
+    }
+
+    .map-block {
+      margin: 0 0 22px;
+      padding: 20px;
+      text-align: center;
+      background: var(--pill-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+    }
+
+    .map-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--brand-ink);
+      background: linear-gradient(145deg, var(--brand-gold) 0%, var(--brand-gold-mid) 100%);
+      box-shadow: 0 4px 16px var(--shadow);
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .map-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+
+    .map-cta:focus-visible {
+      outline: 2px solid var(--brand-walnut);
+      outline-offset: 3px;
+    }
+
+    .direction-address {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.55;
+      color: var(--brand-walnut);
+    }
+
+    .direction-phone {
+      margin: 0 0 28px;
+      font-size: 0.95rem;
+    }
+
+    .direction-phone a {
+      color: var(--accent-secondary);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .transport {
+      margin: 0;
+      padding: 20px 18px;
+      background: linear-gradient(180deg, var(--bg-elevated) 0%, color-mix(in srgb, var(--pill-bg) 35%, var(--bg-elevated)) 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--brand-gold-mid);
+    }
+
+    .transport-heading {
+      margin: 0 0 16px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--brand-walnut);
+    }
+
+    .transport-block {
+      margin: 0 0 18px;
+    }
+
+    .transport-block:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .transport-block h3 {
+      margin: 0 0 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--brand-bronze-deep);
+    }
+
+    .transport-block p {
+      margin: 0 0 8px;
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .transport-block p:last-child {
+      margin-bottom: 0;
+    }
+
+    .transport-block strong {
+      color: var(--brand-walnut);
+      font-weight: 600;
+    }
+
+    .parking-note {
+      margin: 18px 0 0;
+      padding: 12px 14px;
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--brand-gold-soft) 18%, var(--bg-elevated));
+      border-radius: 8px;
+      border: 1px solid color-mix(in srgb, var(--brand-gold) 28%, transparent);
+    }
+
+    @media (max-width: 640px) {
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header-mount"></div>
+
+  <main>
+    <article class="page-direction" id="osinneun-gil" aria-labelledby="direction-title">
+      <h1 id="direction-title">오시는길</h1>
+
+      <section class="map-block" aria-label="네이버 지도">
+        <a class="map-cta" href="https://naver.me/G4W5AtEn" target="_blank" rel="noopener noreferrer">네이버 지도에서 위치 보기</a>
+      </section>
+
+      <p class="direction-address">대구광역시 중구 국채보상로 537 (수동 1-6번지), 곽병원과 만경관 사이</p>
+      <p class="direction-phone">T. <a href="tel:0534253553">053 425 3553</a></p>
+
+      <section class="transport" aria-labelledby="transport-title">
+        <h2 class="transport-heading" id="transport-title">■ 대중교통</h2>
+
+        <div class="transport-block">
+          <h3>♦ 버스</h3>
+          <p><strong>곽병원</strong>(앞1, 앞2, 건너) 156, 309, 425, 508, 521, 600, 623, 724, 909, 939, 급행1, 급행3, 동구2</p>
+          <p><strong>만경관</strong>(앞, 건너) 323, 400, 400-1, 427, 939, 동구2, 북구3</p>
+          <p><strong>호텔아미고 뒤</strong> 651, 653</p>
+        </div>
+
+        <div class="transport-block">
+          <h3>♦ 지하철과 도보</h3>
+          <p>지하철 1호선 중앙로역 (지하철출구 아님) 대현프리몰 1번 출구로 나와서 곽병원 방면 대로로 400미터(도보로 5분)</p>
+        </div>
+
+        <p class="parking-note">※ 주차장이 따로 마련되어 있지 않습니다. 대중교통을 이용해 주세요.</p>
+      </section>
+    </article>
+  </main>
+
+  <div id="site-footer-mount"></div>
+
+  <script defer src="components/site-chrome.js"></script>
+  <script defer src="components/site-font-switcher.js"></script>
+  <script defer src="components/scroll-top.js"></script>
+  <script>
+    (function () {
+      function initGnb() {
+        var gnbToggle = document.getElementById("gnbToggle");
+        var gnbPanel = document.getElementById("gnb-panel");
+        if (gnbToggle && gnbPanel) {
+          gnbToggle.addEventListener("click", function () {
+            var open = gnbPanel.classList.toggle("is-open");
+            gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
+            gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+            if (!open) {
+              gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+                li.classList.remove("is-open");
+              });
+            }
+          });
+          gnbPanel.querySelectorAll(".gnb-depth2 a").forEach(function (a) {
+            a.addEventListener("click", function () {
+              if (window.matchMedia("(max-width: 900px)").matches) {
+                gnbPanel.classList.remove("is-open");
+                gnbToggle.setAttribute("aria-expanded", "false");
+                gnbToggle.setAttribute("aria-label", "메뉴 열기");
+                gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+                  li.classList.remove("is-open");
+                });
+              }
+            });
+          });
+        }
+
+        document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
+          depth1.addEventListener("click", function (e) {
+            if (!window.matchMedia("(max-width: 900px)").matches) return;
+            var panel = document.getElementById("gnb-panel");
+            if (!panel || !panel.classList.contains("is-open")) return;
+            var item = depth1.closest(".gnb-item");
+            if (!item || !item.querySelector(".gnb-dropdown")) return;
+            e.preventDefault();
+            var wasOpen = item.classList.contains("is-open");
+            document.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+              li.classList.remove("is-open");
+            });
+            if (!wasOpen) item.classList.add("is-open");
+          });
+        });
+      }
+
+      var needsSiteChrome = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
+      if (needsSiteChrome) {
+        document.addEventListener("sitechrome:ready", initGnb, { once: true });
+        document.addEventListener("sitechrome:error", initGnb, { once: true });
+      } else {
+        initGnb();
+      }
+    })();
+  </script>
+</body>
+</html>

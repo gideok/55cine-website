@@ -38,11 +38,11 @@
     '<a class="gnb-depth1" href="#">오오극장</a>' +
     '<div class="gnb-dropdown">' +
     '<ul class="gnb-depth2 gnb-dropdown-inner">' +
-    '<li><a href="#">오오극장 소개</a></li>' +
+    '<li><a href="theater-info.html">오오극장 소개</a></li>' +
     '<li><a href="#">관람 안내</a></li>' +
     '<li><a href="#">멤버십</a></li>' +
     '<li><a href="daegwan.html">대관</a></li>' +
-    '<li><a href="#">오시는 길</a></li>' +
+    '<li><a href="osinneun-gil.html">오시는 길</a></li>' +
     '<li><a href="#">공지사항</a></li>' +
     "</ul>" +
     "</div>" +
@@ -75,10 +75,10 @@
     "</div>" +
     "</li>" +
     '<li class="gnb-item">' +
-    '<a class="gnb-depth1" href="#">매거진 삼삼오오</a>' +
+    '<a class="gnb-depth1" href="magazine-preview.html">매거진 삼삼오오</a>' +
     '<div class="gnb-dropdown">' +
     '<ul class="gnb-depth2 gnb-dropdown-inner">' +
-    '<li><a href="#">프리뷰</a></li>' +
+    '<li><a href="magazine-preview.html">프리뷰</a></li>' +
     '<li><a href="#">연재</a></li>' +
     '<li><a href="#">GV 모먼트</a></li>' +
     '<li><a href="#">지난 기사</a></li>' +

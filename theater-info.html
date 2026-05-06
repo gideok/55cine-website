@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>극장 안내 — 55CINE 오오극장</title>
+  <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Asta+Sans:wght@400;500;600;700&family=Do+Hyeon&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin />
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css" />
+  <link rel="stylesheet" href="components/site-common.css" />
+  <style>
+    :root {
+      --site-font-family: "Noto Sans KR", system-ui, sans-serif;
+      --brand-gold: #f0ab2a;
+      --brand-gold-mid: #ca9128;
+      --brand-gold-soft: #f5d78a;
+      --brand-bronze: #8b6e3e;
+      --brand-bronze-deep: #5c4a2e;
+      --brand-ink: #1c1610;
+      --brand-walnut: #4a3d27;
+      --bg: #faf8f4;
+      --bg-elevated: #ffffff;
+      --text: var(--brand-ink);
+      --muted: #6b5d48;
+      --line: #e8e2d6;
+      --pill-bg: #f3efe6;
+      --accent: var(--brand-gold);
+      --accent-hover: #d99920;
+      --accent-secondary: var(--brand-bronze);
+      --shadow: rgba(28, 22, 16, 0.12);
+      --radius: 15px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--site-font-family);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .font-test-select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    main {
+      background: var(--bg-elevated);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .btn-menu:hover {
+      border-color: var(--brand-bronze);
+      color: var(--brand-bronze-deep);
+    }
+    }
+
+    .page-theater {
+      padding: 28px 24px 56px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .page-theater h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 0 0 20px;
+      color: var(--brand-walnut);
+    }
+
+    .theater-lead-img {
+      margin: 0 0 28px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 8px 28px var(--shadow);
+      line-height: 0;
+    }
+
+    .theater-lead-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .intro-points {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    .intro-points > li {
+      padding: 18px 18px 18px 16px;
+      background: linear-gradient(180deg, var(--bg-elevated) 0%, color-mix(in srgb, var(--pill-bg) 40%, var(--bg-elevated)) 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--brand-gold-mid);
+      box-shadow: 0 4px 14px var(--shadow);
+    }
+
+    .intro-points h2 {
+      margin: 0 0 10px;
+      font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+      font-weight: 700;
+      color: var(--brand-walnut);
+      line-height: 1.35;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .intro-points__n {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.75rem;
+      height: 1.75rem;
+      margin-top: 0.1em;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--brand-ink);
+      background: linear-gradient(145deg, var(--brand-gold) 0%, var(--brand-gold-mid) 100%);
+    }
+
+    .intro-points p {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    @media (max-width: 640px) {
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header-mount"></div>
+
+  <main>
+    <article class="page-theater" id="theater-info" aria-labelledby="theater-info-title">
+      <h1 id="theater-info-title">극장안내</h1>
+
+      <figure class="theater-lead-img">
+        <img src="images/theater-info.jpg" width="960" height="540" alt="55CINE 오오극장 극장 안내" decoding="async" onerror="this.onerror=null;this.src='images/movie001.jpg';this.alt='55CINE 오오극장 극장 안내(이미지 준비 중)';" />
+      </figure>
+
+      <ol class="intro-points">
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">1</span> 지역 최초의 독립영화전용관!</h2>
+          <p>오오극장은 대구최초의 독립영화전용관이며 서울을 제외한 지역에서 최초로 설립되는 독립영화전용관입니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">2</span> 함께 만드는 공공의 영화관!</h2>
+          <p>오오극장은 독립영화에 갈증을 느끼는 사람들의 모금을 통해 설립되었습니다. 영리추구보다는 영화문화의 다양성과 그 저변을 확대해 나가는 공공의 영화관으로 자리매김 할 것입니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">3</span> 로컬시네마!</h2>
+          <p>오오극장은 극장상영의 기회가 상대적으로 적은 지역의 독립영화, 단편영화, 다큐멘터리 등을 가장 먼저, 집중적으로 선보이는 지역영화 중심의 영화관입니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">4</span> 커뮤니티시네마! 함께 만드는 상영시간표!</h2>
+          <p>오오극장은 ‘커뮤니티시네마’라는 기치를 내걸고 관객들 그리고 다양한 공동체들과 함께 상영 프로그램을 만들어가는 ‘영화공동체’를 지향합니다. 또한 감독과의 대화, 영화관련 세미나 등을 통해 관객들과 꾸준히 소통하고자 합니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">5</span> 시민제작자들과 함께하는 영화관!</h2>
+          <p>오오극장은 청소년, 주부, 노인, 장애인, 이주민 등 다양한 계층의 시민들이 만든 영상물과 영화들을 지속적으로 상영하는 문턱 낮은 영화관입니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">6</span> 커뮤니티카페 삼삼다방</h2>
+          <p>오오극장은 커뮤니티카페 삼삼다방을 함께 운영합니다. 이곳은 영화인들과 관객들이 서로 교류하는 소통의 공간이자, 세미나, 시나리오 공유모임, 자유토론 등이 가능한 교육의 장이기도 합니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">7</span> 취향의 공동체! 다양한 취향을 담는 상상초월 기획전들!</h2>
+          <p>오오극장은 영화의 장르만큼이나 다양한 취향이 존중받고 공존하는 영화관입니다. 다큐멘터리, 애니메이션, 실험영화 등을 소개하는 프로그램을 통해 관객들의 다양한 취향을 담아내고자 합니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">8</span> 독립, 자립, 인디예술과 어울리는 영화관</h2>
+          <p>오오극장은 영화예술을 넘어 지역의 독립, 자립, 인디예술 공연과 전시가 펼쳐지는 지역예술의 대안공간이며, 다양한 저변문화의 정보를 얻고 예술가를 만날 수 있는 연결고리입니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">9</span> 무한한 가능성의 자유로운 영화관!</h2>
+          <p>오오극장은 예술의 본질인 표현의 자유가 최우선으로 존중받는 영화관입니다. 영화의 무한한 상상력과 가능성을 가로막는 그 무엇 혹은 그 누구로부터도 자유로운 영화관입니다.</p>
+        </li>
+        <li>
+          <h2><span class="intro-points__n" aria-hidden="true">10</span> 그리고 어떻게 성장할지 우리도 알 수 없는 영화관</h2>
+          <p>퀴퀴한 시네마테크, 대사관 강당, 3류 극장 구석의 곰팡이와 동무하며 무럭무럭 자라난 독립영화는 한국영화의 중요한 밑거름이 되었습니다. 오오극장은 대구시 중구 수동에서 자그마하게 시작하지만 대구를 넘어 한국 영화문화의 발전에 있어 소중한 밑거름이 되도록 노력할 것입니다.</p>
+        </li>
+      </ol>
+    </article>
+  </main>
+
+  <div id="site-footer-mount"></div>
+
+  <script defer src="components/site-chrome.js"></script>
+  <script defer src="components/site-font-switcher.js"></script>
+  <script defer src="components/scroll-top.js"></script>
+  <script>
+    (function () {
+      function initGnb() {
+        var gnbToggle = document.getElementById("gnbToggle");
+        var gnbPanel = document.getElementById("gnb-panel");
+        if (gnbToggle && gnbPanel) {
+          gnbToggle.addEventListener("click", function () {
+            var open = gnbPanel.classList.toggle("is-open");
+            gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
+            gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+            if (!open) {
+              gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+                li.classList.remove("is-open");
+              });
+            }
+          });
+          gnbPanel.querySelectorAll(".gnb-depth2 a").forEach(function (a) {
+            a.addEventListener("click", function () {
+              if (window.matchMedia("(max-width: 900px)").matches) {
+                gnbPanel.classList.remove("is-open");
+                gnbToggle.setAttribute("aria-expanded", "false");
+                gnbToggle.setAttribute("aria-label", "메뉴 열기");
+                gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+                  li.classList.remove("is-open");
+                });
+              }
+            });
+          });
+        }
+
+        document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
+          depth1.addEventListener("click", function (e) {
+            if (!window.matchMedia("(max-width: 900px)").matches) return;
+            var panel = document.getElementById("gnb-panel");
+            if (!panel || !panel.classList.contains("is-open")) return;
+            var item = depth1.closest(".gnb-item");
+            if (!item || !item.querySelector(".gnb-dropdown")) return;
+            e.preventDefault();
+            var wasOpen = item.classList.contains("is-open");
+            document.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+              li.classList.remove("is-open");
+            });
+            if (!wasOpen) item.classList.add("is-open");
+          });
+        });
+      }
+
+      var needsSiteChrome = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
+      if (needsSiteChrome) {
+        document.addEventListener("sitechrome:ready", initGnb, { once: true });
+        document.addEventListener("sitechrome:error", initGnb, { once: true });
+      } else {
+        initGnb();
+      }
+    })();
+  </script>
+</body>
+</html>
