@@ -80,7 +80,7 @@
     '<ul class="gnb-depth2 gnb-dropdown-inner">' +
     '<li><a href="magazine-preview.html">프리뷰</a></li>' +
     '<li><a href="#">연재</a></li>' +
-    '<li><a href="#">GV 모먼트</a></li>' +
+    '<li><a href="gv-moment.html">GV 모먼트</a></li>' +
     '<li><a href="#">지난 기사</a></li>' +
     "</ul>" +
     "</div>" +
@@ -115,11 +115,52 @@
     });
   }
 
+  /**
+   * 헤더·푸터의 링크·이미지는 사이트 루트 기준이지만, 문자열상 상대경로만 두었기 때문에
+   * 서브폴더(예: gv/moment/*.html, special/exhibition/*.html)에서 열면 현재 디렉터리 기준으로
+   * 잘못 해석된다. components/site-chrome.js 의 부모 디렉터리를 사이트 루트로 보고 절대 URL로 고친다.
+   */
+  function getSiteRootHref() {
+    var scripts = document.getElementsByTagName("script");
+    var chromeSrc = "";
+    for (var i = scripts.length - 1; i >= 0; i--) {
+      if (scripts[i].src && scripts[i].src.indexOf("site-chrome.js") !== -1) {
+        chromeSrc = scripts[i].src;
+        break;
+      }
+    }
+    if (!chromeSrc) return "";
+    var scriptDir = new URL(".", chromeSrc);
+    var siteRoot = new URL("..", scriptDir);
+    var href = siteRoot.href;
+    return href.charAt(href.length - 1) === "/" ? href : href + "/";
+  }
+
+  function rewriteChromeRootRelativeUrls() {
+    var root = getSiteRootHref();
+    if (!root) return;
+    var nodes = document.querySelectorAll(".site-header a[href], .site-header img[src], .site-footer a[href], .site-footer img[src]");
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var attr = el.tagName === "A" ? "href" : "src";
+      var raw = el.getAttribute(attr);
+      if (!raw || raw === "#" || raw.charAt(0) === "#") continue;
+      if (/^[a-zA-Z][a-zA-Z0-9+\-.]*:/.test(raw)) continue;
+      if (raw.indexOf("//") === 0) continue;
+      try {
+        el.setAttribute(attr, new URL(raw, root).href);
+      } catch (err) {
+        /* noop */
+      }
+    }
+  }
+
   function applyChrome(headerHtml, footerHtml) {
     var hm = document.getElementById("site-header-mount");
     var fm = document.getElementById("site-footer-mount");
     if (hm && headerHtml) hm.outerHTML = headerHtml;
     if (fm && footerHtml) fm.outerHTML = footerHtml;
+    rewriteChromeRootRelativeUrls();
     document.dispatchEvent(new CustomEvent("sitechrome:ready"));
   }
 

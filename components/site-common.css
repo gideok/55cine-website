@@ -15,6 +15,24 @@
   --shadow: rgba(28, 22, 16, 0.12);
   --shadow-deep: rgba(28, 22, 16, 0.35);
   --radius-sm: 12px;
+  --radius: 14px;
+}
+
+/* 매거진/기획전 등 상세 본문·대표 이미지 */
+.detail-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.detail-cover img {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-sizing: border-box;
 }
 
 .visually-hidden {
