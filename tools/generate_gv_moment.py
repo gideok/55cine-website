@@ -1,5 +1,6 @@
 import html
 import json
+import re
 from io import BytesIO
 from pathlib import Path
 from urllib.parse import urljoin
@@ -18,6 +19,22 @@ DATA_PATH = ROOT / "data/gv-moment-data.js"
 
 IMG_DIR.mkdir(parents=True, exist_ok=True)
 DETAIL_DIR.mkdir(parents=True, exist_ok=True)
+
+_INLINE_FONT_FAMILY_DECL = re.compile(r"\s*font-family\s*:\s*[^;]+;?", re.I)
+
+
+def strip_inline_font_family_from_style_attrs(html_fragment: str) -> str:
+    """본문 HTML의 style 속성에서 font-family 만 제거 (맑은 고딕 등)."""
+
+    def scrub_attr(match):
+        content = match.group(1)
+        newc = _INLINE_FONT_FAMILY_DECL.sub("", content)
+        newc = re.sub(r";\s*;+", ";", newc).strip("; \t\r\n")
+        if newc:
+            return f' style="{newc}"'
+        return ""
+
+    return re.sub(r'\sstyle="([^"]*)"', scrub_attr, html_fragment)
 
 
 def fetch_category_items(limit=24):
@@ -102,6 +119,7 @@ def parse_article(item):
             for bad in container.select("script, style"):
                 bad.decompose()
             body_html = container.decode_contents().strip() or body_html
+            body_html = strip_inline_font_family_from_style_attrs(body_html)
 
         og_image = soup.select_one('meta[property="og:image"]')
         if og_image and og_image.get("content"):
@@ -127,7 +145,7 @@ def detail_template(title, date, thumb_rel, body_html, prev_card, next_card):
   <link rel="stylesheet" href="../../components/site-common.css" />
   <style>
     :root {{ --content-max:860px; --line:#e8e2d6; --bg:#faf8f4; --bg-elevated:#fff; --text:#1c1610; --muted:#6b5d48; --radius:14px; --shadow:rgba(28,22,16,.12); }}
-    * {{ box-sizing:border-box; }} body {{ margin:0; font-family:"Noto Sans KR",system-ui,sans-serif; color:var(--text); background:var(--bg); line-height:1.7; }}
+    * {{ box-sizing:border-box; }} body {{ margin:0; font-family:var(--site-font-family); color:var(--text); background:var(--bg); line-height:1.7; }}
     a {{ color:inherit; text-decoration:none; }} main {{ background:var(--bg-elevated); min-height:100vh; padding:32px 24px 56px; }}
     .detail-wrap {{ max-width:var(--content-max); margin:0 auto; }} .detail-kicker {{ margin:0 0 10px; font-size:.86rem; font-weight:700; color:var(--muted); }}
     .detail-title {{ margin:0; font-size:clamp(1.35rem,2.2vw,1.9rem); line-height:1.35; letter-spacing:-.02em; }}

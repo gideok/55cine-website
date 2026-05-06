@@ -1,5 +1,7 @@
+@import url("https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css");
+
 :root {
-  --site-font-family: "Noto Sans KR", system-ui, sans-serif;
+  --site-font-family: "Spoqa Han Sans Neo", sans-serif;
   --brand-gold: #f0ab2a;
   --brand-bronze: #8b6e3e;
   --brand-bronze-deep: #5c4a2e;
@@ -16,6 +18,22 @@
   --shadow-deep: rgba(28, 22, 16, 0.35);
   --radius-sm: 12px;
   --radius: 14px;
+}
+
+/* 스포카 한 산스 네오 웹폰트 가이드: 전역 font-family */
+*,
+*::before,
+*::after {
+  font-family: var(--site-font-family);
+}
+
+/*
+ * 티스토리 등에서 붙은 인라인 font-family(맑은 고딕 등)보다 우선.
+ * !important 로 일반 인라인 스타일보다 강함.
+ */
+.detail-body,
+.detail-body * {
+  font-family: var(--site-font-family) !important;
 }
 
 /* 매거진/기획전 등 상세 본문·대표 이미지 */
