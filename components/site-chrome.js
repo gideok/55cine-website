@@ -81,7 +81,7 @@
     '<div class="gnb-dropdown">' +
     '<ul class="gnb-depth2 gnb-dropdown-inner">' +
     '<li><a href="magazine-preview.html">프리뷰</a></li>' +
-    '<li><a href="#">연재</a></li>' +
+    '<li><a href=\"magazine-serial.html\">연재</a></li>' +
     '<li><a href="gv-moment.html">GV 모먼트</a></li>' +
     '<li><a href="#">지난 기사</a></li>' +
     "</ul>" +

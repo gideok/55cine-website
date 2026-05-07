@@ -171,7 +171,7 @@ def detail_template(title, date, thumb_rel, body_html, prev_card, next_card):
       <p class="detail-meta">{html.escape(date if date else "GV 모먼트")}</p>
       <figure class="detail-cover"><img src="../../{thumb_rel}" alt="{html.escape(title)} 썸네일" /></figure>
       <section class="detail-body">{body_html}</section>
-      <nav class="detail-nav" aria-label="GV 모먼트 상세 이동">
+      <nav class="detail-nav magazine-pn" aria-label="GV 모먼트 상세 이동">
         <a class="detail-back" href="../../gv-moment.html">← GV 모먼트 목록으로</a>
         <div class="pn-grid">{prev_card}{next_card}</div>
       </nav>
