@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>멤버십 · 후원 안내 — 55CINE 오오극장</title>
+  <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="components/site-common.css" />
+  <style>
+    :root {
+      --mbr-max: 820px;
+      --mbr-accent: #c45a12;
+      --mbr-accent-soft: color-mix(in srgb, #ff6600 22%, var(--pill-bg));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--site-font-family);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    main {
+      background: var(--bg-elevated);
+      min-height: 100vh;
+    }
+
+    .page-membership {
+      max-width: var(--mbr-max);
+      margin: 0 auto;
+      padding: 32px 22px 64px;
+    }
+
+    .mbr-header {
+      margin-bottom: 28px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mbr-kicker {
+      margin: 0 0 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--brand-bronze);
+    }
+
+    .mbr-title {
+      margin: 0;
+      font-size: clamp(1.45rem, 3.2vw, 2.05rem);
+      font-weight: 800;
+      line-height: 1.28;
+      letter-spacing: -0.03em;
+      color: var(--brand-ink);
+    }
+
+    .mbr-title span {
+      display: block;
+      font-weight: 700;
+      font-size: 0.92em;
+      color: var(--brand-bronze-deep);
+      margin-top: 0.2em;
+    }
+
+    .mbr-hero {
+      margin: 0 0 32px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 10px 36px var(--shadow);
+      line-height: 0;
+      border: 1px solid var(--line);
+    }
+
+    .mbr-hero img {
+      width: 100%;
+      height: auto;
+      display: block;
+      vertical-align: middle;
+    }
+
+    .mbr-section {
+      margin-bottom: 2.1rem;
+    }
+
+    .mbr-section h2 {
+      margin: 0 0 14px;
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--brand-walnut);
+      padding-bottom: 8px;
+      border-bottom: 2px solid color-mix(in srgb, var(--brand-gold) 55%, var(--line));
+    }
+
+    .mbr-section h3 {
+      margin: 1.6rem 0 10px;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--brand-ink);
+    }
+
+    .mbr-section p {
+      margin: 0 0 14px;
+      font-size: 1rem;
+      color: color-mix(in srgb, var(--text) 92%, var(--muted));
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    .mbr-divider {
+      height: 1px;
+      margin: 2rem 0;
+      border: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--brand-bronze) 35%, var(--line)) 20%,
+        color-mix(in srgb, var(--brand-gold) 40%, var(--line)) 50%,
+        color-mix(in srgb, var(--brand-bronze) 35%, var(--line)) 80%,
+        transparent
+      );
+    }
+
+    .mbr-values {
+      margin: 0;
+      padding: 0 0 0 1.1rem;
+      list-style: none;
+    }
+
+    .mbr-values li {
+      position: relative;
+      margin-bottom: 12px;
+      padding-left: 1.15rem;
+      font-size: 0.98rem;
+      font-weight: 500;
+      color: var(--brand-ink);
+    }
+
+    .mbr-values li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-gold), var(--brand-bronze));
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-gold) 25%, transparent);
+    }
+
+    .mbr-tier-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 18px 0 22px;
+    }
+
+    @media (max-width: 640px) {
+      .mbr-tier-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mbr-tier {
+      padding: 18px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: linear-gradient(
+        160deg,
+        var(--bg-elevated),
+        color-mix(in srgb, var(--pill-bg) 65%, var(--bg-elevated))
+      );
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+
+    .mbr-tier h3 {
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1.35;
+      color: var(--mbr-accent);
+    }
+
+    .mbr-tier p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .mbr-infographic {
+      margin: 8px 0 28px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 28px var(--shadow);
+      line-height: 0;
+    }
+
+    .mbr-infographic img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .mbr-perks {
+      margin: 0;
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--pill-bg) 88%, var(--bg-elevated));
+      border: 1px dashed color-mix(in srgb, var(--brand-bronze) 25%, var(--line));
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .mbr-perks strong {
+      color: var(--brand-ink);
+    }
+
+    .mbr-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mbr-ext {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: var(--bg-elevated);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: border-color 0.15s, box-shadow 0.15s, color 0.15s;
+    }
+
+    .mbr-ext::before {
+      content: "→";
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--brand-gold) 22%, var(--pill-bg));
+      color: var(--brand-bronze-deep);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .mbr-ext:hover {
+      border-color: color-mix(in srgb, var(--brand-gold) 45%, var(--line));
+      box-shadow: 0 6px 20px var(--shadow);
+      color: var(--brand-bronze-deep);
+    }
+
+    .mbr-disclosure {
+      margin-top: 2rem;
+      padding: 20px 18px;
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--brand-bronze-deep) 6%, var(--pill-bg));
+      border-left: 4px solid var(--brand-bronze);
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .mbr-disclosure strong {
+      color: var(--brand-ink);
+    }
+
+    .mbr-drive {
+      display: inline-flex;
+      margin-top: 14px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: var(--brand-ink);
+      color: #fff;
+      border: 1px solid var(--brand-ink);
+      transition: background 0.15s, transform 0.12s;
+    }
+
+    .mbr-drive:hover {
+      background: var(--brand-bronze-deep);
+      transform: translateY(-1px);
+    }
+
+    .mbr-source {
+      margin-top: 2.5rem;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .mbr-source a {
+      color: var(--brand-bronze);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header-mount"></div>
+  <main>
+    <article class="page-membership">
+      <header class="mbr-header">
+        <p class="mbr-kicker">오오극장 · 멤버십</p>
+        <h1 class="mbr-title">
+          대구경북영화영상사회적협동조합
+          <span>오오극장 후원 안내</span>
+        </h1>
+      </header>
+
+      <figure class="mbr-hero">
+        <img
+          src="images/membership/membership_hero.jpg"
+          width="970"
+          height="600"
+          alt="대구경북영화영상사회적협동조합과 오오극장 후원 안내를 소개하는 이미지"
+          decoding="async"
+        />
+      </figure>
+
+      <section class="mbr-section" aria-labelledby="mbr-about-co">
+        <h2 id="mbr-about-co">대구경북영화영상사회적협동조합</h2>
+        <p>
+          대구경북영화영상사회적협동조합은 2015년 대구경북영화영상협동조합으로 출범해 지역 최초의 독립영화전용관 오오극장을 설립·운영해 오고 있으며, 지역 영화·영상 문화의 다양성과 저변 확대를 위해 노력하고 있습니다. 현재는 비영리법인인 대구경북영화영상사회적협동조합으로 전환하여 대구영상미디어센터 위탁운영 등 공공적 활동을 더욱 확대해 나가고 있습니다.
+        </p>
+        <p>
+          지역 관객의 다양한 볼 권리 향상을 위한 독립영화전용관 오오극장, 지역 주민들의 영화·영상 문화 이해와 교육을 위한 대구영상미디어센터 그리고 영화·영상 제작 및 배급, 관련 서적 출판, 갤러리 운영까지 지역의 영화·영상 생태계가 보다 활성화될 수 있도록 대구경북영화영상사회적협동조합이 힘을 보태겠습니다.
+        </p>
+      </section>
+
+      <section class="mbr-section" aria-labelledby="mbr-about-theater">
+        <h2 id="mbr-about-theater">오오극장</h2>
+        <p>
+          오오극장은 2015년 2월 개관한 지역 최초의 민간 독립영화전용관입니다. 55석의 작은 영화관인 오오극장은 독립영화 상영뿐만 아니라, 지역 공동체와 함께하는 상영회, 비평 강좌, 제작 교육 등을 진행하면서 지역에 보다 다양한 영화문화가 뿌리내릴 수 있도록 그 역할을 해 오고 있습니다. 그 과정에서 정부의 독립영화전용관 지원 사업에서 배제되는 등 어려움도 있었지만, 독립영화를 사랑하고 오오극장이라는 공간을 아껴 주시는 많은 분들을 만날 수 있었습니다. 그것은 아주 소중한 경험이었고, 오오극장이 한 걸음 더 나은 미래를 향해 나아갈 수 있는 원동력이 되고 있습니다. 오오극장과 함께해 주신 그 소중한 걸음에 다시 한번 감사드리며, 앞으로도 오오극장의 든든한 버팀목이 되어 주시길 바랍니다.
+        </p>
+      </section>
+
+      <hr class="mbr-divider" />
+
+      <section class="mbr-section" aria-labelledby="mbr-meaning">
+        <h2 id="mbr-meaning">오오극장 후원인이 된다는 것은</h2>
+        <ul class="mbr-values">
+          <li>영화문화 다양성을 확대하는 일입니다.</li>
+          <li>독립문화·소수문화를 지키는 일입니다.</li>
+          <li>다양한 취향을 존중하는 일입니다.</li>
+          <li>대기업 멀티플렉스가 아닌, 지역의 영화관을 응원하는 일입니다.</li>
+          <li>영화 창작자들의 미래를 응원하는 일입니다.</li>
+        </ul>
+      </section>
+
+      <hr class="mbr-divider" />
+
+      <section class="mbr-section" aria-labelledby="mbr-if-donate">
+        <h2 id="mbr-if-donate">오오극장 후원인이 된다면</h2>
+
+        <div class="mbr-tier-grid">
+          <div class="mbr-tier">
+            <h3>정기 결제 후원인</h3>
+            <p>오오극장 멤버십 회원 혜택을 받으실 수 있습니다.</p>
+          </div>
+          <div class="mbr-tier">
+            <h3>일시 결제 후원인</h3>
+            <p>1회 후원인은 멤버십 회원이 아니며, 소정의 혜택을 받으실 수 있습니다.</p>
+          </div>
+        </div>
+
+        <figure class="mbr-infographic">
+          <img
+            src="images/membership/membership_benefits.jpg"
+            width="1050"
+            height="1050"
+            alt="멤버십·후원 혜택 안내 인포그래픽"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+
+        <div class="mbr-perks">
+          <p><strong>∎</strong> 영화 관람 시 1,000원 할인</p>
+          <p><strong>∎</strong> 삼삼다방 음료 1,000원 할인</p>
+          <p><strong>*</strong> 금액과 상관없이 1회 할인 적용</p>
+        </div>
+
+        <nav class="mbr-links" aria-label="후원 및 제보 관련 링크">
+          <a
+            class="mbr-ext"
+            href="https://www.ihappynanum.com/Nanum/nanum/banner/bridge/DG782YKOAT.nanum?memPayType=null&amp;loginOrga=null&amp;orgaId=null&amp;lang=null"
+            target="_blank"
+            rel="noopener noreferrer"
+          >후원인 CMS 링크</a>
+          <a class="mbr-ext" href="https://www.mcst.go.kr/kor/main.jsp" target="_blank" rel="noopener noreferrer">문화체육관광부</a>
+          <a class="mbr-ext" href="https://www.acrc.go.kr/acrc/index.do" target="_blank" rel="noopener noreferrer">국민권익위원회</a>
+          <a class="mbr-ext" href="https://www.nts.go.kr/nts/main.do" target="_blank" rel="noopener noreferrer">국세청</a>
+        </nav>
+
+        <h3 style="margin-top: 2rem">&lt;불만접수 &amp; 공익위반사항 제보&gt;</h3>
+        <p>위 기관 링크를 통해 관련 신고·상담을 이용하실 수 있습니다.</p>
+      </section>
+
+      <section class="mbr-section" aria-labelledby="mbr-disclosure-title">
+        <h2 id="mbr-disclosure-title" class="visually-hidden">기부금 공시</h2>
+        <div class="mbr-disclosure">
+          <p>
+            <strong>법인세법 시행령</strong> 제36조제5항, 제36조의2제8항, 시행규칙 제18조의2제1항에 따라 연간 기부금 모금액 및 활용실적 명세서를 공개합니다. 매년 기부금 모금액 및 활용실적을 홈페이지와 국세청 홈택스에 공개하고 있습니다. 앞으로 조합에 대한 지속적인 관심과 격려를 부탁드리겠습니다. 감사합니다.
+          </p>
+          <a
+            class="mbr-drive"
+            href="https://drive.google.com/file/d/1-raFkd2uR1Z63vDl5b_qnyPJ_uQGnuz_/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+          >2024년도 기부금 모금액 및 활용실적 명세서 확인</a>
+        </div>
+      </section>
+
+    </article>
+  </main>
+  <div id="site-footer-mount"></div>
+
+  <script defer src="components/site-chrome.js"></script>
+  <script defer src="components/site-font-switcher.js"></script>
+  <script defer src="components/scroll-top.js"></script>
+  <script>
+    (function () {
+      function initGnbMenu() {
+        var gnbToggle = document.getElementById("gnbToggle");
+        var gnbPanel = document.getElementById("gnb-panel");
+        if (!gnbToggle || !gnbPanel) return;
+        gnbToggle.addEventListener("click", function () {
+          var open = gnbPanel.classList.toggle("is-open");
+          gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
+          gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+          if (!open) {
+            gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+              li.classList.remove("is-open");
+            });
+          }
+        });
+        document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
+          depth1.addEventListener("click", function (event) {
+            if (!window.matchMedia("(max-width: 900px)").matches) return;
+            if (!gnbPanel.classList.contains("is-open")) return;
+            var item = depth1.closest(".gnb-item");
+            if (!item || !item.querySelector(".gnb-dropdown")) return;
+            event.preventDefault();
+            var wasOpen = item.classList.contains("is-open");
+            gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
+              li.classList.remove("is-open");
+            });
+            if (!wasOpen) item.classList.add("is-open");
+          });
+        });
+      }
+
+      var needs = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
+      if (needs) {
+        document.addEventListener("sitechrome:ready", initGnbMenu, { once: true });
+        document.addEventListener("sitechrome:error", initGnbMenu, { once: true });
+      } else {
+        initGnbMenu();
+      }
+    })();
+  </script>
+</body>
+</html>

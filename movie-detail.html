@@ -7,6 +7,7 @@
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="components/site-common.css" />
+  <link rel="stylesheet" href="components/movie-detail-layout.css" />
   <style>
     /*
      * 컬러 팔레트: images/logo.png 에서 불투명 픽셀 k-means(5) 추출 후
@@ -81,7 +82,6 @@
     .btn-menu:hover {
       border-color: var(--brand-bronze);
       color: var(--brand-bronze-deep);
-    }
     }
 
     /* Hero Carousel */
@@ -496,266 +496,7 @@
       border-radius: 2px;
     }
 
-    /* 영화 상세 (#영화상세페이지) */
-    .section-movie-detail {
-      padding: 8px 24px 48px;
-      max-width: 1040px;
-      margin: 0 auto;
-      scroll-margin-top: 88px;
-    }
-
-    .movie-detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
-      grid-template-areas:
-        "mdc1 mdc2"
-        "mdc3 mdc4";
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    .movie-detail-c1 {
-      grid-area: mdc1;
-    }
-
-    .movie-detail-c2 {
-      grid-area: mdc2;
-    }
-
-    .movie-detail-c3 {
-      grid-area: mdc3;
-    }
-
-    .movie-detail-c4 {
-      grid-area: mdc4;
-    }
-
-    .movie-detail-box {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
-      background: color-mix(in srgb, var(--bg-elevated) 88%, var(--pill-bg));
-    }
-
-    .movie-detail-c1 .movie-detail-box-inner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 16px;
-    }
-
-    .movie-detail-poster {
-      width: 260px;
-      height: 368px;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
-      border-radius: 8px;
-    }
-
-    .movie-detail-c2 .movie-detail-box-inner {
-      padding: 20px 22px;
-      height: 100%;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      box-sizing: border-box;
-      overflow-y: auto;
-    }
-
-    .movie-detail-meta {
-      margin: 0;
-      font-size: 0.92rem;
-      line-height: 1.65;
-      color: var(--text);
-    }
-
-    .movie-detail-meta .meta-row {
-      display: grid;
-      grid-template-columns: 3.5rem 1fr;
-      gap: 8px 12px;
-      margin: 0 0 12px;
-    }
-
-    .movie-detail-meta .meta-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .movie-detail-meta dt {
-      margin: 0;
-      font-weight: 700;
-      color: var(--muted);
-    }
-
-    .movie-detail-meta dd {
-      margin: 0;
-      font-weight: 500;
-    }
-
-    .movie-detail-c3 .movie-detail-box-inner {
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 280px;
-    }
-
-    .movie-detail-tabs {
-      display: flex;
-      gap: 0;
-      border-bottom: 1px solid var(--line);
-      padding: 0 8px;
-    }
-
-    .movie-detail-tab {
-      padding: 12px 18px;
-      border: none;
-      background: transparent;
-      font-family: inherit;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--muted);
-      cursor: pointer;
-      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-      margin-bottom: -1px;
-    }
-
-    .movie-detail-tab:hover {
-      color: var(--brand-ink);
-    }
-
-    .movie-detail-tab[aria-selected="true"] {
-      color: var(--brand-ink);
-      background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
-      border: 1px solid var(--line);
-      border-bottom-color: transparent;
-    }
-
-    .movie-detail-tab:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: -2px;
-    }
-
-    .movie-detail-tabpanel {
-      padding: 18px 20px 22px;
-      flex: 1;
-    }
-
-    .movie-detail-tabpanel[hidden] {
-      display: none;
-    }
-
-    .movie-detail-synopsis {
-      margin: 0;
-      font-size: 0.95rem;
-      line-height: 1.75;
-      color: var(--text);
-      white-space: pre-line;
-    }
-
-    .movie-detail-trailer-frame {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 8px;
-      background: var(--brand-ink);
-    }
-
-    .movie-detail-trailer-frame iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    .movie-detail-c4 .movie-detail-box-inner {
-      padding: 18px 20px 22px;
-    }
-
-    .movie-detail-schedule-title {
-      margin: 0 0 14px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--brand-ink);
-    }
-
-    .movie-detail-badge-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px 12px;
-    }
-
-    .movie-detail-time-badge {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 12px 10px;
-      border-radius: 10px;
-      border: 1px solid color-mix(in srgb, var(--line) 80%, var(--brand-bronze));
-      background: var(--bg-elevated);
-      font-size: 0.82rem;
-      font-weight: 600;
-      line-height: 1.45;
-      color: var(--text);
-    }
-
-    .movie-detail-time-badge .badge-date {
-      font-weight: 700;
-      color: var(--brand-walnut);
-      margin-bottom: 4px;
-    }
-
-    .movie-detail-time-badge .badge-time {
-      font-variant-numeric: tabular-nums;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    @media (min-width: 901px) {
-      .movie-detail-c1.movie-detail-box,
-      .movie-detail-c2.movie-detail-box {
-        height: 400px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .movie-detail-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "mdc1"
-          "mdc2"
-          "mdc3"
-          "mdc4";
-      }
-
-      .movie-detail-c1.movie-detail-box,
-      .movie-detail-c2.movie-detail-box {
-        height: auto;
-      }
-
-      .movie-detail-c1 .movie-detail-box-inner {
-        min-height: 260px;
-        padding: 20px;
-      }
-
-      .movie-detail-poster {
-        width: auto;
-        height: auto;
-        max-height: 320px;
-      }
-
-      .movie-detail-badge-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
+    /* 영화 상세 레이아웃은 components/movie-detail-layout.css */
 
     /* Menu cards */
     .section-menu {
@@ -851,6 +592,13 @@
                 <dd>2026.4.22</dd>
               </div>
             </dl>
+            <a
+              class="md2-booking-btn"
+              href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&amp;BrandCd=indieart&amp;CinemaCd=000059"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="르누아르 예매하기"
+            >예매하기</a>
           </div>
         </div>
         <div class="movie-detail-c3 movie-detail-box">
