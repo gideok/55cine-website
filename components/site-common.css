@@ -484,17 +484,19 @@ nav.magazine-pn .pn-card-empty {
 
 .footer-logo-box {
   flex-shrink: 0;
-  align-self: stretch;
+  align-self: flex-start;
   display: block;
   box-sizing: border-box;
   padding: 0;
   margin: 0;
   line-height: 0;
   border-radius: 2px;
-  background: whitesmoke;
+  background: #fff;
   overflow: hidden;
-  aspect-ratio: 526 / 948;
+  height: 300px;
   width: auto;
+  aspect-ratio: 377 / 211;
+  max-width: 100%;
 }
 
 .footer-logo-box img {
@@ -522,13 +524,14 @@ nav.magazine-pn .pn-card-empty {
     max-width: none;
     align-self: stretch;
     height: auto;
-    aspect-ratio: unset;
+    aspect-ratio: 377 / 211;
+    /* 이미지(211px 기준) 비율에 맞춰 높이가 자연스럽게 결정됨 */
   }
   .footer-logo-box img {
     width: 100%;
     height: auto;
     max-width: none;
-    max-height: none;
+    object-fit: contain;
   }
 }
 
