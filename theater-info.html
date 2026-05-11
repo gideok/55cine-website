@@ -283,9 +283,335 @@
       line-height: 1.65;
       color: color-mix(in srgb, var(--text) 94%, var(--muted));
     }
+
+    /* 전면 로고 인트로 (video 또는 CSS 대체) */
+    body.theater-intro-active {
+      overflow: hidden;
+    }
+
+    .theater-intro-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 10001;
+      background: #0e0c0a;
+      opacity: 1;
+      visibility: visible;
+      transition:
+        opacity 0.5s ease,
+        visibility 0.5s ease;
+    }
+
+    .theater-intro-skip {
+      position: absolute;
+      top: max(12px, env(safe-area-inset-top));
+      right: max(12px, env(safe-area-inset-right));
+      z-index: 2;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, #fff 35%, transparent);
+      background: rgba(28, 22, 16, 0.55);
+      color: #f5f0e8;
+      font-size: 0.82rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+
+    .theater-intro-skip:hover {
+      background: rgba(28, 22, 16, 0.75);
+    }
+
+    .theater-intro-skip:focus-visible {
+      outline: 2px solid var(--brand-gold);
+      outline-offset: 3px;
+    }
+
+    .theater-intro-layer.theater-intro-layer--exit {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .theater-intro-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      background: #000;
+    }
+
+    .theater-intro-fallback {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(ellipse 120% 80% at 50% 40%, #2a2218 0%, #0e0c0a 55%, #050403 100%);
+    }
+
+    .theater-intro-fallback:not([hidden]) {
+      display: flex;
+    }
+
+    .theater-intro-fallback__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: min(92vw, 420px);
+    }
+
+    .theater-intro-fallback:not([hidden]) .theater-intro-fallback__inner {
+      animation: theaterIntroFallbackSeq 7.433s cubic-bezier(0.33, 0.11, 0.25, 1) forwards;
+    }
+
+    .theater-intro-fallback__logo {
+      width: min(55vw, 220px);
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.45));
+    }
+
+    .theater-intro-fallback__brand {
+      margin: 16px 0 0;
+      font-size: clamp(1.55rem, 5vw, 2rem);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      background: linear-gradient(120deg, var(--brand-gold-soft) 0%, var(--brand-gold) 40%, var(--brand-gold-mid) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: 0;
+      animation: theaterIntroFallbackBrand 7.433s cubic-bezier(0.33, 0.11, 0.25, 1) forwards;
+    }
+
+    .theater-intro-fallback__tagline {
+      margin: 10px 0 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: color-mix(in srgb, var(--pill-bg) 88%, #fff);
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: theaterIntroFallbackTagline 7.433s cubic-bezier(0.33, 0.11, 0.25, 1) forwards;
+    }
+
+    @keyframes theaterIntroFallbackSeq {
+      0% {
+        opacity: 0;
+        transform: scale(0.85) translateY(12px);
+        filter: blur(10px);
+      }
+      14% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+      78% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes theaterIntroFallbackBrand {
+      0%,
+      10% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      22% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes theaterIntroFallbackTagline {
+      0%,
+      18% {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      30% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .theater-intro-fallback:not([hidden]) .theater-intro-fallback__inner,
+      .theater-intro-fallback__brand,
+      .theater-intro-fallback__tagline {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
   </style>
 </head>
 <body>
+  <div
+    id="theaterIntroLayer"
+    class="theater-intro-layer"
+    role="dialog"
+    aria-modal="true"
+    aria-label="오오극장 로고 애니메이션"
+    aria-live="polite"
+  >
+    <button type="button" class="theater-intro-skip" id="theaterIntroSkip">건너뛰기</button>
+    <video
+      id="theaterIntroVideo"
+      class="theater-intro-video"
+      src="logo-animation.mp4"
+      playsinline
+      muted
+      preload="auto"
+      title="오오극장 로고 애니메이션"
+    ></video>
+    <div id="theaterIntroFallback" class="theater-intro-fallback" hidden aria-hidden="true">
+      <div class="theater-intro-fallback__inner">
+        <img
+          class="theater-intro-fallback__logo"
+          src="images/logo.png"
+          width="284"
+          height="200"
+          alt=""
+          decoding="async"
+        />
+        <p class="theater-intro-fallback__brand">55CINE 오오극장</p>
+        <p class="theater-intro-fallback__tagline">독립영화전용관</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var layer = document.getElementById("theaterIntroLayer");
+      var video = document.getElementById("theaterIntroVideo");
+      var fallback = document.getElementById("theaterIntroFallback");
+      var skipBtn = document.getElementById("theaterIntroSkip");
+      var FALLBACK_MS = 7433;
+      var exitStarted = false;
+      var fallbackTimer = null;
+      var reduced =
+        window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function tearDownVideo() {
+        if (!video) return;
+        try {
+          video.pause();
+          video.removeAttribute("src");
+          video.load();
+        } catch (e) {}
+      }
+
+      function finishIntro() {
+        if (exitStarted || !layer) return;
+        if (fallbackTimer !== null) {
+          clearTimeout(fallbackTimer);
+          fallbackTimer = null;
+        }
+        exitStarted = true;
+        layer.classList.add("theater-intro-layer--exit");
+        document.body.classList.remove("theater-intro-active");
+        document.body.style.overflow = "";
+
+        function cleanup() {
+          layer.setAttribute("hidden", "");
+          layer.setAttribute("aria-hidden", "true");
+          tearDownVideo();
+        }
+
+        var done = false;
+        var onEnd = function (e) {
+          if (!e || (e.propertyName !== "opacity" && e.propertyName !== "visibility")) return;
+          if (done) return;
+          done = true;
+          layer.removeEventListener("transitionend", onEnd);
+          cleanup();
+        };
+        layer.addEventListener("transitionend", onEnd);
+        window.setTimeout(function () {
+          if (done) return;
+          done = true;
+          layer.removeEventListener("transitionend", onEnd);
+          cleanup();
+        }, 650);
+      }
+
+      if (!layer) return;
+
+      if (reduced) {
+        layer.setAttribute("hidden", "");
+        layer.setAttribute("aria-hidden", "true");
+        tearDownVideo();
+        return;
+      }
+
+      document.body.classList.add("theater-intro-active");
+      document.body.style.overflow = "hidden";
+
+      if (skipBtn) {
+        skipBtn.addEventListener("click", finishIntro);
+      }
+
+      document.addEventListener("keydown", function onIntroEscape(e) {
+        if (e.key !== "Escape") return;
+        if (exitStarted) return;
+        if (layer.hasAttribute("hidden")) return;
+        e.preventDefault();
+        finishIntro();
+      });
+
+      var fallbackUsed = false;
+
+      function showFallback() {
+        if (fallbackUsed || !fallback) return;
+        fallbackUsed = true;
+        if (video) {
+          video.style.display = "none";
+        }
+        fallback.removeAttribute("hidden");
+        fallback.setAttribute("aria-hidden", "false");
+        fallbackTimer = window.setTimeout(finishIntro, FALLBACK_MS);
+      }
+
+      if (video) {
+        video.addEventListener("ended", finishIntro);
+        video.addEventListener("error", showFallback);
+
+        var playTry = video.play();
+        if (playTry !== undefined && playTry.catch) {
+          playTry.catch(function () {
+            showFallback();
+          });
+        }
+
+        window.setTimeout(function () {
+          if (fallbackUsed) return;
+          if (video.error || (video.readyState === 0 && video.networkState === 3)) {
+            showFallback();
+          }
+        }, 1200);
+      } else {
+        showFallback();
+      }
+    })();
+  </script>
+
   <div id="site-header-mount"></div>
 
   <main>
