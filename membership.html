@@ -43,22 +43,11 @@
     }
 
     .mbr-header {
-      margin-bottom: 28px;
-      padding-bottom: 22px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .mbr-kicker {
-      margin: 0 0 10px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--brand-bronze);
+      margin-bottom: 24px;
     }
 
     .mbr-title {
-      margin: 0;
+      margin: 0 0 24px;
       font-size: clamp(1.45rem, 3.2vw, 2.05rem);
       font-weight: 800;
       line-height: 1.28;
@@ -322,13 +311,27 @@
   <div id="site-header-mount"></div>
   <main>
     <article class="page-membership">
-      <header class="mbr-header">
-        <p class="mbr-kicker">오오극장 · 멤버십</p>
-        <h1 class="mbr-title">
-          대구경북영화영상사회적협동조합
-          <span>오오극장 후원 안내</span>
-        </h1>
+      <header class="section-page-head mbr-header">
+        <div class="section-page-head__row">
+          <h1 class="section-page-head__title" id="membership-page-head-title">
+            <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">멤버십</span>
+          </h1>
+          <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+            <a href="theater-info.html">오오극장 소개</a>
+            <a href="viewing-guide.html">관람 안내</a>
+            <a href="membership.html" class="is-current" aria-current="page">멤버십</a>
+            <a href="daegwan.html">대관</a>
+            <a href="osinneun-gil.html">오시는 길</a>
+            <a href="#" class="is-placeholder" tabindex="-1" aria-disabled="true">공지사항</a>
+          </nav>
+        </div>
+        <div class="section-page-head__rule" role="presentation"></div>
       </header>
+
+      <h2 class="mbr-title" id="membership-hero-title">
+        대구경북영화영상사회적협동조합
+        <span>오오극장 후원 안내</span>
+      </h2>
 
       <figure class="mbr-hero">
         <img

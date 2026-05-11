@@ -73,19 +73,11 @@
       border-color: var(--brand-bronze);
       color: var(--brand-bronze-deep);
     }
-    }
 
     .page-theater {
       padding: 28px 24px 56px;
       max-width: 720px;
       margin: 0 auto;
-    }
-
-    .page-theater h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin: 0 0 20px;
-      color: var(--brand-walnut);
     }
 
     .theater-lead-img {
@@ -162,7 +154,22 @@
 
   <main>
     <article class="page-theater" id="theater-info" aria-labelledby="theater-info-title">
-      <h1 id="theater-info-title">극장안내</h1>
+      <header class="section-page-head">
+        <div class="section-page-head__row">
+          <h1 id="theater-info-title" class="section-page-head__title">
+            <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">오오극장 소개</span>
+          </h1>
+          <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+            <a href="theater-info.html" class="is-current" aria-current="page">오오극장 소개</a>
+            <a href="viewing-guide.html">관람 안내</a>
+            <a href="membership.html">멤버십</a>
+            <a href="daegwan.html">대관</a>
+            <a href="osinneun-gil.html">오시는 길</a>
+            <a href="#" class="is-placeholder" tabindex="-1" aria-disabled="true">공지사항</a>
+          </nav>
+        </div>
+        <div class="section-page-head__rule" role="presentation"></div>
+      </header>
 
       <figure class="theater-lead-img">
         <img src="images/theater-info.jpg" width="960" height="540" alt="55CINE 오오극장 극장 안내" decoding="async" onerror="this.onerror=null;this.src='images/movie001.jpg';this.alt='55CINE 오오극장 극장 안내(이미지 준비 중)';" />

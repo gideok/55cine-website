@@ -531,3 +531,106 @@ nav.magazine-pn .pn-card-empty {
     max-height: none;
   }
 }
+
+/* 매거진·오오극장 등 하위 페이지 공통 헤더 (상위·하단 제목 + 형제 메뉴 + 구분선 + 메타) */
+.section-page-head {
+  margin-bottom: 20px;
+}
+
+.section-page-head__row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 20px;
+  flex-wrap: wrap;
+}
+
+.section-page-head__title {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.1vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  color: var(--brand-ink);
+}
+
+.section-page-head__sep {
+  margin: 0 0.28em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.section-page-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px 8px;
+  max-width: 100%;
+}
+
+.section-page-subnav a {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  line-height: 1.2;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.section-page-subnav a:hover {
+  color: var(--brand-ink);
+  background: color-mix(in srgb, var(--pill-bg) 90%, var(--bg-elevated));
+  border-color: var(--line);
+}
+
+.section-page-subnav a.is-current {
+  color: #fff;
+  background: var(--brand-ink);
+  border-color: var(--brand-ink);
+}
+
+.section-page-subnav a.is-placeholder {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.section-page-head__rule {
+  margin: 12px 0 10px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  height: 0;
+}
+
+.section-page-head__meta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 1.4em;
+}
+
+.section-page-head__meta .result-count {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .section-page-head__row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .section-page-subnav {
+    justify-content: flex-start;
+  }
+}

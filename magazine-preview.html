@@ -43,26 +43,6 @@
       margin: 0 auto;
       padding: 32px 24px 56px;
     }
-    .page-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 14px;
-    }
-    .page-title {
-      margin: 0;
-      font-size: clamp(1.2rem, 2vw, 1.6rem);
-      font-weight: 700;
-    }
-    .result-count {
-      color: var(--muted);
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
     .toolbar {
       display: flex;
       justify-content: space-between;
@@ -212,10 +192,23 @@
 
   <main>
     <section class="preview-page" aria-labelledby="preview-page-title">
-      <div class="page-head">
-        <h1 id="preview-page-title" class="page-title">매거진 삼삼오오 - 프리뷰</h1>
-        <span class="result-count" id="resultCount"></span>
-      </div>
+      <header class="section-page-head">
+        <div class="section-page-head__row">
+          <h1 id="preview-page-title" class="section-page-head__title">
+            <span class="section-page-head__parent">매거진 삼삼오오</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">프리뷰</span>
+          </h1>
+          <nav class="section-page-subnav" aria-label="매거진 삼삼오오 하위 메뉴">
+            <a href="magazine-preview.html" class="is-current" aria-current="page">프리뷰</a>
+            <a href="magazine-serial.html">연재</a>
+            <a href="gv-moment.html">GV 모먼트</a>
+            <a href="#" class="is-placeholder" tabindex="-1" aria-disabled="true">지난 기사</a>
+          </nav>
+        </div>
+        <div class="section-page-head__rule" role="presentation"></div>
+        <div class="section-page-head__meta">
+          <span class="result-count" id="resultCount"></span>
+        </div>
+      </header>
 
       <div class="toolbar">
         <div class="view-mode" role="tablist" aria-label="목록 보기 방식">
