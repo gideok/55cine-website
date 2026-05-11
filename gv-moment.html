@@ -132,6 +132,20 @@
       height: 1px;
       visibility: hidden;
     }
+
+    @media (max-width: 425px) {
+      .gv-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .gv-title-wrap {
+        padding: 10px 8px 12px;
+        min-height: 0;
+      }
+      .gv-title {
+        font-size: 0.82rem;
+      }
+    }
   </style>
 </head>
 <body>

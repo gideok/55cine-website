@@ -131,6 +131,20 @@
       opacity: 0.45;
       cursor: default;
     }
+
+    @media (max-width: 425px) {
+      .special-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .special-title-wrap {
+        padding: 10px 8px 12px;
+        min-height: 0;
+      }
+      .special-title {
+        font-size: 0.82rem;
+      }
+    }
   </style>
 </head>
 <body>

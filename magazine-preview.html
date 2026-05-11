@@ -192,6 +192,19 @@
         grid-template-columns: 1fr;
       }
     }
+
+    @media (max-width: 425px) {
+      .preview-list.is-thumb {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .preview-list.is-thumb .preview-body {
+        padding: 10px 8px 12px;
+      }
+      .preview-list.is-thumb .preview-title-link {
+        font-size: 0.82rem;
+      }
+    }
   </style>
 </head>
 <body>

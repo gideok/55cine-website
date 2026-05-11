@@ -144,6 +144,23 @@
       height: 1px;
       visibility: hidden;
     }
+
+    @media (max-width: 425px) {
+      .serial-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .serial-title-wrap {
+        padding: 10px 8px 12px;
+        min-height: 0;
+      }
+      .serial-title {
+        font-size: 0.82rem;
+      }
+      .serial-date {
+        font-size: 0.7rem;
+      }
+    }
   </style>
 </head>
 <body>
