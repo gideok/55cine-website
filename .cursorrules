@@ -1,0 +1,5 @@
+Always respond in Korean.
+Write commit message in Korean.
+Use conventional commits when appropriate.
+Keep commit messages concise and clear.
+Do not include changes to the TODO.md file when generating a Commit Message.
