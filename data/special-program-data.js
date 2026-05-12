@@ -3,7 +3,7 @@ window.SPECIAL_PROGRAM_DATA = [
     "id": 1,
     "title": "오다 카오리 지하 3부작 04/16(목)~4/21(화)",
     "thumbnail": "images/special/exhibition/special_exhibition_thumb_01.png",
-    "detailUrl": "special/exhibition/special-detail-01.html",
+    "detailUrl": "special/exhibition/test/special-detail-01.html",
     "sourceUrl": "http://55cine.com/2026/04/03/under03/"
   },
   {
