@@ -1,6 +1,7 @@
 @import url("https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css");
 
 :root {
+  /* 팔레트: 로고 이미지 기준 골드·브론즈·월넛 — index·상세 등 전역 토큰 */
   --site-font-family: "Spoqa Han Sans Neo", sans-serif;
   --brand-gold: #f0ab2a;
   --brand-bronze: #8b6e3e;
@@ -14,6 +15,14 @@
   --line: #e8e2d6;
   --pill-bg: #f3efe6;
   --accent: var(--brand-gold);
+  --accent-hover: #d99920;
+  --accent-secondary: var(--brand-bronze);
+  --brand-gold-mid: #ca9128;
+  --brand-gold-soft: #f5d78a;
+  --tab-active: var(--brand-ink);
+  --tab-inactive-bg: #ede8de;
+  --tab-inactive-text: #7a6e5c;
+  --menu-card: #f3efe6;
   --shadow: rgba(28, 22, 16, 0.12);
   --shadow-deep: rgba(28, 22, 16, 0.35);
   --radius-sm: 12px;

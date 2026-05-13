@@ -1,0 +1,529 @@
+/* index.html 메인 전용. 디자인 토큰(:root)은 components/site-common.css */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--site-font-family);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.font-test-select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+main {
+  background: var(--bg-elevated);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.btn-menu:hover {
+  border-color: var(--brand-bronze);
+  color: var(--brand-bronze-deep);
+}
+
+/* Hero Carousel */
+.hero {
+  padding: 20px 24px 32px;
+  background: linear-gradient(180deg, var(--pill-bg) 0%, var(--bg-elevated) 100%);
+}
+
+.carousel-wrap {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 8px 32px var(--shadow);
+  background: var(--brand-ink);
+  touch-action: pan-y pinch-zoom;
+  cursor: grab;
+}
+
+.carousel-wrap.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+  touch-action: none;
+}
+
+.carousel-wrap.is-dragging .carousel-slide img {
+  pointer-events: none;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.45s ease;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.slide-nowplaying {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 24px;
+  width: 100%;
+  background: linear-gradient(160deg, #2a2318 0%, var(--brand-ink) 55%, #0f0c09 100%);
+}
+
+.slide-nowplaying figure {
+  margin: 0;
+  text-align: center;
+}
+
+.slide-nowplaying img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 20px var(--shadow-deep);
+}
+
+.slide-nowplaying figcaption {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--brand-gold-soft) 75%, transparent);
+}
+
+.slide-poster-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.slide-poster-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.slide-placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  color: #fff;
+  text-align: center;
+}
+
+.slide-placeholder strong {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.slide-placeholder p {
+  margin: 0;
+  opacity: 0.85;
+  font-size: 0.95rem;
+}
+
+.slide-booking {
+  background: linear-gradient(135deg, var(--brand-bronze) 0%, var(--brand-bronze-deep) 100%);
+}
+
+.slide-timetable {
+  background: linear-gradient(135deg, #3a3228 0%, var(--brand-ink) 55%, #15120e 100%);
+}
+
+.slide-event {
+  background: linear-gradient(125deg, var(--brand-gold) 0%, var(--brand-gold-mid) 42%, var(--brand-bronze) 100%);
+}
+
+.slide-event.slide-placeholder {
+  color: var(--brand-ink);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--bg-elevated) 35%, transparent);
+}
+
+.slide-event.slide-placeholder p {
+  opacity: 0.9;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 0 0;
+}
+
+.carousel-dots button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: color-mix(in srgb, var(--brand-bronze) 35%, #fff);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.carousel-dots button[aria-current="true"] {
+  background: var(--accent);
+  transform: scale(1.15);
+}
+
+.carousel-arrows {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  pointer-events: none;
+}
+
+.carousel-arrows button {
+  pointer-events: auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.carousel-arrows button:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Main 시간표 */
+.section-timetable {
+  padding: 8px 24px 40px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-title::after {
+  content: "›";
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.ref-note {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: -8px 0 16px;
+}
+
+.day-tabs-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 20px;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.day-tabs-wrap::-webkit-scrollbar {
+  height: 6px;
+}
+
+.day-tabs-wrap::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--brand-bronze) 45%, var(--line));
+  border-radius: 3px;
+}
+
+.day-tabs {
+  display: inline-flex;
+  gap: 8px;
+  padding: 4px;
+  min-width: min-content;
+}
+
+.day-tab {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--tab-inactive-bg);
+  color: var(--tab-inactive-text);
+  transition: background 0.2s, color 0.2s;
+}
+
+.day-tab:hover {
+  background: color-mix(in srgb, var(--brand-gold-soft) 55%, var(--tab-inactive-bg));
+  color: var(--brand-ink);
+}
+
+.day-tab[aria-selected="true"] {
+  background: var(--tab-active);
+  color: #fffef8;
+}
+
+.day-tab[aria-selected="true"]:hover {
+  background: var(--brand-walnut);
+  color: #fffef8;
+}
+
+.schedule-panel {
+  display: none;
+}
+
+.schedule-panel.is-active {
+  display: block;
+}
+
+.schedule-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.schedule-row:last-child {
+  border-bottom: none;
+}
+
+.slot-label {
+  flex: 0 0 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 6px 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  line-height: 1;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg-elevated);
+}
+
+.poster-badge {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--bg-elevated);
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+.movie-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.movie-title-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie-status-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  line-height: 1.4;
+  border: 1px solid transparent;
+}
+
+.movie-status-badge--open {
+  background: color-mix(in srgb, var(--brand-gold) 20%, var(--bg-elevated));
+  color: var(--brand-walnut);
+  border-color: color-mix(in srgb, var(--brand-gold) 55%, transparent);
+}
+
+.movie-status-badge--end {
+  background: color-mix(in srgb, var(--brand-bronze) 18%, var(--bg-elevated));
+  color: var(--brand-bronze-deep);
+  border-color: color-mix(in srgb, var(--brand-bronze) 45%, transparent);
+}
+
+.time-pill {
+  margin-left: auto;
+  padding: 10px 16px;
+  background: var(--pill-bg);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.booking-btn {
+  padding: 9px 14px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--brand-ink);
+  font-size: 0.84rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.booking-btn:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 14px var(--shadow);
+  transform: translateY(-1px);
+}
+
+.booking-btn:focus-visible {
+  outline: 2px solid var(--brand-walnut);
+  outline-offset: 2px;
+}
+
+.schedule-poster-link {
+  flex-shrink: 0;
+  line-height: 0;
+  border-radius: 50%;
+  outline-offset: 3px;
+}
+
+.schedule-poster-link:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+.schedule-poster-link .poster-badge {
+  display: block;
+}
+
+.movie-title-link {
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.movie-title-link.movie-title-text {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
+.movie-title-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.movie-title-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Menu cards */
+.section-menu {
+  padding: 16px 24px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.menu-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  background: var(--menu-card);
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+.menu-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow);
+  border: 1px solid color-mix(in srgb, var(--brand-bronze) 28%, transparent);
+}
+
+.menu-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.menu-card .icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  stroke: var(--brand-bronze);
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.menu-card:hover .icon {
+  stroke: var(--brand-bronze-deep);
+}
+
+@media (max-width: 640px) {
+  .slide-nowplaying {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

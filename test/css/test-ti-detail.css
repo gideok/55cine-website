@@ -72,6 +72,22 @@
   border-radius: 0;
 }
 
+/* 좁은 뷰포트: 포스터를 가로폭에 맞춰 축소·비율 유지(크롭 없음). PC 구간은 위 규칙 유지 */
+@media (max-width: 640px) {
+  .sd-cover {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sd-cover img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    object-fit: contain;
+  }
+}
+
 .sd-body {
   padding-top: 18px;
   margin-top: 0;

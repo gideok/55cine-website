@@ -1,4 +1,14 @@
 (function () {
+  var BASE = typeof window.TEST_TI_ASSET_BASE === "string" ? window.TEST_TI_ASSET_BASE : "";
+
+  function resolveAssetUrl(url) {
+    if (!url || url === "#") return url;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return url;
+    if (url.indexOf("//") === 0) return url;
+    if (url.charAt(0) === "/") return url;
+    return BASE + url;
+  }
+
   var GRID_GAP_PX = 10;
   var POSTER_ASPECT = 740 / 510;
   var TITLE_BLOCK_RESERVE_PX = 62;
@@ -56,7 +66,7 @@
   }
 
   function createCard(item) {
-    var href = item.detailUrl || item.sourceUrl || "#";
+    var href = resolveAssetUrl(item.detailUrl || item.sourceUrl || "#");
     var article = document.createElement("article");
     article.className = "se-card";
 
@@ -66,7 +76,7 @@
 
     var image = document.createElement("img");
     image.className = "se-thumb";
-    image.src = item.thumbnail || "";
+    image.src = resolveAssetUrl(item.thumbnail || "");
     image.alt = (item.title || "") + " 썸네일";
     image.loading = "lazy";
     thumbLink.appendChild(image);

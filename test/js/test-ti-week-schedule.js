@@ -7,6 +7,14 @@
     return BASE + path;
   }
 
+  var WEEK_SCHEDULE = window.WEEK_SCHEDULE;
+  var MOVIE_POSTER_BY_TITLE = window.MOVIE_POSTER_BY_TITLE;
+  var parseMovieTitleWithStatus = window.parseMovieTitleWithStatus;
+  var movieDetailUrlForPoster = window.movieDetailUrlForPoster;
+  if (!WEEK_SCHEDULE || !MOVIE_POSTER_BY_TITLE || !parseMovieTitleWithStatus || !movieDetailUrlForPoster) {
+    return;
+  }
+
   var MOVIE_IMAGES = [
     asset("images/movie001.jpg"),
     asset("images/movie002.jpg"),
@@ -14,122 +22,6 @@
     asset("images/movie004.jpg")
   ];
   var WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
-
-  var WEEK_SCHEDULE = [
-    {
-      label: "4/30(목)",
-      weekday: "목",
-      entries: [
-        { time: "11:30", title: "빨간 나리를 보았니" },
-        { time: "13:50", title: "세계의 주인" },
-        { time: "16:15", title: "극장의 시간들" },
-        { time: "18:20", title: "힌드의 목소리" },
-        { time: "20:05", title: "새벽의 Tango" }
-      ]
-    },
-    {
-      label: "5/1(금)",
-      weekday: "금",
-      entries: [
-        { time: "11:30", title: "누륵" },
-        { time: "13:10", title: "센티멘탈 밸류" },
-        { time: "14:00", title: "르누아르" },
-        { time: "15:40", title: "힌드의 목소리" },
-        { time: "17:25", title: "새벽의 Tango" },
-        { time: "19:40", title: "세계의 주인" }
-      ]
-    },
-    {
-      label: "5/2(토)",
-      weekday: "토",
-      entries: [
-        { time: "11:30", title: "세계의 주인" },
-        { time: "13:45", title: "힌드의 목소리" },
-        { time: "15:30", title: "새벽의 Tango" },
-        { time: "17:45", title: "센티멘탈 밸류" },
-        { time: "20:15", title: "누륵" }
-      ]
-    },
-    {
-      label: "5/3(일)",
-      weekday: "일",
-      entries: [
-        { time: "11:30", title: "새벽의 Tango" },
-        { time: "13:45", title: "센티멘탈 밸류" },
-        { time: "16:15", title: "힌드의 목소리" },
-        { time: "18:00", title: "세계의 주인" },
-        { time: "20:15", title: "주의에게" }
-      ]
-    },
-    {
-      label: "5/4(월)",
-      weekday: "월",
-      entries: [
-        { time: "11:30", title: "주의에게" },
-        { time: "13:30", title: "누륵" },
-        { time: "15:10", title: "새벽의 Tango" },
-        { time: "17:25", title: "빨간 나리를 보았니" },
-        { time: "19:40", title: "극장의 시간들 (중영)" }
-      ]
-    },
-    {
-      label: "5/5(화)",
-      weekday: "화",
-      entries: [
-        { time: "11:30", title: "누륵" },
-        { time: "13:10", title: "새벽의 Tango" },
-        { time: "15:25", title: "힌드의 목소리" },
-        { time: "17:10", title: "센티멘탈 밸류 (중영)" },
-        { time: "19:40", title: "세계의 주인" }
-      ]
-    },
-    {
-      label: "5/6(수)",
-      weekday: "수",
-      entries: [
-        { time: "11:15", title: "새벽의 Tango" },
-        { time: "13:30", title: "세계의 주인" },
-        { time: "15:45", title: "누륵" },
-        { time: "17:30", title: "그녀가 돌아온 날 (개봉)" },
-        { time: "19:15", title: "달갈 원정대 (개봉)" }
-      ]
-    }
-  ];
-
-  var MOVIE_POSTER_BY_TITLE = {
-    르누아르: asset("images/movie001.jpg"),
-    "빨간 나리를 보았니": asset("images/movie001.jpg"),
-    "세계의 주인": asset("images/movie002.jpg"),
-    "극장의 시간들": asset("images/movie003.jpg"),
-    "극장의 시간들 (중영)": asset("images/movie003.jpg"),
-    "힌드의 목소리": asset("images/movie004.jpg"),
-    "새벽의 Tango": asset("images/movie001.jpg"),
-    누륵: asset("images/movie002.jpg"),
-    "센티멘탈 밸류": asset("images/movie003.jpg"),
-    "센티멘탈 밸류 (중영)": asset("images/movie003.jpg"),
-    주의에게: asset("images/movie004.jpg"),
-    "그녀가 돌아온 날 (개봉)": asset("images/movie001.jpg"),
-    "달갈 원정대 (개봉)": asset("images/movie002.jpg")
-  };
-
-  function movieDetailUrlForPoster(posterUrl) {
-    if (posterUrl.indexOf("movie001.jpg") !== -1) return asset("movie-detail.html");
-    if (posterUrl.indexOf("movie002.jpg") !== -1) return asset("movie-detail-type2.html");
-    return "";
-  }
-
-  function parseMovieTitleWithStatus(title) {
-    var suffixMatch = title.match(/\s*\((개봉|종영|중영)\)\s*$/);
-    if (!suffixMatch) {
-      return { cleanTitle: title, badgeLabel: "", badgeClass: "" };
-    }
-    var rawStatus = suffixMatch[1];
-    var badgeLabel = rawStatus === "중영" ? "종영" : rawStatus;
-    return {
-      cleanTitle: title.replace(/\s*\((개봉|종영|중영)\)\s*$/, ""),
-      badgeLabel: badgeLabel
-    };
-  }
 
   var dayTabs = document.getElementById("tiDayTabs");
   var panelsWrap = document.getElementById("tiSchedulePanels");

@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>기획전 — 테스트 · 55CINE 오오극장</title>
-  <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="css/test-ti-fonts.css" />
   <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
   <link rel="stylesheet" href="css/test-ti-shell.css" />
@@ -50,23 +50,23 @@
       </div>
       <div class="ti-left-panel" id="tiLeftPanel">
       <div class="ti-left-top">
-        <a class="ti-home" href="index.html">← Home / index</a>
+        <a class="ti-home" href="../index.html">← Home / index</a>
         <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
           <details>
             <summary>오오극장</summary>
             <ul>
-              <li><a href="theater-info.html">오오극장 소개</a></li>
-              <li><a href="viewing-guide.html">관람 안내</a></li>
-              <li><a href="membership.html">멤버십</a></li>
-              <li><a href="daegwan.html">대관</a></li>
-              <li><a href="osinneun-gil.html">오시는 길</a></li>
+              <li><a href="../theater-info.html">오오극장 소개</a></li>
+              <li><a href="../viewing-guide.html">관람 안내</a></li>
+              <li><a href="../membership.html">멤버십</a></li>
+              <li><a href="../daegwan.html">대관</a></li>
+              <li><a href="../osinneun-gil.html">오시는 길</a></li>
               <li><a href="#">공지사항</a></li>
             </ul>
           </details>
           <details>
             <summary>상영작</summary>
             <ul>
-              <li><a href="now-playing.html">현재 상영작</a></li>
+              <li><a href="../now-playing.html">현재 상영작</a></li>
               <li><a href="#">상영 예정작</a></li>
               <li><a href="#">지난 상영작</a></li>
             </ul>
@@ -87,9 +87,9 @@
           <details>
             <summary>매거진 삼삼오오</summary>
             <ul>
-              <li><a href="magazine-preview.html">프리뷰</a></li>
-              <li><a href="magazine-serial.html">연재</a></li>
-              <li><a href="gv-moment.html">GV 모먼트</a></li>
+              <li><a href="../magazine-preview.html">프리뷰</a></li>
+              <li><a href="../magazine-serial.html">연재</a></li>
+              <li><a href="../gv-moment.html">GV 모먼트</a></li>
               <li><a href="#">지난 기사</a></li>
             </ul>
           </details>
@@ -136,7 +136,11 @@
     </aside>
   </div>
 
-  <script src="data/special-program-data.js"></script>
+  <script>
+    window.TEST_TI_ASSET_BASE = "../";
+  </script>
+  <script src="../data/week-schedule-data.js"></script>
+  <script src="../data/special-program-data.js"></script>
   <script src="js/test-ti-exhibition-carousel.js"></script>
   <script src="js/test-ti-mobile-menu.js"></script>
   <script src="js/test-ti-week-schedule.js"></script>

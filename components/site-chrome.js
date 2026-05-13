@@ -2,7 +2,12 @@
  * 공통 헤더·푸터 주입 (components/header.html, components/footer.html)
  * HTTP(s)로 열면 fetch로 최신 HTML을 불러오고, file:// 로 열면 브라우저 보안상
  * fetch가 실패하므로 아래 EMBEDDED_* 내장 마크업을 사용합니다.
- * 헤더·푸터를 수정할 때는 header.html / footer.html 과 EMBEDDED_* 를 함께 맞춰 주세요.
+ *
+ * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ * SYNC 필수: header.html / footer.html 을 바꾼 뒤에는 반드시 이 파일의
+ *            EMBEDDED_HEADER / EMBEDDED_FOOTER 문자열도 동일하게 맞출 것.
+ *            (한쪽만 수정하면 file:// 또는 fetch 실패 시 마크업이 어긋납니다.)
+ * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
  */
 (function () {
   var scripts = document.getElementsByTagName("script");
@@ -91,8 +96,8 @@
     '<a class="gnb-depth1" href="#">테스트</a>' +
     '<div class="gnb-dropdown">' +
     '<ul class="gnb-depth2 gnb-dropdown-inner">' +
-    '<li><a href="test-intro.html">테스트인트로</a></li>' +
-    '<li><a href="special-exhibition-test.html">기획전</a></li>' +
+    '<li><a href="test/test-intro.html">테스트인트로</a></li>' +
+    '<li><a href="test/special-exhibition-test.html">기획전</a></li>' +
     "</ul>" +
     "</div>" +
     "</li>" +

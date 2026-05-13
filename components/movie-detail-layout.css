@@ -1,9 +1,4 @@
 /* movie-detail.html 상세 영역 + type2 예매 버튼 — site-common.css 와 함께 사용 */
-:root {
-  --accent-hover: #d99920;
-  --brand-gold-mid: #ca9128;
-  --brand-gold-soft: #f5d78a;
-}
 
 body {
   margin: 0;
