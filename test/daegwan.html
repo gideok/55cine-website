@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>대관 안내 — 테스트 UI · 55CINE</title>
+  <link rel="icon" href="../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="css/test-ti-fonts.css" />
+  <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/test-ti-shell.css" />
+  <link rel="stylesheet" href="css/test-ti-page-shell.css" />
+  <link rel="stylesheet" href="css/test-ti-daegwan.css" />
+</head>
+<body class="ti">
+  <div class="ti-shell">
+    <div class="ti-left">
+      <div class="ti-left-top">
+        <a class="ti-home" href="../index.html">← Home / index</a>
+        <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
+          <details open>
+            <summary>오오극장</summary>
+            <ul>
+              <li><a href="theater-info.html">소개</a></li>
+              <li><a href="viewing-guide.html">관람 안내</a></li>
+              <li><a href="membership.html">멤버십</a></li>
+              <li><a class="ti-current" href="daegwan.html" aria-current="page">대관</a></li>
+              <li><a href="osinneun-gil.html">오시는 길</a></li>
+              
+            </ul>
+          </details>
+          <details>
+            <summary>상영작</summary>
+            <ul>
+              <li><a href="../now-playing.html">현재 상영작</a></li>
+              <li><a href="#">상영 예정작</a></li>
+              <li><a href="#">지난 상영작</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>예매</summary>
+            <ul>
+              <li><a href="#">예매하기</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>기획전·행사</summary>
+            <ul>
+              <li><a href="special-exhibition-test.html">기획전</a></li>
+              <li><a href="#">행사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>매거진 삼삼오오</summary>
+            <ul>
+              <li><a href="../magazine-preview.html">프리뷰</a></li>
+              <li><a href="../magazine-serial.html">연재</a></li>
+              <li><a href="../gv-moment.html">GV 모먼트</a></li>
+              <li><a href="#">지난 기사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>테스트</summary>
+            <ul>
+              <li><a href="test-intro.html">테스트인트로</a></li>
+              <li><a href="special-exhibition-test.html">기획전</a></li>
+            </ul>
+          </details>
+        </nav>
+      </div>
+      <div class="ti-left-bottom">
+        <h2 class="ti-sched-title">이번주 시간표</h2>
+        <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
+        <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
+      </div>
+    </div>
+    <aside class="ti-right ti-sub-page" aria-label="대관 안내 본문">
+      <div class="ti-sub-scroll">
+        <p class="ti-sub-kicker">오오극장</p>
+        <h1 class="ti-sub-h1" id="daegwan-title">대관</h1>
+
+        <article id="daegwan" aria-labelledby="daegwan-title">
+          <figure class="ti-dg-photo">
+            <img
+              src="../images/daegwan.png"
+              width="960"
+              height="540"
+              alt="오오극장 대관 안내"
+              decoding="async"
+              onerror="this.onerror=null;this.src='../images/movie003.jpg';this.alt='오오극장 대관 안내(이미지 준비 중)';"
+            />
+          </figure>
+
+          <section class="ti-dg-form-wrap" aria-label="대관 신청 구글 폼">
+            <p class="ti-dg-form-note">대관 신청은 구글 폼으로 접수합니다. 폼이 준비되면 아래 영역에 임베드합니다.</p>
+            <div id="daegwan-form-embed" class="ti-dg-form-slot">
+              <!-- 예: iframe 구글 폼 -->
+            </div>
+          </section>
+
+          <section class="ti-dg-steps" aria-labelledby="daegwan-proc-title">
+            <strong id="daegwan-proc-title">대관 절차</strong>
+            <p class="ti-dg-steps-intro">대관의 절차는 아래와 같은 방법으로 진행합니다.</p>
+            <ol class="ti-proc-infographic" aria-label="대관 절차 단계">
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">1</span>
+                  <span class="ti-proc-infographic__text">대관 신청 구글 폼 작성 후 제출</span>
+                </span>
+              </li>
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">2</span>
+                  <span class="ti-proc-infographic__text">대관운영위원회 심의</span>
+                </span>
+              </li>
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">3</span>
+                  <span class="ti-proc-infographic__text">이용승인 및 대관료 통보</span>
+                </span>
+              </li>
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">4</span>
+                  <span class="ti-proc-infographic__text">대관료 납부</span>
+                </span>
+              </li>
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">5</span>
+                  <span class="ti-proc-infographic__text">시설이용</span>
+                </span>
+              </li>
+            </ol>
+          </section>
+
+          <h2 class="ti-dg-subheading">대관료</h2>
+          <table class="ti-dg-fee-table">
+            <thead>
+              <tr>
+                <th scope="col">평일 (월~금) 2시간 기준</th>
+                <th scope="col">주말(토,일) 공휴일 2시간 기준</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>33만원 (세금포함)</td>
+                <td>44만원 (세금포함)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2 class="ti-dg-subheading">시설환경</h2>
+          <ul class="ti-dg-facility-list">
+            <li>좌석수 55석(일반좌석 51석 + 휠체어 좌석 4석)</li>
+            <li>각종 영상 파일 상영이 가능한 영사 시스템</li>
+            <li>무선마이크 3, 유선마이크 1 / 행사용 스피커 2조</li>
+            <li>간이 테이블 (3개), 의자(6개)</li>
+          </ul>
+
+          <p class="ti-dg-contact">
+            문의 :
+            <a href="tel:0534253553">053-425-3553</a>
+            /
+            <a href="mailto:55cinema@daum.net">55cinema@daum.net</a>
+          </p>
+        </article>
+
+        <p class="ti-sub-note">
+          운영 사이트: <a href="../daegwan.html">루트 daegwan.html</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    window.TEST_TI_ASSET_BASE = "../";
+  </script>
+  <script src="../data/week-schedule-data.js"></script>
+  <script src="js/test-ti-week-schedule.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관람 안내 — 테스트 UI · 55CINE</title>
+  <link rel="icon" href="../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="css/test-ti-fonts.css" />
+  <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/test-ti-shell.css" />
+  <link rel="stylesheet" href="css/test-ti-viewing-guide.css" />
+</head>
+<body class="ti">
+  <div class="ti-shell">
+    <div class="ti-left">
+      <div class="ti-left-top">
+        <a class="ti-home" href="../index.html">← Home / index</a>
+        <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
+          <details open>
+            <summary>오오극장</summary>
+            <ul>
+              <li><a href="theater-info.html">소개</a></li>
+              <li><a class="ti-current" href="viewing-guide.html" aria-current="page">관람 안내</a></li>
+              <li><a href="membership.html">멤버십</a></li>
+              <li><a href="daegwan.html">대관</a></li>
+              <li><a href="osinneun-gil.html">오시는 길</a></li>
+              
+            </ul>
+          </details>
+          <details>
+            <summary>상영작</summary>
+            <ul>
+              <li><a href="../now-playing.html">현재 상영작</a></li>
+              <li><a href="#">상영 예정작</a></li>
+              <li><a href="#">지난 상영작</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>예매</summary>
+            <ul>
+              <li><a href="#">예매하기</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>기획전·행사</summary>
+            <ul>
+              <li><a href="special-exhibition-test.html">기획전</a></li>
+              <li><a href="#">행사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>매거진 삼삼오오</summary>
+            <ul>
+              <li><a href="../magazine-preview.html">프리뷰</a></li>
+              <li><a href="../magazine-serial.html">연재</a></li>
+              <li><a href="../gv-moment.html">GV 모먼트</a></li>
+              <li><a href="#">지난 기사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>테스트</summary>
+            <ul>
+              <li><a href="test-intro.html">테스트인트로</a></li>
+              <li><a href="special-exhibition-test.html">기획전</a></li>
+            </ul>
+          </details>
+        </nav>
+      </div>
+      <div class="ti-left-bottom">
+        <h2 class="ti-sched-title">이번주 시간표</h2>
+        <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
+        <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
+      </div>
+    </div>
+    <aside class="ti-right ti-viewing-guide" aria-label="관람 안내 본문">
+      <div class="ti-viewing-scroll">
+        <p class="ti-viewing-page-title">오오극장</p>
+        <h1 class="ti-viewing-h1" id="viewing-guide-title">관람 안내</h1>
+
+        <article id="viewing-guide" aria-labelledby="viewing-guide-title">
+          <section class="ti-viewing-section" aria-labelledby="etiquette-heading">
+            <h2 id="etiquette-heading" class="ti-viewing-section__title">관람 에티켓</h2>
+            <ul class="ti-viewing-list">
+              <li>영화 상영은 정시 시작을 원칙으로 합니다.</li>
+              <li>입장은 상영 10분 전부터 가능합니다.</li>
+              <li>상영 시작 후 10분까지 입장 가능합니다.</li>
+              <li>물과 음료를 제외한 음식물은 반입 금지입니다.</li>
+              <li>엔딩크레딧 종료 후 조명이 켜지오니 안전을 위해 끝까지 자리를 지켜주시기 바랍니다.</li>
+            </ul>
+          </section>
+
+          <section class="ti-viewing-section" aria-labelledby="fee-heading">
+            <h2 id="fee-heading" class="ti-viewing-section__title">관람료 안내</h2>
+            <div class="ti-fee-board-wrap">
+              <div class="ti-fee-board" role="table" aria-label="관람료">
+                <div class="ti-fee-board__head ti-fee-board__row" role="row">
+                  <div class="ti-fee-board__cell" role="columnheader">구분</div>
+                  <div class="ti-fee-board__cell" role="columnheader">요금</div>
+                  <div class="ti-fee-board__cell" role="columnheader">비고</div>
+                </div>
+                <div class="ti-fee-board__row" role="row">
+                  <div class="ti-fee-board__cell" role="cell">일반</div>
+                  <div class="ti-fee-board__cell ti-fee-board__cell--fee" role="cell">8,000원</div>
+                  <div class="ti-fee-board__cell ti-fee-board__empty" role="cell">—</div>
+                </div>
+                <div class="ti-fee-board__row" role="row">
+                  <div class="ti-fee-board__cell" role="cell">청소년</div>
+                  <div class="ti-fee-board__cell ti-fee-board__cell--fee" role="cell">7,000원</div>
+                  <div class="ti-fee-board__cell ti-fee-board__muted" role="cell">만 18세까지</div>
+                </div>
+                <div class="ti-fee-board__row" role="row">
+                  <div class="ti-fee-board__cell" role="cell">경로</div>
+                  <div class="ti-fee-board__cell ti-fee-board__cell--fee" role="cell">7,000원</div>
+                  <div class="ti-fee-board__cell ti-fee-board__muted" role="cell">만 65세 이상</div>
+                </div>
+                <div class="ti-fee-board__row" role="row">
+                  <div class="ti-fee-board__cell" role="cell">장애인</div>
+                  <div class="ti-fee-board__cell ti-fee-board__cell--fee" role="cell">7,000원</div>
+                  <div class="ti-fee-board__cell ti-fee-board__empty" role="cell">—</div>
+                </div>
+                <div class="ti-fee-board__row" role="row">
+                  <div class="ti-fee-board__cell" role="cell">멤버십 회원</div>
+                  <div class="ti-fee-board__cell ti-fee-board__cell--fee" role="cell">7,000원</div>
+                  <div class="ti-fee-board__cell ti-fee-board__muted" role="cell">동반 1인 동일 혜택 적용</div>
+                </div>
+                <div class="ti-fee-board__row" role="row">
+                  <div class="ti-fee-board__cell" role="cell">단체 10인 이상</div>
+                  <div class="ti-fee-board__cell ti-fee-board__cell--fee" role="cell">7,500원</div>
+                  <div class="ti-fee-board__cell ti-fee-board__empty" role="cell">—</div>
+                </div>
+                <div class="ti-fee-board__row" role="row">
+                  <div class="ti-fee-board__cell" role="cell">단체 20인 이상</div>
+                  <div class="ti-fee-board__cell ti-fee-board__cell--fee" role="cell">7,000원</div>
+                  <div class="ti-fee-board__cell ti-fee-board__empty" role="cell">—</div>
+                </div>
+              </div>
+            </div>
+            <ul class="ti-viewing-notes">
+              <li>발권 시 할인 적용을 위해 신분증 등 관련 증빙자료를 제시해 주시기 바랍니다.</li>
+              <li>특별 상영의 경우 별도로 공지된 요금이 적용될 수 있습니다.</li>
+            </ul>
+          </section>
+        </article>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    window.TEST_TI_ASSET_BASE = "../";
+  </script>
+  <script src="../data/week-schedule-data.js"></script>
+  <script src="js/test-ti-week-schedule.js"></script>
+</body>
+</html>

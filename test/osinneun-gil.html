@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>테스트인트로 — 55CINE 오오극장</title>
+  <title>오시는 길 — 테스트 UI · 55CINE</title>
   <link rel="icon" href="../favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="css/test-ti-fonts.css" />
   <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
   <link rel="stylesheet" href="css/test-ti-shell.css" />
-  <link rel="stylesheet" href="css/test-ti-intro.css" />
+  <link rel="stylesheet" href="css/test-ti-page-shell.css" />
+  <link rel="stylesheet" href="css/test-ti-osinneun-gil.css" />
 </head>
 <body class="ti">
   <div class="ti-shell">
@@ -24,7 +25,7 @@
               <li><a href="viewing-guide.html">관람 안내</a></li>
               <li><a href="membership.html">멤버십</a></li>
               <li><a href="daegwan.html">대관</a></li>
-              <li><a href="osinneun-gil.html">오시는 길</a></li>
+              <li><a class="ti-current" href="osinneun-gil.html" aria-current="page">오시는 길</a></li>
               
             </ul>
           </details>
@@ -61,7 +62,7 @@
           <details>
             <summary>테스트</summary>
             <ul>
-              <li><a class="ti-current" href="test-intro.html" aria-current="page">테스트인트로</a></li>
+              <li><a href="test-intro.html">테스트인트로</a></li>
               <li><a href="special-exhibition-test.html">기획전</a></li>
             </ul>
           </details>
@@ -73,28 +74,41 @@
         <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
       </div>
     </div>
-    <aside class="ti-right" aria-label="키 비주얼 타이포그래피">
-      <div class="ti-type">
-        <div class="ti-type__grid">
-          <span class="ti-type__block ti-type__block--55"><span class="ti-breathe ti-breathe--a">55CINE</span></span>
-          <span class="ti-type__block ti-type__block--daegu"><span class="ti-breathe ti-breathe--b">DAEGU</span></span>
-          <span class="ti-type__block ti-type__block--oo"><span class="ti-breathe ti-breathe--c">오오극장</span></span>
-          <span class="ti-type__block ti-type__block--dg"><span class="ti-breathe ti-breathe--d">대구</span></span>
-          <span class="ti-type__block ti-type__block--indie"><span class="ti-breathe ti-breathe--e">독립영화</span></span>
-          <span class="ti-type__block ti-type__block--artko"><span class="ti-breathe ti-breathe--f">예술영화</span></span>
-          <span class="ti-type__block ti-type__block--house"><span class="ti-breathe ti-breathe--g">독립영화전용관</span></span>
-          <span class="ti-type__block ti-type__block--art"><span class="ti-breathe ti-breathe--h">ART MOVIE</span></span>
-          <span class="ti-type__block ti-type__block--local"><span class="ti-breathe ti-breathe--i">LOCAL MOVIE</span></span>
-          <div class="ti-type__block ti-type__block--dense" aria-hidden="true">
-            <span class="ti-breathe ti-breathe--j">INDIE HOUSE</span><em>·</em><span class="ti-breathe ti-breathe--k">55 SCREEN</span><em>·</em><span class="ti-breathe ti-breathe--l">DAEGU CINEMA</span>
-          </div>
-          <div class="ti-type__block ti-type__block--kr" aria-hidden="true">
-            <span><span class="ti-breathe ti-breathe--m">상영</span></span><span><span class="ti-breathe ti-breathe--n">스크린</span></span><span><span class="ti-breathe ti-breathe--o">커뮤니티</span></span><span><span class="ti-breathe ti-breathe--g">예술</span></span><span><span class="ti-breathe ti-breathe--i">로컬</span></span>
-          </div>
-          <div class="ti-type__rail" aria-hidden="true">
-            <span><span class="ti-breathe ti-breathe--d">INDIE</span></span><em>·</em><span><span class="ti-breathe ti-breathe--e">CINEMA</span></span><em>·</em><span><span class="ti-breathe ti-breathe--b">SCREEN</span></span><em>·</em><span><span class="ti-breathe ti-breathe--c">COMMUNITY</span></span><em>·</em><span><span class="ti-breathe ti-breathe--h">FILM</span></span>
-          </div>
-        </div>
+    <aside class="ti-right ti-sub-page" aria-label="오시는 길 본문">
+      <div class="ti-sub-scroll">
+        <p class="ti-sub-kicker">오오극장</p>
+        <h1 class="ti-sub-h1" id="direction-title">오시는 길</h1>
+
+        <article id="osinneun-gil" aria-labelledby="direction-title">
+          <section class="ti-dir-map-block" aria-label="네이버 지도">
+            <a class="ti-dir-map-cta" href="https://naver.me/G4W5AtEn" target="_blank" rel="noopener noreferrer">네이버 지도에서 위치 보기</a>
+          </section>
+
+          <p class="ti-dir-address">대구광역시 중구 국채보상로 537 (수동 1-6번지), 곽병원과 만경관 사이</p>
+          <p class="ti-dir-phone">T. <a href="tel:0534253553">053 425 3553</a></p>
+
+          <section class="ti-dir-transport" aria-labelledby="transport-title">
+            <h2 class="ti-dir-transport-heading" id="transport-title">■ 대중교통</h2>
+
+            <div class="ti-dir-transport-block">
+              <h3>♦ 버스</h3>
+              <p><strong>곽병원</strong>(앞1, 앞2, 건너) 156, 309, 425, 508, 521, 600, 623, 724, 909, 939, 급행1, 급행3, 동구2</p>
+              <p><strong>만경관</strong>(앞, 건너) 323, 400, 400-1, 427, 939, 동구2, 북구3</p>
+              <p><strong>호텔아미고 뒤</strong> 651, 653</p>
+            </div>
+
+            <div class="ti-dir-transport-block">
+              <h3>♦ 지하철과 도보</h3>
+              <p>지하철 1호선 중앙로역 (지하철출구 아님) 대현프리몰 1번 출구로 나와서 곽병원 방면 대로로 400미터(도보로 5분)</p>
+            </div>
+
+            <p class="ti-dir-parking-note">※ 주차장이 따로 마련되어 있지 않습니다. 대중교통을 이용해 주세요.</p>
+          </section>
+        </article>
+
+        <p class="ti-sub-note">
+          운영 사이트: <a href="../osinneun-gil.html">루트 osinneun-gil.html</a>
+        </p>
       </div>
     </aside>
   </div>

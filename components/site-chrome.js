@@ -45,12 +45,12 @@
     '<a class="gnb-depth1" href="#">오오극장</a>' +
     '<div class="gnb-dropdown">' +
     '<ul class="gnb-depth2 gnb-dropdown-inner">' +
-    '<li><a href="theater-info.html">오오극장 소개</a></li>' +
+    '<li><a href="theater-info.html">소개</a></li>' +
     '<li><a href="viewing-guide.html">관람 안내</a></li>' +
     '<li><a href=\"membership.html\">멤버십</a></li>' +
     '<li><a href="daegwan.html">대관</a></li>' +
     '<li><a href="osinneun-gil.html">오시는 길</a></li>' +
-    '<li><a href="#">공지사항</a></li>' +
+    '' +
     "</ul>" +
     "</div>" +
     "</li>" +

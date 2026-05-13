@@ -1,0 +1,192 @@
+/* test/membership.html — 멤버십 아코디언 (모노크롬) */
+
+.ti-mbr-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ti-mbr-acc {
+  margin: 0;
+  border: 1px solid #333;
+  border-radius: 0;
+  background: #101010;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ti-mbr-acc[open] {
+  border-color: #666;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+}
+
+.ti-mbr-acc summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #f0f0f0;
+  background: linear-gradient(165deg, #1a1a1a 0%, #121212 100%);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ti-mbr-acc summary::-webkit-details-marker {
+  display: none;
+}
+
+.ti-mbr-acc summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #b0b0b0;
+  border-bottom: 2px solid #b0b0b0;
+  transform: rotate(45deg);
+  transition: transform 0.22s ease;
+  margin-top: -4px;
+}
+
+.ti-mbr-acc[open] summary::after {
+  transform: rotate(-135deg);
+  margin-top: 4px;
+}
+
+.ti-mbr-acc summary:hover {
+  background: linear-gradient(165deg, #222 0%, #181818 100%);
+}
+
+.ti-mbr-acc summary:focus-visible {
+  outline: 2px solid #e0e0e0;
+  outline-offset: 2px;
+}
+
+.ti-mbr-acc__panel {
+  padding: 0 20px 20px;
+  border-top: 1px solid #2a2a2a;
+  background: #0c0c0c;
+}
+
+.ti-mbr-acc__panel-inner {
+  padding-top: 18px;
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: color-mix(in srgb, #e8e8e8 90%, #888);
+}
+
+.ti-mbr-acc__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ti-mbr-acc__list > li {
+  position: relative;
+  margin-bottom: 12px;
+  padding-left: 0.85rem;
+}
+
+.ti-mbr-acc__list > li:last-child {
+  margin-bottom: 0;
+}
+
+.ti-mbr-acc__list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #888;
+}
+
+.ti-mbr-acc__subhead {
+  margin: 1.25rem 0 10px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #e0e0e0;
+}
+
+.ti-mbr-acc__subhead:first-child {
+  margin-top: 0;
+}
+
+.ti-mbr-acc__dash-list {
+  margin: 0 0 0 0.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ti-mbr-acc__dash-list li {
+  position: relative;
+  margin-bottom: 8px;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+  color: #9a9a9a;
+}
+
+.ti-mbr-acc__dash-list li:last-child {
+  margin-bottom: 0;
+}
+
+.ti-mbr-acc__dash-list li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #b0b0b0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ti-mbr-cms-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 14px 20px;
+  border-radius: 0;
+  border: 1px solid #555;
+  background: #2a2a2a;
+  color: #f5f5f5;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.ti-mbr-cms-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  border-color: #888;
+  background: #333;
+}
+
+.ti-mbr-cms-link:focus-visible {
+  outline: 2px solid #e0e0e0;
+  outline-offset: 3px;
+}
+
+.ti-mbr-cms-link::after {
+  content: "↗";
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+@media (max-width: 480px) {
+  .ti-mbr-acc summary {
+    padding: 16px 16px;
+    font-size: 0.92rem;
+  }
+  .ti-mbr-acc__panel {
+    padding: 0 16px 16px;
+  }
+}

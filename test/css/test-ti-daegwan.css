@@ -1,0 +1,191 @@
+/* test/daegwan.html — 모노크롬 */
+
+.ti-dg-photo {
+  margin: 0 0 24px;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+  line-height: 0;
+  border: 1px solid #333;
+}
+
+.ti-dg-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.ti-dg-form-wrap {
+  margin: 0 0 28px;
+  padding: 20px;
+  background: #121212;
+  border: 1px dashed #4a4a4a;
+  border-radius: 0;
+}
+
+.ti-dg-form-wrap .ti-dg-form-note {
+  margin: 0 0 12px;
+  color: #9a9a9a;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.ti-dg-form-slot {
+  min-height: 120px;
+  border-radius: 0;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+}
+
+.ti-dg-form-slot iframe {
+  display: block;
+  width: 100%;
+  min-height: 720px;
+  border: 0;
+  border-radius: 0;
+}
+
+.ti-dg-steps {
+  margin: 0 0 28px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, #161616 0%, #101010 100%);
+  border-radius: 0;
+  border: 1px solid #3a3a3a;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.ti-dg-steps strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #f0f0f0;
+  font-size: 1rem;
+}
+
+.ti-dg-steps-intro {
+  margin: 8px 0 0;
+  color: #9a9a9a;
+  font-size: 0.9rem;
+}
+
+.ti-proc-infographic {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px clamp(8px, 2.5vw, 12px);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1040px) {
+  .ti-proc-infographic {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 360px) {
+  .ti-proc-infographic {
+    gap: 10px 8px;
+  }
+}
+
+.ti-proc-infographic__step {
+  display: block;
+  min-width: 0;
+}
+
+.ti-proc-infographic__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 240px;
+  margin: 0 auto;
+  min-height: 118px;
+  padding: 14px 12px 12px;
+  background: linear-gradient(165deg, #1a1a1a 0%, #121212 100%);
+  border: 1px solid #3a3a3a;
+  border-radius: 0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.ti-proc-infographic__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0a0a0a;
+  background: #d0d0d0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.ti-proc-infographic__text {
+  font-size: clamp(0.76rem, 2.4vw, 0.82rem);
+  font-weight: 600;
+  line-height: 1.45;
+  color: #d0d0d0;
+}
+
+.ti-dg-subheading {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 28px 0 12px;
+  color: #f0f0f0;
+}
+
+.ti-dg-fee-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.ti-dg-fee-table th,
+.ti-dg-fee-table td {
+  padding: 12px 14px;
+  border: 1px solid #333;
+  text-align: center;
+  color: color-mix(in srgb, #e8e8e8 92%, #888);
+}
+
+.ti-dg-fee-table th {
+  background: #1a1a1a;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.ti-dg-facility-list {
+  margin: 0;
+  padding-left: 1.2em;
+  color: color-mix(in srgb, #e8e8e8 88%, #888);
+  font-size: 0.92rem;
+}
+
+.ti-dg-facility-list li {
+  margin-bottom: 8px;
+}
+
+.ti-dg-contact {
+  margin-top: 20px;
+  font-size: 0.95rem;
+  color: #c8c8c8;
+}
+
+.ti-dg-contact a {
+  color: #e0e0e0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ti-dg-contact a:hover {
+  color: #fff;
+}

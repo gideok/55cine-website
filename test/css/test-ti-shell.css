@@ -162,7 +162,7 @@ body.ti {
   font-weight: 700;
   color: #333;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .ti-day-tab[aria-selected="true"] {
@@ -254,7 +254,7 @@ body.ti {
   padding: 2px 6px;
   border: 1px solid #777;
   color: #444;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .ti-time {
@@ -275,7 +275,7 @@ body.ti {
   background: transparent;
   color: #111;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .ti-book:hover {

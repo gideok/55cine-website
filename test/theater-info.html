@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>소개 — 테스트 UI · 55CINE</title>
+  <link rel="icon" href="../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="css/test-ti-fonts.css" />
+  <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/test-ti-shell.css" />
+  <link rel="stylesheet" href="css/test-ti-theater-info.css" />
+</head>
+<body class="ti">
+  <div class="ti-shell">
+    <div class="ti-left">
+      <div class="ti-left-top">
+        <a class="ti-home" href="../index.html">← Home / index</a>
+        <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
+          <details open>
+            <summary>오오극장</summary>
+            <ul>
+              <li><a class="ti-current" href="theater-info.html" aria-current="page">소개</a></li>
+              <li><a href="viewing-guide.html">관람 안내</a></li>
+              <li><a href="membership.html">멤버십</a></li>
+              <li><a href="daegwan.html">대관</a></li>
+              <li><a href="osinneun-gil.html">오시는 길</a></li>
+              
+            </ul>
+          </details>
+          <details>
+            <summary>상영작</summary>
+            <ul>
+              <li><a href="../now-playing.html">현재 상영작</a></li>
+              <li><a href="#">상영 예정작</a></li>
+              <li><a href="#">지난 상영작</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>예매</summary>
+            <ul>
+              <li><a href="#">예매하기</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>기획전·행사</summary>
+            <ul>
+              <li><a href="special-exhibition-test.html">기획전</a></li>
+              <li><a href="#">행사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>매거진 삼삼오오</summary>
+            <ul>
+              <li><a href="../magazine-preview.html">프리뷰</a></li>
+              <li><a href="../magazine-serial.html">연재</a></li>
+              <li><a href="../gv-moment.html">GV 모먼트</a></li>
+              <li><a href="#">지난 기사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>테스트</summary>
+            <ul>
+              <li><a href="test-intro.html">테스트인트로</a></li>
+              <li><a href="special-exhibition-test.html">기획전</a></li>
+            </ul>
+          </details>
+        </nav>
+      </div>
+      <div class="ti-left-bottom">
+        <h2 class="ti-sched-title">이번주 시간표</h2>
+        <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
+        <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
+      </div>
+    </div>
+    <aside class="ti-right ti-theater-info" aria-label="소개 본문">
+      <div class="ti-theater-scroll">
+        <p class="ti-theater-page-title">오오극장</p>
+        <h1 class="ti-theater-h1">소개</h1>
+
+        <aside class="ti-theater-lead" aria-label="오오극장 슬로건">
+          <p class="ti-theater-lead__eq">1+2+3+4+5+6+7+8+9+10=55</p>
+          <p class="ti-theater-lead__tagline">하나부터 열까지 다 좋은 영화관!</p>
+          <p class="ti-theater-lead__sub">독립영화전용관 오오극장의 10가지 특별함</p>
+        </aside>
+
+        <article class="ti-theater-features" aria-labelledby="theater-features-heading">
+          <h2 id="theater-features-heading" class="visually-hidden">10가지 특별함</h2>
+
+          <section class="ti-theater-item" aria-labelledby="tf-1">
+            <h3 class="ti-theater-item__head" id="tf-1">+1. 지역 최초, 대구 유일의 독립영화전용관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 대구 유일의 독립영화전용관으로, 2015년 서울을 제외한 지역에서 처음으로 설립된 독립영화전용관입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-2">
+            <h3 class="ti-theater-item__head" id="tf-2">+2. 함께 만들어가는 공공의 영화관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 독립영화에 갈증을 느낀 시민들의 자발적인 모금으로 탄생했습니다. 영리 추구를 넘어 영화문화의 다양성을 확장하고 그 저변을 넓혀가는 공공의 영화관으로 자리매김하고자 합니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-3">
+            <h3 class="ti-theater-item__head" id="tf-3">+3. 로컬 시네마</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 극장상영의 기회가 상대적으로 적은 지역의 독립영화, 단편영화, 다큐멘터리 등을 가장 먼저 그리고 집중적으로 소개하는 지역영화 중심의 영화관입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-4">
+            <h3 class="ti-theater-item__head" id="tf-4">+4. 커뮤니티 시네마</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 ‘커뮤니티 시네마’라는 가치를 바탕으로 관객과 다양한 공동체가 함께 상영 프로그램을 만들어가는 ‘영화 공동체’를 지향합니다. 또한 감독과의 대화, 시네토크, 강연 등을 통해 관객과 지속적으로 소통하고자 합니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-5">
+            <h3 class="ti-theater-item__head" id="tf-5">+5. 시민 제작자들과 함께하는 영화관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 청소년, 주부, 노인, 장애인, 이주민 등 다양한 시민들이 만든 영상과 영화를 꾸준히 상영하는 누구에게나 열려 있는 문턱 낮은 영화관입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-6">
+            <h3 class="ti-theater-item__head" id="tf-6">+6. 커뮤니티 카페 ‘삼삼다방’</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 커뮤니티 카페 ‘삼삼다방’을 함께 운영합니다. 이곳은 영화인과 관객이 자유롭게 교류하는 소통의 공간이자 세미나, 영화 감상 모임, 자유 토론 등이 이루어지는 열린 교육의 장입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-7">
+            <h3 class="ti-theater-item__head" id="tf-7">+7. 취향의 공동체, 다채로운 기획전</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 영화 장르만큼이나 다양한 취향이 존중되고 공존하는 공간입니다. 다큐멘터리, 애니메이션, 실험영화 등 폭넓은 프로그램을 통해 관객의 다양한 취향을 담아내는 기획전을 선보입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-8">
+            <h3 class="ti-theater-item__head" id="tf-8">+8. 독립·자립·인디 예술과 함께하는 영화관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 영화예술을 넘어 지역의 독립·자립·인디 예술 공연과 전시가 펼쳐지는 대안적 복합문화공간입니다. 다양한 저변문화의 흐름을 접하고 예술가들과 만날 수 있는 연결의 장이 되고자 합니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-9">
+            <h3 class="ti-theater-item__head" id="tf-9">+9. 무한한 가능성의 자유로운 영화관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 예술의 본질인 표현의 자유를 최우선으로 존중합니다. 영화의 무한한 상상력과 가능성을 제한하는 어떠한 경계로부터도 자유로운 공간을 지향합니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-10">
+            <h3 class="ti-theater-item__head" id="tf-10">+10. 그리고 어떻게 성장할지 우리도 알 수 없는 영화관</h3>
+            <p class="ti-theater-item__body">
+              낡은 시네마테크와 작은 극장 구석에서 시작된 독립영화는 한국 영화의 중요한 토양이 되어 왔습니다. 오오극장은 대구 중구 수동에서 작은 시작을 내딛지만 대구를 넘어 한국 영화문화의 발전에 의미 있는 밑거름이 되도록 꾸준히 성장해 나가겠습니다.
+            </p>
+          </section>
+        </article>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    window.TEST_TI_ASSET_BASE = "../";
+  </script>
+  <script src="../data/week-schedule-data.js"></script>
+  <script src="js/test-ti-week-schedule.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>멤버십 — 테스트 UI · 55CINE</title>
+  <link rel="icon" href="../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="css/test-ti-fonts.css" />
+  <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/test-ti-shell.css" />
+  <link rel="stylesheet" href="css/test-ti-page-shell.css" />
+  <link rel="stylesheet" href="css/test-ti-membership.css" />
+</head>
+<body class="ti">
+  <div class="ti-shell">
+    <div class="ti-left">
+      <div class="ti-left-top">
+        <a class="ti-home" href="../index.html">← Home / index</a>
+        <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
+          <details open>
+            <summary>오오극장</summary>
+            <ul>
+              <li><a href="theater-info.html">소개</a></li>
+              <li><a href="viewing-guide.html">관람 안내</a></li>
+              <li><a class="ti-current" href="membership.html" aria-current="page">멤버십</a></li>
+              <li><a href="daegwan.html">대관</a></li>
+              <li><a href="osinneun-gil.html">오시는 길</a></li>
+              
+            </ul>
+          </details>
+          <details>
+            <summary>상영작</summary>
+            <ul>
+              <li><a href="../now-playing.html">현재 상영작</a></li>
+              <li><a href="#">상영 예정작</a></li>
+              <li><a href="#">지난 상영작</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>예매</summary>
+            <ul>
+              <li><a href="#">예매하기</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>기획전·행사</summary>
+            <ul>
+              <li><a href="special-exhibition-test.html">기획전</a></li>
+              <li><a href="#">행사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>매거진 삼삼오오</summary>
+            <ul>
+              <li><a href="../magazine-preview.html">프리뷰</a></li>
+              <li><a href="../magazine-serial.html">연재</a></li>
+              <li><a href="../gv-moment.html">GV 모먼트</a></li>
+              <li><a href="#">지난 기사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>테스트</summary>
+            <ul>
+              <li><a href="test-intro.html">테스트인트로</a></li>
+              <li><a href="special-exhibition-test.html">기획전</a></li>
+            </ul>
+          </details>
+        </nav>
+      </div>
+      <div class="ti-left-bottom">
+        <h2 class="ti-sched-title">이번주 시간표</h2>
+        <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
+        <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
+      </div>
+    </div>
+    <aside class="ti-right ti-sub-page" aria-label="멤버십 본문">
+      <div class="ti-sub-scroll">
+        <p class="ti-sub-kicker">오오극장</p>
+        <h1 class="ti-sub-h1" id="membership-title">멤버십</h1>
+
+        <div class="ti-mbr-stack" id="mbrAccordion">
+          <details class="ti-mbr-acc">
+            <summary>멤버십이 된다는 것은</summary>
+            <div class="ti-mbr-acc__panel">
+              <div class="ti-mbr-acc__panel-inner">
+                <ul class="ti-mbr-acc__list">
+                  <li>영화문화다양성을 확대하는 일입니다.</li>
+                  <li>독립문화 소수문화를 지키는 일입니다.</li>
+                  <li>다양한 취향을 존중하는 일입니다.</li>
+                  <li>대기업 멀티플렉스가 아닌, 지역의 영화관을 응원하는 일입니다.</li>
+                  <li>영화 창작자들의 미래를 응원하는 일입니다.</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+
+          <details class="ti-mbr-acc">
+            <summary>멤버십 혜택</summary>
+            <div class="ti-mbr-acc__panel">
+              <div class="ti-mbr-acc__panel-inner">
+                <p class="ti-mbr-acc__subhead">영화 관람 혜택</p>
+                <ul class="ti-mbr-acc__dash-list">
+                  <li>월 1회 무료 관람 (월 회비 1만원 기준, 회비에 따라 조정)</li>
+                  <li>매 관람 시 동반 1인 포함 1,000원 할인</li>
+                </ul>
+                <p class="ti-mbr-acc__subhead">삼삼다방 할인 혜택</p>
+                <ul class="ti-mbr-acc__dash-list">
+                  <li>삼삼다방 음료 1,000원 할인</li>
+                </ul>
+                <p class="ti-mbr-acc__subhead">연말정산 소득 공제</p>
+              </div>
+            </div>
+          </details>
+
+          <details class="ti-mbr-acc">
+            <summary>멤버십 가입</summary>
+            <div class="ti-mbr-acc__panel">
+              <div class="ti-mbr-acc__panel-inner">
+                <a
+                  class="ti-mbr-cms-link"
+                  href="https://www.ihappynanum.com/Nanum/nanum/banner/bridge/DG782YKOAT.nanum?memPayType=null&amp;loginOrga=null&amp;orgaId=null&amp;lang=null"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >CMS 링크</a>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <p class="ti-sub-note">
+          운영 사이트: <a href="../membership.html">루트 membership.html</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      function initAccordionExclusive(root) {
+        if (!root) return;
+        root.querySelectorAll("details.ti-mbr-acc").forEach(function (one) {
+          one.addEventListener("toggle", function () {
+            if (!one.open) return;
+            root.querySelectorAll("details.ti-mbr-acc").forEach(function (other) {
+              if (other !== one) other.removeAttribute("open");
+            });
+          });
+        });
+      }
+      initAccordionExclusive(document.getElementById("mbrAccordion"));
+    })();
+  </script>
+  <script>
+    window.TEST_TI_ASSET_BASE = "../";
+  </script>
+  <script src="../data/week-schedule-data.js"></script>
+  <script src="js/test-ti-week-schedule.js"></script>
+</body>
+</html>
