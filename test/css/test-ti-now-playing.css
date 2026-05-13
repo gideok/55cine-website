@@ -1,0 +1,254 @@
+/* now-playing-test.html — mono 본문 (.ti-np-root), 기획전 se-right 톤 참고 */
+
+.ti .ti-right.ti-np-root {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  padding: clamp(12px, 2vw, 22px) clamp(14px, 2.4vw, 28px);
+  background: #fafafa;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ti .ti-np-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+.ti .ti-np-root {
+  --np-max: 1120px;
+  --text: #1a1a1a;
+  --bg: #fafafa;
+  --bg-elevated: #ffffff;
+  --brand-ink: #111;
+  --muted: #5a5a5a;
+  --line: #c8c8c8;
+  --pill-bg: #ececec;
+  --radius: 0;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --brand-bronze: #5a5a5a;
+  --brand-gold: #666;
+  --accent: #333;
+  color: var(--text);
+  background: transparent;
+}
+
+.ti .ti-np-root a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ti .ti-np-root .np-stretch-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.ti .ti-np-root .np-page {
+  max-width: var(--np-max);
+  margin: 0 auto;
+  padding: 20px 0 48px;
+}
+
+.ti .ti-np-root .np-head {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+  margin-bottom: 22px;
+}
+
+.ti .ti-np-root .np-kicker {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ti .ti-np-root .np-title {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--brand-ink);
+}
+
+.ti .ti-np-root .np-sub {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+  max-width: 42rem;
+}
+
+.ti .ti-np-root .np-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ti .ti-np-root .np-count {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.ti .ti-np-root .np-pager {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ti .ti-np-root .np-pager.is-visible {
+  display: flex;
+}
+
+/* 기획전 .se-page-btn 과 동일 계열 */
+.ti .ti-np-root .np-pager button {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 0;
+  border: 1px solid #4a4a4a;
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #333;
+  cursor: pointer;
+}
+
+.ti .ti-np-root .np-pager button:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #111;
+  color: #000;
+}
+
+.ti .ti-np-root .np-pager button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ti .ti-np-root .np-pager button[aria-current="page"] {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+.ti .ti-np-root .np-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+@media (min-width: 900px) {
+  .ti .ti-np-root .np-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ti .ti-np-root .np-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #b0b0b0;
+  border-radius: 0;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: none;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+
+.ti .ti-np-root .np-card:hover {
+  border-color: #111;
+  background: #fafafa;
+}
+
+.ti .ti-np-root .np-card:focus-within {
+  outline: 2px solid #333;
+  outline-offset: 2px;
+}
+
+.ti .ti-np-root .np-card-media {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  background: #e8e8e8;
+}
+
+.ti .ti-np-root .np-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ti .ti-np-root .np-card-body {
+  padding: 14px 14px 16px;
+  border-top: 1px solid #d4d4d4;
+}
+
+.ti .ti-np-root .np-card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--brand-ink);
+  word-break: keep-all;
+}
+
+.ti .ti-np-root .np-card-en {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
+.ti .ti-np-root .np-stretch-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.ti .ti-np-root .np-mobile-hint {
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  display: block;
+}
+
+@media (min-width: 900px) {
+  .ti .ti-np-root .np-mobile-hint {
+    display: none;
+  }
+}
+
+.ti .ti-np-root .np-sentinel {
+  height: 1px;
+  margin-top: 24px;
+}
+
+.ti .ti-np-root .np-end {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 16px;
+  display: none;
+}
+
+.ti .ti-np-root .np-end.is-visible {
+  display: block;
+}
