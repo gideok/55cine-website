@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/test-ti-fonts.css" />
   <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
   <link rel="stylesheet" href="css/test-ti-shell.css" />
+  <link rel="stylesheet" href="css/test-ti-site-footer.css" />
   <link rel="stylesheet" href="css/test-ti-intro.css" />
 </head>
 <body class="ti">
@@ -72,6 +73,12 @@
         <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
         <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
       </div>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base="../"
+        aria-label="사이트 정보"
+      ></footer>
     </div>
     <aside class="ti-right" aria-label="키 비주얼 타이포그래피">
       <div class="ti-type">
@@ -97,8 +104,15 @@
         </div>
       </div>
     </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base="../"
+      aria-label="사이트 정보"
+    ></footer>
   </div>
 
+  <script src="js/test-ti-site-footer-include.js"></script>
   <script>
     window.TEST_TI_ASSET_BASE = "../";
   </script>

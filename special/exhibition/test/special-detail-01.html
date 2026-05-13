@@ -8,6 +8,7 @@
   <link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="../../../test/css/test-ti-fonts.css" />
   <link rel="stylesheet" href="../../../test/css/test-ti-shell.css" />
+  <link rel="stylesheet" href="../../../test/css/test-ti-site-footer.css" />
   <link rel="stylesheet" href="../../../test/css/test-ti-detail.css" />
 </head>
 <body class="ti">
@@ -71,6 +72,12 @@
         <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
         <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
       </div>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base="../../../"
+        aria-label="사이트 정보"
+      ></footer>
     </div>
     <aside class="ti-right sd-right" aria-label="기획전 상세">
       <div class="sd-inner">
@@ -132,8 +139,15 @@
         </article>
       </div>
     </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base="../../../"
+      aria-label="사이트 정보"
+    ></footer>
   </div>
 
+  <script src="../../../test/js/test-ti-site-footer-include.js"></script>
   <script>
     window.TEST_TI_ASSET_BASE = "../../../";
   </script>
