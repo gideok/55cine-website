@@ -90,9 +90,18 @@
         <h1 class="ti-sub-h1" id="direction-title">오시는 길</h1>
 
         <article id="osinneun-gil" aria-labelledby="direction-title">
-          <section class="ti-dir-map-block" aria-label="네이버 지도">
+          <div
+            id="map"
+            class="ti-dir-kakao-map"
+            data-lat="35.8706"
+            data-lng="128.5934"
+            data-zoom="3"
+            role="presentation"
+            aria-label="오오극장 위치 지도"
+          ></div>
+          <!-- <section class="ti-dir-map-block" aria-label="네이버 지도">
             <a class="ti-dir-map-cta" href="https://naver.me/G4W5AtEn" target="_blank" rel="noopener noreferrer">네이버 지도에서 위치 보기</a>
-          </section>
+          </section> -->
 
           <p class="ti-dir-address">대구광역시 중구 국채보상로 537 (수동 1-6번지), 곽병원과 만경관 사이</p>
           <p class="ti-dir-phone">T. <a href="tel:0534253553">053 425 3553</a></p>
@@ -135,5 +144,58 @@
   </script>
   <script src="../data/week-schedule-data.js"></script>
   <script src="js/test-ti-week-schedule.js"></script>
+  <!-- autoload 생략: autoload=false + kakao.maps.load() 조합에서 콜백이 타지 않으면 지도가 비는 경우가 있음 -->
+  <script
+    type="text/javascript"
+    src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=0695e0cf35dbe06f57d11a879686712e"
+  ></script>
+  <script>
+    (function () {
+      var mapInstance = null;
+
+      function relayout() {
+        if (!mapInstance) return;
+        try {
+          mapInstance.relayout();
+        } catch (e) {}
+      }
+
+      function initKakaoMap() {
+        if (typeof kakao === "undefined" || !kakao.maps) {
+          return;
+        }
+        var el = document.getElementById("map");
+        if (!el || el.getAttribute("data-kakao-ready") === "1") {
+          return;
+        }
+        var lat = parseFloat(el.getAttribute("data-lat") || "");
+        var lng = parseFloat(el.getAttribute("data-lng") || "");
+        var level = parseInt(el.getAttribute("data-zoom") || "3", 10) || 3;
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+          return;
+        }
+
+        el.setAttribute("data-kakao-ready", "1");
+        var center = new kakao.maps.LatLng(lat, lng);
+        mapInstance = new kakao.maps.Map(el, { center: center, level: level });
+        new kakao.maps.Marker({ position: center, map: mapInstance });
+
+        window.addEventListener("resize", relayout);
+        if (typeof ResizeObserver !== "undefined") {
+          new ResizeObserver(relayout).observe(el);
+        }
+        window.requestAnimationFrame(function () {
+          window.requestAnimationFrame(relayout);
+        });
+        window.setTimeout(relayout, 120);
+        window.setTimeout(relayout, 400);
+      }
+
+      /* 레이아웃·폰트 반영 후 컨테이너 크기가 잡힌 뒤 초기화 (스크롤 영역 안 지도에서 특히 필요) */
+      window.addEventListener("load", function () {
+        window.requestAnimationFrame(initKakaoMap);
+      });
+    })();
+  </script>
 </body>
 </html>

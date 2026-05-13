@@ -1,5 +1,17 @@
 /* test/osinneun-gil.html — 모노크롬 */
 
+.ti-dir-kakao-map {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  height: clamp(260px, 42vw, 420px);
+  min-height: 280px;
+  margin: 0 0 20px;
+  box-sizing: border-box;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+
 .ti-dir-map-block {
   margin: 0 0 22px;
   padding: 20px;
