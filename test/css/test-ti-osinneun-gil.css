@@ -4,7 +4,6 @@
   position: relative;
   width: 100%;
   max-width: 100%;
-  height: clamp(260px, 42vw, 420px);
   min-height: 280px;
   margin: 0 0 20px;
   box-sizing: border-box;
