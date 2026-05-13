@@ -79,6 +79,16 @@
   text-decoration: underline;
 }
 
+.ti .ti-md-test-wrap .np-back a {
+  color: #333;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ti .ti-md-test-wrap .np-back a:hover {
+  color: #000;
+}
+
 .ti .ti-md-test-wrap .ref-note a:hover {
   color: #000;
 }

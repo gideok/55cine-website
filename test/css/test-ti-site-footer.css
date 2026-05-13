@@ -45,13 +45,13 @@
   padding: 0;
   margin: 0;
   line-height: 0;
-  border-radius: 2px;
-  background: #fff;
+  border-radius: 0;
+  background: transparent;
   overflow: hidden;
   width: 100%;
   max-width: none;
   height: auto;
-  aspect-ratio: 377 / 211;
+  aspect-ratio: 1536 / 1024;
 }
 
 .ti .ti-footer.site-footer .footer-logo-box img {

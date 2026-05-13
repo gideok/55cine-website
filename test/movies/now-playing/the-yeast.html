@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>누룩 (The Yeast) — 테스트 UI · 55CINE</title>
+  <link rel="icon" href="../../../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../../../components/site-common.css" />
+  <link rel="stylesheet" href="../../css/test-ti-fonts.css" />
+  <link rel="stylesheet" href="../../css/test-ti-fonts-display.css" />
+  <link rel="stylesheet" href="../../css/test-ti-shell.css" />
+  <link rel="stylesheet" href="../../css/test-ti-site-footer.css" />
+  <link rel="stylesheet" href="../../../components/movie-detail-layout.css" />
+  <link rel="stylesheet" href="../../css/test-ti-movie-detail-test.css" />
+</head>
+<body class="ti">
+  <div class="ti-shell">
+    <div class="ti-left">
+      <div class="ti-left-top">
+        <a class="ti-home" href="../../../index.html">← Home / index</a>
+        <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
+          <details>
+            <summary>오오극장</summary>
+            <ul>
+              <li><a href="../../theater-info.html">소개</a></li>
+              <li><a href="../../viewing-guide.html">관람 안내</a></li>
+              <li><a href="../../membership.html">멤버십</a></li>
+              <li><a href="../../daegwan.html">대관</a></li>
+              <li><a href="../../osinneun-gil.html">오시는 길</a></li>
+            </ul>
+          </details>
+          <details open>
+            <summary>상영작</summary>
+            <ul>
+              <li><a class="ti-current" href="../../now-playing-test.html" aria-current="page">현재 상영작</a></li>
+              <li><a href="#">상영 예정작</a></li>
+              <li><a href="#">지난 상영작</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>예매</summary>
+            <ul>
+              <li><a href="#">예매하기</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>기획전·행사</summary>
+            <ul>
+              <li><a href="../../special-exhibition-test.html">기획전</a></li>
+              <li><a href="#">행사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>매거진 삼삼오오</summary>
+            <ul>
+              <li><a href="../../magazine-preview-test.html">프리뷰</a></li>
+              <li><a href="../../../magazine-serial.html">연재</a></li>
+              <li><a href="../../../gv-moment.html">GV 모먼트</a></li>
+              <li><a href="#">지난 기사</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>테스트</summary>
+            <ul>
+              <li><a href="../../test-intro.html">테스트인트로</a></li>
+              <li><a href="../../special-exhibition-test.html">기획전</a></li>
+              <li><a href="../../now-playing-test.html">현재 상영작</a></li>
+              <li><a href="../../movie-detail-test.html">영화 상세 (샘플)</a></li>
+              <li><a href="../../magazine-preview-test.html">매거진 프리뷰</a></li>
+            </ul>
+          </details>
+        </nav>
+      </div>
+      <div class="ti-left-bottom">
+        <h2 class="ti-sched-title">이번주 시간표</h2>
+        <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
+        <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
+      </div>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base="../../../"
+        aria-label="사이트 정보"
+      ></footer>
+    </div>
+    <aside class="ti-right ti-md-panel" aria-label="영화 상세 본문">
+      <div class="ti-md-scroll ti-md-test-wrap">
+<section class="section-movie-detail" aria-labelledby="movie-detail-page-title">
+      <p class="np-back"><a href="../../now-playing-test.html">현재 상영작 목록</a></p>
+      <h2 class="section-title" id="movie-detail-page-title">누룩</h2>
+      <div class="movie-detail-grid">
+        <div class="movie-detail-c1 movie-detail-box">
+          <div class="movie-detail-box-inner">
+            <img class="movie-detail-poster" src="../../../images/movies/now-playing/the-yeast-poster.jpg" width="260" height="368" alt="누룩 포스터" decoding="async" />
+          </div>
+        </div>
+        <div class="movie-detail-c2 movie-detail-box">
+          <div class="movie-detail-box-inner">
+            <dl class="movie-detail-meta">
+              <div class="meta-row">
+                <dt>감독</dt>
+                <dd>장동윤</dd>
+              </div>
+              <div class="meta-row">
+                <dt>출연</dt>
+                <dd>김승윤(다슬), 송지혁(다현), 박명훈(아빠)</dd>
+              </div>
+              <div class="meta-row">
+                <dt>정보</dt>
+                <dd>드라마 · 83분 36초 · 15세이상관람가</dd>
+              </div>
+              <div class="meta-row">
+                <dt>개봉</dt>
+                <dd>2026.4.4</dd>
+              </div>
+            </dl>
+            <a class="md2-booking-btn" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="누룩 예매하기">예매하기</a>
+          </div>
+        </div>
+        <div class="movie-detail-c3 movie-detail-box">
+          <div class="movie-detail-box-inner">
+            <div class="movie-detail-tabs" role="tablist" aria-label="영화 정보 탭">
+              <button type="button" class="movie-detail-tab" role="tab" id="movie-tab-synopsis-the-yeast" aria-selected="true" aria-controls="movie-tabpanel-synopsis-the-yeast">줄거리</button>
+              <button type="button" class="movie-detail-tab" role="tab" id="movie-tab-trailer-the-yeast" aria-selected="false" aria-controls="movie-tabpanel-trailer-the-yeast" tabindex="-1">예고</button>
+            </div>
+            <div id="movie-tabpanel-synopsis-the-yeast" class="movie-detail-tabpanel" role="tabpanel" aria-labelledby="movie-tab-synopsis-the-yeast">
+              <p class="movie-detail-synopsis">동네 사람들만 아는 소문난 양조장 집 딸이자 막걸리를 사랑하는 열여덟 소녀 ‘다슬’이 어느 날 막걸리의 맛이 변한 걸 느끼고 막걸리의 주재료인 사라진 누룩을 찾아 나서며 벌어지는 특별한 이야기.</p>
+            </div>
+            <div id="movie-tabpanel-trailer-the-yeast" class="movie-detail-tabpanel" role="tabpanel" aria-labelledby="movie-tab-trailer-the-yeast" hidden>
+              <div class="movie-detail-trailer-frame">
+                <iframe
+                  src="https://www.youtube.com/embed/e8TMxXtKjtI"
+                  title="「누룩」 예고편"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="movie-detail-c4 movie-detail-box">
+          <div class="movie-detail-box-inner">
+            <h3 class="movie-detail-schedule-title">상영시간표</h3>
+            <p class="ref-note" style="margin:-6px 0 12px;">오오극장 공식 사이트 기준 · 변경될 수 있습니다.</p>
+            <div class="movie-detail-badge-grid">
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.04.(월)</span>
+                <span class="badge-time">13:30</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.05.(화)</span>
+                <span class="badge-time">11:30</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.06.(수)</span>
+                <span class="badge-time">15:45</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.07.(목)</span>
+                <span class="badge-time">13:35</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.08.(금)</span>
+                <span class="badge-time">16:10</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.09.(토)</span>
+                <span class="badge-time">20:40</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.11.(월)</span>
+                <span class="badge-time">15:20</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.12.(화)</span>
+                <span class="badge-time">13:50</span>
+              </div>
+              <div class="movie-detail-time-badge">
+                <span class="badge-date">05.13.(수)</span>
+                <span class="badge-time">11:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+      </div>
+    </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base="../../../"
+      aria-label="사이트 정보"
+    ></footer>
+  </div>
+
+  <script src="../../js/test-ti-site-footer-include.js"></script>
+  <script>
+    window.TEST_TI_ASSET_BASE = "../../../";
+  </script>
+  <script src="../../../data/week-schedule-data.js"></script>
+  <script src="../../js/test-ti-week-schedule.js"></script>
+  <script>
+    (function () {
+      var movieTabSynopsis = document.getElementById("movie-tab-synopsis-the-yeast");
+      var movieTabTrailer = document.getElementById("movie-tab-trailer-the-yeast");
+      var moviePanelSynopsis = document.getElementById("movie-tabpanel-synopsis-the-yeast");
+      var moviePanelTrailer = document.getElementById("movie-tabpanel-trailer-the-yeast");
+      if (!movieTabSynopsis || !movieTabTrailer || !moviePanelSynopsis || !moviePanelTrailer) return;
+
+      function activateMovieDetailTab(which) {
+        var isSynopsis = which === "synopsis";
+        movieTabSynopsis.setAttribute("aria-selected", isSynopsis ? "true" : "false");
+        movieTabTrailer.setAttribute("aria-selected", !isSynopsis ? "true" : "false");
+        movieTabSynopsis.tabIndex = isSynopsis ? 0 : -1;
+        movieTabTrailer.tabIndex = !isSynopsis ? 0 : -1;
+        moviePanelSynopsis.hidden = !isSynopsis;
+        moviePanelTrailer.hidden = isSynopsis;
+      }
+
+      movieTabSynopsis.addEventListener("click", function () {
+        activateMovieDetailTab("synopsis");
+      });
+      movieTabTrailer.addEventListener("click", function () {
+        activateMovieDetailTab("trailer");
+      });
+    })();
+</script>
+</body>
+</html>

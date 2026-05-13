@@ -156,6 +156,16 @@
   box-sizing: border-box;
 }
 
+.ti .ti-mz-panel .preview-list a {
+  text-decoration: none;
+}
+
+.ti .ti-mz-panel .preview-list a:hover,
+.ti .ti-mz-panel .preview-list a:focus-visible,
+.ti .ti-mz-panel .preview-list a:active {
+  text-decoration: none;
+}
+
 .ti .ti-mz-panel .preview-title-link {
   font-size: 1rem;
   font-weight: 700;
@@ -165,7 +175,6 @@
 
 .ti .ti-mz-panel .preview-title-link:hover {
   color: #000;
-  text-decoration: underline;
 }
 
 .ti .ti-mz-panel .preview-excerpt-link {

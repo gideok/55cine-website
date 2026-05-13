@@ -15,11 +15,12 @@ BOOKING = (
 
 
 def fmt_schedule_date(mmdd_dow: str, year: int = 2026) -> str:
+    """MM.DD.(요일) — year 인자는 하위 호환용으로 유지(표시에는 사용하지 않음)."""
     m = re.match(r"(\d{2})/(\d{2})\(([^)]+)\)", mmdd_dow)
     if not m:
         return mmdd_dow
     mm, dd, w = m.groups()
-    return f"{year}.{mm}.{dd}.({w})"
+    return f"{mm}.{dd}.({w})"
 
 
 def badges_from_raw(pairs: list[tuple[str, str]], year: int = 2026) -> list[dict[str, str]]:

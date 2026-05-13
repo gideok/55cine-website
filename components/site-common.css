@@ -499,12 +499,12 @@ nav.magazine-pn .pn-card-empty {
   padding: 0;
   margin: 0;
   line-height: 0;
-  border-radius: 2px;
-  background: #fff;
+  border-radius: 0;
+  background: transparent;
   overflow: hidden;
   height: 300px;
   width: auto;
-  aspect-ratio: 377 / 211;
+  aspect-ratio: 1536 / 1024;
   max-width: 100%;
 }
 
@@ -587,8 +587,8 @@ nav.magazine-pn .pn-card-empty {
     max-width: none;
     align-self: stretch;
     height: auto;
-    aspect-ratio: 377 / 211;
-    /* 이미지(211px 기준) 비율에 맞춰 높이가 자연스럽게 결정됨 */
+    aspect-ratio: 1536 / 1024;
+    /* logo_footer_transparent.png(1536×1024) 비율 */
   }
   .footer-logo-box img {
     width: 100%;

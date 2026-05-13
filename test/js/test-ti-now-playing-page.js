@@ -16,6 +16,8 @@
     if (!u) return "";
     if (/^https?:/i.test(u)) return u;
     if (u.startsWith("../")) return u;
+    /* 상세 HTML은 test/movies/now-playing/ 에 두고, 목록은 /test/*.html 기준 상대경로로 연결 */
+    if (u.indexOf("movies/now-playing/") === 0) return u;
     return "../" + u.replace(/^\//, "");
   }
 

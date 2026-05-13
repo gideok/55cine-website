@@ -153,6 +153,26 @@
   gap: 18px;
 }
 
+/* 모바일·태블릿: 한 줄에 포스터 2개(2열) */
+@media (max-width: 899px) {
+  .ti .ti-np-root .np-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .ti .ti-np-root .np-card-body {
+    padding: 10px 10px 12px;
+  }
+
+  .ti .ti-np-root .np-card-title {
+    font-size: 0.88rem;
+  }
+
+  .ti .ti-np-root .np-card-en {
+    font-size: 0.72rem;
+  }
+}
+
 @media (min-width: 900px) {
   .ti .ti-np-root .np-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
