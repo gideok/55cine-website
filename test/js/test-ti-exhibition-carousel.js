@@ -267,7 +267,7 @@
     COL_BREAKPOINT.addListener(onColBreakpointChange);
   }
 
-  window.addEventListener("special-exhibition-test:relayout", function () {
+  window.addEventListener("ti-shell:relayout", function () {
     scheduleLayout();
   });
 

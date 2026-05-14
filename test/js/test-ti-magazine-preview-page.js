@@ -416,6 +416,14 @@
       { passive: true }
     );
 
+    window.addEventListener(
+      "ti-shell:relayout",
+      function () {
+        if (currentView === "thumb") scheduleThumbLayout();
+      },
+      { passive: true }
+    );
+
     if (mzThumbStack && typeof ResizeObserver !== "undefined") {
       thumbResizeObserver = new ResizeObserver(function () {
         if (currentView === "thumb") scheduleThumbLayout();

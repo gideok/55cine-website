@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="ti-nav-current" content="special-exhibition-test.html" />
   <title>기획전 — 테스트 · 55CINE 오오극장</title>
   <link rel="icon" href="../favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
@@ -15,102 +16,9 @@
 <body class="ti">
   <div class="ti-shell" id="tiShell">
     <div class="ti-left">
-      <div class="ti-mobile-menu-bar">
-        <button
-          type="button"
-          class="ti-hamburger"
-          id="tiHamburger"
-          aria-expanded="true"
-          aria-controls="tiLeftPanel"
-        >
-          <span class="ti-hamburger__glyph" aria-hidden="true">
-            <img
-              class="ti-hamburger__img ti-hamburger__img--short"
-              alt=""
-              width="18"
-              height="8"
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='8' viewBox='0 0 18 8'%3E%3Cline x1='0' y1='7' x2='10' y2='1' stroke='%231a1a1a' stroke-width='2' stroke-linecap='square'/%3E%3C/svg%3E"
-            />
-            <img
-              class="ti-hamburger__img ti-hamburger__img--mid"
-              alt=""
-              width="24"
-              height="9"
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='9' viewBox='0 0 24 9'%3E%3Cline x1='0' y1='8' x2='16' y2='1' stroke='%231a1a1a' stroke-width='2' stroke-linecap='square'/%3E%3C/svg%3E"
-            />
-            <img
-              class="ti-hamburger__img ti-hamburger__img--long"
-              alt=""
-              width="30"
-              height="10"
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='10' viewBox='0 0 30 10'%3E%3Cline x1='0' y1='9' x2='22' y2='1' stroke='%231a1a1a' stroke-width='2' stroke-linecap='square'/%3E%3C/svg%3E"
-            />
-          </span>
-        </button>
-        <span class="ti-mobile-menu-label">독립영화전용관 오오극장</span>
-      </div>
+      <div data-ti-mobile-menu-bar></div>
       <div class="ti-left-panel" id="tiLeftPanel">
-      <div class="ti-left-top">
-        <a class="ti-home" href="../index.html">← Home / index</a>
-        <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
-          <details>
-            <summary>오오극장</summary>
-            <ul>
-              <li><a href="theater-info.html">소개</a></li>
-              <li><a href="viewing-guide.html">관람 안내</a></li>
-              <li><a href="membership.html">멤버십</a></li>
-              <li><a href="daegwan.html">대관</a></li>
-              <li><a href="osinneun-gil.html">오시는 길</a></li>
-              
-            </ul>
-          </details>
-          <details>
-            <summary>상영작</summary>
-            <ul>
-              <li><a href="now-playing-test.html">현재 상영작</a></li>
-              <li><a href="#">상영 예정작</a></li>
-              <li><a href="#">지난 상영작</a></li>
-            </ul>
-          </details>
-          <details>
-            <summary>예매</summary>
-            <ul>
-              <li><a href="#">예매하기</a></li>
-            </ul>
-          </details>
-          <details open>
-            <summary>기획전·행사</summary>
-            <ul>
-              <li><a class="ti-current" href="special-exhibition-test.html" aria-current="page">기획전</a></li>
-              <li><a href="#">행사</a></li>
-            </ul>
-          </details>
-          <details>
-            <summary>매거진 삼삼오오</summary>
-            <ul>
-              <li><a href="magazine-preview-test.html">프리뷰</a></li>
-              <li><a href="../magazine-serial.html">연재</a></li>
-              <li><a href="../gv-moment.html">GV 모먼트</a></li>
-              <li><a href="#">지난 기사</a></li>
-            </ul>
-          </details>
-          <details>
-            <summary>테스트</summary>
-            <ul>
-              <li><a href="test-intro.html">테스트인트로</a></li>
-              <li><a href="special-exhibition-test.html">기획전</a></li>
-              <li><a href="now-playing-test.html">현재 상영작</a></li>
-              <li><a href="movie-detail-test.html">영화 상세 (샘플)</a></li>
-              <li><a href="magazine-preview-test.html">매거진 프리뷰</a></li>
-            </ul>
-          </details>
-        </nav>
-      </div>
-      <div class="ti-left-bottom">
-        <h2 class="ti-sched-title">이번주 시간표</h2>
-        <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
-        <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
-      </div>
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
       </div>
       <footer
         class="ti-footer ti-footer--slot-pc site-footer"
@@ -157,8 +65,10 @@
     window.TEST_TI_ASSET_BASE = "../";
   </script>
   <script src="../data/week-schedule-data.js"></script>
+  <script src="../data/now-playing-data.js"></script>
   <script src="../data/special-program-data.js"></script>
   <script src="js/test-ti-exhibition-carousel.js"></script>
+  <script src="js/test-ti-left-gnb-include.js"></script>
   <script src="js/test-ti-mobile-menu.js"></script>
   <script src="js/test-ti-week-schedule.js"></script>
 </body>

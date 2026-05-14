@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="ti-nav-current" content="now-playing-test.html" />
   <title>달걀 원정대 (Riddle of Fire) — 테스트 UI · 55CINE</title>
   <link rel="icon" href="../../../favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
@@ -15,67 +16,11 @@
   <link rel="stylesheet" href="../../css/test-ti-movie-detail-test.css" />
 </head>
 <body class="ti">
-  <div class="ti-shell">
+  <div class="ti-shell" id="tiShell">
     <div class="ti-left">
-      <div class="ti-left-top">
-        <a class="ti-home" href="../../../index.html">← Home / index</a>
-        <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
-          <details>
-            <summary>오오극장</summary>
-            <ul>
-              <li><a href="../../theater-info.html">소개</a></li>
-              <li><a href="../../viewing-guide.html">관람 안내</a></li>
-              <li><a href="../../membership.html">멤버십</a></li>
-              <li><a href="../../daegwan.html">대관</a></li>
-              <li><a href="../../osinneun-gil.html">오시는 길</a></li>
-            </ul>
-          </details>
-          <details open>
-            <summary>상영작</summary>
-            <ul>
-              <li><a class="ti-current" href="../../now-playing-test.html" aria-current="page">현재 상영작</a></li>
-              <li><a href="#">상영 예정작</a></li>
-              <li><a href="#">지난 상영작</a></li>
-            </ul>
-          </details>
-          <details>
-            <summary>예매</summary>
-            <ul>
-              <li><a href="#">예매하기</a></li>
-            </ul>
-          </details>
-          <details>
-            <summary>기획전·행사</summary>
-            <ul>
-              <li><a href="../../special-exhibition-test.html">기획전</a></li>
-              <li><a href="#">행사</a></li>
-            </ul>
-          </details>
-          <details>
-            <summary>매거진 삼삼오오</summary>
-            <ul>
-              <li><a href="../../magazine-preview-test.html">프리뷰</a></li>
-              <li><a href="../../../magazine-serial.html">연재</a></li>
-              <li><a href="../../../gv-moment.html">GV 모먼트</a></li>
-              <li><a href="#">지난 기사</a></li>
-            </ul>
-          </details>
-          <details>
-            <summary>테스트</summary>
-            <ul>
-              <li><a href="../../test-intro.html">테스트인트로</a></li>
-              <li><a href="../../special-exhibition-test.html">기획전</a></li>
-              <li><a href="../../now-playing-test.html">현재 상영작</a></li>
-              <li><a href="../../movie-detail-test.html">영화 상세 (샘플)</a></li>
-              <li><a href="../../magazine-preview-test.html">매거진 프리뷰</a></li>
-            </ul>
-          </details>
-        </nav>
-      </div>
-      <div class="ti-left-bottom">
-        <h2 class="ti-sched-title">이번주 시간표</h2>
-        <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
-        <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
+      <div data-ti-mobile-menu-bar></div>
+      <div class="ti-left-panel" id="tiLeftPanel">
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
       </div>
       <footer
         class="ti-footer ti-footer--slot-pc site-footer"
@@ -189,6 +134,8 @@
     window.TEST_TI_ASSET_BASE = "../../../";
   </script>
   <script src="../../../data/week-schedule-data.js"></script>
+  <script src="../../js/test-ti-left-gnb-include.js"></script>
+  <script src="../../js/test-ti-mobile-menu.js"></script>
   <script src="../../js/test-ti-week-schedule.js"></script>
   <script>
     (function () {
