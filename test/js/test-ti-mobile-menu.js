@@ -18,6 +18,24 @@
       if (!mq.matches) {
         shell.classList.remove("ti-menu-collapsed-mobile");
         btn.setAttribute("aria-expanded", "true");
+        btn.setAttribute("aria-label", "메뉴·시간표 접기");
+      }
+    }
+
+    function applyMobileDefaultCollapsed() {
+      if (!mq.matches) return;
+      shell.classList.add("ti-menu-collapsed-mobile");
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-label", "메뉴·시간표 펼치기");
+      window.requestAnimationFrame(requestRelayout);
+      window.setTimeout(requestRelayout, 480);
+    }
+
+    function onViewportModeChange() {
+      if (mq.matches) {
+        applyMobileDefaultCollapsed();
+      } else {
+        clearCollapsedOnDesktop();
       }
     }
 
@@ -33,21 +51,21 @@
       window.setTimeout(requestRelayout, 480);
     });
 
-    btn.setAttribute("aria-label", "메뉴·시간표 접기");
-
     window.addEventListener(
       "resize",
       function () {
-        clearCollapsedOnDesktop();
+        if (!mq.matches) clearCollapsedOnDesktop();
       },
       { passive: true }
     );
 
     if (mq.addEventListener) {
-      mq.addEventListener("change", clearCollapsedOnDesktop);
+      mq.addEventListener("change", onViewportModeChange);
     } else if (mq.addListener) {
-      mq.addListener(clearCollapsedOnDesktop);
+      mq.addListener(onViewportModeChange);
     }
+
+    onViewportModeChange();
   }
 
   window.addEventListener("ti-left-gnb:loaded", bindMobileMenu);
@@ -64,4 +82,17 @@
 
   tryBindSoon();
   window.addEventListener("load", tryBindSoon, { once: true });
+
+  window.addEventListener("pageshow", function (ev) {
+    if (!ev.persisted) return;
+    var shell = document.getElementById("tiShell");
+    var btn = document.getElementById("tiHamburger");
+    if (!shell || !btn) return;
+    var mq = window.matchMedia("(max-width: 820px)");
+    if (!mq.matches) return;
+    shell.classList.add("ti-menu-collapsed-mobile");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-label", "메뉴·시간표 펼치기");
+    window.dispatchEvent(new CustomEvent("ti-shell:relayout"));
+  });
 })();

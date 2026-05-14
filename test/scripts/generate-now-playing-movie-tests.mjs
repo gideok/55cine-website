@@ -106,6 +106,7 @@ ${mainInner}
   <script src="../../../data/week-schedule-data.js"></script>
   <script src="../../js/test-ti-left-gnb-include.js"></script>
   <script src="../../js/test-ti-mobile-menu.js"></script>
+  <script src="../../js/test-ti-scroll-top.js"></script>
   <script src="../../js/test-ti-week-schedule.js"></script>
   <script>${tabScript}</script>
 </body>

@@ -503,3 +503,59 @@ body.ti {
     transition: none !important;
   }
 }
+
+/* 우측 하단 맨 위로 (test 공통, test-ti-scroll-top.js) */
+body.ti .ti-scroll-top {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right, 0px));
+  bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  margin: 0;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid #000;
+  border-radius: 0;
+  background: #0a0a0a;
+  color: #f0f0f0;
+  box-shadow: inset 0 0 0 1px #e8e8e8;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    visibility 0.22s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+body.ti .ti-scroll-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+body.ti .ti-scroll-top:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+  box-shadow: inset 0 0 0 1px #f5f5f5;
+}
+
+body.ti .ti-scroll-top:focus-visible {
+  outline: 2px solid #f5f5f5;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.ti .ti-scroll-top {
+    transition: none;
+  }
+}
