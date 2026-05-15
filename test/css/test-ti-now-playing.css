@@ -1,4 +1,4 @@
-/* now-playing-test.html — mono 본문 (.ti-np-root), 기획전 se-right 톤 참고 */
+/* now-playing-test.html — mono 본문 (.ti-np-root); 상영작 그리드는 3열·간격 없음 */
 
 .ti .ti-right.ti-np-root {
   flex: 1 1 auto;
@@ -149,40 +149,32 @@
 
 .ti .ti-np-root .np-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid #b0b0b0;
+  border-left: 1px solid #b0b0b0;
 }
 
-/* 모바일·태블릿: 한 줄에 포스터 2개(2열) */
 @media (max-width: 899px) {
-  .ti .ti-np-root .np-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
   .ti .ti-np-root .np-card-body {
-    padding: 10px 10px 12px;
+    padding: 8px 8px 10px;
   }
 
   .ti .ti-np-root .np-card-title {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
   }
 
   .ti .ti-np-root .np-card-en {
-    font-size: 0.72rem;
-  }
-}
-
-@media (min-width: 900px) {
-  .ti .ti-np-root .np-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    font-size: 0.68rem;
   }
 }
 
 .ti .ti-np-root .np-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid #b0b0b0;
+  border: none;
+  border-right: 1px solid #b0b0b0;
+  border-bottom: 1px solid #b0b0b0;
   border-radius: 0;
   overflow: hidden;
   background: #fff;
@@ -192,13 +184,14 @@
 }
 
 .ti .ti-np-root .np-card:hover {
-  border-color: #111;
   background: #fafafa;
+  border-right-color: #111;
+  border-bottom-color: #111;
 }
 
 .ti .ti-np-root .np-card:focus-within {
   outline: 2px solid #333;
-  outline-offset: 2px;
+  outline-offset: 0;
 }
 
 .ti .ti-np-root .np-card-media {
