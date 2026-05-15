@@ -1,0 +1,41 @@
+/*
+ * [그리드라인] 기획전(special-exhibition-test) 포스터 그리드 — 셀(포스터+제목) 단위 테두리
+ * 일괄 수정: 이 파일의 변수·아래 블록만 조정. 적용 페이지 head 에 exhibition.css 다음으로 링크.
+ */
+
+/* [그리드라인] 색·굵기 (한곳에서 조정) */
+.ti-right.se-right {
+  --se-grid-line: #8a8a8a;
+  --se-grid-line-caption: #d4d4d4;
+}
+
+/* [그리드라인] 바깥 프레임: 좌·상은 그리드에만 */
+.ti-right.se-right .se-grid {
+  gap: 0;
+  border-left: 1px solid var(--se-grid-line);
+  border-top: 1px solid var(--se-grid-line);
+}
+
+/* [그리드라인] 각 셀: 우·하만 (인접 셀과 겹선 없이 한 줄) */
+.ti-right.se-right .se-card {
+  border: 0;
+  border-right: 1px solid var(--se-grid-line);
+  border-bottom: 1px solid var(--se-grid-line);
+}
+
+/* [그리드라인] 썸네일 링크 박스 테두리 제거 — 셀 외곽선만 보이게 */
+.ti-right.se-right .se-thumb-link {
+  border: 0;
+}
+
+/* [그리드라인] 포스터/제목 사이 구분선 톤 통일 */
+.ti-right.se-right .se-title-wrap {
+  border-top-color: var(--se-grid-line-caption);
+}
+
+@media (max-width: 820px) {
+  /* [그리드라인] 모바일 2열에서도 동일 규칙 (열 수는 exhibition.css 가 담당) */
+  .ti-right.se-right .se-grid {
+    gap: 0;
+  }
+}

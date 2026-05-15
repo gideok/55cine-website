@@ -111,9 +111,13 @@
         timeEl.className = "ti-time";
         timeEl.textContent = entry.time;
 
-        var book = document.createElement("button");
-        book.type = "button";
+        var bookUrl =
+          "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059";
+        var book = document.createElement("a");
         book.className = "ti-book";
+        book.href = bookUrl;
+        book.target = "_blank";
+        book.rel = "noopener noreferrer";
         book.setAttribute("aria-label", entry.title + " " + entry.time + " 예매하기");
         book.textContent = "예매";
 

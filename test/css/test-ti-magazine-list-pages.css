@@ -1,0 +1,176 @@
+/* magazine-serial-test.html, gv-moment-test.html — ti-mz-panel 내 연재·GV 그리드 (magazine-preview mono 톤과 정렬) */
+
+.ti .ti-mz-panel .serial-list,
+.ti .ti-mz-panel .gv-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  align-content: start;
+}
+
+.ti .ti-mz-panel .serial-item,
+.ti .ti-mz-panel .gv-item {
+  border: 1px solid #8a8a8a;
+  border-radius: 0;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.ti .ti-mz-panel .serial-thumb-link,
+.ti .ti-mz-panel .gv-thumb-link {
+  display: block;
+  line-height: 0;
+  background: #f0f0f0;
+  border-bottom: 1px solid #8a8a8a;
+  text-decoration: none;
+}
+
+.ti .ti-mz-panel .serial-thumb-link:hover,
+.ti .ti-mz-panel .serial-thumb-link:focus-visible,
+.ti .ti-mz-panel .gv-thumb-link:hover,
+.ti .ti-mz-panel .gv-thumb-link:focus-visible {
+  text-decoration: none;
+}
+
+.ti .ti-mz-panel .serial-thumb,
+.ti .ti-mz-panel .gv-thumb {
+  width: 100%;
+  aspect-ratio: 264 / 200;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+.ti .ti-mz-panel .serial-title-wrap,
+.ti .ti-mz-panel .gv-title-wrap {
+  padding: 14px 14px 16px;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 0;
+  box-sizing: border-box;
+}
+
+.ti .ti-mz-panel .serial-title,
+.ti .ti-mz-panel .gv-title {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.38;
+  color: #2a2a2a;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ti .ti-mz-panel .serial-title-link,
+.ti .ti-mz-panel .gv-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.ti .ti-mz-panel .serial-title-link:hover .serial-title,
+.ti .ti-mz-panel .serial-title-link:focus-visible .serial-title,
+.ti .ti-mz-panel .gv-title-link:hover .gv-title,
+.ti .ti-mz-panel .gv-title-link:focus-visible .gv-title {
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ti .ti-mz-panel .serial-date {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.ti .ti-mz-panel .page-sub {
+  margin: 0 0 16px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.ti .ti-mz-panel .pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding-top: 14px;
+  border-top: 1px solid #c8c8c8;
+}
+
+.ti .ti-mz-panel .page-btn {
+  min-width: 34px;
+  height: auto;
+  padding: 7px 12px;
+  border: 1px solid #4a4a4a;
+  border-radius: 0;
+  background: #fff;
+  color: #333;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.ti .ti-mz-panel .page-btn:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #111;
+  color: #000;
+}
+
+.ti .ti-mz-panel .page-btn.is-active {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+  color: #fff;
+}
+
+.ti .ti-mz-panel .page-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.ti .ti-mz-panel .load-sentinel {
+  height: 1px;
+  visibility: hidden;
+}
+
+/* PC: 연재·GV 본페이지(magazine-serial / gv-moment)와 동일하게 한 행 4칸 */
+@media (min-width: 901px) {
+  .ti .ti-mz-panel .serial-list,
+  .ti .ti-mz-panel .gv-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 425px) {
+  .ti .ti-mz-panel .serial-list,
+  .ti .ti-mz-panel .gv-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .ti .ti-mz-panel .serial-title-wrap,
+  .ti .ti-mz-panel .gv-title-wrap {
+    padding: 10px 8px 12px;
+    min-height: 0;
+  }
+
+  .ti .ti-mz-panel .serial-title,
+  .ti .ti-mz-panel .gv-title {
+    font-size: 0.82rem;
+  }
+
+  .ti .ti-mz-panel .serial-date {
+    font-size: 0.7rem;
+  }
+}

@@ -1,7 +1,7 @@
 <!-- 공통 GNB: 링크·구조는 이 파일만 수정. head 에 <meta name="ti-nav-current" content="파일명.html" /> -->
 <!-- 모바일 상단 바: test/partials/ti-mobile-menu-bar.html — test/js/test-ti-left-gnb-include.js 가 함께 주입 -->
 <div class="ti-left-top">
-  <a class="ti-home" href="__TI_SITE_ROOT__index.html">← Home / index</a>
+  <a class="ti-home" href="/test/test-intro.html">← Home</a>
   <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
     <details>
       <summary>오오극장</summary>
@@ -24,7 +24,13 @@
     <details>
       <summary>예매</summary>
       <ul>
-        <li><a href="#">예매하기</a></li>
+        <li>
+          <a
+            href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&amp;BrandCd=indieart&amp;CinemaCd=000059"
+            target="_blank"
+            rel="noopener noreferrer"
+          >예매하기</a>
+        </li>
       </ul>
     </details>
     <details>
@@ -38,12 +44,12 @@
       <summary>매거진 삼삼오오</summary>
       <ul>
         <li><a href="__TI_TEST_ROOT__magazine-preview-test.html">프리뷰</a></li>
-        <li><a href="__TI_SITE_ROOT__magazine-serial.html">연재</a></li>
-        <li><a href="__TI_SITE_ROOT__gv-moment.html">GV 모먼트</a></li>
+        <li><a href="__TI_TEST_ROOT__magazine-serial-test.html">연재</a></li>
+        <li><a href="__TI_TEST_ROOT__gv-moment-test.html">GV 모먼트</a></li>
         <li><a href="#">지난 기사</a></li>
       </ul>
     </details>
-    <details>
+    <!-- <details>
       <summary>테스트</summary>
       <ul>
         <li><a href="__TI_TEST_ROOT__test-intro.html">테스트인트로</a></li>
@@ -52,7 +58,7 @@
         <li><a href="__TI_TEST_ROOT__movie-detail-test.html">영화 상세 (샘플)</a></li>
         <li><a href="__TI_TEST_ROOT__magazine-preview-test.html">매거진 프리뷰</a></li>
       </ul>
-    </details>
+    </details> -->
   </nav>
 </div>
 <div class="ti-left-bottom">

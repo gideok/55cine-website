@@ -1,0 +1,266 @@
+/**
+ * 매거진 연재·GV·프리뷰 등 — 스크롤 스냅 캐러셀 + 목록형
+ * 규칙: test/스크롤-스냅-캐러셀.md (se-swipe-viewport / se-slide / se-grid)
+ */
+
+.magazine-carousel-host .toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.magazine-carousel-host .view-mode {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.magazine-carousel-host .mode-btn {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.magazine-carousel-host .mode-btn.is-active {
+  background: var(--brand-ink);
+  color: #fff;
+}
+
+/* [hidden] 과 display 충돌 방지 (스크롤-스냅-캐러셀.md) */
+.magazine-carousel-host .mz-page-list[hidden],
+.magazine-carousel-host .mz-thumb-stack[hidden] {
+  display: none !important;
+}
+
+.magazine-carousel-host .mz-thumb-stack {
+  --mz-thumb-cols: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-hint {
+  margin: 0 0 8px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-swipe-viewport {
+  min-height: min(52vh, 560px);
+  max-height: 70vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: #a09078 #f3efe6;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-swipe-track {
+  display: flex;
+  height: 100%;
+  min-height: 100%;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  padding: 2px 1px 0 0;
+  box-sizing: border-box;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--mz-thumb-cols, 4), minmax(0, 1fr));
+  gap: 16px;
+  align-content: start;
+  align-items: stretch;
+}
+
+/* 슬라이드 안 카드: 행 높이 맞춤 (스크롤-스냅-캐러셀.md §3) */
+.magazine-carousel-host .mz-thumb-stack .se-slide .serial-item,
+.magazine-carousel-host .mz-thumb-stack .se-slide .gv-item {
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-slide .serial-thumb-link,
+.magazine-carousel-host .mz-thumb-stack .se-slide .gv-thumb-link {
+  flex-shrink: 0;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-slide .serial-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-slide .gv-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.magazine-carousel-host .mz-thumb-stack .se-slide .serial-title-wrap,
+.magazine-carousel-host .mz-thumb-stack .se-slide .gv-title-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.magazine-carousel-host .se-foot {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding-top: 14px;
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.magazine-carousel-host .se-page-btn {
+  padding: 7px 14px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.magazine-carousel-host .se-page-btn:hover:not(:disabled) {
+  border-color: var(--brand-bronze);
+  color: var(--brand-ink);
+}
+
+.magazine-carousel-host .se-page-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.magazine-carousel-host .se-fraction {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 3.25rem;
+  text-align: center;
+}
+
+.magazine-carousel-host .se-page-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: min(100%, 280px);
+}
+
+.magazine-carousel-host .se-dot {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--line);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.magazine-carousel-host .se-dot.is-active {
+  background: var(--brand-ink);
+  border-color: var(--brand-ink);
+}
+
+/* 목록형 */
+.magazine-carousel-host .mz-page-list {
+  display: grid;
+  gap: 14px;
+}
+
+.magazine-carousel-host .mz-page-list.is-list .serial-item,
+.magazine-carousel-host .mz-page-list.is-list .gv-item {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: var(--radius, 14px);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 12px var(--shadow, rgba(28, 22, 16, 0.12));
+}
+
+.magazine-carousel-host .mz-page-list.is-list .serial-thumb-link,
+.magazine-carousel-host .mz-page-list.is-list .gv-thumb-link {
+  align-self: stretch;
+}
+
+.magazine-carousel-host .mz-page-list.is-list .serial-title-wrap,
+.magazine-carousel-host .mz-page-list.is-list .gv-title-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 72px;
+}
+
+@media (max-width: 820px) {
+  .magazine-carousel-host .mz-page-list.is-list .serial-item,
+  .magazine-carousel-host .mz-page-list.is-list .gv-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .magazine-carousel-host .mz-thumb-stack .se-grid {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 425px) {
+  .magazine-carousel-host .mz-thumb-stack .se-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .magazine-carousel-host .mz-thumb-stack .se-slide .serial-title-wrap,
+  .magazine-carousel-host .mz-thumb-stack .se-slide .gv-title-wrap {
+    padding: 10px 8px 12px;
+    min-height: 0;
+  }
+
+  .magazine-carousel-host .mz-thumb-stack .se-slide .serial-title,
+  .magazine-carousel-host .mz-thumb-stack .se-slide .gv-title {
+    font-size: 0.82rem;
+  }
+
+  .magazine-carousel-host .mz-thumb-stack .se-slide .serial-date {
+    font-size: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magazine-carousel-host .mz-thumb-stack .se-swipe-viewport {
+    scroll-behavior: auto;
+  }
+}

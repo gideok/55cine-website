@@ -1,8 +1,19 @@
 /**
- * test/magazine-preview-test.html — 썸네일형: special-exhibition-test 와 동일한 스크롤 스냅 캐러셀 + 페이지 크롬
- * 목록형: 고정 12건/페이지 그리드
+ * 스크롤 스냅 캐러셀 + 목록형 (test/스크롤-스냅-캐러셀.md, magazine-preview-test.html 패턴)
+ *
+ * 페이지에서 먼저 설정:
+ *   window.__MZ_SCROLL_CAROUSEL__ = {
+ *     dataKey: "MAGAZINE_SERIAL_DATA" | "GV_MOMENT_DATA",
+ *     cardStyle: "serial" | "gv",
+ *     ariaCarouselLabel: "…",
+ *     pagerAriaLabel: "…",
+ *   };
  */
+
 (function () {
+  var cfg = window.__MZ_SCROLL_CAROUSEL__;
+  if (!cfg || !cfg.dataKey || !cfg.cardStyle) return;
+
   var ITEMS_PER_PAGE_LIST = 12;
   var currentPage = 1;
   var currentView = "thumb";
@@ -25,63 +36,34 @@
   var thumbResizeObserver;
   var thumbEventsBound;
 
-  var INTERNAL_PREVIEW_DETAIL_BY_ID = {
-    1: "magazine-preview-detail-01.html",
-    2: "magazine-preview-detail-02.html",
-    3: "magazine-preview-detail-03.html",
-    4: "magazine-preview-detail-04.html",
-    5: "magazine-preview-detail-05.html",
-    6: "magazine-preview-detail-06.html",
-    7: "magazine-preview-detail-07.html",
-    8: "magazine-preview-detail-08.html",
-    9: "magazine-preview-detail-09.html",
-    10: "magazine-preview-detail-10.html",
-    11: "magazine-preview-detail-11.html",
-    12: "magazine-preview-detail-12.html",
-    13: "magazine-preview-detail-13.html",
-    14: "magazine-preview-detail-14.html",
-    15: "magazine-preview-detail-15.html",
-    16: "magazine-preview-detail-16.html",
-    17: "magazine-preview-detail-17.html",
-    18: "magazine-preview-detail-18.html",
-    19: "magazine-preview-detail-19.html",
-    20: "magazine-preview-detail-20.html",
-    21: "magazine-preview-detail-21.html",
-    22: "magazine-preview-detail-22.html",
-    23: "magazine-preview-detail-23.html",
-    24: "magazine-preview-detail-24.html"
-  };
-
   var mzThumbStack = document.getElementById("mzThumbStack");
   var mzSwipeViewport = document.getElementById("mzSwipeViewport");
   var mzSwipeTrack = document.getElementById("mzSwipeTrack");
   var mzSwipeHint = document.getElementById("mzSwipeHint");
-  var previewList = document.getElementById("previewList");
+  var listId = cfg.listId || (cfg.cardStyle === "gv" ? "gvList" : "serialList");
+  var pageList = document.getElementById(listId);
   var fractionEl = document.getElementById("mzPagerFraction");
   var dotsEl = document.getElementById("mzPagerDots");
   var btnPrev = document.getElementById("mzPagerPrev");
   var btnNext = document.getElementById("mzPagerNext");
 
-  function toInternalArticleHref(item) {
-    if (!item || !item.id) return "";
-    var name = INTERNAL_PREVIEW_DETAIL_BY_ID[item.id] || "";
-    if (!name) return "";
-    return "../" + name;
+  function dataArray() {
+    var raw = window[cfg.dataKey];
+    return Array.isArray(raw) ? raw.slice() : [];
   }
 
   function refreshDataset() {
-    dataset = Array.isArray(window.MAGAZINE_PREVIEW_DATA) ? window.MAGAZINE_PREVIEW_DATA.slice() : [];
+    dataset = dataArray();
   }
 
-  function ensureDatasetThenRender() {
-    refreshDataset();
-    if (!dataset.length) {
-      window.setTimeout(function () {
-        refreshDataset();
-        renderCount();
-        applyCurrentView();
-      }, 0);
-    }
+  function detailHref(item) {
+    return (item && item.detailUrl) || "";
+  }
+
+  function thumbSrc(item) {
+    var src = (item && item.thumbnail) || "";
+    if (!src || /^https?:/i.test(src)) return src;
+    return src.replace(/^\//, "");
   }
 
   function getListTotalPages() {
@@ -98,7 +80,6 @@
     return GRID_GAP_DESKTOP;
   }
 
-  /** 뷰포트 너비·최소 셀 폭으로 열 수 산출 (기획전과 같이 슬라이드당 행·열이 리사이즈에 맞춤) */
   function getGridColumns() {
     if (!mzSwipeViewport) {
       return typeof window !== "undefined" && window.innerWidth <= 820 ? 2 : 4;
@@ -135,52 +116,82 @@
     return dataset.slice(start, start + thumbItemsPerPage);
   }
 
-  function thumbSrc(src) {
-    if (!src) return "";
-    if (/^https?:/i.test(src)) return src;
-    if (src.startsWith("../")) return src;
-    return "../" + src.replace(/^\//, "");
-  }
-
-  function createPreviewItemElement(item, withExcerpt) {
-    var href = toInternalArticleHref(item);
+  function createSerialCard(item, withDate) {
+    var href = detailHref(item);
     var article = document.createElement("article");
-    article.className = "preview-item";
+    article.className = "serial-item";
 
     var thumbLink = document.createElement("a");
-    thumbLink.className = "preview-thumb-link";
+    thumbLink.className = "serial-thumb-link";
     thumbLink.href = href;
-    thumbLink.setAttribute("aria-label", item.title || "");
 
     var image = document.createElement("img");
-    image.className = "preview-thumb";
-    image.src = thumbSrc(item.thumbnail || "");
+    image.className = "serial-thumb";
+    image.src = thumbSrc(item);
     image.alt = (item.title || "") + " 썸네일";
     image.loading = "lazy";
     thumbLink.appendChild(image);
 
-    var body = document.createElement("div");
-    body.className = "preview-body";
-
+    var titleWrap = document.createElement("div");
+    titleWrap.className = "serial-title-wrap";
     var titleLink = document.createElement("a");
-    titleLink.className = "preview-title-link";
+    titleLink.className = "serial-title-link";
     titleLink.href = href;
-    titleLink.textContent = item.title || "";
-
-    body.appendChild(titleLink);
-
-    if (withExcerpt) {
-      var excerptLink = document.createElement("a");
-      excerptLink.className = "preview-excerpt-link";
-      excerptLink.href = href;
-      excerptLink.textContent = item.excerpt || "";
-      body.appendChild(excerptLink);
+    var title = document.createElement("h2");
+    title.className = "serial-title";
+    title.textContent = item.title || "";
+    titleLink.appendChild(title);
+    titleWrap.appendChild(titleLink);
+    if (withDate && item.date) {
+      var d = document.createElement("p");
+      d.className = "serial-date";
+      d.textContent = item.date;
+      titleWrap.appendChild(d);
     }
 
     article.appendChild(thumbLink);
-    article.appendChild(body);
+    article.appendChild(titleWrap);
     return article;
   }
+
+  function createGvCardItem(item) {
+    var href = detailHref(item);
+    var article = document.createElement("article");
+    article.className = "gv-item";
+
+    var thumbLink = document.createElement("a");
+    thumbLink.className = "gv-thumb-link";
+    thumbLink.href = href;
+
+    var image = document.createElement("img");
+    image.className = "gv-thumb";
+    image.src = thumbSrc(item);
+    image.alt = (item.title || "") + " 썸네일";
+    image.loading = "lazy";
+    thumbLink.appendChild(image);
+
+    var titleWrap = document.createElement("div");
+    titleWrap.className = "gv-title-wrap";
+    var titleLink = document.createElement("a");
+    titleLink.className = "gv-title-link";
+    titleLink.href = href;
+    var title = document.createElement("h2");
+    title.className = "gv-title";
+    title.textContent = item.title || "";
+    titleLink.appendChild(title);
+    titleWrap.appendChild(titleLink);
+
+    article.appendChild(thumbLink);
+    article.appendChild(titleWrap);
+    return article;
+  }
+
+  var createCard =
+    cfg.cardStyle === "gv"
+      ? createGvCardItem
+      : function (item) {
+          return createSerialCard(item, true);
+        };
 
   function buildThumbSlides() {
     if (!mzSwipeTrack) return;
@@ -196,7 +207,7 @@
       grid.className = "se-grid";
 
       getThumbPageItems(p).forEach(function (item) {
-        grid.appendChild(createPreviewItemElement(item, false));
+        grid.appendChild(createCard(item));
       });
 
       slide.appendChild(grid);
@@ -289,7 +300,7 @@
   }
 
   function purgeListDom() {
-    if (previewList) previewList.innerHTML = "";
+    if (pageList) pageList.innerHTML = "";
   }
 
   function applyThumbLayoutFromViewport() {
@@ -338,12 +349,12 @@
   }
 
   function renderListView() {
-    if (!previewList) return;
-    previewList.classList.remove("is-thumb");
-    previewList.classList.add("is-list");
-    previewList.innerHTML = "";
+    if (!pageList) return;
+    pageList.classList.remove("is-thumb");
+    pageList.classList.add("is-list");
+    pageList.innerHTML = "";
     getListPageItems(currentPage).forEach(function (item) {
-      previewList.appendChild(createPreviewItemElement(item, true));
+      pageList.appendChild(createCard(item));
     });
   }
 
@@ -361,11 +372,11 @@
     if (currentView === "thumb") {
       purgeListDom();
       if (mzThumbStack) mzThumbStack.removeAttribute("hidden");
-      if (previewList) previewList.setAttribute("hidden", "");
+      if (pageList) pageList.setAttribute("hidden", "");
     } else {
       purgeThumbCarousel();
       if (mzThumbStack) mzThumbStack.setAttribute("hidden", "");
-      if (previewList) previewList.removeAttribute("hidden");
+      if (pageList) pageList.removeAttribute("hidden");
     }
   }
 
@@ -410,14 +421,6 @@
 
     window.addEventListener(
       "resize",
-      function () {
-        if (currentView === "thumb") scheduleThumbLayout();
-      },
-      { passive: true }
-    );
-
-    window.addEventListener(
-      "ti-shell:relayout",
       function () {
         if (currentView === "thumb") scheduleThumbLayout();
       },
@@ -477,16 +480,23 @@
     if (count) count.textContent = "총 " + dataset.length + "건";
   }
 
-  function boot() {
+  function ensureDatasetThenRender() {
+    refreshDataset();
+    if (!dataset.length) {
+      window.setTimeout(function () {
+        refreshDataset();
+        renderCount();
+        applyCurrentView();
+      }, 0);
+    }
+  }
+
+  function bootCarousel() {
     ensureDatasetThenRender();
     refreshDataset();
     bindEvents();
     applyCurrentView();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
-  }
+  window.__MZ_SCROLL_CAROUSEL_BOOT__ = bootCarousel;
 })();

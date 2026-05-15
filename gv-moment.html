@@ -7,6 +7,7 @@
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="components/site-common.css" />
+  <link rel="stylesheet" href="components/magazine-scroll-carousel.css" />
   <style>
     :root {
       --bg: #faf8f4;
@@ -19,6 +20,7 @@
       --brand-gold: #f0ab2a;
       --radius: 14px;
       --shadow: rgba(28, 22, 16, 0.12);
+      --pill-bg: #f3efe6;
     }
     * { box-sizing: border-box; }
     body {
@@ -36,19 +38,15 @@
       margin: 0 auto;
       padding: 32px 24px 56px;
     }
-    .gv-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
-    }
     .gv-item {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       overflow: hidden;
       background: #fff;
       box-shadow: 0 4px 12px var(--shadow);
-      display: flex;
-      flex-direction: column;
+    }
+    .magazine-carousel-host .mz-thumb-stack .se-slide .gv-item {
+      box-shadow: 0 4px 12px var(--shadow);
     }
     .gv-thumb-link {
       display: block;
@@ -80,59 +78,12 @@
       color: var(--brand-bronze);
       text-decoration: underline;
     }
-    .pagination {
-      margin-top: 24px;
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .page-btn {
-      min-width: 34px;
-      height: 34px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      color: var(--text);
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      padding: 0 10px;
-    }
-    .page-btn.is-active {
-      background: var(--brand-gold);
-      border-color: var(--brand-gold);
-      color: var(--brand-ink);
-    }
-    .page-btn:disabled {
-      opacity: 0.45;
-      cursor: default;
-    }
-    .load-sentinel {
-      height: 1px;
-      visibility: hidden;
-    }
-
-    @media (max-width: 425px) {
-      .gv-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-      .gv-title-wrap {
-        padding: 10px 8px 12px;
-        min-height: 0;
-      }
-      .gv-title {
-        font-size: 0.82rem;
-      }
-    }
   </style>
 </head>
 <body>
   <div id="site-header-mount"></div>
   <main>
-    <section class="gv-page" aria-labelledby="gv-page-title">
+    <section class="gv-page magazine-carousel-host" aria-labelledby="gv-page-title">
       <header class="section-page-head">
         <div class="section-page-head__row">
           <h1 id="gv-page-title" class="section-page-head__title">
@@ -150,149 +101,53 @@
           <span class="result-count" id="resultCount"></span>
         </div>
       </header>
-      <div id="gvList" class="gv-list" aria-live="polite"></div>
-      <nav id="pagination" class="pagination" aria-label="GV 모먼트 페이지네이션"></nav>
-      <div id="loadSentinel" class="load-sentinel" aria-hidden="true"></div>
+
+      <div class="toolbar">
+        <div class="view-mode" role="tablist" aria-label="목록 보기 방식">
+          <button type="button" class="mode-btn is-active" data-view="thumb" role="tab" aria-selected="true">썸네일형</button>
+          <button type="button" class="mode-btn" data-view="list" role="tab" aria-selected="false">목록형</button>
+        </div>
+      </div>
+
+      <div id="mzThumbStack" class="mz-thumb-stack">
+        <p class="se-hint" id="mzSwipeHint">좌우로 스와이프하여 페이지 이동</p>
+        <div
+          class="se-swipe-viewport"
+          id="mzSwipeViewport"
+          tabindex="0"
+          role="region"
+          aria-roledescription="캐러셀"
+          aria-label="GV 모먼트. 좌우 스와이프로 전환"
+        >
+          <div class="se-swipe-track" id="mzSwipeTrack"></div>
+        </div>
+      </div>
+      <div id="gvList" class="mz-page-list is-list" aria-live="polite" hidden></div>
+      <footer class="se-foot mz-pager" aria-label="GV 모먼트 페이지네이션">
+        <button type="button" class="se-page-btn" id="mzPagerPrev" aria-label="이전 페이지">이전</button>
+        <span class="se-fraction" id="mzPagerFraction" aria-live="polite">1 / 1</span>
+        <div class="se-page-dots" id="mzPagerDots" aria-hidden="true"></div>
+        <button type="button" class="se-page-btn" id="mzPagerNext" aria-label="다음 페이지">다음</button>
+      </footer>
     </section>
   </main>
   <div id="site-footer-mount"></div>
 
   <script src="data/gv-moment-data.js"></script>
+  <script>
+    window.__MZ_SCROLL_CAROUSEL__ = {
+      dataKey: "GV_MOMENT_DATA",
+      cardStyle: "gv",
+      ariaCarouselLabel: "GV 모먼트. 좌우 스와이프로 전환",
+      pagerAriaLabel: "GV 모먼트 페이지네이션"
+    };
+  </script>
+  <script defer src="components/magazine-scroll-carousel.js"></script>
   <script defer src="components/site-chrome.js"></script>
   <script defer src="components/site-font-switcher.js"></script>
   <script defer src="components/scroll-top.js"></script>
   <script>
     (function () {
-      var ITEMS_PER_PAGE = 12;
-      var MOBILE_QUERY = window.matchMedia("(max-width: 900px)");
-      var allItems = [];
-      var currentPage = 1;
-      var mobileLoadedCount = 0;
-      var observer = null;
-
-      function refreshData() {
-        allItems = Array.isArray(window.GV_MOMENT_DATA) ? window.GV_MOMENT_DATA.slice() : [];
-      }
-
-      function getTotalPages() {
-        return Math.max(1, Math.ceil(allItems.length / ITEMS_PER_PAGE));
-      }
-
-      function createCard(item) {
-        var href = item.detailUrl || "";
-        var article = document.createElement("article");
-        article.className = "gv-item";
-
-        var thumbLink = document.createElement("a");
-        thumbLink.className = "gv-thumb-link";
-        thumbLink.href = href;
-
-        var image = document.createElement("img");
-        image.className = "gv-thumb";
-        image.src = item.thumbnail || "";
-        image.alt = (item.title || "") + " 썸네일";
-        image.loading = "lazy";
-        thumbLink.appendChild(image);
-
-        var titleWrap = document.createElement("div");
-        titleWrap.className = "gv-title-wrap";
-        var titleLink = document.createElement("a");
-        titleLink.className = "gv-title-link";
-        titleLink.href = href;
-        var title = document.createElement("h2");
-        title.className = "gv-title";
-        title.textContent = item.title || "";
-        titleLink.appendChild(title);
-        titleWrap.appendChild(titleLink);
-
-        article.appendChild(thumbLink);
-        article.appendChild(titleWrap);
-        return article;
-      }
-
-      function renderCount() {
-        document.getElementById("resultCount").textContent = "총 " + allItems.length + "건";
-      }
-
-      function renderDesktopPage() {
-        var list = document.getElementById("gvList");
-        var start = (currentPage - 1) * ITEMS_PER_PAGE;
-        var pageItems = allItems.slice(start, start + ITEMS_PER_PAGE);
-        list.innerHTML = "";
-        pageItems.forEach(function (item) {
-          list.appendChild(createCard(item));
-        });
-      }
-
-      function renderPagination() {
-        var total = getTotalPages();
-        var nav = document.getElementById("pagination");
-        var html = "";
-        html += '<button type="button" class="page-btn" data-page="' + (currentPage - 1) + '"' + (currentPage === 1 ? " disabled" : "") + ">이전</button>";
-        for (var i = 1; i <= total; i++) {
-          html += '<button type="button" class="page-btn' + (i === currentPage ? " is-active" : "") + '" data-page="' + i + '">' + i + "</button>";
-        }
-        html += '<button type="button" class="page-btn" data-page="' + (currentPage + 1) + '"' + (currentPage === total ? " disabled" : "") + ">다음</button>";
-        nav.innerHTML = html;
-      }
-
-      function loadMoreMobile() {
-        if (mobileLoadedCount >= allItems.length) return;
-        var list = document.getElementById("gvList");
-        var next = allItems.slice(mobileLoadedCount, mobileLoadedCount + ITEMS_PER_PAGE);
-        next.forEach(function (item) {
-          list.appendChild(createCard(item));
-        });
-        mobileLoadedCount += next.length;
-      }
-
-      function setupMobileInfiniteScroll() {
-        var nav = document.getElementById("pagination");
-        nav.style.display = "none";
-        mobileLoadedCount = 0;
-        document.getElementById("gvList").innerHTML = "";
-        loadMoreMobile();
-        if (observer) observer.disconnect();
-        observer = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              loadMoreMobile();
-            }
-          });
-        }, { rootMargin: "120px 0px" });
-        observer.observe(document.getElementById("loadSentinel"));
-      }
-
-      function setupDesktopPagination() {
-        var nav = document.getElementById("pagination");
-        nav.style.display = "flex";
-        if (observer) observer.disconnect();
-        currentPage = 1;
-        renderDesktopPage();
-        renderPagination();
-      }
-
-      function bindPaginationEvents() {
-        document.getElementById("pagination").addEventListener("click", function (event) {
-          var button = event.target.closest(".page-btn");
-          if (!button || button.disabled) return;
-          var page = Number(button.getAttribute("data-page") || 1);
-          if (!page || page < 1 || page > getTotalPages() || page === currentPage) return;
-          currentPage = page;
-          renderDesktopPage();
-          renderPagination();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-      }
-
-      function applyLayoutMode() {
-        if (MOBILE_QUERY.matches) {
-          setupMobileInfiniteScroll();
-        } else {
-          setupDesktopPagination();
-        }
-      }
-
       function initGnbMenu() {
         var gnbToggle = document.getElementById("gnbToggle");
         var gnbPanel = document.getElementById("gnb-panel");
@@ -324,20 +179,26 @@
       }
 
       function boot() {
-        refreshData();
-        renderCount();
-        bindPaginationEvents();
-        applyLayoutMode();
-        MOBILE_QUERY.addEventListener("change", applyLayoutMode);
+        if (window.__MZ_SCROLL_CAROUSEL_BOOT__) window.__MZ_SCROLL_CAROUSEL_BOOT__();
         initGnbMenu();
       }
 
-      var needsSiteChrome = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
-      if (needsSiteChrome) {
-        document.addEventListener("sitechrome:ready", boot, { once: true });
-        document.addEventListener("sitechrome:error", boot, { once: true });
+      function scheduleBoot() {
+        var needs =
+          document.getElementById("site-header-mount") ||
+          document.getElementById("site-footer-mount");
+        if (needs) {
+          document.addEventListener("sitechrome:ready", boot, { once: true });
+          document.addEventListener("sitechrome:error", boot, { once: true });
+        } else {
+          boot();
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", scheduleBoot, { once: true });
       } else {
-        boot();
+        scheduleBoot();
       }
     })();
   </script>

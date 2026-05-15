@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 from PIL import Image
 
-ROOT = Path("C:/Projects/55cine-website")
+ROOT = Path(__file__).resolve().parent.parent
 BASE = "https://55cinema.tistory.com"
 CATEGORY = "/category/GV%20%EB%AA%A8%EB%A8%BC%ED%8A%B8"
 

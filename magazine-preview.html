@@ -93,6 +93,12 @@
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 16px;
     }
+
+    @media (min-width: 901px) {
+      .preview-list.is-thumb {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
     .preview-list.is-thumb .preview-item {
       border: 1px solid var(--line);
       border-radius: var(--radius);
