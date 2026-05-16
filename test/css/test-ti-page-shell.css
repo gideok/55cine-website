@@ -1,4 +1,4 @@
-/* test/* — 오오극장 하위 페이지 공통 우측 패널 (다크 톤) */
+/* test/* — 오오극장 하위 페이지 공통 우측 패널 (theater-info.html 기준 밝은 톤) */
 
 .visually-hidden {
   position: absolute;
@@ -20,9 +20,19 @@
   min-height: 100dvh;
   min-width: 0;
   padding: clamp(12px, 2vw, 22px) clamp(14px, 2.4vw, 28px);
-  background: #070707;
-  color: #e8e8e8;
+  background: #f9f9f9;
+  color: #1a1a1a;
   -webkit-font-smoothing: antialiased;
+  /* 섹션 공통 팔레트 (밝은 배경 · 어두운 전경, WCAG AA 대비) */
+  --ti-surface: #ffffff;
+  --ti-surface-alt: #f2f2f2;
+  --ti-text: #1a1a1a;
+  --ti-text-strong: #0a0a0a;
+  --ti-text-secondary: #3d3d3d;
+  --ti-text-muted: #444444;
+  --ti-accent: #5c4a0f;
+  --ti-accent-hover: #3d3209;
+  --ti-border: #bdbdbd;
 }
 
 .ti-sub-scroll {
@@ -42,35 +52,16 @@
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #888;
+  color: var(--ti-text-secondary);
 }
 
 .ti-sub-h1 {
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #2a2a2a;
+  border-bottom: 1px solid #bdbdbd;
   font-size: clamp(1.15rem, 2.8vw, 1.5rem);
   font-weight: 900;
   letter-spacing: -0.02em;
   line-height: 1.35;
-  color: #f5f5f5;
-}
-
-.ti-sub-note {
-  margin: 24px 0 0;
-  padding-top: 16px;
-  border-top: 1px dashed #333;
-  font-size: 0.72rem;
-  color: #666;
-  line-height: 1.5;
-}
-
-.ti-sub-note a {
-  color: #c0c0c0;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.ti-sub-note a:hover {
-  color: #f5f5f5;
+  color: #0a0a0a;
 }

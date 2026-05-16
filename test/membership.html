@@ -34,7 +34,7 @@
         <h1 class="ti-sub-h1" id="membership-title">멤버십</h1>
 
         <div class="ti-mbr-stack" id="mbrAccordion">
-          <details class="ti-mbr-acc">
+          <details class="ti-mbr-acc" open>
             <summary>멤버십이 된다는 것은</summary>
             <div class="ti-mbr-acc__panel">
               <div class="ti-mbr-acc__panel-inner">
@@ -49,7 +49,7 @@
             </div>
           </details>
 
-          <details class="ti-mbr-acc">
+          <details class="ti-mbr-acc" open>
             <summary>멤버십 혜택</summary>
             <div class="ti-mbr-acc__panel">
               <div class="ti-mbr-acc__panel-inner">
@@ -82,9 +82,6 @@
           </section>
         </div>
 
-        <p class="ti-sub-note">
-          운영 사이트: <a href="../membership.html">루트 membership.html</a>
-        </p>
       </div>
     </aside>
     <footer
@@ -96,22 +93,6 @@
   </div>
 
   <script src="js/test-ti-site-footer-include.js"></script>
-  <script>
-    (function () {
-      function initAccordionExclusive(root) {
-        if (!root) return;
-        root.querySelectorAll("details.ti-mbr-acc").forEach(function (one) {
-          one.addEventListener("toggle", function () {
-            if (!one.open) return;
-            root.querySelectorAll("details.ti-mbr-acc").forEach(function (other) {
-              if (other !== one) other.removeAttribute("open");
-            });
-          });
-        });
-      }
-      initAccordionExclusive(document.getElementById("mbrAccordion"));
-    })();
-  </script>
   <script>
     window.TEST_TI_ASSET_BASE = "../";
   </script>

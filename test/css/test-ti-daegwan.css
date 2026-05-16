@@ -1,12 +1,17 @@
-/* test/daegwan.html — 모노크롬 */
+/* test/daegwan.html — 섹션 밝은 배경 · 어두운 전경 (가시성 우선) */
+
+.ti-right.ti-sub-page #daegwan {
+  color: var(--ti-text);
+}
 
 .ti-dg-photo {
   margin: 0 0 24px;
   border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
   line-height: 0;
-  border: 1px solid #333;
+  border: 1px solid var(--ti-border);
+  background: var(--ti-surface);
 }
 
 .ti-dg-photo img {
@@ -18,14 +23,15 @@
 .ti-dg-form-wrap {
   margin: 0 0 28px;
   padding: 20px;
-  background: #121212;
-  border: 1px dashed #4a4a4a;
+  background: var(--ti-surface);
+  border: 1px solid var(--ti-border);
   border-radius: 0;
+  color: var(--ti-text);
 }
 
 .ti-dg-form-wrap .ti-dg-form-note {
   margin: 0 0 12px;
-  color: #9a9a9a;
+  color: var(--ti-text-secondary);
   font-size: 0.9rem;
   text-align: center;
 }
@@ -33,8 +39,8 @@
 .ti-dg-form-slot {
   min-height: 120px;
   border-radius: 0;
-  background: #0a0a0a;
-  border: 1px solid #2a2a2a;
+  background: var(--ti-surface-alt);
+  border: 1px solid #d8d8d8;
 }
 
 .ti-dg-form-slot iframe {
@@ -48,23 +54,24 @@
 .ti-dg-steps {
   margin: 0 0 28px;
   padding: 16px 18px;
-  background: linear-gradient(180deg, #161616 0%, #101010 100%);
+  background: var(--ti-surface);
   border-radius: 0;
-  border: 1px solid #3a3a3a;
+  border: 1px solid var(--ti-border);
   font-size: 0.92rem;
   line-height: 1.65;
+  color: var(--ti-text);
 }
 
 .ti-dg-steps strong {
   display: block;
   margin-bottom: 8px;
-  color: #f0f0f0;
+  color: var(--ti-text-strong);
   font-size: 1rem;
 }
 
 .ti-dg-steps-intro {
   margin: 8px 0 0;
-  color: #9a9a9a;
+  color: var(--ti-text-secondary);
   font-size: 0.9rem;
 }
 
@@ -109,10 +116,11 @@
   margin: 0 auto;
   min-height: 118px;
   padding: 14px 12px 12px;
-  background: linear-gradient(165deg, #1a1a1a 0%, #121212 100%);
-  border: 1px solid #3a3a3a;
+  background: var(--ti-surface-alt);
+  border: 1px solid var(--ti-border);
   border-radius: 0;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  color: var(--ti-text);
 }
 
 .ti-proc-infographic__badge {
@@ -124,68 +132,79 @@
   border-radius: 0;
   font-size: 0.95rem;
   font-weight: 800;
-  color: #0a0a0a;
-  background: #d0d0d0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  background: var(--ti-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .ti-proc-infographic__text {
   font-size: clamp(0.76rem, 2.4vw, 0.82rem);
   font-weight: 600;
   line-height: 1.45;
-  color: #d0d0d0;
+  color: var(--ti-text);
 }
 
 .ti-dg-subheading {
   font-size: 1.05rem;
   font-weight: 700;
   margin: 28px 0 12px;
-  color: #f0f0f0;
+  color: var(--ti-text-strong);
 }
 
 .ti-dg-fee-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.92rem;
+  background: var(--ti-surface);
+  border: 1px solid var(--ti-border);
 }
 
 .ti-dg-fee-table th,
 .ti-dg-fee-table td {
   padding: 12px 14px;
-  border: 1px solid #333;
+  border: 1px solid #d8d8d8;
   text-align: center;
-  color: color-mix(in srgb, #e8e8e8 92%, #888);
+  color: var(--ti-text);
 }
 
 .ti-dg-fee-table th {
-  background: #1a1a1a;
+  background: var(--ti-surface-alt);
   font-weight: 600;
-  color: #e0e0e0;
+  color: var(--ti-text-strong);
 }
 
 .ti-dg-facility-list {
   margin: 0;
-  padding-left: 1.2em;
-  color: color-mix(in srgb, #e8e8e8 88%, #888);
+  padding: 16px 18px 16px 2.2em;
+  color: var(--ti-text);
   font-size: 0.92rem;
+  background: var(--ti-surface);
+  border: 1px solid var(--ti-border);
+  list-style: disc;
 }
 
 .ti-dg-facility-list li {
   margin-bottom: 8px;
+  color: var(--ti-text);
+}
+
+.ti-dg-facility-list li:last-child {
+  margin-bottom: 0;
 }
 
 .ti-dg-contact {
   margin-top: 20px;
   font-size: 0.95rem;
-  color: #c8c8c8;
+  color: var(--ti-text);
 }
 
 .ti-dg-contact a {
-  color: #e0e0e0;
+  color: var(--ti-accent);
+  font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .ti-dg-contact a:hover {
-  color: #fff;
+  color: var(--ti-accent-hover);
 }

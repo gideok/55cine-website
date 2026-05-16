@@ -57,8 +57,8 @@
                 if (!container) return;
                 container.style.cssText =
                   "display:flex;align-items:center;justify-content:center;" +
-                  "background:#f2f2f2;border:1px solid #ccc;" +
-                  "font-size:0.82rem;color:#555;padding:20px;" +
+                  "background:#f2f2f2;border:1px solid #bdbdbd;" +
+                  "font-size:0.82rem;color:#1a1a1a;padding:20px;" +
                   "text-align:center;box-sizing:border-box;line-height:1.6;";
                 container.innerHTML = "<div>" + html + "</div>";
                 console.error("[KakaoMap]", html.replace(/<[^>]+>/g, " "));
@@ -108,7 +108,7 @@
                   showMapError(
                     "카카오 지도 초기화가 응답하지 않습니다.<br>" +
                     "<a href='https://developers.kakao.com/console/app' " +
-                    "target='_blank' rel='noopener' style='color:#3a7bd5'>" +
+                    "target='_blank' rel='noopener' style='color:#5c4a0f;font-weight:600'>" +
                     "Kakao Developers 콘솔</a> → 플랫폼 → Web 에서<br>" +
                     "<strong>http://localhost:8080</strong> 등록 여부를 확인하세요."
                   );
@@ -171,9 +171,6 @@
           </section>
         </article>
 
-        <p class="ti-sub-note">
-          운영 사이트: <a href="../osinneun-gil.html">루트 osinneun-gil.html</a>
-        </p>
       </div>
     </aside>
     <footer
