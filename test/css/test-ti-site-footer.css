@@ -39,7 +39,7 @@
 
 .ti .ti-footer.site-footer .footer-logo-box {
   flex-shrink: 0;
-  align-self: stretch;
+  align-self: flex-start;
   display: block;
   box-sizing: border-box;
   padding: 0;
@@ -48,8 +48,8 @@
   border-radius: 0;
   background: transparent;
   overflow: hidden;
-  width: 100%;
-  max-width: none;
+  width: 50%;
+  max-width: 50%;
   height: auto;
   aspect-ratio: 1536 / 1024;
 }
@@ -58,7 +58,7 @@
   display: block;
   width: 100%;
   height: auto;
-  max-width: none;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
@@ -68,6 +68,11 @@
 .ti .ti-footer.site-footer .footer-text {
   flex: 1;
   min-width: 0;
+}
+
+.ti .ti-footer.site-footer .footer-text p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .ti .ti-footer.site-footer .footer-text .copyright {
