@@ -30,6 +30,35 @@ def badges_from_raw(pairs: list[tuple[str, str]], year: int = 2026) -> list[dict
     return out
 
 
+RATING_PICTOGRAMS: list[tuple[str, str]] = [
+    ("전체관람가", "rate_all.png"),
+    ("12세이상관람가", "rate_12.png"),
+    ("12세이상 관람가", "rate_12.png"),
+    ("15세이상관람가", "rate_15.png"),
+    ("15세이상 관람가", "rate_15.png"),
+    ("청소년관람불가", "rate_19.png"),
+    ("19세이상관람가", "rate_19.png"),
+]
+
+
+def format_movie_info_html(info: str, images_prefix: str = "../../images/") -> str:
+    for rating_label, filename in RATING_PICTOGRAMS:
+        suffix = f" · {rating_label}"
+        if info.endswith(suffix):
+            base = info[: -len(suffix)]
+        elif info.endswith(rating_label):
+            base = info[: -len(rating_label)].rstrip(" ·")
+        else:
+            continue
+        base_esc = html.escape(base)
+        img = (
+            f'<img class="movie-rating-pictogram" src="{images_prefix}{filename}" '
+            f'width="24" height="24" alt="{html.escape(rating_label)}" decoding="async" />'
+        )
+        return f"{base_esc} · {img}" if base_esc else img
+    return html.escape(info)
+
+
 MOVIES: list[dict] = [
     {
         "slug": "riddle-of-fire",
@@ -263,7 +292,7 @@ DETAIL_TEMPLATE = """<!DOCTYPE html>
               </div>
               <div class="meta-row">
                 <dt>정보</dt>
-                <dd>{info}</dd>
+                <dd class="movie-detail-info">{info}</dd>
               </div>
               <div class="meta-row">
                 <dt>개봉</dt>
@@ -438,7 +467,7 @@ def main() -> None:
             poster_alt=html.escape(f"{m['titleKo']} 포스터"),
             director=html.escape(m["director"]),
             cast=html.escape(m["cast"]),
-            info=html.escape(m["info"]),
+            info=format_movie_info_html(m["info"]),
             release=html.escape(m["release"]),
             booking=BOOKING,
             title_ko=html.escape(m["titleKo"]),

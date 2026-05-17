@@ -201,6 +201,23 @@ a {
   word-break: keep-all;
 }
 
+.movie-detail-meta dd.movie-detail-info {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.35em;
+  line-height: 1.5rem;
+  min-height: 1.5rem;
+}
+
+.movie-rating-pictogram {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
 .movie-detail-c3 .movie-detail-box-inner {
   padding: 0;
   display: flex;

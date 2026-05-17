@@ -12,7 +12,10 @@
   border: 0;
 }
 
-.ti-right.ti-sub-page {
+/* 오오극장 정보 5페이지 우측 패널 공통 */
+.ti-right.ti-sub-page,
+.ti-right.ti-theater-info,
+.ti-right.ti-viewing-guide {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -24,6 +27,7 @@
   color: #1a1a1a;
   -webkit-font-smoothing: antialiased;
   /* 섹션 공통 팔레트 (밝은 배경 · 어두운 전경, WCAG AA 대비) */
+  --ti-content-max: 640px;
   --ti-surface: #ffffff;
   --ti-surface-alt: #f2f2f2;
   --ti-text: #1a1a1a;
@@ -35,14 +39,19 @@
   --ti-border: #bdbdbd;
 }
 
-.ti-sub-scroll {
+/* 본문 스크롤 — max-width·margin 5페이지 동일 (theater-info 기준 640px) */
+.ti-sub-scroll,
+.ti-theater-scroll,
+.ti-viewing-scroll {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  max-width: 720px;
+  box-sizing: border-box;
   width: 100%;
-  margin: 0 auto;
+  max-width: var(--ti-content-max, 640px);
+  margin-inline: auto;
+  margin-block: 0;
   padding-bottom: 32px;
 }
 
