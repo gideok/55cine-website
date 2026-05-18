@@ -424,11 +424,13 @@ DETAIL_TEMPLATE = """<!DOCTYPE html>
 
 
 def badge_html(b: dict[str, str]) -> str:
+    aria = html.escape(f'{b["date"]} {b["time"]} 예매')
     return (
-        f'              <div class="movie-detail-time-badge">\n'
+        f'              <a class="movie-detail-time-badge" href="{BOOKING}" '
+        f'target="_blank" rel="noopener noreferrer" aria-label="{aria}">\n'
         f'                <span class="badge-date">{html.escape(b["date"])}</span>\n'
         f'                <span class="badge-time">{html.escape(b["time"])}</span>\n'
-        f"              </div>"
+        f"              </a>"
     )
 
 

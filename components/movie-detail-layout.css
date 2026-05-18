@@ -327,6 +327,32 @@ a {
   font-weight: 600;
   line-height: 1.45;
   color: var(--text);
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+a.movie-detail-time-badge:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg-elevated));
+  box-shadow: 0 3px 10px var(--shadow);
+  transform: translateY(-1px);
+}
+
+a.movie-detail-time-badge:hover .badge-date {
+  color: var(--brand-ink);
+}
+
+a.movie-detail-time-badge:hover .badge-time {
+  color: var(--brand-walnut);
+}
+
+a.movie-detail-time-badge:focus-visible {
+  outline: 2px solid var(--brand-walnut);
+  outline-offset: 2px;
 }
 
 .movie-detail-time-badge .badge-date {

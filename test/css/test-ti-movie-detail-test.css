@@ -123,6 +123,18 @@
   background: #fafafa;
 }
 
+.ti .ti-md-test-wrap a.movie-detail-time-badge:hover {
+  border-color: #111;
+  background: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.ti .ti-md-test-wrap a.movie-detail-time-badge:hover .badge-date,
+.ti .ti-md-test-wrap a.movie-detail-time-badge:hover .badge-time {
+  color: #000;
+}
+
 .ti .ti-md-test-wrap .movie-detail-time-badge .badge-date {
   color: #111;
 }
