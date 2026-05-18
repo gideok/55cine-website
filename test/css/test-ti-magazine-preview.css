@@ -36,19 +36,37 @@
 }
 
 .ti .ti-mz-panel .preview-page {
+  width: 100%;
   max-width: 1120px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   padding: 20px 0 48px;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
 }
 
 /* [hidden] 은 display: none (UA) 인데 .preview-list 등이 display 를 덮어쓰면 목록이 겹쳐 보임 */
 .ti .ti-mz-panel .preview-list[hidden],
 .ti .ti-mz-panel .mz-thumb-stack[hidden] {
   display: none !important;
+}
+
+/* 썸네일/목록 토글 시 preview-page 좌우 정렬·너비 (본문 영역 공통) */
+.ti .ti-mz-panel .preview-page .toolbar,
+.ti .ti-mz-panel .preview-page .page-sub,
+.ti .ti-mz-panel .preview-page .mz-thumb-stack,
+.ti .ti-mz-panel .preview-page .preview-list,
+.ti .ti-mz-panel .preview-page > .se-foot {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
 }
 
 /* 썸네일형: special-exhibition-test 와 동일한 가로 스크롤 스냅 캐러셀 */
@@ -72,12 +90,16 @@
 .ti .ti-mz-panel .mz-thumb-stack .se-swipe-viewport {
   flex: 1 1 auto;
   min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
   scrollbar-color: #9a9a9a #f0f0f0;
 }
 
@@ -93,7 +115,7 @@
   max-width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  padding: 2px 1px 0 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -105,7 +127,9 @@
   align-items: stretch;
 }
 
-.ti .ti-mz-panel .mz-thumb-stack .se-slide .preview-item {
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .preview-item,
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .serial-item,
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .gv-item {
   border: 0;
   border-radius: 0;
   overflow: visible;
@@ -120,13 +144,23 @@
   align-self: stretch;
 }
 
-.ti .ti-mz-panel .mz-thumb-stack .se-slide .preview-thumb-link {
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .preview-thumb-link,
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .serial-thumb-link,
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .gv-thumb-link {
   flex-shrink: 0;
+  border: 1px solid #8a8a8a;
+  background: #f0f0f0;
+  box-sizing: border-box;
 }
 
-.ti .ti-mz-panel .mz-thumb-stack .se-slide .preview-body {
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .preview-body,
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .serial-title-wrap,
+.ti .ti-mz-panel .mz-thumb-stack .se-slide .gv-title-wrap {
   flex: 1 1 auto;
   min-height: 0;
+  border: 1px solid #b0b0b0;
+  border-top: 1px solid #d4d4d4;
+  box-sizing: border-box;
 }
 
 .ti .ti-mz-panel .mz-thumb-stack .se-slide .preview-excerpt-link {
@@ -195,14 +229,24 @@
 .ti .ti-mz-panel .preview-list {
   display: grid;
   gap: 14px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* 목록형: 이미지 영역·본문 영역 각각 테두리, radius 없음 */
-.ti .ti-mz-panel .preview-list.is-list .preview-item {
+.ti .ti-mz-panel .preview-list.is-list .preview-item,
+.ti .ti-mz-panel .preview-list.is-list .serial-item,
+.ti .ti-mz-panel .preview-list.is-list .gv-item {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 12px;
   align-items: stretch;
+  min-width: 0;
+  width: 100%;
   border: 0;
   border-radius: 0;
   overflow: visible;
@@ -210,7 +254,9 @@
   box-shadow: none;
 }
 
-.ti .ti-mz-panel .preview-thumb-link {
+.ti .ti-mz-panel .preview-thumb-link,
+.ti .ti-mz-panel .preview-list.is-list .serial-thumb-link,
+.ti .ti-mz-panel .preview-list.is-list .gv-thumb-link {
   display: block;
   line-height: 0;
   border: 1px solid #8a8a8a;
@@ -221,7 +267,11 @@
 }
 
 .ti .ti-mz-panel .preview-thumb-link:hover,
-.ti .ti-mz-panel .preview-thumb-link:focus-visible {
+.ti .ti-mz-panel .preview-thumb-link:focus-visible,
+.ti .ti-mz-panel .preview-list.is-list .serial-thumb-link:hover,
+.ti .ti-mz-panel .preview-list.is-list .serial-thumb-link:focus-visible,
+.ti .ti-mz-panel .preview-list.is-list .gv-thumb-link:hover,
+.ti .ti-mz-panel .preview-list.is-list .gv-thumb-link:focus-visible {
   text-decoration: none;
 }
 
@@ -233,7 +283,9 @@
   border-radius: 0;
 }
 
-.ti .ti-mz-panel .preview-body {
+.ti .ti-mz-panel .preview-body,
+.ti .ti-mz-panel .preview-list.is-list .serial-title-wrap,
+.ti .ti-mz-panel .preview-list.is-list .gv-title-wrap {
   padding: 14px 14px 16px;
   display: flex;
   flex-direction: column;
@@ -356,12 +408,14 @@
 }
 
 @media (max-width: 820px) {
-  .ti .ti-mz-panel .preview-list.is-list .preview-item {
+  .ti .ti-mz-panel .preview-list.is-list .preview-item,
+  .ti .ti-mz-panel .preview-list.is-list .serial-item,
+  .ti .ti-mz-panel .preview-list.is-list .gv-item {
     grid-template-columns: 1fr;
   }
 
   .ti .ti-mz-panel .mz-thumb-stack .se-grid {
-    gap: 10px;
+    gap: 16px;
   }
 }
 

@@ -1,12 +1,4 @@
-/* magazine-serial-test.html, gv-moment-test.html — ti-mz-panel 내 연재·GV 그리드 (magazine-preview mono 톤과 정렬) */
-
-.ti .ti-mz-panel .serial-list,
-.ti .ti-mz-panel .gv-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-  align-content: start;
-}
+/* magazine-serial-test.html, gv-moment-test.html — 연재·GV 카드 (목록 컨테이너는 .preview-list 공유) */
 
 .ti .ti-mz-panel .serial-item,
 .ti .ti-mz-panel .gv-item {
@@ -83,7 +75,8 @@
   text-underline-offset: 2px;
 }
 
-.ti .ti-mz-panel .serial-date {
+.ti .ti-mz-panel .serial-date,
+.ti .ti-mz-panel .gv-date {
   margin: 0;
   font-size: 0.72rem;
   color: var(--muted);
@@ -144,23 +137,11 @@
   visibility: hidden;
 }
 
-/* PC: 연재·GV 본페이지(magazine-serial / gv-moment)와 동일하게 한 행 4칸 */
-@media (min-width: 901px) {
-  .ti .ti-mz-panel .serial-list,
-  .ti .ti-mz-panel .gv-list {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 425px) {
-  .ti .ti-mz-panel .serial-list,
-  .ti .ti-mz-panel .gv-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .ti .ti-mz-panel .serial-title-wrap,
-  .ti .ti-mz-panel .gv-title-wrap {
+  .ti .ti-mz-panel .mz-thumb-stack .se-slide .serial-title-wrap,
+  .ti .ti-mz-panel .mz-thumb-stack .se-slide .gv-title-wrap,
+  .ti .ti-mz-panel .preview-list.is-list .serial-title-wrap,
+  .ti .ti-mz-panel .preview-list.is-list .gv-title-wrap {
     padding: 10px 8px 12px;
     min-height: 0;
   }
@@ -170,7 +151,8 @@
     font-size: 0.82rem;
   }
 
-  .ti .ti-mz-panel .serial-date {
+  .ti .ti-mz-panel .serial-date,
+  .ti .ti-mz-panel .gv-date {
     font-size: 0.7rem;
   }
 }

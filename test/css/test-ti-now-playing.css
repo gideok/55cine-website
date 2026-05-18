@@ -150,9 +150,7 @@
 .ti .ti-np-root .np-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  border-top: 1px solid #b0b0b0;
-  border-left: 1px solid #b0b0b0;
+  gap: 16px;
 }
 
 @media (max-width: 899px) {
@@ -172,9 +170,7 @@
 .ti .ti-np-root .np-card {
   display: flex;
   flex-direction: column;
-  border: none;
-  border-right: 1px solid #b0b0b0;
-  border-bottom: 1px solid #b0b0b0;
+  border: 1px solid #b0b0b0;
   border-radius: 0;
   overflow: hidden;
   background: #fff;
@@ -185,8 +181,7 @@
 
 .ti .ti-np-root .np-card:hover {
   background: #fafafa;
-  border-right-color: #111;
-  border-bottom-color: #111;
+  border-color: #111;
 }
 
 .ti .ti-np-root .np-card:focus-within {
