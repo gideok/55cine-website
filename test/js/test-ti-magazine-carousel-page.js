@@ -11,6 +11,7 @@
   var currentPage = 1;
   var currentView = "thumb";
 
+  var COL_BREAKPOINT = window.matchMedia("(max-width: 820px)");
   var GRID_GAP_DESKTOP = 16;
   var GRID_GAP_MOBILE = 10;
   var THUMB_MIN_CELL_PX = 200;
@@ -78,10 +79,13 @@
 
   function getGridColumns() {
     if (!mzSwipeViewport) {
-      return typeof window !== "undefined" && window.innerWidth <= 820 ? 2 : 4;
+      return COL_BREAKPOINT.matches ? 2 : 4;
+    }
+    if (COL_BREAKPOINT.matches || mzSwipeViewport.clientWidth <= 820) {
+      return 2;
     }
     var w = mzSwipeViewport.clientWidth;
-    if (w < 40) return 1;
+    if (w < 40) return 4;
     var gap = gridGapPx();
     var cols = Math.floor((w + gap) / (THUMB_MIN_CELL_PX + gap));
     return Math.max(1, Math.min(MAX_THUMB_COLS, cols));
@@ -195,6 +199,14 @@
 
   function updateThumbDots() {
     if (!dotsEl) return;
+    if (window.TiCarouselDots) {
+      window.TiCarouselDots.render(dotsEl, {
+        total: thumbTotalPages,
+        activeIndex: thumbActivePage,
+        onSelect: goToThumbPage
+      });
+      return;
+    }
     dotsEl.innerHTML = "";
     for (var i = 0; i < thumbTotalPages; i++) {
       var dot = document.createElement("button");
@@ -216,6 +228,16 @@
   function updateListDots() {
     if (!dotsEl) return;
     var total = getListTotalPages();
+    if (window.TiCarouselDots) {
+      window.TiCarouselDots.render(dotsEl, {
+        total: total,
+        activeIndex: currentPage - 1,
+        onSelect: function (index) {
+          goToListPage(index + 1);
+        }
+      });
+      return;
+    }
     dotsEl.innerHTML = "";
     for (var i = 1; i <= total; i++) {
       var dot = document.createElement("button");
@@ -483,15 +505,6 @@
       btnNext.addEventListener("click", function () {
         if (currentView === "thumb") goToThumbPage(thumbActivePage + 1);
         else goToListPage(currentPage + 1);
-      });
-    }
-    if (dotsEl) {
-      dotsEl.addEventListener("click", function (event) {
-        if (currentView === "thumb") return;
-        var target = event.target.closest(".se-dot");
-        if (!target) return;
-        var p = Number(target.getAttribute("data-page") || 0);
-        if (p >= 1) goToListPage(p);
       });
     }
   }

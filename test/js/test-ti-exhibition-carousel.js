@@ -124,6 +124,15 @@
   }
 
   function updateDots() {
+    if (!dotsEl) return;
+    if (window.TiCarouselDots) {
+      window.TiCarouselDots.render(dotsEl, {
+        total: totalPages,
+        activeIndex: activePage,
+        onSelect: goToPage
+      });
+      return;
+    }
     dotsEl.innerHTML = "";
     for (var i = 0; i < totalPages; i++) {
       var dot = document.createElement("button");

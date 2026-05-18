@@ -1,4 +1,4 @@
-/* now-playing-test.html — mono 본문 (.ti-np-root); 상영작 그리드는 3열·간격 없음 */
+/* now-playing-test.html — mono 본문 (.ti-np-root); PC 3열 · 모바일(≤899px) 2열 */
 
 .ti .ti-right.ti-np-root {
   flex: 1 1 auto;
@@ -95,6 +95,10 @@
 }
 
 @media (max-width: 899px) {
+  .ti .ti-np-root .np-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .ti .ti-np-root .np-card-body {
     padding: 8px 8px 10px;
   }

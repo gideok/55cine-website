@@ -1,0 +1,68 @@
+/* 캐러셀 하단 푸터·dots — special-exhibition-test 기준 (모바일) */
+
+.se-dot-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 10px;
+  height: 8px;
+  padding: 0 1px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #6a6a6a;
+  line-height: 1;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+@media (max-width: 820px) {
+  .ti .se-foot {
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px 8px;
+    padding-top: 12px;
+  }
+
+  .ti .se-page-btn {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    font-size: 0.68rem;
+    white-space: nowrap;
+  }
+
+  .ti .se-fraction {
+    flex: 0 0 auto;
+    min-width: 2.75rem;
+    font-size: 0.68rem;
+    white-space: nowrap;
+  }
+
+  .ti .se-page-dots {
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+    max-width: none;
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .ti .se-dot,
+  .ti .se-dot-ellipsis {
+    flex-shrink: 0;
+  }
+
+  .ti .se-dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  /* 매거진 썸네일형 — 기획전과 동일 2열 */
+  .ti .ti-mz-panel .mz-thumb-stack .se-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
