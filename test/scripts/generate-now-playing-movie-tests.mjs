@@ -71,6 +71,7 @@ function buildShell({ title, mainInner, tabSuffix }) {
   <link rel="stylesheet" href="../../css/test-ti-site-footer.css" />
   <link rel="stylesheet" href="../../../components/movie-detail-layout.css" />
   <link rel="stylesheet" href="../../css/test-ti-movie-detail-test.css" />
+  <link rel="stylesheet" href="../../css/test-ti-now-playing-movie-detail.css" />
 </head>
 <body class="ti">
   <div class="ti-shell" id="tiShell">

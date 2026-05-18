@@ -1,5 +1,9 @@
 /* test/theater-info.html — 우측 본문 (밝은 배경 #e8e8e8, 본문은 darkgray~black) */
 
+.ti .ti-theater-info p {
+  text-align: justify;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

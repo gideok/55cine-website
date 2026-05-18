@@ -1,0 +1,5 @@
+/* test/movies/now-playing/*.html — 현재 상영작 상세 본문 (일괄 관리) */
+
+.ti .ti-md-test-wrap .movie-detail-synopsis {
+  text-align: justify;
+}
