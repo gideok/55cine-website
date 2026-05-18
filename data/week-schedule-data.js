@@ -18,7 +18,7 @@
       label: "4/30(목)",
       weekday: "목",
       entries: [
-        { time: "11:30", title: "빨간 나리를 보았니" },
+        { time: "11:30", title: "빨간 나라를 보았니" },
         { time: "13:50", title: "세계의 주인" },
         { time: "16:15", title: "극장의 시간들" },
         { time: "18:20", title: "힌드의 목소리" },
@@ -56,17 +56,17 @@
         { time: "13:45", title: "센티멘탈 밸류" },
         { time: "16:15", title: "힌드의 목소리" },
         { time: "18:00", title: "세계의 주인" },
-        { time: "20:15", title: "주의에게" }
+        { time: "20:15", title: "주희에게" }
       ]
     },
     {
       label: "5/4(월)",
       weekday: "월",
       entries: [
-        { time: "11:30", title: "주의에게" },
+        { time: "11:30", title: "주희에게" },
         { time: "13:30", title: "누룩" },
         { time: "15:10", title: "새벽의 Tango" },
-        { time: "17:25", title: "빨간 나리를 보았니" },
+        { time: "17:25", title: "빨간 나라를 보았니" },
         { time: "19:40", title: "극장의 시간들 (중영)" }
       ]
     },
@@ -96,7 +96,7 @@
 
   var postersRel = {
     르누아르: "images/movie001.jpg",
-    "빨간 나리를 보았니": "images/movie001.jpg",
+    "빨간 나라를 보았니": "images/movie001.jpg",
     "세계의 주인": "images/movie002.jpg",
     "극장의 시간들": "images/movie003.jpg",
     "극장의 시간들 (중영)": "images/movie003.jpg",
@@ -105,7 +105,7 @@
     누룩: "images/movie002.jpg",
     "센티멘탈 밸류": "images/movie003.jpg",
     "센티멘탈 밸류 (중영)": "images/movie003.jpg",
-    주의에게: "images/movie004.jpg",
+    주희에게: "images/movie004.jpg",
     "그녀가 돌아온 날 (개봉)": "images/movie001.jpg",
     "달갈 원정대 (개봉)": "images/movie002.jpg"
   };
