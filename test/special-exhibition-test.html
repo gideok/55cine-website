@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
   <link rel="stylesheet" href="css/test-ti-shell.css" />
   <link rel="stylesheet" href="css/test-ti-site-footer.css" />
+  <link rel="stylesheet" href="css/test-ti-page-pager.css" />
   <link rel="stylesheet" href="css/test-ti-exhibition.css" />
   <link rel="stylesheet" href="css/test-ti-exhibition-grid-lines.css" />
 </head>
@@ -30,11 +31,14 @@
     </div>
     <aside class="ti-right se-right" aria-label="기획전 목록">
       <div class="se-right-inner" id="seRightInner">
-        <p class="se-hint" id="seSwipeHint">좌우로 스와이프하여 페이지 이동</p>
         <header class="se-head">
           <h1 class="se-title-page" id="special-page-title">기획전</h1>
-          <span class="se-count" id="resultCount"></span>
         </header>
+        <div class="ti-page-toolbar">
+          <p class="ti-page-count" id="tiPageCount" aria-live="polite"></p>
+          <nav class="ti-page-pager" id="tiPagePager" aria-label="페이지"></nav>
+        </div>
+        <p class="se-hint" id="seSwipeHint">좌우로 스와이프하여 페이지 이동</p>
         <div
           class="se-swipe-viewport"
           id="seSwipeViewport"
@@ -45,7 +49,7 @@
         >
           <div class="se-swipe-track" id="seSwipeTrack"></div>
         </div>
-        <footer class="se-foot">
+        <footer class="se-foot ti-pager-foot--mobile-only">
           <button type="button" class="se-page-btn" id="sePrev" aria-label="이전 페이지">이전</button>
           <span class="se-fraction" id="seFraction" aria-live="polite">1 / 1</span>
           <div class="se-page-dots" id="seDots" aria-hidden="true"></div>
@@ -68,6 +72,7 @@
   <script src="../data/week-schedule-data.js"></script>
   <script src="../data/now-playing-data.js"></script>
   <script src="../data/special-program-data.js"></script>
+  <script src="js/test-ti-page-pager.js"></script>
   <script src="js/test-ti-exhibition-carousel.js"></script>
   <script src="js/test-ti-left-gnb-include.js"></script>
   <script src="js/test-ti-mobile-menu.js"></script>

@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
   <link rel="stylesheet" href="css/test-ti-shell.css" />
   <link rel="stylesheet" href="css/test-ti-site-footer.css" />
+  <link rel="stylesheet" href="css/test-ti-page-pager.css" />
   <link rel="stylesheet" href="css/test-ti-magazine-preview.css" />
   <link rel="stylesheet" href="css/test-ti-magazine-list-pages.css" />
 </head>
@@ -45,17 +46,18 @@
               </nav>
             </div>
             <div class="section-page-head__rule" role="presentation"></div>
-            <div class="section-page-head__meta">
-              <span class="result-count" id="resultCount"></span>
-            </div>
           </header>
           <p class="page-sub">장르 불문! 대구독립영화</p>
 
-          <div class="toolbar">
-            <div class="view-mode" role="tablist" aria-label="목록 보기 방식">
-              <button type="button" class="mode-btn is-active" data-view="thumb" role="tab" aria-selected="true">썸네일형</button>
-              <button type="button" class="mode-btn" data-view="list" role="tab" aria-selected="false">목록형</button>
+          <div class="ti-page-toolbar">
+            <div class="ti-page-toolbar__leading">
+              <div class="view-mode" role="tablist" aria-label="목록 보기 방식">
+                <button type="button" class="mode-btn is-active" data-view="thumb" role="tab" aria-selected="true">썸네일형</button>
+                <button type="button" class="mode-btn" data-view="list" role="tab" aria-selected="false">목록형</button>
+              </div>
+              <p class="ti-page-count" id="pagerCount" aria-live="polite"></p>
             </div>
+            <nav class="ti-page-pager" id="tiPagePager" aria-label="페이지"></nav>
           </div>
 
           <div id="mzThumbStack" class="mz-thumb-stack">
@@ -74,7 +76,7 @@
 
           <div id="serialList" class="preview-list is-list" aria-live="polite" hidden></div>
 
-          <footer class="se-foot mz-pager" aria-label="연재 페이지네이션">
+          <footer class="se-foot mz-pager ti-pager-foot--mobile-only" aria-label="연재 페이지네이션">
             <button type="button" class="se-page-btn" id="mzPagerPrev" aria-label="이전 페이지">이전</button>
             <span class="se-fraction" id="mzPagerFraction" aria-live="polite">1 / 1</span>
             <div class="se-page-dots" id="mzPagerDots" aria-hidden="true"></div>
@@ -123,6 +125,7 @@
       }
     };
   </script>
+  <script src="js/test-ti-page-pager.js"></script>
   <script src="js/test-ti-magazine-carousel-page.js"></script>
 </body>
 </html>

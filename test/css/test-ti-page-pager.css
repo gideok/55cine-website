@@ -1,0 +1,83 @@
+/* 공용 PC 페이지네이션 — now-playing-test .np-toolbar / .np-pager 기준 */
+
+.ti .ti-page-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ti .ti-page-toolbar__leading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  min-width: 0;
+}
+
+.ti .ti-page-toolbar .toolbar {
+  margin-bottom: 0;
+}
+
+.ti .ti-page-count {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted, #5a5a5a);
+}
+
+.ti .ti-page-pager {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ti .ti-page-pager.is-visible {
+  display: flex;
+}
+
+.ti .ti-page-pager button {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 0;
+  border: 1px solid #4a4a4a;
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #333;
+  cursor: pointer;
+}
+
+.ti .ti-page-pager button:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #111;
+  color: #000;
+}
+
+.ti .ti-page-pager button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ti .ti-page-pager button[aria-current="page"] {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+/* PC: 상단 번호 페이지네이션만, 스와이프 힌트·하단 컨트롤 숨김 */
+@media (min-width: 900px) {
+  .ti .se-hint {
+    display: none;
+  }
+
+  .ti .ti-pager-foot--mobile-only {
+    display: none !important;
+  }
+}

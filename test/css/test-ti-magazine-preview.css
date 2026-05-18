@@ -57,7 +57,7 @@
 }
 
 /* 썸네일/목록 토글 시 preview-page 좌우 정렬·너비 (본문 영역 공통) */
-.ti .ti-mz-panel .preview-page .toolbar,
+.ti .ti-mz-panel .preview-page .ti-page-toolbar,
 .ti .ti-mz-panel .preview-page .page-sub,
 .ti .ti-mz-panel .preview-page .mz-thumb-stack,
 .ti .ti-mz-panel .preview-page .preview-list,
@@ -192,14 +192,6 @@
 
 .ti .ti-mz-panel .section-page-head__rule {
   border-top-color: #c8c8c8;
-}
-
-.ti .ti-mz-panel .toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
 }
 
 .ti .ti-mz-panel .view-mode {

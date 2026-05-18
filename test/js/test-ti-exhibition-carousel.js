@@ -18,7 +18,9 @@
   var viewport = document.getElementById("seSwipeViewport");
   var track = document.getElementById("seSwipeTrack");
   var rightInner = document.getElementById("seRightInner");
-  var resultCountEl = document.getElementById("resultCount");
+  var Pager = window.TiPagePager;
+  var pageCountEl = document.getElementById("tiPageCount");
+  var pagePagerEl = document.getElementById("tiPagePager");
   var fractionEl = document.getElementById("seFraction");
   var dotsEl = document.getElementById("seDots");
   var btnPrev = document.getElementById("sePrev");
@@ -141,9 +143,34 @@
   }
 
   function updateChrome() {
-    fractionEl.textContent = totalPages ? activePage + 1 + " / " + totalPages : "0 / 0";
-    btnPrev.disabled = activePage <= 0;
-    btnNext.disabled = activePage >= totalPages - 1;
+    if (pageCountEl && Pager) {
+      pageCountEl.textContent = Pager.formatCount(
+        dataset.length,
+        activePage + 1,
+        totalPages,
+        "건"
+      );
+    }
+
+    if (Pager && Pager.isDesktop()) {
+      Pager.render(pagePagerEl, {
+        page: activePage + 1,
+        totalPages: totalPages,
+        scrollRootSelector: ".se-right-inner",
+        onChange: function (p) {
+          goToPage(p - 1);
+        }
+      });
+      return;
+    }
+
+    if (Pager) Pager.updateVisibility(pagePagerEl, 0);
+
+    if (fractionEl) {
+      fractionEl.textContent = totalPages ? activePage + 1 + " / " + totalPages : "0 / 0";
+    }
+    if (btnPrev) btnPrev.disabled = activePage <= 0;
+    if (btnNext) btnNext.disabled = activePage >= totalPages - 1;
     updateDots();
   }
 
@@ -208,9 +235,6 @@
 
   function boot() {
     refreshDataset();
-    if (resultCountEl) {
-      resultCountEl.textContent = "총 " + dataset.length + "건";
-    }
     activePage = 0;
     itemsPerPage = getGridColumns();
     requestAnimationFrame(function () {
@@ -270,6 +294,12 @@
   window.addEventListener("ti-shell:relayout", function () {
     scheduleLayout();
   });
+
+  if (Pager && Pager.mq) {
+    Pager.mq.addEventListener("change", function () {
+      updateChrome();
+    });
+  }
 
   boot();
 })();

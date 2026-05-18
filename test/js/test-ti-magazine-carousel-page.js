@@ -33,6 +33,9 @@
   var mzSwipeTrack = document.getElementById("mzSwipeTrack");
   var mzSwipeHint = document.getElementById("mzSwipeHint");
   var listEl = document.getElementById(cfg.listId);
+  var Pager = window.TiPagePager;
+  var pagerCountEl = document.getElementById("pagerCount");
+  var pagePagerEl = document.getElementById("tiPagePager");
   var fractionEl = document.getElementById("mzPagerFraction");
   var dotsEl = document.getElementById("mzPagerDots");
   var btnPrev = document.getElementById("mzPagerPrev");
@@ -224,7 +227,35 @@
     }
   }
 
+  function getPagerState() {
+    if (currentView === "thumb") {
+      return { page: thumbActivePage + 1, totalPages: thumbTotalPages };
+    }
+    return { page: currentPage, totalPages: getListTotalPages() };
+  }
+
   function updatePagerChrome() {
+    var st = getPagerState();
+
+    if (pagerCountEl && Pager) {
+      pagerCountEl.textContent = Pager.formatCount(dataset.length, st.page, st.totalPages, "건");
+    }
+
+    if (Pager && Pager.isDesktop()) {
+      Pager.render(pagePagerEl, {
+        page: st.page,
+        totalPages: st.totalPages,
+        scrollRootSelector: ".ti-mz-scroll",
+        onChange: function (p) {
+          if (currentView === "thumb") goToThumbPage(p - 1);
+          else goToListPage(p);
+        }
+      });
+      return;
+    }
+
+    if (Pager) Pager.updateVisibility(pagePagerEl, 0);
+
     if (!fractionEl || !btnPrev || !btnNext) return;
 
     if (currentView === "thumb") {
@@ -466,8 +497,7 @@
   }
 
   function renderCount() {
-    var count = document.getElementById("resultCount");
-    if (count) count.textContent = "총 " + dataset.length + "건";
+    updatePagerChrome();
   }
 
   function ensureDatasetThenRender() {
@@ -479,6 +509,12 @@
         applyCurrentView();
       }, 0);
     }
+  }
+
+  if (Pager && Pager.mq) {
+    Pager.mq.addEventListener("change", function () {
+      updatePagerChrome();
+    });
   }
 
   function boot() {
