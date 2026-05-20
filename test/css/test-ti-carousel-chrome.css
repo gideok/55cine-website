@@ -60,9 +60,10 @@
     height: 7px;
   }
 
-  /* 매거진 썸네일형 — 기획전과 동일 2열 */
+  /* 매거진 썸네일형 — 모바일 2열×2행(4건/페이지) */
   .ti .ti-mz-panel .mz-thumb-stack .se-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
   }
 }

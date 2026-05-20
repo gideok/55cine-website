@@ -12,6 +12,7 @@
   var currentView = "thumb";
 
   var COL_BREAKPOINT = window.matchMedia("(max-width: 820px)");
+  var MOBILE_THUMB_ROWS = 2;
   var GRID_GAP_DESKTOP = 16;
   var GRID_GAP_MOBILE = 10;
   var THUMB_MIN_CELL_PX = 200;
@@ -77,6 +78,12 @@
     return GRID_GAP_DESKTOP;
   }
 
+  function isMobileThumbViewport() {
+    return (
+      COL_BREAKPOINT.matches || (mzSwipeViewport && mzSwipeViewport.clientWidth <= 820)
+    );
+  }
+
   function getGridColumns() {
     if (!mzSwipeViewport) {
       return COL_BREAKPOINT.matches ? 2 : 4;
@@ -92,8 +99,11 @@
   }
 
   function computeThumbItemsPerPage() {
-    if (!mzSwipeViewport) return Math.max(4, getGridColumns() * 2);
     var cols = getGridColumns();
+    if (isMobileThumbViewport()) {
+      return cols * MOBILE_THUMB_ROWS;
+    }
+    if (!mzSwipeViewport) return Math.max(4, cols * 2);
     var h = mzSwipeViewport.clientHeight;
     var w = mzSwipeViewport.clientWidth;
     var gap = gridGapPx();
