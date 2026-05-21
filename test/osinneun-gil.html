@@ -7,6 +7,7 @@
   <title>오시는 길 — 테스트 UI · 55CINE</title>
   <link rel="icon" href="../favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../components/site-common.css" />
   <link rel="stylesheet" href="css/test-ti-fonts.css" />
   <link rel="stylesheet" href="css/test-ti-fonts-display.css" />
   <link rel="stylesheet" href="css/test-ti-shell.css" />
@@ -30,8 +31,21 @@
     </div>
     <aside class="ti-right ti-sub-page" aria-label="오시는 길 본문">
       <div class="ti-sub-scroll">
-        <p class="ti-sub-kicker">오오극장</p>
-        <h1 class="ti-sub-h1" id="direction-title">오시는 길</h1>
+        <header class="section-page-head">
+          <div class="section-page-head__row">
+            <h1 id="direction-title" class="section-page-head__title">
+              <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">오시는 길</span>
+            </h1>
+            <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+              <a href="theater-info.html">소개</a>
+              <a href="viewing-guide.html">관람 안내</a>
+              <a href="membership.html">멤버십</a>
+              <a href="daegwan.html">대관</a>
+              <a href="osinneun-gil.html" class="is-current" aria-current="page">오시는 길</a>
+            </nav>
+          </div>
+          <div class="section-page-head__rule" role="presentation"></div>
+        </header>
 
         <article id="osinneun-gil" aria-labelledby="direction-title">
           <!-- 가이드: 지도 영역에 width·height 지정 → SDK 스크립트 → 즉시 Map 생성 (https://apis.map.kakao.com/web/guide/#ready) -->

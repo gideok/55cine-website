@@ -74,3 +74,33 @@
   line-height: 1.35;
   color: #0a0a0a;
 }
+
+/* 오오극장 하위 — section-page-head · subnav (매거진 프리뷰와 동일 패턴) */
+.ti .ti-sub-scroll .section-page-head {
+  margin-bottom: 20px;
+}
+
+.ti .ti-sub-scroll .section-page-head__title {
+  color: var(--ti-text-strong, #0a0a0a);
+}
+
+.ti .ti-sub-scroll .section-page-subnav a {
+  border-radius: 0;
+  text-decoration: none;
+}
+
+.ti .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+.ti .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ti .ti-sub-scroll .section-page-subnav a.is-current {
+  color: #fff;
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.ti .ti-sub-scroll .section-page-head__rule {
+  border-top-color: #c8c8c8;
+}
