@@ -17,7 +17,7 @@ window.SPECIAL_PROGRAM_DATA = [
     "id": 3,
     "title": "오오극장 개관 11주년 특별전 02/21(토)~22(일)",
     "thumbnail": "images/special/exhibition/special_exhibition_thumb_03.png",
-    "detailUrl": "special/exhibition/special-detail-03.html",
+    "detailUrl": "test/special/exhibition/exhibition_detail.html",
     "sourceUrl": "http://55cine.com/2026/02/10/11than/"
   },
   {

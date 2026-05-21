@@ -193,8 +193,15 @@ body.ti {
   margin-bottom: 12px;
 }
 
+/* 표시 최대 길이 "12/31(금)" 기준 고정 너비 */
 .ti-day-tab {
-  padding: 6px 10px;
+  --ti-day-tab-width: 5.5rem;
+  box-sizing: border-box;
+  width: var(--ti-day-tab-width);
+  min-width: var(--ti-day-tab-width);
+  max-width: var(--ti-day-tab-width);
+  flex: 0 0 var(--ti-day-tab-width);
+  padding: 6px 4px;
   border: 1px solid #9a9a9a;
   background: #fff;
   font-family: inherit;
@@ -203,6 +210,9 @@ body.ti {
   color: #333;
   cursor: pointer;
   border-radius: 0;
+  text-align: center;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .ti-day-tab[aria-selected="true"] {
