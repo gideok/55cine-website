@@ -24,6 +24,13 @@
     return "../" + u.replace(/^\//, "");
   }
 
+  /** slug 기준 SEO 경로: movies/now-playing/{slug}.html */
+  function detailHref(slugOrUrl) {
+    if (!slugOrUrl) return "";
+    if (/\.html$/i.test(slugOrUrl) || /^https?:/i.test(slugOrUrl)) return rootPath(slugOrUrl);
+    return rootPath("movies/now-playing/" + slugOrUrl + ".html");
+  }
+
   function allMovies() {
     return window.NOW_PLAYING_MOVIES || [];
   }
@@ -54,7 +61,7 @@
     img.loading = "lazy";
     img.decoding = "async";
     var link = document.createElement("a");
-    link.href = rootPath(m.detailUrl);
+    link.href = detailHref(m.slug || m.detailUrl);
     link.className = "np-stretch-link";
     link.setAttribute("aria-label", m.titleKo + " 상세 보기");
     media.appendChild(img);
@@ -64,7 +71,7 @@
     var h2 = document.createElement("h2");
     h2.className = "np-card-title";
     var tlink = document.createElement("a");
-    tlink.href = rootPath(m.detailUrl);
+    tlink.href = detailHref(m.slug || m.detailUrl);
     tlink.textContent = m.titleKo;
     h2.appendChild(tlink);
     body.appendChild(h2);
