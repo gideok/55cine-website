@@ -240,6 +240,7 @@
       var MOVIE_POSTER_BY_TITLE = window.MOVIE_POSTER_BY_TITLE;
       var parseMovieTitleWithStatus = window.parseMovieTitleWithStatus;
       var movieDetailUrlForPoster = window.movieDetailUrlForPoster;
+      var movieDetailUrlForTitle = window.movieDetailUrlForTitle;
 
       const dayTabs = document.getElementById("dayTabs");
       const panelsWrap = document.getElementById("schedulePanels");
@@ -247,7 +248,6 @@
         WEEK_SCHEDULE &&
         MOVIE_POSTER_BY_TITLE &&
         parseMovieTitleWithStatus &&
-        movieDetailUrlForPoster &&
         dayTabs &&
         panelsWrap
       ) {
@@ -282,7 +282,10 @@
           const badgeHtml = titleInfo.badgeLabel
             ? '<span class="movie-status-badge ' + titleInfo.badgeClass + '">' + titleInfo.badgeLabel + "</span>"
             : "";
-          var detailUrl = movieDetailUrlForPoster(poster);
+          var detailUrl =
+            (movieDetailUrlForTitle && movieDetailUrlForTitle(entry.title)) ||
+            (movieDetailUrlForPoster && movieDetailUrlForPoster(poster)) ||
+            "";
           var posterInner = '<img class="poster-badge" src="' + poster + '" alt="' + entry.title + ' 포스터" width="52" height="52" />';
           var posterBlock = detailUrl
             ? '<a class="schedule-poster-link" href="' + detailUrl + '">' + posterInner + "</a>"

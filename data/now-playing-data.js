@@ -55,5 +55,26 @@ window.NOW_PLAYING_MOVIES = [
     "titleEn": "The World of Love",
     "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
     "detailUrl": "movies/now-playing/the-world-of-love.html"
+  },
+  {
+    "slug": "teaching-practice",
+    "titleKo": "교생실습",
+    "titleEn": "Teaching Practice: Idiot Girls and School Ghost 2",
+    "poster": "images/movies/now-playing/teaching-practice-poster.jpg",
+    "detailUrl": "movies/now-playing/teaching-practice.html"
+  },
+  {
+    "slug": "namtaeryeong",
+    "titleKo": "남태령",
+    "titleEn": "The Longest Night: Namtaeryeong",
+    "poster": "images/movies/now-playing/namtaeryeong-poster.jpg",
+    "detailUrl": "movies/now-playing/namtaeryeong.html"
+  },
+  {
+    "slug": "nirvanna-the-band-the-show-the-movie",
+    "titleKo": "너바나 더 밴드",
+    "titleEn": "Nirvanna the Band the Show the Movie",
+    "poster": "images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg",
+    "detailUrl": "movies/now-playing/nirvanna-the-band-the-show-the-movie.html"
   }
 ];

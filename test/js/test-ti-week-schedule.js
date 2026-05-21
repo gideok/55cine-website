@@ -11,7 +11,8 @@
   var MOVIE_POSTER_BY_TITLE = window.MOVIE_POSTER_BY_TITLE;
   var parseMovieTitleWithStatus = window.parseMovieTitleWithStatus;
   var movieDetailUrlForPoster = window.movieDetailUrlForPoster;
-  if (!WEEK_SCHEDULE || !MOVIE_POSTER_BY_TITLE || !parseMovieTitleWithStatus || !movieDetailUrlForPoster) {
+  var movieDetailUrlForTitle = window.movieDetailUrlForTitle;
+  if (!WEEK_SCHEDULE || !MOVIE_POSTER_BY_TITLE || !parseMovieTitleWithStatus) {
     return;
   }
 
@@ -70,7 +71,10 @@
           MOVIE_POSTER_BY_TITLE[entry.title] ||
           MOVIE_POSTER_BY_TITLE[titleInfo.cleanTitle] ||
           MOVIE_IMAGES[entryIndex % MOVIE_IMAGES.length];
-        var detailUrl = movieDetailUrlForPoster(poster);
+        var detailUrl =
+          (movieDetailUrlForTitle && movieDetailUrlForTitle(entry.title)) ||
+          (movieDetailUrlForPoster && movieDetailUrlForPoster(poster)) ||
+          "";
 
         var row = document.createElement("div");
         row.className = "ti-row";

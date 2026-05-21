@@ -15,114 +15,147 @@
 
   window.WEEK_SCHEDULE = [
     {
-      label: "4/30(목)",
+      label: "5/14(목)",
       weekday: "목",
       entries: [
-        { time: "11:30", title: "빨간 나라를 보았니" },
-        { time: "13:50", title: "세계의 주인" },
-        { time: "16:15", title: "극장의 시간들" },
-        { time: "18:20", title: "힌드의 목소리" },
-        { time: "20:05", title: "새벽의 Tango" }
+        { time: "11:30", title: "세계의 주인" },
+        { time: "13:45", title: "빨간 나라를 보았니" },
+        { time: "16:00", title: "새벽의 Tango" },
+        { time: "18:15", title: "교생실습" },
+        { time: "20:05", title: "그녀가 돌아온 날" }
       ]
     },
     {
-      label: "5/1(금)",
+      label: "5/15(금)",
       weekday: "금",
       entries: [
         { time: "11:30", title: "누룩" },
-        { time: "13:10", title: "센티멘탈 밸류" },
-        { time: "14:00", title: "르누아르" },
-        { time: "15:40", title: "힌드의 목소리" },
-        { time: "17:25", title: "새벽의 Tango" },
-        { time: "19:40", title: "세계의 주인" }
+        { time: "13:15", title: "그녀가 돌아온 날" },
+        { time: "15:00", title: "교생실습" },
+        { time: "16:55", title: "빨간 나라를 보았니" },
+        { time: "19:30", title: "달걀 원정대" }
       ]
     },
     {
-      label: "5/2(토)",
+      label: "5/16(토)",
       weekday: "토",
       entries: [
-        { time: "11:30", title: "세계의 주인" },
-        { time: "13:45", title: "힌드의 목소리" },
-        { time: "15:30", title: "새벽의 Tango" },
-        { time: "17:45", title: "센티멘탈 밸류" },
-        { time: "20:15", title: "누룩" }
+        { time: "11:30", title: "교생실습" },
+        { time: "13:20", title: "달걀 원정대" },
+        { time: "15:30", title: "그녀가 돌아온 날" },
+        { time: "17:10", title: "힌드의 목소리" },
+        { time: "19:00", title: "세계의 주인" }
       ]
     },
     {
-      label: "5/3(일)",
+      label: "5/17(일)",
       weekday: "일",
       entries: [
-        { time: "11:30", title: "새벽의 Tango" },
-        { time: "13:45", title: "센티멘탈 밸류" },
-        { time: "16:15", title: "힌드의 목소리" },
-        { time: "18:00", title: "세계의 주인" },
-        { time: "20:15", title: "주희에게" }
+        { time: "11:30", title: "힌드의 목소리" },
+        { time: "13:15", title: "그녀가 돌아온 날" },
+        { time: "14:55", title: "달걀 원정대" },
+        { time: "17:05", title: "세계의 주인" },
+        { time: "19:20", title: "교생실습" }
       ]
     },
     {
-      label: "5/4(월)",
+      label: "5/18(월)",
       weekday: "월",
       entries: [
-        { time: "11:30", title: "주희에게" },
-        { time: "13:30", title: "누룩" },
-        { time: "15:10", title: "새벽의 Tango" },
-        { time: "17:25", title: "빨간 나라를 보았니" },
-        { time: "19:40", title: "극장의 시간들 (중영)" }
+        { time: "11:30", title: "그녀가 돌아온 날" },
+        { time: "13:10", title: "세계의 주인" },
+        { time: "15:25", title: "새벽의 Tango" },
+        { time: "17:40", title: "교생실습" },
+        { time: "19:30", title: "빨간 나라를 보았니 (종영)" }
       ]
     },
     {
-      label: "5/5(화)",
+      label: "5/19(화)",
       weekday: "화",
       entries: [
-        { time: "11:30", title: "누룩" },
-        { time: "13:10", title: "새벽의 Tango" },
-        { time: "15:25", title: "힌드의 목소리" },
-        { time: "17:10", title: "센티멘탈 밸류 (중영)" },
-        { time: "19:40", title: "세계의 주인" }
+        { time: "10:30", title: "세계의 주인" },
+        { time: "12:45", title: "누룩" },
+        { time: "14:25", title: "교생실습" },
+        { time: "16:15", title: "새벽의 Tango" },
+        { time: "18:25", title: "그녀가 돌아온 날" },
+        { time: "20:05", title: "달걀 원정대" }
       ]
     },
     {
-      label: "5/6(수)",
+      label: "5/20(수)",
       weekday: "수",
       entries: [
-        { time: "11:15", title: "새벽의 Tango" },
-        { time: "13:30", title: "세계의 주인" },
-        { time: "15:45", title: "누룩" },
-        { time: "17:30", title: "그녀가 돌아온 날 (개봉)" },
-        { time: "19:15", title: "달갈 원정대 (개봉)" }
+        { time: "10:30", title: "교생실습" },
+        { time: "12:20", title: "남태령 (개봉)" },
+        { time: "14:30", title: "너바나'와는 별 관련 없는 '너바나 더 밴드' (개봉)" },
+        { time: "16:25", title: "그녀가 돌아온 날" },
+        { time: "18:10", title: "남태령 (개봉)" },
+        { time: "20:20", title: "너바나'와는 별 관련 없는 '너바나 더 밴드' (개봉)" }
       ]
     }
   ];
 
-  var postersRel = {
-    르누아르: "images/movie001.jpg",
-    "빨간 나라를 보았니": "images/movie001.jpg",
-    "세계의 주인": "images/movie002.jpg",
-    "극장의 시간들": "images/movie003.jpg",
-    "극장의 시간들 (중영)": "images/movie003.jpg",
-    "힌드의 목소리": "images/movie004.jpg",
-    "새벽의 Tango": "images/movie001.jpg",
-    누룩: "images/movie002.jpg",
-    "센티멘탈 밸류": "images/movie003.jpg",
-    "센티멘탈 밸류 (중영)": "images/movie003.jpg",
-    주희에게: "images/movie004.jpg",
-    "그녀가 돌아온 날 (개봉)": "images/movie001.jpg",
-    "달갈 원정대 (개봉)": "images/movie002.jpg"
+  /** [현재 상영작]과 제목이 일치할 때 상세·포스터 경로 */
+  var nowPlayingByTitle = {
+    "달걀 원정대": {
+      poster: "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      detailUrl: "movies/now-playing/riddle-of-fire.html"
+    },
+    "그녀가 돌아온 날": {
+      poster: "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      detailUrl: "movies/now-playing/the-day-she-returns.html"
+    },
+    "새벽의 Tango": {
+      poster: "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      detailUrl: "movies/now-playing/tango-at-dawn.html"
+    },
+    "힌드의 목소리": {
+      poster: "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      detailUrl: "movies/now-playing/the-voice-of-hind-rajab.html"
+    },
+    누룩: {
+      poster: "images/movies/now-playing/the-yeast-poster.jpg",
+      detailUrl: "movies/now-playing/the-yeast.html"
+    },
+    "빨간 나라를 보았니": {
+      poster: "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      detailUrl: "movies/now-playing/have-you-seen-the-land-of-the-red.html"
+    },
+    "세계의 주인": {
+      poster: "images/movies/now-playing/the-world-of-love-poster.jpg",
+      detailUrl: "movies/now-playing/the-world-of-love.html"
+    },
+    "교생실습": {
+      poster: "images/movies/now-playing/teaching-practice-poster.jpg",
+      detailUrl: "movies/now-playing/teaching-practice.html"
+    },
+    "남태령 (개봉)": {
+      poster: "images/movies/now-playing/namtaeryeong-poster.jpg",
+      detailUrl: "movies/now-playing/namtaeryeong.html"
+    },
+    "남태령": {
+      poster: "images/movies/now-playing/namtaeryeong-poster.jpg",
+      detailUrl: "movies/now-playing/namtaeryeong.html"
+    },
+    "너바나'와는 별 관련 없는 '너바나 더 밴드' (개봉)": {
+      poster: "images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg",
+      detailUrl: "movies/now-playing/nirvanna-the-band-the-show-the-movie.html"
+    },
+    "너바나'와는 별 관련 없는 '너바나 더 밴드'": {
+      poster: "images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg",
+      detailUrl: "movies/now-playing/nirvanna-the-band-the-show-the-movie.html"
+    }
   };
 
   window.MOVIE_POSTER_BY_TITLE = {};
-  for (var key in postersRel) {
-    if (Object.prototype.hasOwnProperty.call(postersRel, key)) {
-      window.MOVIE_POSTER_BY_TITLE[key] = withBase(postersRel[key]);
-    }
-  }
+  window.MOVIE_DETAIL_BY_TITLE = {};
 
-  window.movieDetailUrlForPoster = function (posterUrl) {
-    if (!posterUrl) return "";
-    if (posterUrl.indexOf("movie001.jpg") !== -1) return withBase("movie-detail.html");
-    if (posterUrl.indexOf("movie002.jpg") !== -1) return withBase("movie-detail-type2.html");
-    return "";
-  };
+  for (var title in nowPlayingByTitle) {
+    if (!Object.prototype.hasOwnProperty.call(nowPlayingByTitle, title)) continue;
+    var row = nowPlayingByTitle[title];
+    window.MOVIE_POSTER_BY_TITLE[title] = withBase(row.poster);
+    window.MOVIE_DETAIL_BY_TITLE[title] = withBase(row.detailUrl);
+  }
 
   window.parseMovieTitleWithStatus = function (title) {
     var suffixMatch = title.match(/\s*\((개봉|종영|중영)\)\s*$/);
@@ -137,5 +170,22 @@
       badgeLabel: badgeLabel,
       badgeClass: badgeClass
     };
+  };
+
+  window.movieDetailUrlForTitle = function (title) {
+    if (!title) return "";
+    var info = window.parseMovieTitleWithStatus(title);
+    return (
+      window.MOVIE_DETAIL_BY_TITLE[title] ||
+      window.MOVIE_DETAIL_BY_TITLE[info.cleanTitle] ||
+      ""
+    );
+  };
+
+  window.movieDetailUrlForPoster = function (posterUrl) {
+    if (!posterUrl) return "";
+    if (posterUrl.indexOf("movie001.jpg") !== -1) return withBase("movie-detail.html");
+    if (posterUrl.indexOf("movie002.jpg") !== -1) return withBase("movie-detail-type2.html");
+    return "";
   };
 })();

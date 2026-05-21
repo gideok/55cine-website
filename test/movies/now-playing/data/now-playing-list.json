@@ -55,6 +55,27 @@
       "titleKo": "세계의 주인",
       "titleEn": "The World of Love",
       "detailUrl": "movies/now-playing/the-world-of-love.html"
+    },
+    {
+      "slug": "teaching-practice",
+      "poster": "images/movies/now-playing/teaching-practice-poster.jpg",
+      "titleKo": "교생실습",
+      "titleEn": "Teaching Practice: Idiot Girls and School Ghost 2",
+      "detailUrl": "movies/now-playing/teaching-practice.html"
+    },
+    {
+      "slug": "namtaeryeong",
+      "poster": "images/movies/now-playing/namtaeryeong-poster.jpg",
+      "titleKo": "남태령",
+      "titleEn": "The Longest Night: Namtaeryeong",
+      "detailUrl": "movies/now-playing/namtaeryeong.html"
+    },
+    {
+      "slug": "nirvanna-the-band-the-show-the-movie",
+      "poster": "images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg",
+      "titleKo": "너바나 더 밴드",
+      "titleEn": "Nirvanna the Band the Show the Movie",
+      "detailUrl": "movies/now-playing/nirvanna-the-band-the-show-the-movie.html"
     }
   ]
 }
