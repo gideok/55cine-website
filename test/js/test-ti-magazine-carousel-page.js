@@ -217,6 +217,23 @@
       slide.appendChild(grid);
       mzSwipeTrack.appendChild(slide);
     }
+    syncThumbSlideWidths();
+  }
+
+  /** 슬라이드 너비 = 뷰포트(clientWidth). flex 100%는 트랙 기준이라 다음 페이지가 살짝 보일 수 있음 */
+  function syncThumbSlideWidths() {
+    if (!mzSwipeViewport || !mzSwipeTrack) return;
+    var w = mzSwipeViewport.clientWidth;
+    if (w <= 0) return;
+    var slides = mzSwipeTrack.querySelectorAll(".se-slide");
+    for (var i = 0; i < slides.length; i++) {
+      var slide = slides[i];
+      slide.style.flex = "0 0 " + w + "px";
+      slide.style.width = w + "px";
+      slide.style.maxWidth = w + "px";
+      slide.style.minWidth = w + "px";
+    }
+    mzSwipeTrack.style.width = slides.length * w + "px";
   }
 
   function updateThumbDots() {
@@ -380,6 +397,8 @@
     if (nextKey !== thumbLayoutKey || mzSwipeTrack.childElementCount === 0) {
       buildThumbSlides();
       thumbLayoutKey = nextKey;
+    } else {
+      syncThumbSlideWidths();
     }
 
     var w = mzSwipeViewport.clientWidth;

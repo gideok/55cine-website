@@ -110,13 +110,12 @@
 }
 
 .ti .ti-mz-panel .mz-thumb-stack .se-slide {
-  flex: 0 0 100%;
-  width: 100%;
-  max-width: 100%;
+  flex: 0 0 auto;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   padding: 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .ti .ti-mz-panel .mz-thumb-stack .se-grid {
@@ -345,6 +344,17 @@
   text-decoration: underline;
 }
 
+/* 목록형: 본문(요약) 양쪽 정렬 */
+.ti .ti-mz-panel .preview-list.is-list .preview-excerpt-link {
+  display: block;
+  text-align: justify;
+}
+
+.ti .ti-mz-panel .preview-list.is-list .serial-title,
+.ti .ti-mz-panel .preview-list.is-list .gv-title {
+  text-align: justify;
+}
+
 /* special-exhibition-test.html .se-foot 패턴 (동일 비주얼) */
 .ti .ti-mz-panel .se-foot {
   flex: 0 0 auto;
@@ -434,6 +444,14 @@
 
   .ti .ti-mz-panel .mz-thumb-stack .se-slide .preview-title-link {
     font-size: 0.82rem;
+  }
+}
+
+/* PC: 상단 페이지네이션만 사용 — 가로 스크롤 peek 방지 */
+@media (min-width: 900px) {
+  .ti .ti-mz-panel .mz-thumb-stack .se-swipe-viewport {
+    overflow-x: hidden;
+    scrollbar-gutter: auto;
   }
 }
 
