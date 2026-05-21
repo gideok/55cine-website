@@ -1,0 +1,242 @@
+{
+  "movies": [
+    {
+      "slug": "autumn-visit",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "titleKo": "가을 방문",
+      "titleEn": "Autumn Visit",
+      "director": "최은영"
+    },
+    {
+      "slug": "city-dreams",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "titleKo": "도시의 꿈",
+      "titleEn": "City Dreams",
+      "director": "한지원"
+    },
+    {
+      "slug": "blue-note",
+      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
+      "titleKo": "블루 노트",
+      "titleEn": "Blue Note",
+      "director": "장동윤"
+    },
+    {
+      "slug": "horizon-line",
+      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      "titleKo": "지평선",
+      "titleEn": "Horizon Line",
+      "director": "김효은"
+    },
+    {
+      "slug": "past-archive-01",
+      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      "titleKo": "고요한 밤",
+      "titleEn": "Archive Film 4",
+      "director": "한지원"
+    },
+    {
+      "slug": "past-archive-02",
+      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      "titleKo": "잔향 2",
+      "titleEn": "Archive Film 5",
+      "director": "최은영"
+    },
+    {
+      "slug": "past-archive-03",
+      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      "titleKo": "별빛 아래 3",
+      "titleEn": "Archive Film 6",
+      "director": "박석영"
+    },
+    {
+      "slug": "past-archive-04",
+      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
+      "titleKo": "작은 방 4",
+      "titleEn": "Archive Film 7",
+      "director": "감정원"
+    },
+    {
+      "slug": "past-archive-05",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "titleKo": "마지막 편지 5",
+      "titleEn": "Archive Film 8",
+      "director": "성스러운"
+    },
+    {
+      "slug": "past-archive-06",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "titleKo": "푸른 계절 6",
+      "titleEn": "Archive Film 9",
+      "director": "웨스턴 라줄리"
+    },
+    {
+      "slug": "past-archive-07",
+      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
+      "titleKo": "바람의 끝 7",
+      "titleEn": "Archive Film 10",
+      "director": "카우타르 벤 하니야"
+    },
+    {
+      "slug": "past-archive-08",
+      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      "titleKo": "숨결 8",
+      "titleEn": "Archive Film 11",
+      "director": "이수민"
+    },
+    {
+      "slug": "past-archive-09",
+      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      "titleKo": "그날의 기억 9",
+      "titleEn": "Archive Film 12",
+      "director": "정하늘"
+    },
+    {
+      "slug": "past-archive-10",
+      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      "titleKo": "늦은 여름 10",
+      "titleEn": "Archive Film 13",
+      "director": "문재인"
+    },
+    {
+      "slug": "past-archive-11",
+      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      "titleKo": "창가의 빛 11",
+      "titleEn": "Archive Film 14",
+      "director": "김연교"
+    },
+    {
+      "slug": "past-archive-12",
+      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
+      "titleKo": "조용한 해변 12",
+      "titleEn": "Archive Film 15",
+      "director": "신철민"
+    },
+    {
+      "slug": "past-archive-13",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "titleKo": "이름 없는 길 13",
+      "titleEn": "Archive Film 16",
+      "director": "임권택"
+    },
+    {
+      "slug": "past-archive-14",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "titleKo": "서쪽 하늘 14",
+      "titleEn": "Archive Film 17",
+      "director": "박찬욱"
+    },
+    {
+      "slug": "past-archive-15",
+      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
+      "titleKo": "달빛 산책 15",
+      "titleEn": "Archive Film 18",
+      "director": "봉준호"
+    },
+    {
+      "slug": "past-archive-16",
+      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      "titleKo": "겨울 정원 16",
+      "titleEn": "Archive Film 19",
+      "director": "김기덕"
+    },
+    {
+      "slug": "past-archive-17",
+      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      "titleKo": "안개 낀 아침 17",
+      "titleEn": "Archive Film 20",
+      "director": "나홍진"
+    },
+    {
+      "slug": "past-archive-18",
+      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      "titleKo": "흩어진 꽃 18",
+      "titleEn": "Archive Film 21",
+      "director": "정재익"
+    },
+    {
+      "slug": "past-archive-19",
+      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      "titleKo": "깊은 바다 19",
+      "titleEn": "Archive Film 22",
+      "director": "홍종호"
+    },
+    {
+      "slug": "past-archive-20",
+      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
+      "titleKo": "다시 만난 날 20",
+      "titleEn": "Archive Film 23",
+      "director": "전운경"
+    },
+    {
+      "slug": "past-archive-21",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "titleKo": "멀리서 온 노래 21",
+      "titleEn": "Archive Film 24",
+      "director": "윤종빈"
+    },
+    {
+      "slug": "past-archive-22",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "titleKo": "흐린 거울 22",
+      "titleEn": "Archive Film 25",
+      "director": "김한민"
+    },
+    {
+      "slug": "past-archive-23",
+      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
+      "titleKo": "사라진 시간 23",
+      "titleEn": "Archive Film 26",
+      "director": "이창동"
+    },
+    {
+      "slug": "past-archive-24",
+      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      "titleKo": "작은 우주 24",
+      "titleEn": "Archive Film 27",
+      "director": "장준환"
+    },
+    {
+      "slug": "past-archive-25",
+      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      "titleKo": "밤의 정원 25",
+      "titleEn": "Archive Film 28",
+      "director": "송일곤"
+    },
+    {
+      "slug": "past-archive-26",
+      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      "titleKo": "새벽 이후 26",
+      "titleEn": "Archive Film 29",
+      "director": "조성희"
+    },
+    {
+      "slug": "past-archive-27",
+      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      "titleKo": "잊지 못할 여름 27",
+      "titleEn": "Archive Film 30",
+      "director": "홍상수"
+    },
+    {
+      "slug": "past-archive-28",
+      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
+      "titleKo": "희미한 빛 28",
+      "titleEn": "Archive Film 31",
+      "director": "윤가은"
+    },
+    {
+      "slug": "past-archive-29",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "titleKo": "마지막 춤 29",
+      "titleEn": "Archive Film 32",
+      "director": "김효은"
+    },
+    {
+      "slug": "past-archive-30",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "titleKo": "고백의 계절 30",
+      "titleEn": "Archive Film 33",
+      "director": "장동윤"
+    }
+  ]
+}

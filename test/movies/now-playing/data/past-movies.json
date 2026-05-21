@@ -1,0 +1,684 @@
+{
+  "movies": [
+    {
+      "slug": "autumn-visit",
+      "titleKo": "가을 방문",
+      "titleEn": "Autumn Visit",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "director": "최은영",
+      "cast": "배우 1, 조연 2",
+      "info": "다큐멘터리 · 80분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2025.11.8",
+      "synopsis": "가을 방문은(는) 오오극장 지난 상영작 아카이브 샘플 1입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "UBoNaW5bqQA",
+      "screenings": [
+        {
+          "dateLabel": "undefined.undefined.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "city-dreams",
+      "titleKo": "도시의 꿈",
+      "titleEn": "City Dreams",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "director": "한지원",
+      "cast": "배우 2, 조연 3",
+      "info": "드라마 · 81분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2025.9.20",
+      "synopsis": "도시의 꿈은(는) 오오극장 지난 상영작 아카이브 샘플 2입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "lQdFU-QF8FQ",
+      "screenings": [
+        {
+          "dateLabel": "undefined.undefined.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "blue-note",
+      "titleKo": "블루 노트",
+      "titleEn": "Blue Note",
+      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
+      "director": "장동윤",
+      "cast": "배우 3, 조연 4",
+      "info": "다큐멘터리 · 82분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2025.8.15",
+      "synopsis": "블루 노트은(는) 오오극장 지난 상영작 아카이브 샘플 3입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "e8TMxXtKjtI",
+      "screenings": [
+        {
+          "dateLabel": "undefined.undefined.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "horizon-line",
+      "titleKo": "지평선",
+      "titleEn": "Horizon Line",
+      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      "director": "김효은",
+      "cast": "배우 4, 조연 5",
+      "info": "드라마 · 83분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2025.7.4",
+      "synopsis": "지평선은(는) 오오극장 지난 상영작 아카이브 샘플 4입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "45J1UqlyTKc",
+      "screenings": [
+        {
+          "dateLabel": "undefined.undefined.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-01",
+      "titleKo": "고요한 밤",
+      "titleEn": "Archive Film 4",
+      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      "director": "한지원",
+      "cast": "배우 5, 조연 6",
+      "info": "다큐멘터리 · 84분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2022.5.5",
+      "synopsis": "고요한 밤은(는) 오오극장 지난 상영작 아카이브 샘플 5입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "LJu5eGAQGtY",
+      "screenings": [
+        {
+          "dateLabel": "05.05.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-02",
+      "titleKo": "잔향 2",
+      "titleEn": "Archive Film 5",
+      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      "director": "최은영",
+      "cast": "배우 6, 조연 7",
+      "info": "드라마 · 85분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2023.6.6",
+      "synopsis": "잔향 2은(는) 오오극장 지난 상영작 아카이브 샘플 6입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "gHT94hQd6Ys",
+      "screenings": [
+        {
+          "dateLabel": "06.06.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-03",
+      "titleKo": "별빛 아래 3",
+      "titleEn": "Archive Film 6",
+      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      "director": "박석영",
+      "cast": "배우 7, 조연 8",
+      "info": "다큐멘터리 · 86분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2024.7.7",
+      "synopsis": "별빛 아래 3은(는) 오오극장 지난 상영작 아카이브 샘플 7입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "DAQKs_d70B0",
+      "screenings": [
+        {
+          "dateLabel": "07.07.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-04",
+      "titleKo": "작은 방 4",
+      "titleEn": "Archive Film 7",
+      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
+      "director": "감정원",
+      "cast": "배우 8, 조연 9",
+      "info": "드라마 · 87분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2025.8.8",
+      "synopsis": "작은 방 4은(는) 오오극장 지난 상영작 아카이브 샘플 8입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "cm7y2k9pFOU",
+      "screenings": [
+        {
+          "dateLabel": "08.08.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-05",
+      "titleKo": "마지막 편지 5",
+      "titleEn": "Archive Film 8",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "director": "성스러운",
+      "cast": "배우 9, 조연 10",
+      "info": "다큐멘터리 · 88분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2018.9.9",
+      "synopsis": "마지막 편지 5은(는) 오오극장 지난 상영작 아카이브 샘플 9입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "UBoNaW5bqQA",
+      "screenings": [
+        {
+          "dateLabel": "09.09.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-06",
+      "titleKo": "푸른 계절 6",
+      "titleEn": "Archive Film 9",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "director": "웨스턴 라줄리",
+      "cast": "배우 10, 조연 11",
+      "info": "드라마 · 89분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2019.10.10",
+      "synopsis": "푸른 계절 6은(는) 오오극장 지난 상영작 아카이브 샘플 10입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "lQdFU-QF8FQ",
+      "screenings": [
+        {
+          "dateLabel": "10.10.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-07",
+      "titleKo": "바람의 끝 7",
+      "titleEn": "Archive Film 10",
+      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
+      "director": "카우타르 벤 하니야",
+      "cast": "배우 11, 조연 12",
+      "info": "다큐멘터리 · 90분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2020.11.11",
+      "synopsis": "바람의 끝 7은(는) 오오극장 지난 상영작 아카이브 샘플 11입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "e8TMxXtKjtI",
+      "screenings": [
+        {
+          "dateLabel": "11.11.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-08",
+      "titleKo": "숨결 8",
+      "titleEn": "Archive Film 11",
+      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      "director": "이수민",
+      "cast": "배우 12, 조연 13",
+      "info": "드라마 · 91분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2021.12.12",
+      "synopsis": "숨결 8은(는) 오오극장 지난 상영작 아카이브 샘플 12입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "45J1UqlyTKc",
+      "screenings": [
+        {
+          "dateLabel": "12.12.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-09",
+      "titleKo": "그날의 기억 9",
+      "titleEn": "Archive Film 12",
+      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      "director": "정하늘",
+      "cast": "배우 13, 조연 14",
+      "info": "다큐멘터리 · 92분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2022.1.13",
+      "synopsis": "그날의 기억 9은(는) 오오극장 지난 상영작 아카이브 샘플 13입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "LJu5eGAQGtY",
+      "screenings": [
+        {
+          "dateLabel": "01.13.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-10",
+      "titleKo": "늦은 여름 10",
+      "titleEn": "Archive Film 13",
+      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      "director": "문재인",
+      "cast": "배우 14, 조연 15",
+      "info": "드라마 · 93분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2023.2.14",
+      "synopsis": "늦은 여름 10은(는) 오오극장 지난 상영작 아카이브 샘플 14입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "gHT94hQd6Ys",
+      "screenings": [
+        {
+          "dateLabel": "02.14.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-11",
+      "titleKo": "창가의 빛 11",
+      "titleEn": "Archive Film 14",
+      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      "director": "김연교",
+      "cast": "배우 15, 조연 16",
+      "info": "다큐멘터리 · 94분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2024.3.15",
+      "synopsis": "창가의 빛 11은(는) 오오극장 지난 상영작 아카이브 샘플 15입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "DAQKs_d70B0",
+      "screenings": [
+        {
+          "dateLabel": "03.15.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-12",
+      "titleKo": "조용한 해변 12",
+      "titleEn": "Archive Film 15",
+      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
+      "director": "신철민",
+      "cast": "배우 16, 조연 17",
+      "info": "드라마 · 95분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2025.4.16",
+      "synopsis": "조용한 해변 12은(는) 오오극장 지난 상영작 아카이브 샘플 16입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "cm7y2k9pFOU",
+      "screenings": [
+        {
+          "dateLabel": "04.16.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-13",
+      "titleKo": "이름 없는 길 13",
+      "titleEn": "Archive Film 16",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "director": "임권택",
+      "cast": "배우 17, 조연 18",
+      "info": "다큐멘터리 · 96분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2018.5.17",
+      "synopsis": "이름 없는 길 13은(는) 오오극장 지난 상영작 아카이브 샘플 17입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "UBoNaW5bqQA",
+      "screenings": [
+        {
+          "dateLabel": "05.17.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-14",
+      "titleKo": "서쪽 하늘 14",
+      "titleEn": "Archive Film 17",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "director": "박찬욱",
+      "cast": "배우 18, 조연 19",
+      "info": "드라마 · 97분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2019.6.18",
+      "synopsis": "서쪽 하늘 14은(는) 오오극장 지난 상영작 아카이브 샘플 18입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "lQdFU-QF8FQ",
+      "screenings": [
+        {
+          "dateLabel": "06.18.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-15",
+      "titleKo": "달빛 산책 15",
+      "titleEn": "Archive Film 18",
+      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
+      "director": "봉준호",
+      "cast": "배우 19, 조연 20",
+      "info": "다큐멘터리 · 98분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2020.7.19",
+      "synopsis": "달빛 산책 15은(는) 오오극장 지난 상영작 아카이브 샘플 19입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "e8TMxXtKjtI",
+      "screenings": [
+        {
+          "dateLabel": "07.19.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-16",
+      "titleKo": "겨울 정원 16",
+      "titleEn": "Archive Film 19",
+      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      "director": "김기덕",
+      "cast": "배우 20, 조연 21",
+      "info": "드라마 · 99분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2021.8.20",
+      "synopsis": "겨울 정원 16은(는) 오오극장 지난 상영작 아카이브 샘플 20입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "45J1UqlyTKc",
+      "screenings": [
+        {
+          "dateLabel": "08.20.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-17",
+      "titleKo": "안개 낀 아침 17",
+      "titleEn": "Archive Film 20",
+      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      "director": "나홍진",
+      "cast": "배우 21, 조연 22",
+      "info": "다큐멘터리 · 100분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2022.9.21",
+      "synopsis": "안개 낀 아침 17은(는) 오오극장 지난 상영작 아카이브 샘플 21입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "LJu5eGAQGtY",
+      "screenings": [
+        {
+          "dateLabel": "09.21.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-18",
+      "titleKo": "흩어진 꽃 18",
+      "titleEn": "Archive Film 21",
+      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      "director": "정재익",
+      "cast": "배우 22, 조연 23",
+      "info": "드라마 · 101분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2023.10.22",
+      "synopsis": "흩어진 꽃 18은(는) 오오극장 지난 상영작 아카이브 샘플 22입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "gHT94hQd6Ys",
+      "screenings": [
+        {
+          "dateLabel": "10.22.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-19",
+      "titleKo": "깊은 바다 19",
+      "titleEn": "Archive Film 22",
+      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      "director": "홍종호",
+      "cast": "배우 23, 조연 24",
+      "info": "다큐멘터리 · 102분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2024.11.23",
+      "synopsis": "깊은 바다 19은(는) 오오극장 지난 상영작 아카이브 샘플 23입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "DAQKs_d70B0",
+      "screenings": [
+        {
+          "dateLabel": "11.23.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-20",
+      "titleKo": "다시 만난 날 20",
+      "titleEn": "Archive Film 23",
+      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
+      "director": "전운경",
+      "cast": "배우 24, 조연 25",
+      "info": "드라마 · 103분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2025.12.24",
+      "synopsis": "다시 만난 날 20은(는) 오오극장 지난 상영작 아카이브 샘플 24입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "cm7y2k9pFOU",
+      "screenings": [
+        {
+          "dateLabel": "12.24.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-21",
+      "titleKo": "멀리서 온 노래 21",
+      "titleEn": "Archive Film 24",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "director": "윤종빈",
+      "cast": "배우 25, 조연 26",
+      "info": "다큐멘터리 · 104분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2018.1.25",
+      "synopsis": "멀리서 온 노래 21은(는) 오오극장 지난 상영작 아카이브 샘플 25입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "UBoNaW5bqQA",
+      "screenings": [
+        {
+          "dateLabel": "01.25.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-22",
+      "titleKo": "흐린 거울 22",
+      "titleEn": "Archive Film 25",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "director": "김한민",
+      "cast": "배우 26, 조연 27",
+      "info": "드라마 · 105분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2019.2.26",
+      "synopsis": "흐린 거울 22은(는) 오오극장 지난 상영작 아카이브 샘플 26입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "lQdFU-QF8FQ",
+      "screenings": [
+        {
+          "dateLabel": "02.26.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-23",
+      "titleKo": "사라진 시간 23",
+      "titleEn": "Archive Film 26",
+      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
+      "director": "이창동",
+      "cast": "배우 27, 조연 28",
+      "info": "다큐멘터리 · 106분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2020.3.27",
+      "synopsis": "사라진 시간 23은(는) 오오극장 지난 상영작 아카이브 샘플 27입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "e8TMxXtKjtI",
+      "screenings": [
+        {
+          "dateLabel": "03.27.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-24",
+      "titleKo": "작은 우주 24",
+      "titleEn": "Archive Film 27",
+      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
+      "director": "장준환",
+      "cast": "배우 28, 조연 29",
+      "info": "드라마 · 107분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2021.4.1",
+      "synopsis": "작은 우주 24은(는) 오오극장 지난 상영작 아카이브 샘플 28입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "45J1UqlyTKc",
+      "screenings": [
+        {
+          "dateLabel": "04.01.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-25",
+      "titleKo": "밤의 정원 25",
+      "titleEn": "Archive Film 28",
+      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
+      "director": "송일곤",
+      "cast": "배우 29, 조연 30",
+      "info": "다큐멘터리 · 108분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2022.5.2",
+      "synopsis": "밤의 정원 25은(는) 오오극장 지난 상영작 아카이브 샘플 29입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "LJu5eGAQGtY",
+      "screenings": [
+        {
+          "dateLabel": "05.02.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-26",
+      "titleKo": "새벽 이후 26",
+      "titleEn": "Archive Film 29",
+      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
+      "director": "조성희",
+      "cast": "배우 30, 조연 31",
+      "info": "드라마 · 109분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2023.6.3",
+      "synopsis": "새벽 이후 26은(는) 오오극장 지난 상영작 아카이브 샘플 30입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "gHT94hQd6Ys",
+      "screenings": [
+        {
+          "dateLabel": "06.03.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-27",
+      "titleKo": "잊지 못할 여름 27",
+      "titleEn": "Archive Film 30",
+      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
+      "director": "홍상수",
+      "cast": "배우 31, 조연 32",
+      "info": "다큐멘터리 · 110분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2024.7.4",
+      "synopsis": "잊지 못할 여름 27은(는) 오오극장 지난 상영작 아카이브 샘플 31입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "DAQKs_d70B0",
+      "screenings": [
+        {
+          "dateLabel": "07.04.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-28",
+      "titleKo": "희미한 빛 28",
+      "titleEn": "Archive Film 31",
+      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
+      "director": "윤가은",
+      "cast": "배우 32, 조연 33",
+      "info": "드라마 · 111분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2025.8.5",
+      "synopsis": "희미한 빛 28은(는) 오오극장 지난 상영작 아카이브 샘플 32입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "cm7y2k9pFOU",
+      "screenings": [
+        {
+          "dateLabel": "08.05.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-29",
+      "titleKo": "마지막 춤 29",
+      "titleEn": "Archive Film 32",
+      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
+      "director": "김효은",
+      "cast": "배우 33, 조연 34",
+      "info": "다큐멘터리 · 112분 ·",
+      "ratingImage": "images/rate_12.png",
+      "ratingAlt": "12세이상관람가",
+      "releaseDate": "2018.9.6",
+      "synopsis": "마지막 춤 29은(는) 오오극장 지난 상영작 아카이브 샘플 33입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "UBoNaW5bqQA",
+      "screenings": [
+        {
+          "dateLabel": "09.06.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    },
+    {
+      "slug": "past-archive-30",
+      "titleKo": "고백의 계절 30",
+      "titleEn": "Archive Film 33",
+      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
+      "director": "장동윤",
+      "cast": "배우 34, 조연 35",
+      "info": "드라마 · 113분 ·",
+      "ratingImage": "images/rate_15.png",
+      "ratingAlt": "15세이상관람가",
+      "releaseDate": "2019.10.7",
+      "synopsis": "고백의 계절 30은(는) 오오극장 지난 상영작 아카이브 샘플 34입니다. 관객과 함께했던 상영 기록을 기억합니다.",
+      "trailerYoutubeId": "lQdFU-QF8FQ",
+      "screenings": [
+        {
+          "dateLabel": "10.07.(토)",
+          "timeLabel": "14:00 (종료)"
+        }
+      ]
+    }
+  ]
+}

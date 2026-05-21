@@ -17,6 +17,15 @@
   min-width: 0;
 }
 
+.ti .ti-page-toolbar__trailing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-left: auto;
+}
+
 .ti .ti-page-toolbar .toolbar {
   margin-bottom: 0;
 }

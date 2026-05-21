@@ -1,0 +1,10 @@
+{
+  "movies": [
+    {
+      "slug": "pillion",
+      "poster": "images/movies/now-playing/pillion-poster.jpg",
+      "titleKo": "뒷자리에 태워줘",
+      "titleEn": "Pillion"
+    }
+  ]
+}

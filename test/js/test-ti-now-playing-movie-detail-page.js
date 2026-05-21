@@ -10,7 +10,16 @@
   var BOOKING_URL =
     cfg.bookingUrl ||
     "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059";
-  var LIST_URL = cfg.listPageUrl || "../../now-playing-test.html";
+  var LIST_PAGES = {
+    "now-playing": cfg.listPageUrl || "../../now-playing-test.html",
+    upcoming: "../../upcoming-playing-test.html",
+    past: "../../past-playing-test.html"
+  };
+  var LIST_LABELS = {
+    "now-playing": "현재 상영작 목록",
+    upcoming: "상영 예정작 목록",
+    past: "지난 상영작 목록"
+  };
 
   var root = document.getElementById("movieDetailRoot");
   var statusEl = document.getElementById("movieDetailStatus");
@@ -39,9 +48,17 @@
     return "";
   }
 
+  function getCatalogSection() {
+    if (cfg.catalogSection) return cfg.catalogSection;
+    var params = new URLSearchParams(window.location.search);
+    var section = params.get("section");
+    if (section) return section.trim();
+    return "now-playing";
+  }
+
   function buildDataUrl() {
     if (cfg.dataUrl) return cfg.dataUrl;
-    return PAGE_BASE + "now-playing-movies.json";
+    return PAGE_BASE + getCatalogSection() + "-movies.json";
   }
 
   function fetchMovieCatalog() {
@@ -330,7 +347,17 @@
     statusEl.classList.toggle("is-error", !!isError);
   }
 
+  function applyListBackLink() {
+    var back = document.querySelector(".np-back a");
+    if (!back) return;
+    var section = getCatalogSection();
+    back.href = LIST_PAGES[section] || LIST_PAGES["now-playing"];
+    back.textContent = LIST_LABELS[section] || LIST_LABELS["now-playing"];
+  }
+
   function boot() {
+    applyListBackLink();
+
     var slug = getMovieSlug();
     if (!slug) {
       setStatus("영화 경로(slug)를 확인할 수 없습니다.", true);
