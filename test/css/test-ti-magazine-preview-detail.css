@@ -1,0 +1,123 @@
+/* 매거진 프리뷰 본문 — JSON 템플릿 */
+
+.ti .sd-right--preview .sd-preview-subtitle {
+  margin: 10px 0 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #2a2a2a;
+}
+
+.ti .sd-right--preview .sd-cover--preview img {
+  aspect-ratio: 264 / 200;
+  object-fit: cover;
+}
+
+.ti .sd-right--preview .sd-body .body-heading {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.45;
+  color: #111;
+  text-align: left;
+}
+
+.ti .sd-right--preview .sd-body {
+  text-align: justify;
+}
+
+.ti .sd-right--preview .sd-body p {
+  margin: 0 0 14px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #333;
+  text-align: justify;
+  white-space: normal;
+}
+
+.ti .preview-detail-status {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border: 1px solid #c8c8c8;
+  background: #fff;
+  font-size: 0.88rem;
+  color: #444;
+}
+
+.ti .preview-detail-status[hidden] {
+  display: none !important;
+}
+
+/* 이전·다음 — gap 8px, 썸네일 비율 401:226, 제목 영역 높이 양쪽 동일 */
+.ti .sd-right--preview .sd-pn-cols {
+  align-items: stretch;
+  gap: 8px;
+}
+
+.ti .sd-right--preview .sd-pn-col {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  flex: 1 1 0;
+  max-width: calc(50% - 4px);
+  min-width: 0;
+}
+
+.ti .sd-right--preview .sd-pn-card,
+.ti .sd-right--preview .sd-pn-body.sd-pn-body--empty {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+}
+
+.ti .sd-right--preview .sd-pn-thumb-wrap,
+.ti .sd-right--preview .sd-pn-thumb-wrap--empty {
+  flex-shrink: 0;
+}
+
+.ti .sd-right--preview .sd-pn-item-title {
+  flex: 1 1 auto;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.ti .sd-right--preview .sd-pn-empty-note {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.ti .sd-right--preview .sd-pn-thumb-wrap:not(.sd-pn-thumb-wrap--empty) {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 401 / 226;
+}
+
+.ti .sd-right--preview .sd-pn-thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 401 / 226;
+  object-fit: cover;
+}
+
+.ti .sd-right--preview .sd-pn-thumb-wrap--empty {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 401 / 226;
+}
+
+@media (max-width: 820px) {
+  .ti .sd-right--preview .sd-pn-cols {
+    gap: 8px;
+  }
+
+  .ti .sd-right--preview .sd-pn-col {
+    flex: 1 1 0;
+    max-width: calc(50% - 4px);
+  }
+}
