@@ -1,0 +1,174 @@
+{
+  "section": "gv-moment",
+  "label": "GV 모먼트",
+  "items": [
+    {
+      "id": "gm001",
+      "numericId": 1,
+      "title": "<3670> 박준호 감독, 조유현 배우, 김현목 배우 / 2025.09.16.",
+      "date": "2025. 11. 6. 16:06",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_01.png"
+    },
+    {
+      "id": "gm002",
+      "numericId": 2,
+      "title": "<부모 바보> 이종수 감독 / 2025.02.02.",
+      "date": "2025. 3. 14. 16:30",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_02.png"
+    },
+    {
+      "id": "gm003",
+      "numericId": 3,
+      "title": "<미망> 김태양 감독, 하성국 배우, 박봉준 배우 / 2024.12.07.",
+      "date": "2025. 1. 10. 17:24",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_03.png"
+    },
+    {
+      "id": "gm004",
+      "numericId": 4,
+      "title": "<장손> 오정민 감독 / 2024.10.13.",
+      "date": "2024. 10. 30. 12:44",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_04.png"
+    },
+    {
+      "id": "gm005",
+      "numericId": 5,
+      "title": "<땅에 쓰는 시> 정다운 감독, 김종신 프로듀서 / 2024.05.26.",
+      "date": "2024. 6. 27. 17:07",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_05.png"
+    },
+    {
+      "id": "gm006",
+      "numericId": 6,
+      "title": "<막걸리가 알려줄거야> 김다민 감독 / 2024.03.23.",
+      "date": "2024. 4. 19. 16:59",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_06.png"
+    },
+    {
+      "id": "gm007",
+      "numericId": 7,
+      "title": "<벗어날 탈 脫> 서보형 감독, 임호준 배우, 위지원 배우, 성용훈 배우 / 2024.03.09.",
+      "date": "2024. 3. 27. 17:43",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_07.png"
+    },
+    {
+      "id": "gm008",
+      "numericId": 8,
+      "title": "<듣보인간의 생존신고> 권하정, 김아현 감독 / 2023.09.18.",
+      "date": "2023. 10. 26. 14:32",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_08.png"
+    },
+    {
+      "id": "gm009",
+      "numericId": 9,
+      "title": "<5시부터 7시까지의 주희> 장건재 감독 / 2023.06.17.",
+      "date": "2023. 7. 22. 14:30",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_09.png"
+    },
+    {
+      "id": "gm010",
+      "numericId": 10,
+      "title": "<희수> 감정원 감독, 공민정 배우 / 2023.05.21.",
+      "date": "2023. 6. 29. 16:46",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_10.png"
+    },
+    {
+      "id": "gm011",
+      "numericId": 11,
+      "title": "<사랑의 고고학> 이완민 감독, 옥자연 배우 / 2023.05.08.",
+      "date": "2023. 6. 2. 17:44",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_11.png"
+    },
+    {
+      "id": "gm012",
+      "numericId": 12,
+      "title": "<흐르다> 김현정 감독, 이설 배우 / 2023.04.16.",
+      "date": "2023. 5. 11. 18:12",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_12.png"
+    },
+    {
+      "id": "gm013",
+      "numericId": 13,
+      "title": "<김나영 감독전> 김나영 감독 / 2023.03.25.",
+      "date": "2023. 4. 20. 14:29",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_13.png"
+    },
+    {
+      "id": "gm014",
+      "numericId": 14,
+      "title": "<수프와 이데올로기> 양영희 감독 / 2022.12.10.",
+      "date": "2023. 1. 2. 16:17",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_14.png"
+    },
+    {
+      "id": "gm015",
+      "numericId": 15,
+      "title": "<장영선 감독전> 장영선 감독 / 2022.09.25.",
+      "date": "2022. 11. 7. 18:36",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_15.png"
+    },
+    {
+      "id": "gm016",
+      "numericId": 16,
+      "title": "<멜팅 아이스크림> 홍진훤 감독 / 2022.07.31.",
+      "date": "2022. 9. 8. 15:43",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_16.png"
+    },
+    {
+      "id": "gm017",
+      "numericId": 17,
+      "title": "<경아의 딸> 김정은 감독 / 2022.07.01.",
+      "date": "2022. 7. 23. 13:39",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_17.png"
+    },
+    {
+      "id": "gm018",
+      "numericId": 18,
+      "title": "<장윤미 단편전> 장윤미 감독 / 2022.06.26.",
+      "date": "2022. 7. 3. 18:59",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_18.png"
+    },
+    {
+      "id": "gm019",
+      "numericId": 19,
+      "title": "<낮에는 덥고 밤에는 춥고> 박송열 감독, 원향라 배우 / 2022.05.28",
+      "date": "2022. 6. 21. 12:33",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_19.png"
+    },
+    {
+      "id": "gm020",
+      "numericId": 20,
+      "title": "<공동정범> 김일란, 이혁상 감독 / 2018.03.18",
+      "date": "2022. 4. 9. 18:07",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_20.png"
+    },
+    {
+      "id": "gm021",
+      "numericId": 21,
+      "title": "<그 새끼를 죽였어야 했는데> 이경민 감독, 정수지 배우 / 2018.04.28",
+      "date": "2022. 4. 5. 16:02",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_21.png"
+    },
+    {
+      "id": "gm022",
+      "numericId": 22,
+      "title": "<수성못> 유지영 감독 / 2018.04.21",
+      "date": "2022. 4. 5. 15:08",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_22.png"
+    },
+    {
+      "id": "gm023",
+      "numericId": 23,
+      "title": "<3670> 박준호 감독, 조유현 배우, 김현목 배우 / 2025.09.16. (아카이브 샘플)",
+      "date": "2025. 11. 6. 16:06",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_23.png"
+    },
+    {
+      "id": "gm024",
+      "numericId": 24,
+      "title": "<부모 바보> 이종수 감독 / 2025.02.02. (아카이브 샘플)",
+      "date": "2025. 3. 14. 16:30",
+      "thumbnail": "images/magazine/gv-moment/gv_moment_thumb_24.png"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="ti-nav-current" content="gv-moment-test.html" />
+  <title>GV 모먼트 — 55CINE</title>
+  <link rel="icon" href="../../../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../../css/test-ti-fonts.css" />
+  <link rel="stylesheet" href="../../css/test-ti-fonts-display.css" />
+  <link rel="stylesheet" href="../../css/test-ti-shell.css" />
+  <link rel="stylesheet" href="../../css/test-ti-site-footer.css" />
+  <link rel="stylesheet" href="../../css/test-ti-detail.css" />
+  <link rel="stylesheet" href="../../css/test-ti-magazine-gv-moment-detail.css" />
+</head>
+<body class="ti">
+  <div class="ti-shell" id="tiShell">
+    <div class="ti-left">
+      <div data-ti-mobile-menu-bar></div>
+      <div class="ti-left-panel" id="tiLeftPanel">
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
+      </div>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base="../../../"
+        aria-label="사이트 정보"
+      ></footer>
+    </div>
+    <aside class="ti-right sd-right sd-right--gv-moment" aria-label="GV 모먼트 상세">
+      <div class="sd-inner">
+        <p class="gv-moment-detail-status" id="gvMomentDetailStatus" hidden aria-live="polite"></p>
+        <div id="gvMomentDetailRoot"></div>
+      </div>
+    </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base="../../../"
+      aria-label="사이트 정보"
+    ></footer>
+  </div>
+
+  <script src="../../js/test-ti-site-footer-include.js"></script>
+  <script>
+    window.TEST_TI_ASSET_BASE = "../../../";
+    window.TEST_TI_MAGAZINE_GV_MOMENT_DETAIL_CONFIG = {
+      dataBase: "data/",
+      listPageUrl: "../../gv-moment-test.html",
+      indexUrl: "data/index.json",
+      detailPageUrl: "article-detail.html"
+      /* API 연동 예시:
+      fetchArticle: function (id) {
+        return fetch("/api/magazine/gv-moment/" + encodeURIComponent(id)).then(function (r) {
+          if (!r.ok) throw new Error("GV 모먼트를 불러오지 못했습니다.");
+          return r.json();
+        });
+      },
+      fetchIndex: function () {
+        return fetch("/api/magazine/gv-moment?fields=id,title,thumbnail,date").then(function (r) {
+          return r.json().then(function (d) { return d.items; });
+        });
+      }
+      */
+    };
+  </script>
+  <script src="../../../data/week-schedule-data.js"></script>
+  <script src="../../js/test-ti-left-gnb-include.js"></script>
+  <script src="../../js/test-ti-mobile-menu.js"></script>
+  <script src="../../js/test-ti-scroll-top.js"></script>
+  <script src="../../js/test-ti-week-schedule.js"></script>
+  <script src="../../js/test-ti-magazine-gv-moment-detail-page.js"></script>
+</body>
+</html>
