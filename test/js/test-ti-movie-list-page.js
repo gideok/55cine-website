@@ -281,6 +281,7 @@
     Pager.mq.addEventListener("change", function () {
       onResizeMode();
       setupInfinite();
+      if (Pager.isDesktop && Pager.isDesktop()) closeMobileSearch();
     });
   }
 
@@ -292,16 +293,99 @@
     render();
   }
 
-  function createSearchIcon() {
+  var SEARCH_SVG =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.75"/>' +
+    '<path d="M16 16L20.5 20.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/>' +
+    "</svg>";
+
+  function createSearchIcon(className) {
     var icon = document.createElement("span");
-    icon.className = "np-search-icon";
+    icon.className = className || "np-search-icon";
     icon.setAttribute("aria-hidden", "true");
-    icon.innerHTML =
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-      '<circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.75"/>' +
-      '<path d="M16 16L20.5 20.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/>' +
-      "</svg>";
+    icon.innerHTML = SEARCH_SVG;
     return icon;
+  }
+
+  function ensureSearchPanelStructure() {
+    if (!searchWrap) return null;
+    var toggle = searchWrap.querySelector(".np-search-toggle");
+    if (!toggle) {
+      toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "np-search-toggle";
+      toggle.id = "npSearchToggle";
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-controls", "npSearchPanel");
+      toggle.setAttribute("aria-label", "검색 열기");
+      var toggleIcon = createSearchIcon("np-search-toggle__icon");
+      toggleIcon.innerHTML = SEARCH_SVG.replace('width="16" height="16"', 'width="18" height="18"');
+      toggle.appendChild(toggleIcon);
+      searchWrap.insertBefore(toggle, searchWrap.firstChild);
+    }
+    var panel = searchWrap.querySelector(".np-search-panel");
+    var field = searchWrap.querySelector(".np-search-field");
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.className = "np-search-panel";
+      panel.id = "npSearchPanel";
+      if (field) {
+        searchWrap.insertBefore(panel, field);
+        panel.appendChild(field);
+      } else {
+        searchWrap.appendChild(panel);
+      }
+    } else if (field && field.parentElement !== panel) {
+      panel.appendChild(field);
+    }
+    return panel;
+  }
+
+  function closeMobileSearch() {
+    if (!searchWrap) return;
+    searchWrap.classList.remove("is-open");
+    var toggle = document.getElementById("npSearchToggle");
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "검색 열기");
+    }
+  }
+
+  function setupSearchToggle() {
+    ensureSearchPanelStructure();
+    var toggle = document.getElementById("npSearchToggle");
+    if (!toggle || !searchWrap) return;
+    if (toggle.dataset.bound === "1") return;
+    toggle.dataset.bound = "1";
+
+    toggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = !searchWrap.classList.contains("is-open");
+      if (open) {
+        searchWrap.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+        toggle.setAttribute("aria-label", "검색 닫기");
+        if (searchInput) {
+          window.requestAnimationFrame(function () {
+            searchInput.focus();
+          });
+        }
+      } else {
+        closeMobileSearch();
+      }
+    });
+
+    if (!document.documentElement.dataset.npSearchDismissBound) {
+      document.documentElement.dataset.npSearchDismissBound = "1";
+      document.addEventListener("click", function (e) {
+        if (!searchWrap || !searchWrap.classList.contains("is-open")) return;
+        if (searchWrap.contains(e.target)) return;
+        closeMobileSearch();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeMobileSearch();
+      });
+    }
   }
 
   function ensureSearchTrailingHost() {
@@ -338,6 +422,9 @@
           if (head) head.insertAdjacentElement("afterend", searchWrap);
         }
       }
+      var panel = document.createElement("div");
+      panel.className = "np-search-panel";
+      panel.id = "npSearchPanel";
       var field = document.createElement("label");
       field.className = "np-search-field";
       field.htmlFor = "npSearchInput";
@@ -350,11 +437,14 @@
       searchInput.setAttribute("aria-label", SEARCH_PLACEHOLDER);
       searchInput.autocomplete = "off";
       field.appendChild(searchInput);
-      searchWrap.appendChild(field);
+      panel.appendChild(field);
+      searchWrap.appendChild(panel);
     } else {
       searchInput.placeholder = SEARCH_PLACEHOLDER;
       searchInput.setAttribute("aria-label", SEARCH_PLACEHOLDER);
     }
+    ensureSearchPanelStructure();
+    setupSearchToggle();
     searchInput.addEventListener("input", onSearchInput);
     searchInput.addEventListener("search", onSearchInput);
   }
