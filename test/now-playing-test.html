@@ -62,7 +62,19 @@
     window.TEST_TI_ASSET_BASE = "../";
   </script>
   <script src="../data/week-schedule-data.js"></script>
-  <script src="../data/now-playing-data.js"></script>
+  <script>
+    window.TEST_TI_NOW_PLAYING_LIST_CONFIG = {
+      dataUrl: "movies/now-playing/data/now-playing-list.json"
+      /* API 연동 예시:
+      fetchList: function () {
+        return fetch("/api/now-playing/list").then(function (r) {
+          if (!r.ok) throw new Error("상영작 목록을 불러오지 못했습니다.");
+          return r.json();
+        });
+      }
+      */
+    };
+  </script>
   <script src="js/test-ti-left-gnb-include.js"></script>
   <script src="js/test-ti-mobile-menu.js"></script>
   <script src="js/test-ti-scroll-top.js"></script>

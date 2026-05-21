@@ -94,6 +94,22 @@
   gap: 16px;
 }
 
+.ti .ti-np-root .np-list-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 20px 16px;
+  border: 1px solid #c8c8c8;
+  background: #fff;
+  font-size: 0.9rem;
+  color: #5a5a5a;
+  text-align: center;
+}
+
+.ti .ti-np-root .np-list-status.is-error {
+  color: #8b1a1a;
+  border-color: #c8a0a0;
+}
+
 @media (max-width: 899px) {
   .ti .ti-np-root .np-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

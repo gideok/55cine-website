@@ -1,7 +1,12 @@
 /**
- * test/now-playing-test.html — 루트 now-playing.html 과 동일 로직, 경로만 ../ 보정
+ * test/now-playing-test.html — 현재 상영작 목록 (JSON / API)
+ * window.TEST_TI_NOW_PLAYING_LIST_CONFIG
  */
 (function () {
+  var cfg = window.TEST_TI_NOW_PLAYING_LIST_CONFIG || {};
+  var SITE_BASE = typeof window.TEST_TI_ASSET_BASE === "string" ? window.TEST_TI_ASSET_BASE : "";
+  var LIST_DATA_URL = cfg.dataUrl || "movies/now-playing/data/now-playing-list.json";
+
   var PAGE_SIZE = 6;
   var Pager = window.TiPagePager;
   var grid = document.getElementById("npGrid");
@@ -11,6 +16,9 @@
   var endEl = document.getElementById("npEnd");
   var io = null;
   var state = { page: 1, mobileShown: PAGE_SIZE };
+  var movieList = [];
+
+  if (!grid) return;
 
   function isDesktop() {
     return Pager && Pager.isDesktop();
@@ -24,15 +32,51 @@
     return "../" + u.replace(/^\//, "");
   }
 
-  /** slug 기준 SEO 경로: movies/now-playing/{slug}.html */
-  function detailHref(slugOrUrl) {
-    if (!slugOrUrl) return "";
-    if (/\.html$/i.test(slugOrUrl) || /^https?:/i.test(slugOrUrl)) return rootPath(slugOrUrl);
-    return rootPath("movies/now-playing/" + slugOrUrl + ".html");
+  /** SEO 경로: movies/now-playing/{slug}.html (물리 파일 필요, tools/sync-now-playing-slug-pages.js) */
+  function buildDetailUrl(slug) {
+    return "movies/now-playing/" + slug + ".html";
+  }
+
+  function detailHref(item) {
+    if (!item) return "";
+    if (item.detailUrl) return rootPath(item.detailUrl);
+    if (item.slug) return rootPath(buildDetailUrl(item.slug));
+    return "";
+  }
+
+  /**
+   * 추후 API 연동 시 cfg.fetchList 만 교체.
+   * @returns {Promise<Array>}
+   */
+  function fetchMovieList() {
+    if (typeof cfg.fetchList === "function") {
+      return Promise.resolve(cfg.fetchList()).then(normalizeListPayload);
+    }
+    return fetch(LIST_DATA_URL, { credentials: "same-origin" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("상영작 목록을 불러오지 못했습니다. (" + res.status + ")");
+        return res.json();
+      })
+      .then(normalizeListPayload);
+  }
+
+  function normalizeListPayload(payload) {
+    var raw = Array.isArray(payload) ? payload : payload && payload.movies;
+    if (!Array.isArray(raw)) return [];
+    return raw.map(function (item) {
+      var slug = item.slug || "";
+      return {
+        slug: slug,
+        poster: item.poster || "",
+        titleKo: item.titleKo || item.title || "",
+        titleEn: item.titleEn || "",
+        detailUrl: item.detailUrl || (slug ? buildDetailUrl(slug) : "")
+      };
+    });
   }
 
   function allMovies() {
-    return window.NOW_PLAYING_MOVIES || [];
+    return movieList;
   }
 
   function totalPages(n) {
@@ -61,7 +105,7 @@
     img.loading = "lazy";
     img.decoding = "async";
     var link = document.createElement("a");
-    link.href = detailHref(m.slug || m.detailUrl);
+    link.href = detailHref(m);
     link.className = "np-stretch-link";
     link.setAttribute("aria-label", m.titleKo + " 상세 보기");
     media.appendChild(img);
@@ -71,7 +115,7 @@
     var h2 = document.createElement("h2");
     h2.className = "np-card-title";
     var tlink = document.createElement("a");
-    tlink.href = detailHref(m.slug || m.detailUrl);
+    tlink.href = detailHref(m);
     tlink.textContent = m.titleKo;
     h2.appendChild(tlink);
     body.appendChild(h2);
@@ -86,8 +130,25 @@
     return article;
   }
 
+  function showListMessage(message, isError) {
+    grid.innerHTML = "";
+    var p = document.createElement("p");
+    p.className = "np-list-status" + (isError ? " is-error" : "");
+    p.setAttribute("role", "status");
+    p.textContent = message;
+    grid.appendChild(p);
+    if (countEl) countEl.textContent = "";
+    if (Pager) Pager.updateVisibility(pager, 0);
+    if (endEl) endEl.classList.remove("is-visible");
+  }
+
   function render() {
     var list = allMovies();
+    if (!list.length) {
+      showListMessage("표시할 상영작이 없습니다.", false);
+      return;
+    }
+
     grid.innerHTML = "";
     sliceForView().forEach(function (m) {
       grid.appendChild(renderCard(m));
@@ -115,10 +176,12 @@
         countEl.textContent =
           "총 " + list.length + "편 · " + Math.min(state.mobileShown, list.length) + "편 표시";
       }
-      endEl.classList.toggle(
-        "is-visible",
-        state.mobileShown >= list.length && list.length > 0
-      );
+      if (endEl) {
+        endEl.classList.toggle(
+          "is-visible",
+          state.mobileShown >= list.length && list.length > 0
+        );
+      }
     }
   }
 
@@ -158,8 +221,23 @@
   }
 
   function boot() {
-    render();
-    setupInfinite();
+    showListMessage("상영작 목록을 불러오는 중…", false);
+
+    fetchMovieList()
+      .then(function (list) {
+        movieList = list;
+        state.page = 1;
+        state.mobileShown = PAGE_SIZE;
+        render();
+        setupInfinite();
+      })
+      .catch(function (err) {
+        movieList = [];
+        showListMessage(
+          (err && err.message) || "상영작 목록을 표시할 수 없습니다.",
+          true
+        );
+      });
   }
 
   if (document.readyState === "loading") {
