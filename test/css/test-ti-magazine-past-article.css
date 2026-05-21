@@ -1,0 +1,141 @@
+/* 지난 기사 본문 — Tistory HTML 이관 */
+
+.ti .sd-body .imageblock,
+.ti .sd-body figure {
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.ti .sd-body .imageblock img,
+.ti .sd-body figure img,
+.ti .sd-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border: 1px solid #d4d4d4;
+}
+
+.ti .sd-body h2,
+.ti .sd-body h3,
+.ti .sd-body h4 {
+  margin: 18px 0 10px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: #111;
+}
+
+.ti .sd-body h3 {
+  font-size: 1.05rem;
+}
+
+.ti .sd-body {
+  text-align: justify;
+}
+
+.ti .sd-body p {
+  margin: 0 0 14px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #333;
+  text-align: justify;
+}
+
+.ti .sd-body h2,
+.ti .sd-body h3,
+.ti .sd-body h4 {
+  text-align: left;
+}
+
+.ti .sd-body a {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+.ti .sd-attachments {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #d4d4d4;
+}
+
+.ti .sd-attachments-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ti .sd-attachments-item {
+  margin: 0;
+  border: 1px solid #c8c8c8;
+  background: #fff;
+}
+
+.ti .sd-attachments-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+@media (max-width: 520px) {
+  .ti .sd-attachments-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ti .past-article-status {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border: 1px solid #c8c8c8;
+  background: #fff;
+  font-size: 0.9rem;
+  color: #5a5a5a;
+}
+
+.ti .past-article-status[hidden] {
+  display: none;
+}
+
+/* 이전·다음 — gap 8px, 썸네일 비율 401:226 */
+.ti .sd-right--past-article .sd-pn-cols {
+  gap: 8px;
+}
+
+.ti .sd-right--past-article .sd-pn-col {
+  flex: 1 1 0;
+  max-width: calc(50% - 4px);
+}
+
+.ti .sd-right--past-article .sd-pn-card {
+  width: 100%;
+}
+
+.ti .sd-right--past-article .sd-pn-thumb-wrap {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 401 / 226;
+}
+
+.ti .sd-right--past-article .sd-pn-thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 401 / 226;
+  object-fit: cover;
+}
+
+.ti .sd-right--past-article .sd-pn-thumb-wrap--empty {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 401 / 226;
+}
+
+@media (max-width: 820px) {
+  .ti .sd-right--past-article .sd-pn-cols {
+    gap: 8px;
+  }
+
+  .ti .sd-right--past-article .sd-pn-col {
+    flex: 1 1 0;
+    max-width: calc(50% - 4px);
+  }
+}

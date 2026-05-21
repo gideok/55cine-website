@@ -48,6 +48,18 @@
     dataset = Array.isArray(raw) ? raw.slice() : [];
   }
 
+  function loadDataset() {
+    if (typeof cfg.fetchList === "function") {
+      return Promise.resolve(cfg.fetchList()).then(function (list) {
+        dataset = Array.isArray(list) ? list.slice() : [];
+        window[cfg.dataKey] = dataset;
+        return dataset;
+      });
+    }
+    refreshDataset();
+    return Promise.resolve(dataset);
+  }
+
   function resolveHref(item) {
     if (typeof cfg.resolveHref === "function") return cfg.resolveHref(item) || "";
     var path = item && item.detailUrl ? item.detailUrl : "";
@@ -541,10 +553,17 @@
   }
 
   function boot() {
-    ensureDatasetThenRender();
-    refreshDataset();
     bindEvents();
-    applyCurrentView();
+    loadDataset()
+      .then(function () {
+        ensureDatasetThenRender();
+        applyCurrentView();
+      })
+      .catch(function () {
+        dataset = [];
+        ensureDatasetThenRender();
+        applyCurrentView();
+      });
   }
 
   if (document.readyState === "loading") {
