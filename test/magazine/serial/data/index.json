@@ -1,0 +1,174 @@
+{
+  "section": "magazine-serial",
+  "label": "연재",
+  "items": [
+    {
+      "id": "sr001",
+      "numericId": 1,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 폐허의 아이들",
+      "date": "2026. 1. 14. 15:41",
+      "thumbnail": "images/magazine/serial/serial_thumb_01.png"
+    },
+    {
+      "id": "sr002",
+      "numericId": 2,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 한받과의 대화 - 4(完)",
+      "date": "2025. 12. 29. 15:54",
+      "thumbnail": "images/magazine/serial/serial_thumb_02.png"
+    },
+    {
+      "id": "sr003",
+      "numericId": 3,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 한받과의 대화 - 3",
+      "date": "2025. 12. 24. 16:00",
+      "thumbnail": "images/magazine/serial/serial_thumb_03.png"
+    },
+    {
+      "id": "sr004",
+      "numericId": 4,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 한받과의 대화 - 2",
+      "date": "2025. 12. 16. 15:54",
+      "thumbnail": "images/magazine/serial/serial_thumb_04.png"
+    },
+    {
+      "id": "sr005",
+      "numericId": 5,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 한받과의 대화 - 1",
+      "date": "2025. 12. 10. 15:11",
+      "thumbnail": "images/magazine/serial/serial_thumb_05.png"
+    },
+    {
+      "id": "sr006",
+      "numericId": 6,
+      "title": "황금양털을 쓰는 법 — ‘조정의 국면’에서 : 금동현 영화사연구자",
+      "date": "2025. 10. 25. 16:02",
+      "thumbnail": "images/magazine/serial/serial_thumb_06.png"
+    },
+    {
+      "id": "sr007",
+      "numericId": 7,
+      "title": "나를 키워준 당신에게 - 오정민 감독",
+      "date": "2025. 7. 2. 15:15",
+      "thumbnail": "images/magazine/serial/serial_thumb_07.png"
+    },
+    {
+      "id": "sr008",
+      "numericId": 8,
+      "title": "나는 어떻게 다섯 번의 초저예산 영화제를 했고 아직(도) 멀쩡한 (척하고 있는)가 - 배은열 INK 대표",
+      "date": "2025. 6. 13. 14:50",
+      "thumbnail": "images/magazine/serial/serial_thumb_08.png"
+    },
+    {
+      "id": "sr009",
+      "numericId": 9,
+      "title": "RE : 극장 상영 문의 드립니다 - 정보라 PD",
+      "date": "2025. 5. 27. 17:27",
+      "thumbnail": "images/magazine/serial/serial_thumb_09.png"
+    },
+    {
+      "id": "sr010",
+      "numericId": 10,
+      "title": "다른 나라에서: 나의 영화제 기행 - 박진용 감독",
+      "date": "2025. 5. 22. 16:44",
+      "thumbnail": "images/magazine/serial/serial_thumb_10.png"
+    },
+    {
+      "id": "sr011",
+      "numericId": 11,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 이영은과의 대화 - 마지막",
+      "date": "2025. 3. 9. 15:44",
+      "thumbnail": "images/magazine/serial/serial_thumb_11.png"
+    },
+    {
+      "id": "sr012",
+      "numericId": 12,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 이영은과의 대화 - 4",
+      "date": "2025. 3. 6. 13:54",
+      "thumbnail": "images/magazine/serial/serial_thumb_12.png"
+    },
+    {
+      "id": "sr013",
+      "numericId": 13,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 이영은과의 대화 - 3",
+      "date": "2025. 3. 3. 15:54",
+      "thumbnail": "images/magazine/serial/serial_thumb_13.png"
+    },
+    {
+      "id": "sr014",
+      "numericId": 14,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 이영은과의 대화 - 2",
+      "date": "2025. 2. 28. 13:20",
+      "thumbnail": "images/magazine/serial/serial_thumb_14.png"
+    },
+    {
+      "id": "sr015",
+      "numericId": 15,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 이영은과의 대화 - 1",
+      "date": "2025. 2. 25. 16:39",
+      "thumbnail": "images/magazine/serial/serial_thumb_15.png"
+    },
+    {
+      "id": "sr016",
+      "numericId": 16,
+      "title": "<건강한 시네필 문화라는 농담> - 2024관객프로그래머 영화제 <조발기> 시네토크 / 2024.11.16",
+      "date": "2025. 2. 20. 16:48",
+      "thumbnail": "images/magazine/serial/serial_thumb_16.png"
+    },
+    {
+      "id": "sr017",
+      "numericId": 17,
+      "title": "대구독립영화 비평 시리즈 - 책임지지 않는 우정, <새>",
+      "date": "2024. 12. 15. 13:19",
+      "thumbnail": "images/magazine/serial/serial_thumb_17.png"
+    },
+    {
+      "id": "sr018",
+      "numericId": 18,
+      "title": "대구독립영화 비평 시리즈 - 반항과 속하고자 하는 마음, <누구나 겨울이 오면>",
+      "date": "2024. 12. 8. 12:50",
+      "thumbnail": "images/magazine/serial/serial_thumb_18.png"
+    },
+    {
+      "id": "sr019",
+      "numericId": 19,
+      "title": "대구독립영화 비평 시리즈 - 유리된 배회의 좌표들, <왜행성>",
+      "date": "2024. 10. 16. 18:29",
+      "thumbnail": "images/magazine/serial/serial_thumb_19.png"
+    },
+    {
+      "id": "sr020",
+      "numericId": 20,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 김중기와의 대화",
+      "date": "2024. 9. 6. 16:00",
+      "thumbnail": "images/magazine/serial/serial_thumb_20.png"
+    },
+    {
+      "id": "sr021",
+      "numericId": 21,
+      "title": "대구 시네마테크 운동 밑그림 그리기: 이진이와의 대화",
+      "date": "2024. 6. 21. 15:37",
+      "thumbnail": "images/magazine/serial/serial_thumb_21.png"
+    },
+    {
+      "id": "sr022",
+      "numericId": 22,
+      "title": "일과 영화 (daily) work and film(ing) - 김나영 감독",
+      "date": "2023. 11. 27. 16:36",
+      "thumbnail": "images/magazine/serial/serial_thumb_22.png"
+    },
+    {
+      "id": "sr023",
+      "numericId": 23,
+      "title": "무엇이 영화인지 좀 더 생각해봐야겠지만 영화인 것만은 분명함 #3 - 마지막화",
+      "date": "2023. 10. 25. 15:56",
+      "thumbnail": "images/magazine/serial/serial_thumb_23.png"
+    },
+    {
+      "id": "sr024",
+      "numericId": 24,
+      "title": "무엇이 영화인지 좀 더 생각해봐야겠지만 영화인 것만은 분명함 #2",
+      "date": "2023. 10. 19. 13:43",
+      "thumbnail": "images/magazine/serial/serial_thumb_24.png"
+    }
+  ]
+}

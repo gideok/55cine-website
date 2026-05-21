@@ -123,11 +123,17 @@
       useTitleWrap: true,
       showDate: true,
       resolveHref: function (item) {
-        var path = item && item.detailUrl ? item.detailUrl : "";
-        if (!path) return "";
-        if (/^https?:\/\//i.test(path)) return path;
-        return "../" + path.replace(/^\//, "");
+        if (!item || item.id == null) return "";
+        var slug = "sr" + String(item.id).padStart(3, "0");
+        return "magazine/serial/article-detail.html?id=" + encodeURIComponent(slug);
       }
+      /* 목록 데이터 API 전환 예시:
+      fetchList: function () {
+        return fetch("magazine/serial/data/index.json").then(function (r) {
+          return r.json().then(function (d) { return d.items; });
+        });
+      }
+      */
     };
   </script>
   <script src="js/test-ti-page-pager.js"></script>
