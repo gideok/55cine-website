@@ -13,6 +13,17 @@
     return BASE + path;
   }
 
+  /** 테스트 UI: 상세는 test/movies/now-playing/ 기준, 포스터만 사이트 루트 images/ */
+  var isTestTi =
+    typeof window !== "undefined" &&
+    typeof window.TEST_TI_ASSET_BASE === "string" &&
+    window.TEST_TI_ASSET_BASE;
+
+  function withDetailBase(path) {
+    if (!path) return path;
+    return isTestTi ? path : withBase(path);
+  }
+
   window.WEEK_SCHEDULE = [
     {
       label: "5/14(목)",
@@ -154,7 +165,7 @@
     if (!Object.prototype.hasOwnProperty.call(nowPlayingByTitle, title)) continue;
     var row = nowPlayingByTitle[title];
     window.MOVIE_POSTER_BY_TITLE[title] = withBase(row.poster);
-    window.MOVIE_DETAIL_BY_TITLE[title] = withBase(row.detailUrl);
+    window.MOVIE_DETAIL_BY_TITLE[title] = withDetailBase(row.detailUrl);
   }
 
   window.parseMovieTitleWithStatus = function (title) {

@@ -7,6 +7,26 @@
     return BASE + path;
   }
 
+  /** test/ 하위 깊이에 맞게 movies/now-playing/… 상세 경로 보정 */
+  function computeTestRoot() {
+    var path = (location.pathname || "").replace(/\\/g, "/");
+    var lower = path.toLowerCase();
+    var needle = "/test/";
+    var i = lower.indexOf(needle);
+    if (i === -1) return "";
+    var rest = path.slice(i + needle.length);
+    var segments = rest.split("/").filter(Boolean);
+    var depth = Math.max(0, segments.length - 1);
+    return depth > 0 ? new Array(depth).fill("..").join("/") + "/" : "";
+  }
+
+  function resolveMovieDetailUrl(url) {
+    if (!url || /^https?:/i.test(url)) return url || "";
+    var testRoot = computeTestRoot();
+    if (!testRoot) return url;
+    return testRoot + url.replace(/^\//, "");
+  }
+
   var WEEK_SCHEDULE = window.WEEK_SCHEDULE;
   var MOVIE_POSTER_BY_TITLE = window.MOVIE_POSTER_BY_TITLE;
   var parseMovieTitleWithStatus = window.parseMovieTitleWithStatus;
@@ -71,10 +91,11 @@
           MOVIE_POSTER_BY_TITLE[entry.title] ||
           MOVIE_POSTER_BY_TITLE[titleInfo.cleanTitle] ||
           MOVIE_IMAGES[entryIndex % MOVIE_IMAGES.length];
-        var detailUrl =
+        var detailUrl = resolveMovieDetailUrl(
           (movieDetailUrlForTitle && movieDetailUrlForTitle(entry.title)) ||
-          (movieDetailUrlForPoster && movieDetailUrlForPoster(poster)) ||
-          "";
+            (movieDetailUrlForPoster && movieDetailUrlForPoster(poster)) ||
+            ""
+        );
 
         var row = document.createElement("div");
         row.className = "ti-row";
