@@ -397,7 +397,7 @@ a.movie-detail-time-badge:focus-visible {
   .movie-detail-poster {
     width: auto;
     height: auto;
-    max-height: 320px;
+    max-height: 480px;
   }
 
   .movie-detail-badge-grid {
