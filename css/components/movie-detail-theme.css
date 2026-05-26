@@ -1,29 +1,6 @@
-/* movies/now-playing/movie-detail.html — mono 톤 + movie-detail-layout 각진 오버라이드 (이미지 컬러 유지) */
+/* 영화 상세 — mono 톤 (site-common 골드 토큰 오버라이드, layout 각짐 스타일) */
 
-.ti .ti-right.ti-md-panel {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  min-width: 0;
-  padding: clamp(12px, 2vw, 22px) clamp(14px, 2.4vw, 28px);
-  background: #fafafa;
-  color: #1a1a1a;
-  -webkit-font-smoothing: antialiased;
-}
-
-.ti .ti-md-scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding-bottom: 24px;
-}
-
-.ti .ti-md-test-wrap {
+.ti .ti-md-theme {
   --site-font-family: "Spoqa Han Sans Neo", sans-serif;
   --brand-gold: #666;
   --brand-gold-mid: #555;
@@ -55,98 +32,98 @@
   line-height: 1.5;
 }
 
-.ti .ti-md-test-wrap a {
+.ti .ti-md-theme a {
   color: inherit;
   text-decoration: none;
 }
 
-.ti .ti-md-test-wrap .section-movie-detail {
+.ti .ti-md-theme .section-movie-detail {
   padding: 8px 8px 32px;
   max-width: 1040px;
   margin: 0 auto;
 }
 
-.ti .ti-md-test-wrap .section-title {
+.ti .ti-md-theme .section-title {
   color: var(--text);
 }
 
-.ti .ti-md-test-wrap .section-title::after {
+.ti .ti-md-theme .section-title::after {
   color: var(--muted);
 }
 
-.ti .ti-md-test-wrap .ref-note a {
+.ti .ti-md-theme .ref-note a {
   color: #333;
   text-decoration: underline;
 }
 
-.ti .ti-md-test-wrap .np-back a {
+.ti .ti-md-theme .np-back a {
   color: #333;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.ti .ti-md-test-wrap .np-back a:hover {
+.ti .ti-md-theme .np-back a:hover {
   color: #000;
 }
 
-.ti .ti-md-test-wrap .ref-note a:hover {
+.ti .ti-md-theme .ref-note a:hover {
   color: #000;
 }
 
-.ti .ti-md-test-wrap .movie-detail-box {
+.ti .ti-md-theme .movie-detail-box {
   border-radius: 0;
   border-color: #b0b0b0;
   background: #fff;
 }
 
-.ti .ti-md-test-wrap .movie-detail-poster {
+.ti .ti-md-theme .movie-detail-poster {
   max-width: 100%;
   border-radius: 0;
 }
 
-.ti .ti-md-test-wrap .movie-detail-tab {
+.ti .ti-md-theme .movie-detail-tab {
   border-radius: 0;
 }
 
-.ti .ti-md-test-wrap .movie-detail-tab:focus-visible {
+.ti .ti-md-theme .movie-detail-tab:focus-visible {
   outline-color: #333;
 }
 
-.ti .ti-md-test-wrap .movie-detail-trailer-frame {
+.ti .ti-md-theme .movie-detail-trailer-frame {
   border-radius: 0;
   background: #1a1a1a;
 }
 
-.ti .ti-md-test-wrap .movie-detail-time-badge {
+.ti .ti-md-theme .movie-detail-time-badge {
   border-radius: 0;
   border: 1px solid #b0b0b0;
   background: #fafafa;
 }
 
-.ti .ti-md-test-wrap a.movie-detail-time-badge:hover {
+.ti .ti-md-theme a.movie-detail-time-badge:hover {
   border-color: #111;
   background: #f0f0f0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   transform: translateY(-1px);
 }
 
-.ti .ti-md-test-wrap a.movie-detail-time-badge:hover .badge-date,
-.ti .ti-md-test-wrap a.movie-detail-time-badge:hover .badge-time {
+.ti .ti-md-theme a.movie-detail-time-badge:hover .badge-date,
+.ti .ti-md-theme a.movie-detail-time-badge:hover .badge-time {
   color: #000;
 }
 
-.ti .ti-md-test-wrap .movie-detail-time-badge .badge-date {
+.ti .ti-md-theme .movie-detail-time-badge .badge-date {
   color: #111;
 }
 
-.ti .ti-md-test-wrap .md2-booking-btn {
+.ti .ti-md-theme .md2-booking-btn {
   border-radius: 0;
   border: 1px solid #4a4a4a;
   background: #fff;
   color: #111;
 }
 
-.ti .ti-md-test-wrap .md2-booking-btn:hover {
+.ti .ti-md-theme .md2-booking-btn:hover {
   background: #f0f0f0;
   border-color: #111;
   color: #000;
@@ -154,7 +131,7 @@
   transform: none;
 }
 
-.ti .ti-md-test-wrap .md2-booking-btn:focus-visible {
+.ti .ti-md-theme .md2-booking-btn:focus-visible {
   outline: 2px solid #333;
   outline-offset: 2px;
 }

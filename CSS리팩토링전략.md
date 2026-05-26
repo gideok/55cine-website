@@ -25,10 +25,12 @@
 
 ### A. 공유·레거시 (`components/`)
 
+역할·오버라이드 관계: **[components/README.md](./components/README.md)**
+
 | 파일 | 줄 수 | 역할 | 비고 |
 |------|------:|------|------|
-| `components/site-common.css` | 702 | GNB, `section-page-*`, 공통 토큰 | 신규 UI 페이지 다수가 **추가로** 로드 |
-| `components/movie-detail-layout.css` | 406 | 상영작·기획전 상세 그리드·탭·배지 | `movie-detail.html`, `exhibition_detail.html` 등 |
+| `components/site-common.css` | 702 | GNB, `section-page-*`, **골드 `:root` 토큰** | Base(레거시) |
+| `components/movie-detail-layout.css` | 406 | 상세 그리드·탭·배지 (구조) | Layout |
 | ~~`components/magazine-scroll-carousel.css`~~ | — | 구 루트 매거진 캐러셀 | **삭제됨 (2026-05)** |
 
 ### B. 신규 UI (`css/`) — 27개
@@ -50,8 +52,10 @@
 | | `exhibition.css` | 233 | 기획전 목록 |
 | | `exhibition-grid-lines.css` | 33 | 기획전 그리드 라인 |
 | **상세 변형** | `magazine-*-detail.css` ×4 | ~50~90 | 프리뷰/연재/GV/지난기사 — `sd-pn`은 `sd-prev-next-magazine.css` |
-| | `movie-detail-test.css` | 160 | 영화·기획전 상세 톤 오버라이드 |
-| | `now-playing-movie-detail.css` | 20 | 상영작 상세 미세 조정 |
+| | `components/movie-detail-panel.css` | ~25 | 영화 상세 우측 패널·스크롤 |
+| | `components/movie-detail-theme.css` | ~135 | `.ti-md-theme` 모노 토큰·각진 오버라이드 |
+| | `now-playing-movie-detail.css` | 20 | 상영작 상세 로딩·시놉시스 |
+| ~~`movie-detail-test.css`~~ | — | — | **삭제** → panel + theme 분리 |
 | **페이지 전용** | `theater-info.css` 등 5개 | 118~226 | 오오극장 하위 |
 | | `intro.css` | 460 | **메인 `index.html` 전용** |
 | ~~**미사용**~~ | ~~`css/index.css`~~ | — | **삭제됨** — `intro.css`로 대체됨 |
@@ -105,7 +109,8 @@
 | ~~`.visually-hidden`~~ | → `base/utilities.css` | ✅ 통합 |
 | ~~`.sd-pn-*`~~ | → `sd-prev-next-magazine.css` | ✅ 통합 |
 | 목록 카드 | `magazine-preview` + `magazine-list-pages` | 썸네일·타이틀 |
-| 영화/기획전 상세 | `movie-detail-layout` + `movie-detail-test` + `now-playing-movie-detail` | 3중 스택 |
+| ~~영화 상세 CSS~~ | layout + panel + theme + now-playing-movie-detail | ✅ Phase 3 역할 분리 |
+| 기획전 상세 | layout + `exhibition-detail` (theme 없음) | 영화 전용 theme 미로드 |
 | ~~구 타이틀 (`.ti-sub-h1` 등)~~ | `page-shell` | ✅ 미사용 제거 (`section-page-head` 사용) |
 
 ### 2-4. 네이밍·스코프
@@ -204,9 +209,9 @@ special/exhibition/css/
 | **매거진 상세** | `/magazine/preview/article-detail.html?id=pv001` | 공통 → detail → sd-prev-next-magazine → `magazine-*-detail.css` 1개 |
 | **오오극장 5페이지** | `/theater-info.html` … | 공통 → site-common → page-shell → `{page}.css` |
 | **상영작 목록** | `/now-playing.html`, … | 공통 → page-pager → now-playing → np-movie-grid → np-search-toolbar (+ past: logo-spinner) |
-| **상영작 상세** | `/movies/now-playing/movie-detail.html?slug=…` | 공통 → site-common → movie-detail-layout → movie-detail-test → now-playing-movie-detail |
+| **상영작 상세** | `/movies/now-playing/movie-detail.html?slug=…` | 공통 → site-common → movie-detail-layout → movie-detail-panel → movie-detail-theme → now-playing-movie-detail |
 | **기획전 목록** | `/special-exhibition.html` | 공통 → page-pager → exhibition → exhibition-grid-lines → carousel-chrome |
-| **기획전 상세** | `/special/exhibition/exhibition_detail.html?id=…` | 공통 → site-common → movie-detail-layout → movie-detail-test → exhibition-detail |
+| **기획전 상세** | `/special/exhibition/exhibition_detail.html?id=…` | 공통 → site-common → movie-detail-layout → exhibition-detail |
 | **행사 상세** | `/special/event/event_detail.html` | 기획전 상세와 유사 (전용 CSS 없음) |
 
 **공통 JS (대부분 페이지):** `left-gnb-include.js`, `mobile-menu.js`, `scroll-top.js`, `site-footer-include.js`, `week-schedule.js` (+ 페이지별 config 스크립트).
@@ -236,11 +241,13 @@ special/exhibition/css/
 - [x] **2-B** `now-playing.css` → `np-movie-grid.css`, `np-search-toolbar.css`
 - [x] **2-C** `shell.css` → `shell-mobile-menu.css`, `shell-scroll-top.css` (33 HTML `<link>` 반영)
 
-### Phase 3 — `components/` 정렬
+### Phase 3 — `components/` 정렬 ✅ (2026-05)
 
-- `site-common` vs `css/` 오버라이드 관계를 base + theme로 문서화.
-- `movie-detail-test` vs `movie-detail-layout` 역할 분리.
-- 레거시 `movies/now-playing/*.html` → `movie-detail.html?slug=` 단일화.
+- [x] **`site-common` vs `css/`** — [components/README.md](./components/README.md)에 base + theme 계층 문서화
+- [x] **`movie-detail-test` 분리** — `movie-detail-panel.css` + `movie-detail-theme.css`, 래퍼 `.ti-md-theme` (구 `ti-md-test-wrap`)
+- [x] **기획전·행사 상세** — 미사용 `movie-detail-test` `<link>` 제거
+- [x] **slug URL 단일화** — `now-playing.html` `detailUrlMode: "query"`, 목록 JSON `detailUrl` 제거, `week-schedule-data.js`·`now-playing-data.js` query URL
+- [x] **`{slug}.html`** — `movie-detail.html?slug=` 리다이렉트 stub (`tools/sync-now-playing-slug-redirects.js`)
 
 ### Phase 4 — 로드 방식 (선택)
 
@@ -302,7 +309,8 @@ special/exhibition/css/
 | 최대 파일 | shell-core ~428줄, np-search ~199줄 | ~200줄 단위 component (2단계 분할 완료) |
 | HTML link | 깊이·페이지마다 6~9개 | manifest 6~7종 |
 | 클래스/JS | `.ti-*`, `TI_*` 잔존 | 선택적 후속 개명 |
-| prod/legacy | `components/` + `css/` | components 단계적 흡수 |
+| prod/legacy | `components/` + `css/` | 역할 문서화 완료(Phase 3); 물리 이동은 선택 |
+| 상영작 상세 URL | slug HTML 복제 + seo 모드 | `movie-detail.html?slug=` + redirect stub |
 
 ---
 
@@ -310,4 +318,7 @@ special/exhibition/css/
 
 - 구조 이동: [리팩토링전략.md](./리팩토링전략.md)
 - 파일명 일괄 변경: `scripts/rename-drop-ti-prefix.py`
+- Phase 3 일괄 적용: `scripts/apply-phase3-css.py`
+- slug 리다이렉트: `tools/sync-now-playing-slug-redirects.js`
+- `components/` 계층: [components/README.md](./components/README.md)
 - 기획전 이미지: `images/special/…`(루트) vs `special/exhibition/images/e00000N_t.webp` — `exhibition-detail-page.js` `resolveAssetUrl`

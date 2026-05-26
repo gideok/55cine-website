@@ -1,10 +1,10 @@
 /* movies/now-playing/*.html — 현재 상영작 상세 본문 (일괄 관리) */
 
-.ti .ti-md-test-wrap .movie-detail-synopsis {
+.ti .ti-md-theme .movie-detail-synopsis {
   text-align: justify;
 }
 
-.ti .ti-md-test-wrap .movie-detail-status {
+.ti .ti-md-theme .movie-detail-status {
   margin: 0 0 16px;
   padding: 14px 16px;
   border: 1px solid #c8c8c8;
@@ -14,7 +14,7 @@
   text-align: center;
 }
 
-.ti .ti-md-test-wrap .movie-detail-status.is-error {
+.ti .ti-md-theme .movie-detail-status.is-error {
   color: #8b1a1a;
   border-color: #c8a0a0;
 }

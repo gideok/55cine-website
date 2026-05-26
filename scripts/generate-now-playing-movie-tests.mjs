@@ -70,7 +70,8 @@ function buildShell({ title, mainInner, tabSuffix }) {
   <link rel="stylesheet" href="../../css/shell.css" />
   <link rel="stylesheet" href="../../css/site-footer.css" />
   <link rel="stylesheet" href="../../../components/movie-detail-layout.css" />
-  <link rel="stylesheet" href="../../css/movie-detail-test.css" />
+  <link rel="stylesheet" href="../../css/components/movie-detail-panel.css" />
+  <link rel="stylesheet" href="../../css/components/movie-detail-theme.css" />
   <link rel="stylesheet" href="../../css/now-playing-movie-detail.css" />
 </head>
 <body class="ti">
@@ -88,7 +89,7 @@ function buildShell({ title, mainInner, tabSuffix }) {
       ></footer>
     </div>
     <aside class="ti-right ti-md-panel" aria-label="영화 상세 본문">
-      <div class="ti-md-scroll ti-md-test-wrap">
+      <div class="ti-md-scroll ti-md-theme">
 ${mainInner}
       </div>
     </aside>

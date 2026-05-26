@@ -62,9 +62,13 @@
 
 ### 상영작·기획전 상세
 
-- 공통 4종 → `components/site-common.css` → `movie-detail-layout.css` → `movie-detail-test.css`
-- 상영작: `now-playing-movie-detail.css`
-- 기획전: `special/exhibition/css/exhibition-detail.css`
+- 공통 6종 → `components/site-common.css` → `movie-detail-layout.css`
+- **상영작:** `movie-detail-panel.css` → `movie-detail-theme.css` → `now-playing-movie-detail.css`
+- **기획전·행사:** `exhibition-detail.css` (영화 theme CSS 없음)
+
+상세 URL: `movies/now-playing/movie-detail.html?slug={slug}` (`{slug}.html`은 리다이렉트 stub).
+
+레거시 `components/` 역할: [components/README.md](../components/README.md)
 
 ## `css/` 디렉터리 구조 (2026-05)
 
@@ -81,6 +85,8 @@ css/
     np-search-toolbar.css
     shell-mobile-menu.css
     shell-scroll-top.css
+    movie-detail-panel.css
+    movie-detail-theme.css
   *.css                    # 페이지·도메인별 (shell, magazine-preview, now-playing, …)
 ```
 
@@ -90,6 +96,8 @@ css/
 
 - `scripts/patch-html-css-bundles.py` — 루트 `../components/` 수정 및 Phase 1 번들 `<link>`
 - `scripts/patch-html-shell-np-css.py` — shell·now-playing 분할 후 `<link>` 보강
+- `scripts/apply-phase3-css.py` — movie-detail CSS 분리·slug URL·data 갱신
+- `tools/sync-now-playing-slug-redirects.js` — `{slug}.html` 리다이렉트 stub 생성
 
 ## 검증
 

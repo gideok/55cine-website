@@ -244,7 +244,7 @@ body.exhibition-poster-lightbox-open {
   min-height: 280px;
 }
 
-/* riddle-of-fire.html (.ti-md-test-wrap) 과 동일한 예매하기 버튼 */
+/* riddle-of-fire.html (.ti-md-theme) 과 동일한 예매하기 버튼 */
 .ti .ti-ex-detail-wrap .md2-booking-btn {
   display: inline-flex;
   align-items: center;

@@ -4,78 +4,67 @@
       "slug": "riddle-of-fire",
       "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
       "titleKo": "달걀 원정대",
-      "titleEn": "Riddle of Fire",
-      "detailUrl": "movies/now-playing/riddle-of-fire.html"
+      "titleEn": "Riddle of Fire"
     },
     {
       "slug": "the-day-she-returns",
       "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
       "titleKo": "그녀가 돌아온 날",
-      "titleEn": "The Day She Returns",
-      "detailUrl": "movies/now-playing/the-day-she-returns.html"
+      "titleEn": "The Day She Returns"
     },
     {
       "slug": "tango-at-dawn",
       "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
       "titleKo": "새벽의 Tango",
-      "titleEn": "Tango at Dawn",
-      "detailUrl": "movies/now-playing/tango-at-dawn.html"
+      "titleEn": "Tango at Dawn"
     },
     {
       "slug": "the-voice-of-hind-rajab",
       "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
       "titleKo": "힌드의 목소리",
-      "titleEn": "The Voice of Hind Rajab",
-      "detailUrl": "movies/now-playing/the-voice-of-hind-rajab.html"
+      "titleEn": "The Voice of Hind Rajab"
     },
     {
       "slug": "the-yeast",
       "poster": "images/movies/now-playing/the-yeast-poster.jpg",
       "titleKo": "누룩",
-      "titleEn": "The Yeast",
-      "detailUrl": "movies/now-playing/the-yeast.html"
+      "titleEn": "The Yeast"
     },
     {
       "slug": "have-you-seen-the-land-of-the-red",
       "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
       "titleKo": "빨간 나라를 보았니",
-      "titleEn": "Have You Seen the Land of the Red?",
-      "detailUrl": "movies/now-playing/have-you-seen-the-land-of-the-red.html"
+      "titleEn": "Have You Seen the Land of the Red?"
     },
     {
       "slug": "dear-juhee",
       "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
       "titleKo": "주희에게",
-      "titleEn": "Dear Juhee",
-      "detailUrl": "movies/now-playing/dear-juhee.html"
+      "titleEn": "Dear Juhee"
     },
     {
       "slug": "the-world-of-love",
       "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
       "titleKo": "세계의 주인",
-      "titleEn": "The World of Love",
-      "detailUrl": "movies/now-playing/the-world-of-love.html"
+      "titleEn": "The World of Love"
     },
     {
       "slug": "teaching-practice",
       "poster": "images/movies/now-playing/teaching-practice-poster.jpg",
       "titleKo": "교생실습",
-      "titleEn": "Teaching Practice: Idiot Girls and School Ghost 2",
-      "detailUrl": "movies/now-playing/teaching-practice.html"
+      "titleEn": "Teaching Practice: Idiot Girls and School Ghost 2"
     },
     {
       "slug": "namtaeryeong",
       "poster": "images/movies/now-playing/namtaeryeong-poster.jpg",
       "titleKo": "남태령",
-      "titleEn": "The Longest Night: Namtaeryeong",
-      "detailUrl": "movies/now-playing/namtaeryeong.html"
+      "titleEn": "The Longest Night: Namtaeryeong"
     },
     {
       "slug": "nirvanna-the-band-the-show-the-movie",
       "poster": "images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg",
       "titleKo": "너바나 더 밴드",
-      "titleEn": "Nirvanna the Band the Show the Movie",
-      "detailUrl": "movies/now-playing/nirvanna-the-band-the-show-the-movie.html"
+      "titleEn": "Nirvanna the Band the Show the Movie"
     }
   ]
 }

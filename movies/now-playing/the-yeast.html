@@ -1,81 +1,13 @@
 <!DOCTYPE html>
-<!-- 공통 템플릿: {slug}.html 은 이 파일과 동일 본문. slug는 URL 파일명에서 추출. -->
-<!-- slug 페이지 갱신: node tools/sync-now-playing-slug-pages.js -->
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="ti-nav-current" content="now-playing.html" />
-  <title>영화 상세 — 테스트 UI · 55CINE</title>
-  <link rel="icon" href="../../../favicon.ico" sizes="48x48 32x32 16x16" />
-  <link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="../../../components/site-common.css" />
-  <link rel="stylesheet" href="../../css/fonts.css" />
-  <link rel="stylesheet" href="../../css/fonts-display.css" />
-  <link rel="stylesheet" href="../../css/shell.css" />
-  <link rel="stylesheet" href="../../css/components/shell-mobile-menu.css" />
-  <link rel="stylesheet" href="../../css/components/shell-scroll-top.css" />
-  <link rel="stylesheet" href="../../css/site-footer.css" />
-  <link rel="stylesheet" href="../../../components/movie-detail-layout.css" />
-  <link rel="stylesheet" href="../../css/movie-detail-test.css" />
-  <link rel="stylesheet" href="../../css/now-playing-movie-detail.css" />
+  <meta http-equiv="refresh" content="0;url=movie-detail.html?slug=the-yeast" />
+  <link rel="canonical" href="movie-detail.html?slug=the-yeast" />
+  <title>리다이렉트 — 55CINE</title>
+  <script>location.replace("movie-detail.html?slug=the-yeast");</script>
 </head>
-<body class="ti">
-  <div class="ti-shell" id="tiShell">
-    <div class="ti-left">
-      <div data-ti-mobile-menu-bar></div>
-      <div class="ti-left-panel" id="tiLeftPanel">
-        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
-      </div>
-      <footer
-        class="ti-footer ti-footer--slot-pc site-footer"
-        data-ti-site-footer
-        data-ti-asset-base="../../"
-        aria-label="사이트 정보"
-      ></footer>
-    </div>
-    <aside class="ti-right ti-md-panel" aria-label="영화 상세 본문">
-      <div class="ti-md-scroll ti-md-test-wrap">
-        <section class="section-movie-detail" aria-labelledby="movie-detail-page-title">
-          <p class="np-back"><a href="../../now-playing.html">현재 상영작 목록</a></p>
-          <h2 class="section-title" id="movieDetailPageTitle">영화 상세</h2>
-          <p id="movieDetailStatus" class="movie-detail-status" hidden aria-live="polite"></p>
-          <div id="movieDetailRoot" class="movie-detail-root"></div>
-        </section>
-      </div>
-    </aside>
-    <footer
-      class="ti-footer ti-footer--slot-mobile site-footer"
-      data-ti-site-footer
-      data-ti-asset-base="../../"
-      aria-label="사이트 정보"
-    ></footer>
-  </div>
-
-  <script src="../../js/site-footer-include.js"></script>
-  <script>
-    window.TI_ASSET_BASE = "../../";
-    window.TI_MOVIE_DETAIL_CONFIG = {
-      pageBase: "data/",
-      /* section 쿼리(now-playing|upcoming|past)에 맞는 {section}-movies.json 로드 */
-      listPageUrl: "../../now-playing.html",
-      bookingUrl:
-        "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059"
-      /* API 연동 예시:
-      fetchMovies: function () {
-        return fetch("/api/now-playing/movies").then(function (r) {
-          if (!r.ok) throw new Error("영화 데이터를 불러오지 못했습니다.");
-          return r.json();
-        });
-      }
-      */
-    };
-  </script>
-  <script src="../../data/week-schedule-data.js"></script>
-  <script src="../../js/left-gnb-include.js"></script>
-  <script src="../../js/mobile-menu.js"></script>
-  <script src="../../js/scroll-top.js"></script>
-  <script src="../../js/week-schedule.js"></script>
-  <script src="../../js/now-playing-movie-detail-page.js"></script>
+<body>
+  <p><a href="movie-detail.html?slug=the-yeast">영화 상세로 이동</a></p>
 </body>
 </html>

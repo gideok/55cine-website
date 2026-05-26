@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- 공통 템플릿: {slug}.html 은 이 파일과 동일 본문. slug는 URL 파일명에서 추출. -->
-<!-- slug 페이지 갱신: node tools/sync-now-playing-slug-pages.js -->
+<!-- slug 리다이렉트 갱신: node tools/sync-now-playing-slug-redirects.js -->
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -17,7 +17,8 @@
   <link rel="stylesheet" href="../../css/components/shell-scroll-top.css" />
   <link rel="stylesheet" href="../../css/site-footer.css" />
   <link rel="stylesheet" href="../../../components/movie-detail-layout.css" />
-  <link rel="stylesheet" href="../../css/movie-detail-test.css" />
+  <link rel="stylesheet" href="../../css/components/movie-detail-panel.css" />
+  <link rel="stylesheet" href="../../css/components/movie-detail-theme.css" />
   <link rel="stylesheet" href="../../css/now-playing-movie-detail.css" />
 </head>
 <body class="ti">
@@ -35,7 +36,7 @@
       ></footer>
     </div>
     <aside class="ti-right ti-md-panel" aria-label="영화 상세 본문">
-      <div class="ti-md-scroll ti-md-test-wrap">
+      <div class="ti-md-scroll ti-md-theme">
         <section class="section-movie-detail" aria-labelledby="movie-detail-page-title">
           <p class="np-back"><a href="../../now-playing.html">현재 상영작 목록</a></p>
           <h2 class="section-title" id="movieDetailPageTitle">영화 상세</h2>
