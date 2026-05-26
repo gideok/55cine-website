@@ -249,9 +249,10 @@ special/exhibition/css/
 - [x] **slug URL 단일화** — `now-playing.html` `detailUrlMode: "query"`, 목록 JSON `detailUrl` 제거, `week-schedule-data.js`·`now-playing-data.js` query URL
 - [x] **`{slug}.html`** — `movie-detail.html?slug=` 리다이렉트 stub (`tools/sync-now-playing-slug-redirects.js`)
 
-### Phase 4 — 로드 방식 (선택)
+### Phase 4 — 로드 방식 ⏭️ SKIP (2026-05)
 
-- manifest + 빌드 concat 권장; 전면 `@import` 비권장.
+- [~] manifest + 빌드 concat — **진행 안 함**. 현재는 `css/README.md` + 페이지별 `<link>` 유지.
+- [~] `partials/styles.html` depth 치환 — **진행 안 함**.
 
 ### (완료) 파일명 `ti-` 제거
 
@@ -307,14 +308,30 @@ special/exhibition/css/
 | CSS 파일명 | `css/*.css` (ti- 없음) 27개 | `css/{base,layout,components,pages}` + manifest |
 | JS/Partial | `js/*.js`, `partials/*.html` (ti- 없음) | 동일 계층 구조 |
 | 최대 파일 | shell-core ~428줄, np-search ~199줄 | ~200줄 단위 component (2단계 분할 완료) |
-| HTML link | 깊이·페이지마다 6~9개 | manifest 6~7종 |
+| HTML link | 깊이·페이지마다 6~10개 | Phase 4 SKIP — README manifest로 운영 |
 | 클래스/JS | `.ti-*`, `TI_*` 잔존 | 선택적 후속 개명 |
 | prod/legacy | `components/` + `css/` | 역할 문서화 완료(Phase 3); 물리 이동은 선택 |
 | 상영작 상세 URL | slug HTML 복제 + seo 모드 | `movie-detail.html?slug=` + redirect stub |
 
 ---
 
-## 10. 참고
+## 10. 다음 진행 (Phase 4 SKIP 이후)
+
+**CSS 2단계(본 문서)는 Phase 0~3 완료로 실질 종료.** 아래는 선택·별도 트랙이다.
+
+| 우선순위 | 항목 | 출처 | 비고 |
+|----------|------|------|------|
+| 권장 | §8 검증 체크리스트 수동 확인 | 본 문서 | 로컬 8080, 네트워크 200·레이아웃 |
+| 권장 | 변경분 `git push` | repo | `main`이 origin보다 5커밋 ahead |
+| 선택 | `magazine-preview` ↔ `magazine-list-pages` 카드 중복 정리 | §2-3 | Phase 1에서 제외했던 항목 |
+| 선택 | `css/` 물리 폴더화 (`layout/`, `pages/`, `base/tokens.css`) | §3-2 | 문서·링크 대량 변경 |
+| 선택 | `.ti-*` / `TI_*` / `data-ti-*` 마크업 네임스페이스 | §0·§9 | 범위 큼 — 별도 프로젝트 |
+| 선택 | `site-common.css` 흡수·축소 | §9 | 대규모 수정 — 신규 페이지 추가 시만 점진 |
+| 별도 | 기능·콘텐츠 (API 연동, SEO, 폰트 테스트 등) | [오오극장 홈페이지재구축.md](./오오극장%20홈페이지재구축.md) | CSS 리팩과 무관 |
+
+---
+
+## 11. 참고
 
 - 구조 이동: [리팩토링전략.md](./리팩토링전략.md)
 - 파일명 일괄 변경: `scripts/rename-drop-ti-prefix.py`
