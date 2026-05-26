@@ -1,16 +1,4 @@
-/* test/* — 오오극장 하위 페이지 공통 우측 패널 (theater-info.html 기준 밝은 톤) */
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+/* 오오극장 하위 페이지 공통 우측 패널 (theater-info.html 기준 밝은 톤) */
 
 /* 오오극장 정보 5페이지 우측 패널 공통 */
 .ti-right.ti-sub-page,
@@ -75,32 +63,3 @@
   color: #0a0a0a;
 }
 
-/* 오오극장 하위 — section-page-head · subnav (매거진 프리뷰와 동일 패턴) */
-.ti .ti-sub-scroll .section-page-head {
-  margin-bottom: 20px;
-}
-
-.ti .ti-sub-scroll .section-page-head__title {
-  color: var(--ti-text-strong, #0a0a0a);
-}
-
-.ti .ti-sub-scroll .section-page-subnav a {
-  border-radius: 0;
-  text-decoration: none;
-}
-
-.ti .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
-.ti .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.ti .ti-sub-scroll .section-page-subnav a.is-current {
-  color: #fff;
-  background: #1a1a1a;
-  border-color: #1a1a1a;
-}
-
-.ti .ti-sub-scroll .section-page-head__rule {
-  border-top-color: #c8c8c8;
-}

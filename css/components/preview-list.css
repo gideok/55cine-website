@@ -1,0 +1,137 @@
+/* 매거진 목록 — 목록형 카드 그리드 */
+
+.ti .ti-mz-panel .preview-list {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 목록형: 이미지 영역·본문 영역 각각 테두리, radius 없음 */
+.ti .ti-mz-panel .preview-list.is-list .preview-item,
+.ti .ti-mz-panel .preview-list.is-list .serial-item,
+.ti .ti-mz-panel .preview-list.is-list .gv-item {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 2px;
+  align-items: stretch;
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+.ti .ti-mz-panel .preview-thumb-link,
+.ti .ti-mz-panel .preview-list.is-list .serial-thumb-link,
+.ti .ti-mz-panel .preview-list.is-list .gv-thumb-link {
+  display: block;
+  line-height: 0;
+  border: 1px solid #8a8a8a;
+  border-radius: 0;
+  background: #f0f0f0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.ti .ti-mz-panel .preview-thumb-link:hover,
+.ti .ti-mz-panel .preview-thumb-link:focus-visible,
+.ti .ti-mz-panel .preview-list.is-list .serial-thumb-link:hover,
+.ti .ti-mz-panel .preview-list.is-list .serial-thumb-link:focus-visible,
+.ti .ti-mz-panel .preview-list.is-list .gv-thumb-link:hover,
+.ti .ti-mz-panel .preview-list.is-list .gv-thumb-link:focus-visible {
+  text-decoration: none;
+}
+
+.ti .ti-mz-panel .preview-thumb {
+  width: 100%;
+  aspect-ratio: 264 / 200;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+.ti .ti-mz-panel .preview-body,
+.ti .ti-mz-panel .preview-list.is-list .serial-title-wrap,
+.ti .ti-mz-panel .preview-list.is-list .gv-title-wrap {
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #b0b0b0;
+  border-radius: 0;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/* 기획전 .se-title-link / .se-item-title 과 동일: 기본 밑줄 없음, 호버·초점 시만 */
+.ti .ti-mz-panel .preview-title-link {
+  /* font-size: 1rem;
+  font-weight: 700;
+  color: #111;
+  display: inline;
+  text-decoration: none;
+  text-underline-offset: 2px; */
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.38;
+  color: #2a2a2a;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-decoration: none;
+  overflow: hidden;  
+}
+
+.ti .ti-mz-panel .preview-title-link:hover,
+.ti .ti-mz-panel .preview-title-link:focus-visible {
+  color: #000;
+  text-decoration: underline;
+}
+
+.ti .ti-mz-panel .preview-excerpt-link {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  display: inline;
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+.ti .ti-mz-panel .preview-excerpt-link:hover,
+.ti .ti-mz-panel .preview-excerpt-link:focus-visible {
+  color: #2a2a2a;
+  text-decoration: underline;
+}
+
+/* 목록형: 제목·요약 글자 크기 */
+.ti .ti-mz-panel .preview-list.is-list .preview-title-link {
+  font-size: 1.1rem;
+}
+
+/* 목록형: 본문(요약) 양쪽 정렬 */
+.ti .ti-mz-panel .preview-list.is-list .preview-excerpt-link {
+  display: block;
+  font-size: 0.78rem;
+  text-align: justify;
+}
+
+.ti .ti-mz-panel .preview-list.is-list .serial-title,
+.ti .ti-mz-panel .preview-list.is-list .gv-title {
+  text-align: justify;
+}
+
+@media (max-width: 820px) {
+  .ti .ti-mz-panel .preview-list.is-list .preview-item,
+  .ti .ti-mz-panel .preview-list.is-list .serial-item,
+  .ti .ti-mz-panel .preview-list.is-list .gv-item {
+    grid-template-columns: 1fr;
+  }
+}

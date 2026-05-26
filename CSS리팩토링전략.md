@@ -29,7 +29,7 @@
 |------|------:|------|------|
 | `components/site-common.css` | 702 | GNB, `section-page-*`, 공통 토큰 | 신규 UI 페이지 다수가 **추가로** 로드 |
 | `components/movie-detail-layout.css` | 406 | 상영작·기획전 상세 그리드·탭·배지 | `movie-detail.html`, `exhibition_detail.html` 등 |
-| `components/magazine-scroll-carousel.css` | 282 | 구 루트 매거진 캐러셀 | **현재 HTML 미참조** — 삭제 후보 |
+| ~~`components/magazine-scroll-carousel.css`~~ | — | 구 루트 매거진 캐러셀 | **삭제됨 (2026-05)** |
 
 ### B. 신규 UI (`css/`) — 27개
 
@@ -54,7 +54,7 @@
 | | `now-playing-movie-detail.css` | 20 | 상영작 상세 미세 조정 |
 | **페이지 전용** | `theater-info.css` 등 5개 | 118~226 | 오오극장 하위 |
 | | `intro.css` | 460 | **메인 `index.html` 전용** |
-| **미사용** | `css/index.css` | 529 | **어떤 HTML도 미링크** — `intro.css`로 대체됨 |
+| ~~**미사용**~~ | ~~`css/index.css`~~ | — | **삭제됨** — `intro.css`로 대체됨 |
 
 ### C. 기능별 분리 (`special/`)
 
@@ -93,14 +93,9 @@
 
 → 새 페이지 추가 시 “몇 단계 `../`인지”가 문서화되어 있지 않음.
 
-### 2-2. 알려진 경로 버그 (CSS 작업 전에 수정 권장)
+### 2-2. ~~알려진 경로 버그~~ (수정 완료, 2026-05)
 
-루트에 있는데 `../components/site-common.css`를 쓰는 페이지(상위 폴더로 빠져 **404**):
-
-- `magazine-preview.html`, `magazine-serial.html`, `magazine-past-articles.html`, `gv-moment.html`
-- `theater-info.html`, `viewing-guide.html`, `membership.html`, `daegwan.html`, `osinneun-gil.html`
-
-**올바른 루트 기준:** `components/site-common.css`
+루트 9페이지 `../components/site-common.css` → `components/site-common.css` (`scripts/patch-html-css-bundles.py`).
 
 ### 2-3. 역할 중복
 
@@ -220,30 +215,30 @@ special/exhibition/css/
 
 ## 5. 통합·분리 우선순위
 
-### Phase 0 — 정리·문서 (코드 변경 최소)
+### Phase 0 — 정리·문서 ✅ (2026-05)
 
-1. **`css/README.md`** — manifest, 로드 순서, 깊이별 path.
-2. **잔존 `test/`** — 루트와 diff 후 삭제.
-3. **루트 HTML `../components/`** → `components/` (9파일).
-4. **`css/index.css`** — 삭제 또는 `intro.css` 병합.
-5. **`components/magazine-scroll-carousel.css`** — 미사용 시 삭제.
-6. dead selector (`.ti-sub-h1` 등).
+1. ✅ **`css/README.md`** — manifest, 로드 순서, 깊이별 path.
+2. ⏳ **잔존 `test/`** — git 미추적 복사본; 로컬에서 수동 삭제 가능.
+3. ✅ **루트 HTML `../components/`** → `components/` (9파일).
+4. ✅ **`css/index.css`** — 삭제됨 (`intro.css` 사용).
+5. ✅ **`components/magazine-scroll-carousel.css`** — 삭제됨.
+6. ⏳ dead selector (`.ti-sub-h1` 등) — 후속.
 
-### Phase 1 — 중복 제거 (영향 낮음)
+### Phase 1 — 중복 제거 ✅ (2026-05)
 
-| 작업 | 통합 대상 |
-|------|-----------|
-| 1-A | `section-page-subnav` → `css/components/section-page-head.css` |
-| 1-B | `.visually-hidden` → `base/utilities.css` |
-| 1-C | `.sd-pn` → `sd-prev-next.css`, 변형만 `*-detail`에 소량 유지 |
+| 작업 | 통합 대상 | 상태 |
+|------|-----------|------|
+| 1-A | `section-page-subnav` → `css/components/section-page-head.css` | ✅ HTML 연결 |
+| 1-B | `.visually-hidden` → `base/utilities.css` | ✅ 오오극장 5페이지 |
+| 1-C | `.sd-pn` → `sd-prev-next-magazine.css` | ✅ 4종 상세 + 중복 제거 |
 
-### Phase 2 — 대형 파일 분할
+### Phase 2 — 대형 파일 분할 (진행 중)
 
-| 작업 | 대상 |
-|------|------|
-| 2-A | `magazine-preview.css` (468) |
-| 2-B | `now-playing.css` (423) |
-| 2-C | `shell.css` (654) — 선택 |
+| 작업 | 대상 | 상태 |
+|------|------|------|
+| 2-A | `magazine-preview.css` | ✅ `mz-thumb-stack.css`, `preview-list.css` 분리 |
+| 2-B | `now-playing.css` (423) | ⏳ |
+| 2-C | `shell.css` (654) — 선택 | ⏳ |
 
 ### Phase 3 — `components/` 정렬
 

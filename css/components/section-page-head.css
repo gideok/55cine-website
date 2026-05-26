@@ -1,0 +1,40 @@
+/* site-common section-page-head · subnav — TI 셸(매거진·오오극장) 오버라이드 */
+
+.ti .ti-mz-panel .section-page-head__title,
+.ti .ti-sub-scroll .section-page-head__title {
+  color: var(--text, var(--ti-text-strong, #0a0a0a));
+}
+
+.ti .ti-mz-panel .section-page-subnav a,
+.ti .ti-sub-scroll .section-page-subnav a {
+  border-radius: 0;
+  text-decoration: none;
+}
+
+.ti .ti-mz-panel .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+.ti .ti-mz-panel .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
+.ti .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+.ti .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ti .ti-mz-panel .section-page-subnav a.is-current,
+.ti .ti-sub-scroll .section-page-subnav a.is-current {
+  color: #fff;
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.ti .ti-mz-panel .section-page-head__rule,
+.ti .ti-sub-scroll .section-page-head__rule {
+  border-top-color: #c8c8c8;
+}
+
+.ti .ti-sub-scroll .section-page-head {
+  margin-bottom: 20px;
+}
+
+.ti .ti-sub-scroll .section-page-head__title {
+  color: var(--ti-text-strong, #0a0a0a);
+}
