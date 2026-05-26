@@ -21,16 +21,22 @@
     searchCfg.noResultsMessage || "검색 결과가 없습니다.";
 
   var PAGE_SIZE = cfg.pageSize || 6;
+  /* 조치필요(테스트스피너): cfg.testSpinnerDelayMs — 스피너 확인용 지연(ms), 배포 전 제거 */
+  var TEST_SPINNER_DELAY_MS =
+    typeof cfg.testSpinnerDelayMs === "number" && cfg.testSpinnerDelayMs > 0
+      ? cfg.testSpinnerDelayMs
+      : 0;
   var Pager = window.TiPagePager;
   var grid = document.getElementById("npGrid");
   var pager = document.getElementById("npPager");
   var countEl = document.getElementById("npCount");
   var sentinel = document.getElementById("npSentinel");
+  var loadMoreEl = document.getElementById("npLoadMore");
   var endEl = document.getElementById("npEnd");
   var searchInput = document.getElementById("npSearchInput");
   var searchWrap = document.getElementById("npSearch");
   var io = null;
-  var state = { page: 1, mobileShown: PAGE_SIZE, searchQuery: "" };
+  var state = { page: 1, mobileShown: PAGE_SIZE, searchQuery: "", isLoadingMore: false };
   var movieList = [];
 
   if (!grid) return;
@@ -81,6 +87,16 @@
         return res.json();
       })
       .then(normalizeListPayload);
+  }
+
+  /* 조치필요(테스트스피너): 스피너 노출 확인용 최소 대기 */
+  function waitForTestSpinner(value) {
+    if (!TEST_SPINNER_DELAY_MS) return Promise.resolve(value);
+    return new Promise(function (resolve) {
+      window.setTimeout(function () {
+        resolve(value);
+      }, TEST_SPINNER_DELAY_MS);
+    });
   }
 
   function normalizeListPayload(payload) {
@@ -178,11 +194,25 @@
 
   function showListMessage(message, isError) {
     grid.innerHTML = "";
-    var p = document.createElement("p");
-    p.className = "np-list-status" + (isError ? " is-error" : "");
-    p.setAttribute("role", "status");
-    p.textContent = message;
-    grid.appendChild(p);
+    var wrap = document.createElement("div");
+    wrap.className = "np-list-status" + (isError ? " is-error" : " is-loading");
+    wrap.setAttribute("role", "status");
+
+    if (!isError && window.TiLogoSpinner) {
+      wrap.appendChild(
+        window.TiLogoSpinner.create({
+          size: 72,
+          label: message || "로딩 중"
+        })
+      );
+    }
+
+    var text = document.createElement("p");
+    text.className = "np-list-status__text";
+    text.textContent = message;
+    wrap.appendChild(text);
+
+    grid.appendChild(wrap);
     if (countEl) countEl.textContent = "";
     if (Pager) Pager.updateVisibility(pager, 0);
     if (endEl) endEl.classList.remove("is-visible");
@@ -255,6 +285,52 @@
     render();
   }
 
+  function setMobileLoadMoreSpinner(visible) {
+    if (!loadMoreEl) return;
+    if (!visible) {
+      loadMoreEl.hidden = true;
+      loadMoreEl.setAttribute("aria-busy", "false");
+      loadMoreEl.innerHTML = "";
+      return;
+    }
+    loadMoreEl.hidden = false;
+    loadMoreEl.setAttribute("aria-busy", "true");
+    loadMoreEl.innerHTML = "";
+    if (window.TiLogoSpinner) {
+      loadMoreEl.appendChild(
+        window.TiLogoSpinner.create({
+          size: 64,
+          label: "다음 상영작 불러오는 중"
+        })
+      );
+    }
+  }
+
+  function loadMoreOnMobile() {
+    if (isDesktop() || state.isLoadingMore) return;
+    var list = allMovies();
+    if (state.mobileShown >= list.length) return;
+
+    state.isLoadingMore = true;
+    setMobileLoadMoreSpinner(true);
+    var startedAt = Date.now();
+    /* 조치필요(테스트스피너): 무한 스크롤 스피너 최소 표시 시간 */
+    var minSpinnerMs = TEST_SPINNER_DELAY_MS || 360;
+
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        var elapsed = Date.now() - startedAt;
+        var delay = Math.max(0, minSpinnerMs - elapsed);
+        window.setTimeout(function () {
+          state.mobileShown = Math.min(state.mobileShown + PAGE_SIZE, list.length);
+          state.isLoadingMore = false;
+          setMobileLoadMoreSpinner(false);
+          render();
+        }, delay);
+      });
+    });
+  }
+
   function setupInfinite() {
     if (io) {
       io.disconnect();
@@ -265,11 +341,7 @@
       function (entries) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
-          if (isDesktop()) return;
-          var list = allMovies();
-          if (state.mobileShown >= list.length) return;
-          state.mobileShown = Math.min(state.mobileShown + PAGE_SIZE, list.length);
-          render();
+          loadMoreOnMobile();
         });
       },
       { root: null, rootMargin: "180px 0px", threshold: 0 }
@@ -454,6 +526,7 @@
     showListMessage(LOADING_MESSAGE, false);
 
     fetchMovieList()
+      .then(waitForTestSpinner)
       .then(function (list) {
         movieList = list;
         state.page = 1;
