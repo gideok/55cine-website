@@ -1,5 +1,5 @@
 /**
- * gv/moment/gv-moment-detail-01~24.html → test/magazine/gv-moment/data/*.json
+ * gv/moment/gv-moment-detail-01~24.html → magazine/gv-moment/data/*.json
  * 실행: node tools/extract-magazine-gv-moment-json.js
  */
 const fs = require("fs");
@@ -7,7 +7,7 @@ const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
 const GV_DIR = path.join(ROOT, "gv", "moment");
-const OUT_DIR = path.join(ROOT, "test", "magazine", "gv-moment", "data");
+const OUT_DIR = path.join(ROOT, "magazine", "gv-moment", "data");
 const DATA_JS = path.join(ROOT, "data", "gv-moment-data.js");
 
 function decodeHtmlEntities(s) {

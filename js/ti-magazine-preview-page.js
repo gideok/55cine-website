@@ -25,32 +25,10 @@
   var thumbResizeObserver;
   var thumbEventsBound;
 
-  var INTERNAL_PREVIEW_DETAIL_BY_ID = {
-    1: "magazine-preview-detail-01.html",
-    2: "magazine-preview-detail-02.html",
-    3: "magazine-preview-detail-03.html",
-    4: "magazine-preview-detail-04.html",
-    5: "magazine-preview-detail-05.html",
-    6: "magazine-preview-detail-06.html",
-    7: "magazine-preview-detail-07.html",
-    8: "magazine-preview-detail-08.html",
-    9: "magazine-preview-detail-09.html",
-    10: "magazine-preview-detail-10.html",
-    11: "magazine-preview-detail-11.html",
-    12: "magazine-preview-detail-12.html",
-    13: "magazine-preview-detail-13.html",
-    14: "magazine-preview-detail-14.html",
-    15: "magazine-preview-detail-15.html",
-    16: "magazine-preview-detail-16.html",
-    17: "magazine-preview-detail-17.html",
-    18: "magazine-preview-detail-18.html",
-    19: "magazine-preview-detail-19.html",
-    20: "magazine-preview-detail-20.html",
-    21: "magazine-preview-detail-21.html",
-    22: "magazine-preview-detail-22.html",
-    23: "magazine-preview-detail-23.html",
-    24: "magazine-preview-detail-24.html"
-  };
+  function previewDetailHref(numericId) {
+    var slug = "pv" + String(numericId).padStart(3, "0");
+    return "magazine/preview/article-detail.html?id=" + encodeURIComponent(slug);
+  }
 
   var mzThumbStack = document.getElementById("mzThumbStack");
   var mzSwipeViewport = document.getElementById("mzSwipeViewport");
@@ -64,9 +42,7 @@
 
   function toInternalArticleHref(item) {
     if (!item || !item.id) return "";
-    var name = INTERNAL_PREVIEW_DETAIL_BY_ID[item.id] || "";
-    if (!name) return "";
-    return "../" + name;
+    return previewDetailHref(item.id);
   }
 
   function refreshDataset() {

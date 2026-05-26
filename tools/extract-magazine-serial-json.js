@@ -1,5 +1,5 @@
 /**
- * magazine/serial/magazine-serial-detail-01~24.html → test/magazine/serial/data/*.json
+ * magazine/serial/magazine-serial-detail-01~24.html → magazine/serial/data/*.json
  * 실행: node tools/extract-magazine-serial-json.js
  */
 const fs = require("fs");
@@ -7,7 +7,7 @@ const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
 const SERIAL_DIR = path.join(ROOT, "magazine", "serial");
-const OUT_DIR = path.join(ROOT, "test", "magazine", "serial", "data");
+const OUT_DIR = path.join(ROOT, "magazine", "serial", "data");
 const DATA_JS = path.join(ROOT, "data", "magazine-serial-data.js");
 
 function decodeHtmlEntities(s) {

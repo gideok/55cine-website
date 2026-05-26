@@ -1,12 +1,12 @@
 /**
- * magazine-preview-detail-01~24.html → test/magazine/preview/data/*.json
+ * magazine-preview-detail-01~24.html → magazine/preview/data/*.json
  * 실행: node tools/extract-magazine-preview-json.js
  */
 const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-const OUT_DIR = path.join(ROOT, "test", "magazine", "preview", "data");
+const OUT_DIR = path.join(ROOT, "magazine", "preview", "data");
 const DATA_JS = path.join(ROOT, "data", "magazine-preview-data.js");
 
 function decodeHtmlEntities(s) {
