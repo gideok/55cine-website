@@ -332,6 +332,11 @@ body.exhibition-poster-lightbox-open {
   box-sizing: border-box;
 }
 
+/* 포스터는 상하 여백·구분선 제거 */
+.ti .exhibition-detail-film .exhibition-detail-section__inner > .exhibition-film-poster {
+  padding-bottom: 0;
+}
+
 .ti .exhibition-film-title {
   margin: 0;
   width: 100%;
@@ -379,6 +384,7 @@ body.exhibition-poster-lightbox-open {
   width: 100%;
   max-width: none;
   height: auto;
+  padding-bottom: 0;
   aspect-ratio: 390 / 220;
   object-fit: contain;
   object-position: center;
