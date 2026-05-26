@@ -62,7 +62,7 @@
     if (DETAIL_SECTION && DETAIL_SECTION !== "now-playing") {
       q += "&section=" + encodeURIComponent(DETAIL_SECTION);
     }
-    return "movies/now-playing/movies/now-playing/movie-detail.html?" + q;
+    return "movies/now-playing/movie-detail.html?" + q;
   }
 
   function buildDetailUrl(slug) {

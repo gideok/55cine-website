@@ -26,7 +26,13 @@
     if (/^https?:\/\//i.test(url)) return url;
     if (url.indexOf("//") === 0) return url;
     if (url.charAt(0) === "/") return url;
-    return PAGE_BASE + url.replace(/^\//, "");
+    var path = url.replace(/^\//, "");
+    /* 목록 썸네일: 사이트 루트 images/special/… — TI_ASSET_BASE(../../) */
+    if (path.indexOf("images/special/") === 0) {
+      return BASE + path;
+    }
+    /* 상영작 포스터: special/exhibition/images/… — 페이지 기준 상대 경로 */
+    return PAGE_BASE + path;
   }
 
   function getExhibitionId() {
