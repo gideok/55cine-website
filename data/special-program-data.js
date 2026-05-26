@@ -3,7 +3,7 @@ window.SPECIAL_PROGRAM_DATA = [
     "id": 1,
     "title": "오다 카오리 지하 3부작 04/16(목)~4/21(화)",
     "thumbnail": "images/special/exhibition/special_exhibition_thumb_01.png",
-    "detailUrl": "special/exhibition/test/special-detail-01.html",
+    "detailUrl": "special/exhibition/exhibition_detail.html?id=e000001",
     "sourceUrl": "http://55cine.com/2026/04/03/under03/"
   },
   {
@@ -17,7 +17,7 @@ window.SPECIAL_PROGRAM_DATA = [
     "id": 3,
     "title": "오오극장 개관 11주년 특별전 02/21(토)~22(일)",
     "thumbnail": "images/special/exhibition/special_exhibition_thumb_03.png",
-    "detailUrl": "test/special/exhibition/exhibition_detail.html",
+    "detailUrl": "special/exhibition/exhibition_detail.html",
     "sourceUrl": "http://55cine.com/2026/02/10/11than/"
   },
   {

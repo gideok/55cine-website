@@ -1,197 +1,79 @@
 <!DOCTYPE html>
+<!-- 공통 템플릿: {slug}.html 은 이 파일과 동일 본문. slug는 URL 파일명에서 추출. -->
+<!-- slug 페이지 갱신: node tools/sync-now-playing-slug-pages.js -->
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>너바나 더 밴드 (Nirvanna the Band the Show the Movie) — 현재 상영작 — 55CINE</title>
-  <meta name="description" content="전설적 밴드 ‘너바나’와는 별로 관련이 없어 보이는 ‘너바나 더 밴드’의 콤비 맷과 제이. 어느 날 이들은 공연을 위해 타임 머신을 만들자는 황당한 계획을 세우고 처음 만났던 17년 전으로 돌아가기로 하는데……" />
-  <link rel="icon" href="../../favicon.ico" sizes="48x48 32x32 16x16" />
-  <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="../../components/site-common.css" />
-  <link rel="stylesheet" href="../../components/movie-detail-layout.css" />
+  <meta name="ti-nav-current" content="now-playing.html" />
+  <title>영화 상세 — 테스트 UI · 55CINE</title>
+  <link rel="icon" href="../../../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../../../components/site-common.css" />
+  <link rel="stylesheet" href="../../css/ti-fonts.css" />
+  <link rel="stylesheet" href="../../css/ti-fonts-display.css" />
+  <link rel="stylesheet" href="../../css/ti-shell.css" />
+  <link rel="stylesheet" href="../../css/ti-site-footer.css" />
+  <link rel="stylesheet" href="../../../components/movie-detail-layout.css" />
+  <link rel="stylesheet" href="../../css/ti-movie-detail-test.css" />
+  <link rel="stylesheet" href="../../css/ti-now-playing-movie-detail.css" />
 </head>
-<body>
-  <div id="site-header-mount"></div>
-
-  <main>
-    <section class="section-movie-detail" aria-labelledby="movie-detail-page-title">
-      <p class="np-back"><a href="../../now-playing.html">현재 상영작 목록</a></p>
-      <h2 class="section-title" id="movie-detail-page-title">너바나 더 밴드</h2>
-      <div class="movie-detail-grid">
-        <div class="movie-detail-c1 movie-detail-box">
-          <div class="movie-detail-box-inner">
-            <img class="movie-detail-poster" src="../../images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg" width="260" height="368" alt="너바나 더 밴드 포스터" decoding="async" />
-          </div>
-        </div>
-        <div class="movie-detail-c2 movie-detail-box">
-          <div class="movie-detail-box-inner">
-            <dl class="movie-detail-meta">
-              <div class="meta-row">
-                <dt>감독</dt>
-                <dd>맷 존슨</dd>
-              </div>
-              <div class="meta-row">
-                <dt>출연</dt>
-                <dd>맷 존슨, 제이 맥캐럴</dd>
-              </div>
-              <div class="meta-row">
-                <dt>정보</dt>
-                <dd class="movie-detail-info">코미디, 어드벤처, SF · 100분 1초 · <img class="movie-rating-pictogram" src="../../images/rate_12.png" width="24" height="24" alt="12세이상관람가" decoding="async" /></dd>
-              </div>
-              <div class="meta-row">
-                <dt>개봉</dt>
-                <dd>2026.5.20</dd>
-              </div>
-            </dl>
-            <a class="md2-booking-btn" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="너바나 더 밴드 예매하기">예매하기</a>
-          </div>
-        </div>
-        <div class="movie-detail-c3 movie-detail-box">
-          <div class="movie-detail-box-inner">
-            <div class="movie-detail-tabs" role="tablist" aria-label="영화 정보 탭">
-              <button type="button" class="movie-detail-tab" role="tab" id="movie-tab-synopsis-nirvanna-the-band-the-show-the-movie" aria-selected="true" aria-controls="movie-tabpanel-synopsis-nirvanna-the-band-the-show-the-movie">줄거리</button>
-              <button type="button" class="movie-detail-tab" role="tab" id="movie-tab-trailer-nirvanna-the-band-the-show-the-movie" aria-selected="false" aria-controls="movie-tabpanel-trailer-nirvanna-the-band-the-show-the-movie" tabindex="-1">예고</button>
-            </div>
-            <div id="movie-tabpanel-synopsis-nirvanna-the-band-the-show-the-movie" class="movie-detail-tabpanel" role="tabpanel" aria-labelledby="movie-tab-synopsis-nirvanna-the-band-the-show-the-movie">
-              <p class="movie-detail-synopsis">전설적 밴드 ‘너바나’와는 별로 관련이 없어 보이는 ‘너바나 더 밴드’의 콤비 맷과 제이. 어느 날 이들은 공연을 위해 타임 머신을 만들자는 황당한 계획을 세우고 처음 만났던 17년 전으로 돌아가기로 하는데…</p>
-            </div>
-            <div id="movie-tabpanel-trailer-nirvanna-the-band-the-show-the-movie" class="movie-detail-tabpanel" role="tabpanel" aria-labelledby="movie-tab-trailer-nirvanna-the-band-the-show-the-movie" hidden>
-              <div class="movie-detail-trailer-frame">
-                <iframe
-                  src="https://www.youtube.com/embed/V6drU2EcIow"
-                  title="「너바나 더 밴드」 예고편"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                  loading="lazy"
-                ></iframe>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="movie-detail-c4 movie-detail-box">
-          <div class="movie-detail-box-inner">
-            <h3 class="movie-detail-schedule-title">상영시간표</h3>
-            <p class="ref-note" style="margin:-6px 0 12px;">오오극장 공식 사이트 기준 · 변경될 수 있습니다.</p>
-            <div class="movie-detail-badge-grid">
-              <a class="movie-detail-time-badge" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="05.20.(수) 14:30 예매">
-                <span class="badge-date">05.20.(수)</span>
-                <span class="badge-time">14:30</span>
-              </a>
-              <a class="movie-detail-time-badge" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="05.20.(수) 20:20 예매">
-                <span class="badge-date">05.20.(수)</span>
-                <span class="badge-time">20:20</span>
-              </a>
-              <a class="movie-detail-time-badge" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="05.21.(목) 15:10 예매">
-                <span class="badge-date">05.21.(목)</span>
-                <span class="badge-time">15:10</span>
-              </a>
-              <a class="movie-detail-time-badge" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="05.23.(토) 15:55 예매">
-                <span class="badge-date">05.23.(토)</span>
-                <span class="badge-time">15:55</span>
-              </a>
-              <a class="movie-detail-time-badge" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="05.24.(일) 13:40 예매">
-                <span class="badge-date">05.24.(일)</span>
-                <span class="badge-time">13:40</span>
-              </a>
-              <a class="movie-detail-time-badge" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="05.25.(월) 15:50 예매">
-                <span class="badge-date">05.25.(월)</span>
-                <span class="badge-time">15:50</span>
-              </a>
-              <a class="movie-detail-time-badge" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="05.26.(화) 20:20 예매">
-                <span class="badge-date">05.26.(화)</span>
-                <span class="badge-time">20:20</span>
-              </a>
-              <a class="movie-detail-time-badge" href="https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059" target="_blank" rel="noopener noreferrer" aria-label="05.27.(수) 15:50 예매">
-                <span class="badge-date">05.27.(수)</span>
-                <span class="badge-time">15:50</span>
-              </a>
-            </div>
-          </div>
-        </div>
+<body class="ti">
+  <div class="ti-shell" id="tiShell">
+    <div class="ti-left">
+      <div data-ti-mobile-menu-bar></div>
+      <div class="ti-left-panel" id="tiLeftPanel">
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
       </div>
-    </section>
-  </main>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base="../../"
+        aria-label="사이트 정보"
+      ></footer>
+    </div>
+    <aside class="ti-right ti-md-panel" aria-label="영화 상세 본문">
+      <div class="ti-md-scroll ti-md-test-wrap">
+        <section class="section-movie-detail" aria-labelledby="movie-detail-page-title">
+          <p class="np-back"><a href="../../now-playing.html">현재 상영작 목록</a></p>
+          <h2 class="section-title" id="movieDetailPageTitle">영화 상세</h2>
+          <p id="movieDetailStatus" class="movie-detail-status" hidden aria-live="polite"></p>
+          <div id="movieDetailRoot" class="movie-detail-root"></div>
+        </section>
+      </div>
+    </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base="../../"
+      aria-label="사이트 정보"
+    ></footer>
+  </div>
 
-  <div id="site-footer-mount"></div>
-
-  <script defer src="../../components/site-chrome.js"></script>
-  <script defer src="../../components/site-font-switcher.js"></script>
-  <script defer src="../../components/scroll-top.js"></script>
+  <script src="../../js/ti-site-footer-include.js"></script>
   <script>
-    (function () {
-      function runApp() {
-        var gnbToggle = document.getElementById("gnbToggle");
-        var gnbPanel = document.getElementById("gnb-panel");
-        if (gnbToggle && gnbPanel) {
-          gnbToggle.addEventListener("click", function () {
-            var open = gnbPanel.classList.toggle("is-open");
-            gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
-            gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
-            if (!open) {
-              gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-                li.classList.remove("is-open");
-              });
-            }
-          });
-          gnbPanel.querySelectorAll(".gnb-depth2 a").forEach(function (a) {
-            a.addEventListener("click", function () {
-              if (window.matchMedia("(max-width: 900px)").matches) {
-                gnbPanel.classList.remove("is-open");
-                gnbToggle.setAttribute("aria-expanded", "false");
-                gnbToggle.setAttribute("aria-label", "메뉴 열기");
-                gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-                  li.classList.remove("is-open");
-                });
-              }
-            });
-          });
-        }
-        document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
-          depth1.addEventListener("click", function (e) {
-            if (!window.matchMedia("(max-width: 900px)").matches) return;
-            var panel = document.getElementById("gnb-panel");
-            if (!panel || !panel.classList.contains("is-open")) return;
-            var item = depth1.closest(".gnb-item");
-            if (!item || !item.querySelector(".gnb-dropdown")) return;
-            e.preventDefault();
-            var wasOpen = item.classList.contains("is-open");
-            document.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-              li.classList.remove("is-open");
-            });
-            if (!wasOpen) item.classList.add("is-open");
-          });
+    window.TI_ASSET_BASE = "../../";
+    window.TI_MOVIE_DETAIL_CONFIG = {
+      pageBase: "data/",
+      /* section 쿼리(now-playing|upcoming|past)에 맞는 {section}-movies.json 로드 */
+      listPageUrl: "../../now-playing.html",
+      bookingUrl:
+        "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059"
+      /* API 연동 예시:
+      fetchMovies: function () {
+        return fetch("/api/now-playing/movies").then(function (r) {
+          if (!r.ok) throw new Error("영화 데이터를 불러오지 못했습니다.");
+          return r.json();
         });
-
-        var movieTabSynopsis = document.getElementById("movie-tab-synopsis-nirvanna-the-band-the-show-the-movie");
-        var movieTabTrailer = document.getElementById("movie-tab-trailer-nirvanna-the-band-the-show-the-movie");
-        var moviePanelSynopsis = document.getElementById("movie-tabpanel-synopsis-nirvanna-the-band-the-show-the-movie");
-        var moviePanelTrailer = document.getElementById("movie-tabpanel-trailer-nirvanna-the-band-the-show-the-movie");
-        if (movieTabSynopsis && movieTabTrailer && moviePanelSynopsis && moviePanelTrailer) {
-          function activateMovieDetailTab(which) {
-            var isSynopsis = which === "synopsis";
-            movieTabSynopsis.setAttribute("aria-selected", isSynopsis ? "true" : "false");
-            movieTabTrailer.setAttribute("aria-selected", !isSynopsis ? "true" : "false");
-            movieTabSynopsis.tabIndex = isSynopsis ? 0 : -1;
-            movieTabTrailer.tabIndex = !isSynopsis ? 0 : -1;
-            moviePanelSynopsis.hidden = !isSynopsis;
-            moviePanelTrailer.hidden = isSynopsis;
-          }
-          movieTabSynopsis.addEventListener("click", function () {
-            activateMovieDetailTab("synopsis");
-          });
-          movieTabTrailer.addEventListener("click", function () {
-            activateMovieDetailTab("trailer");
-          });
-        }
       }
-      var needsSiteChrome = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
-      if (needsSiteChrome) {
-        document.addEventListener("sitechrome:ready", runApp, { once: true });
-        document.addEventListener("sitechrome:error", runApp, { once: true });
-      } else {
-        runApp();
-      }
-    })();
+      */
+    };
   </script>
+  <script src="../../data/week-schedule-data.js"></script>
+  <script src="../../js/ti-left-gnb-include.js"></script>
+  <script src="../../js/ti-mobile-menu.js"></script>
+  <script src="../../js/ti-scroll-top.js"></script>
+  <script src="../../js/ti-week-schedule.js"></script>
+  <script src="../../js/ti-now-playing-movie-detail-page.js"></script>
 </body>
 </html>

@@ -3,510 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>현재 상영작 — 55CINE 오오극장</title>
-  <meta name="description" content="대구 독립영화전용관 오오극장의 현재 상영작 목록입니다. 포스터와 작품명을 확인하고 상세 정보·예매로 이동할 수 있습니다." />
+  <meta name="ti-nav-current" content="now-playing.html" />
+  <title>현재 상영작 — 테스트 UI · 55CINE</title>
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="components/site-common.css" />
-  <style>
-    :root {
-      --np-max: 1120px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.5;
-    }
-
-    main {
-      background: var(--bg-elevated);
-      min-height: 60vh;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .np-page {
-      max-width: var(--np-max);
-      margin: 0 auto;
-      padding: 28px 24px 64px;
-    }
-
-    .np-head {
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 16px;
-      margin-bottom: 22px;
-    }
-
-    .np-kicker {
-      margin: 0 0 6px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .np-title {
-      margin: 0;
-      font-size: clamp(1.35rem, 2.4vw, 1.75rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--brand-ink);
-    }
-
-    .np-sub {
-      margin: 8px 0 0;
-      font-size: 0.95rem;
-      color: var(--muted);
-      max-width: 42rem;
-    }
-
-    .np-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .np-count {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--muted);
-    }
-
-    .np-pager {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .np-pager.is-visible {
-      display: flex;
-    }
-
-    .np-pager button {
-      min-width: 38px;
-      height: 38px;
-      padding: 0 10px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: #fff;
-      font-family: inherit;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--brand-ink);
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
-    }
-
-    .np-pager button:hover:not(:disabled) {
-      border-color: color-mix(in srgb, var(--brand-bronze) 45%, var(--line));
-      background: var(--pill-bg);
-    }
-
-    .np-pager button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    .np-pager button[aria-current="page"] {
-      background: var(--brand-ink);
-      color: #fffef8;
-      border-color: var(--brand-ink);
-    }
-
-    .np-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    @media (min-width: 900px) {
-      .np-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    .np-card {
-      display: flex;
-      flex-direction: column;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 6px 20px var(--shadow);
-      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
-      text-align: left;
-    }
-
-    .np-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px var(--shadow);
-      border-color: color-mix(in srgb, var(--brand-gold) 35%, var(--line));
-    }
-
-    .np-card:focus-within {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
-
-    .np-card-media {
-      position: relative;
-      aspect-ratio: 2 / 3;
-      background: var(--brand-ink);
-    }
-
-    .np-card-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .np-card-body {
-      padding: 14px 14px 16px;
-    }
-
-    .np-card-title {
-      margin: 0;
-      font-size: 1rem;
-      font-weight: 800;
-      line-height: 1.35;
-      letter-spacing: -0.02em;
-      color: var(--brand-ink);
-      word-break: keep-all;
-    }
-
-    .np-card-en {
-      margin: 4px 0 0;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.01em;
-    }
-
-    .np-stretch-link::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-    }
-
-    .np-card-media {
-      position: relative;
-    }
-
-    .np-mobile-hint {
-      margin: 10px 0 0;
-      font-size: 0.82rem;
-      color: var(--muted);
-      display: block;
-    }
-
-    @media (min-width: 900px) {
-      .np-mobile-hint {
-        display: none;
-      }
-    }
-
-    .np-sentinel {
-      height: 1px;
-      margin-top: 24px;
-    }
-
-    .np-end {
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-top: 16px;
-      display: none;
-    }
-
-    .np-end.is-visible {
-      display: block;
-    }
-  </style>
+  <link rel="stylesheet" href="css/ti-fonts.css" />
+  <link rel="stylesheet" href="css/ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/ti-shell.css" />
+  <link rel="stylesheet" href="css/ti-site-footer.css" />
+  <link rel="stylesheet" href="css/ti-page-pager.css" />
+  <link rel="stylesheet" href="css/ti-now-playing.css" />
 </head>
-<body>
-  <div id="site-header-mount"></div>
-
-  <main>
-    <div class="np-page">
-      <header class="np-head">
-        <p class="np-kicker">상영작</p>
-        <h1 class="np-title" id="np-page-title">현재 상영작</h1>
-        <p class="np-sub">
-          영화 상영작만 모았습니다. PC에서는 페이지를 나누어 보고, 모바일에서는 아래로 스크롤하면 이어서 불러옵니다.
-        </p>
-      </header>
-
-      <div class="np-toolbar">
-        <p class="np-count" id="npCount" aria-live="polite"></p>
-        <nav class="np-pager" id="npPager" aria-label="페이지"></nav>
+<body class="ti">
+  <div class="ti-shell" id="tiShell">
+    <div class="ti-left">
+      <div data-ti-mobile-menu-bar></div>
+      <div class="ti-left-panel" id="tiLeftPanel">
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
       </div>
-
-      <div class="np-grid" id="npGrid"></div>
-      <p class="np-mobile-hint" id="npMobileHint">스크롤하면 다음 작품이 자동으로 불러와집니다.</p>
-      <div class="np-sentinel" id="npSentinel" aria-hidden="true"></div>
-      <p class="np-end" id="npEnd">모든 상영작을 불러왔습니다.</p>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base=""
+        aria-label="사이트 정보"
+      ></footer>
     </div>
-  </main>
+    <aside class="ti-right ti-np-root" aria-label="현재 상영작 본문">
+      <div class="ti-np-scroll">
+        <div class="np-page">
+          <header class="np-head">
+            <p class="np-kicker">상영작</p>
+            <h1 class="np-title" id="np-page-title">현재 상영작</h1>
+            <p class="np-sub">
+              영화 상영작만 모았습니다. PC에서는 페이지를 나누어 보고, 모바일에서는 아래로 스크롤하면 이어서 불러옵니다.
+            </p>
+          </header>
+          <div class="ti-page-toolbar">
+            <p class="ti-page-count" id="npCount" aria-live="polite"></p>
+            <nav class="ti-page-pager" id="npPager" aria-label="페이지"></nav>
+          </div>
+          <div class="np-grid" id="npGrid"></div>
+          <p class="np-mobile-hint" id="npMobileHint">스크롤하면 다음 작품이 자동으로 불러와집니다.</p>
+          <div class="np-sentinel" id="npSentinel" aria-hidden="true"></div>
+          <p class="np-end" id="npEnd">모든 상영작을 불러왔습니다.</p>
+        </div>
+      </div>
+    </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base=""
+      aria-label="사이트 정보"
+    ></footer>
+  </div>
 
-  <div id="site-footer-mount"></div>
-
-  <script src="data/now-playing-data.js"></script>
-  <script defer src="components/site-chrome.js"></script>
-  <script defer src="components/site-font-switcher.js"></script>
-  <script defer src="components/scroll-top.js"></script>
+  <script src="js/ti-site-footer-include.js"></script>
   <script>
-    (function () {
-      var PAGE_SIZE = 6;
-      var DESKTOP = window.matchMedia("(min-width: 900px)");
-      var grid = document.getElementById("npGrid");
-      var pager = document.getElementById("npPager");
-      var countEl = document.getElementById("npCount");
-      var sentinel = document.getElementById("npSentinel");
-      var endEl = document.getElementById("npEnd");
-      var io = null;
-
-      var state = { page: 1, mobileShown: PAGE_SIZE };
-
-      function allMovies() {
-        return window.NOW_PLAYING_MOVIES || [];
-      }
-
-      function totalPages(n) {
-        return Math.max(1, Math.ceil(n / PAGE_SIZE));
-      }
-
-      function sliceForView() {
-        var list = allMovies();
-        if (DESKTOP.matches) {
-          var start = (state.page - 1) * PAGE_SIZE;
-          return list.slice(start, start + PAGE_SIZE);
-        }
-        return list.slice(0, state.mobileShown);
-      }
-
-      function renderCard(m) {
-        var article = document.createElement("article");
-        article.className = "np-card";
-        var media = document.createElement("div");
-        media.className = "np-card-media";
-        var img = document.createElement("img");
-        img.src = m.poster;
-        img.width = 400;
-        img.height = 600;
-        img.alt = m.titleKo + " 포스터";
-        img.loading = "lazy";
-        img.decoding = "async";
-        var link = document.createElement("a");
-        link.href = m.detailUrl;
-        link.className = "np-stretch-link";
-        link.setAttribute("aria-label", m.titleKo + " 상세 보기");
-        media.appendChild(img);
-        media.appendChild(link);
-        var body = document.createElement("div");
-        body.className = "np-card-body";
-        var h2 = document.createElement("h2");
-        h2.className = "np-card-title";
-        var tlink = document.createElement("a");
-        tlink.href = m.detailUrl;
-        tlink.textContent = m.titleKo;
-        h2.appendChild(tlink);
-        body.appendChild(h2);
-        if (m.titleEn) {
-          var en = document.createElement("p");
-          en.className = "np-card-en";
-          en.textContent = m.titleEn;
-          body.appendChild(en);
-        }
-        article.appendChild(media);
-        article.appendChild(body);
-        return article;
-      }
-
-      function renderPager(total) {
-        pager.innerHTML = "";
-        var pages = totalPages(total);
-        if (pages <= 1) {
-          return;
-        }
-
-        var prev = document.createElement("button");
-        prev.type = "button";
-        prev.textContent = "이전";
-        prev.disabled = state.page <= 1;
-        prev.addEventListener("click", function () {
-          if (state.page > 1) {
-            state.page--;
-            render();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
-        });
-        pager.appendChild(prev);
-
-        for (var p = 1; p <= pages; p++) {
-          (function (num) {
-            var b = document.createElement("button");
-            b.type = "button";
-            b.textContent = String(num);
-            if (num === state.page) {
-              b.setAttribute("aria-current", "page");
-            }
-            b.addEventListener("click", function () {
-              state.page = num;
-              render();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            });
-            pager.appendChild(b);
-          })(p);
-        }
-
-        var next = document.createElement("button");
-        next.type = "button";
-        next.textContent = "다음";
-        next.disabled = state.page >= pages;
-        next.addEventListener("click", function () {
-          if (state.page < pages) {
-            state.page++;
-            render();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
-        });
-        pager.appendChild(next);
-      }
-
-      function render() {
-        var list = allMovies();
-        grid.innerHTML = "";
-        var chunk = sliceForView();
-        chunk.forEach(function (m) {
-          grid.appendChild(renderCard(m));
-        });
-
-        if (DESKTOP.matches) {
-          var tp = totalPages(list.length);
-          pager.classList.toggle("is-visible", tp > 1);
-          countEl.textContent = "총 " + list.length + "편 · " + state.page + " / " + tp + " 페이지";
-          if (tp > 1) {
-            renderPager(list.length);
-          }
-        } else {
-          pager.classList.remove("is-visible");
-          countEl.textContent = "총 " + list.length + "편 · " + Math.min(state.mobileShown, list.length) + "편 표시";
-          endEl.classList.toggle("is-visible", state.mobileShown >= list.length && list.length > 0);
-        }
-      }
-
-      function onResizeMode() {
-        state.page = 1;
-        state.mobileShown = PAGE_SIZE;
-        render();
-      }
-
-      function setupInfinite() {
-        if (io) {
-          io.disconnect();
-          io = null;
-        }
-        if (!sentinel) return;
-        io = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (!entry.isIntersecting) return;
-              if (DESKTOP.matches) return;
-              var list = allMovies();
-              if (state.mobileShown >= list.length) return;
-              state.mobileShown = Math.min(state.mobileShown + PAGE_SIZE, list.length);
-              render();
-            });
-          },
-          { root: null, rootMargin: "180px 0px", threshold: 0 }
-        );
-        io.observe(sentinel);
-      }
-
-      DESKTOP.addEventListener("change", function () {
-        onResizeMode();
-        setupInfinite();
-      });
-
-      function boot() {
-        render();
-        setupInfinite();
-      }
-
-      var needsChrome = document.getElementById("site-header-mount");
-      if (needsChrome) {
-        document.addEventListener("sitechrome:ready", boot, { once: true });
-        document.addEventListener("sitechrome:error", boot, { once: true });
-      } else {
-        boot();
-      }
-
-      function runGnb() {
-        var gnbToggle = document.getElementById("gnbToggle");
-        var gnbPanel = document.getElementById("gnb-panel");
-        if (gnbToggle && gnbPanel) {
-          gnbToggle.addEventListener("click", function () {
-            var open = gnbPanel.classList.toggle("is-open");
-            gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
-            gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
-            if (!open) {
-              gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-                li.classList.remove("is-open");
-              });
-            }
-          });
-          gnbPanel.querySelectorAll(".gnb-depth2 a").forEach(function (a) {
-            a.addEventListener("click", function () {
-              if (window.matchMedia("(max-width: 900px)").matches) {
-                gnbPanel.classList.remove("is-open");
-                gnbToggle.setAttribute("aria-expanded", "false");
-                gnbToggle.setAttribute("aria-label", "메뉴 열기");
-                gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-                  li.classList.remove("is-open");
-                });
-              }
-            });
-          });
-        }
-        document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
-          depth1.addEventListener("click", function (e) {
-            if (!window.matchMedia("(max-width: 900px)").matches) return;
-            var panel = document.getElementById("gnb-panel");
-            if (!panel || !panel.classList.contains("is-open")) return;
-            var item = depth1.closest(".gnb-item");
-            if (!item || !item.querySelector(".gnb-dropdown")) return;
-            e.preventDefault();
-            var wasOpen = item.classList.contains("is-open");
-            document.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-              li.classList.remove("is-open");
-            });
-            if (!wasOpen) item.classList.add("is-open");
-          });
-        });
-      }
-
-      if (needsChrome) {
-        document.addEventListener("sitechrome:ready", runGnb, { once: true });
-        document.addEventListener("sitechrome:error", runGnb, { once: true });
-      } else {
-        runGnb();
-      }
-    })();
+    window.TI_ASSET_BASE = "";
   </script>
+  <script src="data/week-schedule-data.js"></script>
+  <script>
+    window.TI_MOVIE_LIST_PAGE_CONFIG = {
+      dataUrl: "movies/now-playing/data/now-playing-list.json",
+      detailUrlMode: "seo",
+      detailSection: "now-playing"
+      /* API 연동 예시:
+      fetchList: function () {
+        return fetch("/api/now-playing/list").then(function (r) {
+          if (!r.ok) throw new Error("상영작 목록을 불러오지 못했습니다.");
+          return r.json();
+        });
+      }
+      */
+    };
+  </script>
+  <script src="js/ti-left-gnb-include.js"></script>
+  <script src="js/ti-mobile-menu.js"></script>
+  <script src="js/ti-scroll-top.js"></script>
+  <script src="js/ti-week-schedule.js"></script>
+  <script src="js/ti-page-pager.js"></script>
+  <script src="js/ti-movie-list-page.js"></script>
 </body>
 </html>

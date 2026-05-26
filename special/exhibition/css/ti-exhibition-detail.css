@@ -1,0 +1,573 @@
+/* special/exhibition/exhibition_detail.html — 기획전 상세 */
+
+.ti .ti-right.ti-ex-detail-panel {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  padding: clamp(12px, 2vw, 22px) clamp(14px, 2.4vw, 28px);
+  background: #fafafa;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ti .ti-ex-detail-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+.ti .ti-ex-detail-wrap {
+  --site-font-family: "Spoqa Han Sans Neo", sans-serif;
+  --brand-bronze: #5a5a5a;
+  --brand-ink: #111;
+  --brand-walnut: #2a2a2a;
+  --bg: #fafafa;
+  --bg-elevated: #ffffff;
+  --text: #1a1a1a;
+  --muted: #5a5a5a;
+  --line: #c8c8c8;
+  --accent: #333;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --radius-sm: 0;
+  color: var(--text);
+  background: var(--bg-elevated);
+  font-family: var(--site-font-family);
+  line-height: 1.5;
+}
+
+.ti .ti-ex-detail-wrap a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ti .ti-ex-detail-wrap .section-exhibition-detail {
+  padding: 8px 8px 32px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.ti .ti-ex-detail-wrap .np-back {
+  margin: 0 0 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.ti .ti-ex-detail-wrap .np-back a {
+  color: #333;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ti .ti-ex-detail-wrap .np-back a:hover {
+  color: #000;
+}
+
+.ti .ti-ex-detail-wrap .section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+}
+
+.ti .ti-ex-detail-wrap .section-title::after {
+  content: "›";
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.ti .exhibition-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.ti .exhibition-detail-section {
+  min-width: 0;
+  border: 1px solid #b0b0b0;
+  border-radius: 0;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.ti .exhibition-detail-section__inner {
+  padding: 18px 20px 22px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.ti .exhibition-detail-section--hero .exhibition-detail-section__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  min-height: 280px;
+}
+
+.ti .exhibition-detail-poster-btn {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ti .exhibition-detail-poster-btn {
+    cursor: zoom-in;
+  }
+
+  .ti .exhibition-detail-poster-btn:hover .exhibition-detail-poster {
+    opacity: 0.92;
+  }
+}
+
+.ti .exhibition-detail-poster-btn:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 3px;
+}
+
+.ti .exhibition-detail-poster {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.exhibition-poster-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 28px);
+  box-sizing: border-box;
+}
+
+.exhibition-poster-lightbox[hidden] {
+  display: none !important;
+}
+
+.exhibition-poster-lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0.92);
+  cursor: pointer;
+}
+
+.exhibition-poster-lightbox__img {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  user-select: none;
+}
+
+.exhibition-poster-lightbox__close {
+  position: absolute;
+  top: clamp(10px, 2vw, 18px);
+  right: clamp(10px, 2vw, 18px);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.exhibition-poster-lightbox__close:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: #fff;
+}
+
+.exhibition-poster-lightbox__close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+body.exhibition-poster-lightbox-open {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+.ti .exhibition-detail-intro {
+  margin: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  font-size: 0.86rem;
+  line-height: 1.65;
+  color: var(--text);
+  white-space: pre-line;
+  text-align: justify;
+}
+
+.ti .exhibition-detail-section--info .exhibition-detail-section__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 280px;
+}
+
+/* riddle-of-fire.html (.ti-md-test-wrap) 과 동일한 예매하기 버튼 */
+.ti .ti-ex-detail-wrap .md2-booking-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 0;
+  border: 1px solid #4a4a4a;
+  background: #fff;
+  color: #111;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.ti .ti-ex-detail-wrap .md2-booking-btn:hover {
+  background: #f0f0f0;
+  border-color: #111;
+  color: #000;
+  box-shadow: none;
+  transform: none;
+}
+
+.ti .ti-ex-detail-wrap .md2-booking-btn:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 2px;
+}
+
+.ti .exhibition-detail-section--info .md2-booking-btn {
+  margin-top: 0;
+  flex: 0 0 auto;
+}
+
+.ti .exhibition-detail-films {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.ti .exhibition-detail-film {
+  height: 100%;
+}
+
+.ti .exhibition-detail-film .exhibition-detail-section__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.ti .exhibition-detail-film.exhibition-film-empty .exhibition-detail-section__inner--empty-film {
+  min-height: 140px;
+}
+
+.ti .exhibition-film-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.ti .exhibition-film-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+/* 아래 항목이 있을 때만 구분선 */
+.ti .exhibition-detail-film .exhibition-detail-section__inner > *:not(:last-child) {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  box-sizing: border-box;
+}
+
+/* 포스터는 상하 여백·구분선 제거 */
+.ti .exhibition-detail-film .exhibition-detail-section__inner > .exhibition-film-poster {
+  padding-bottom: 0;
+}
+
+.ti .exhibition-film-title {
+  margin: 0;
+  width: 100%;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--brand-ink);
+  line-height: 1.35;
+}
+
+.ti .exhibition-film-section-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: 46%;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f0f0f0;
+  color: #222;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: right;
+  white-space: normal;
+  word-break: keep-all;
+  overflow: hidden;
+}
+
+.ti .exhibition-film-info {
+  margin: 0;
+  width: 100%;
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.ti .exhibition-film-poster {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  padding-bottom: 0;
+  aspect-ratio: 390 / 220;
+  object-fit: contain;
+  object-position: center;
+  border: 1px solid #8a8a8a;
+  background: #f0f0f0;
+  box-sizing: border-box;
+}
+
+.ti .exhibition-film-meta {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  box-sizing: border-box;
+}
+
+.ti .exhibition-film-meta dt {
+  display: inline;
+  margin: 0;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.ti .exhibition-film-meta dt::after {
+  content: " ";
+}
+
+.ti .exhibition-film-meta dd {
+  display: inline;
+  margin: 0;
+  font-weight: 500;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+}
+
+.ti .exhibition-film-meta .meta-block {
+  margin: 0 0 8px;
+}
+
+.ti .exhibition-film-meta .meta-block:last-child {
+  margin-bottom: 0;
+}
+
+.ti .exhibition-film-description {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.65;
+  color: var(--text);
+  text-align: justify;
+  box-sizing: border-box;
+}
+
+.ti .exhibition-film-schedule-title {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--brand-ink);
+  box-sizing: border-box;
+}
+
+.ti .exhibition-detail-badge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ti .exhibition-detail-time-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  justify-self: stretch;
+  text-align: center;
+  padding: 12px 10px;
+  border-radius: 0;
+  border: 1px solid #b0b0b0;
+  background: #fafafa;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+  text-decoration: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.ti a.exhibition-detail-time-badge:hover {
+  border-color: #111;
+  background: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.ti a.exhibition-detail-time-badge:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 2px;
+}
+
+.ti .exhibition-detail-time-badge .badge-date-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.ti .exhibition-detail-time-badge .badge-date {
+  font-weight: 700;
+  color: #111;
+}
+
+.ti .exhibition-detail-time-badge .badge-gv {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #1a1a1a;
+  border: 1px solid #1a1a1a;
+  line-height: 1.35;
+}
+
+.ti .exhibition-detail-time-badge .badge-time {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.ti .exhibition-detail-status {
+  margin: 24px 0;
+  padding: 16px;
+  border: 1px solid #c8c8c8;
+  background: #fff;
+  font-size: 0.9rem;
+  color: #5a5a5a;
+  text-align: center;
+}
+
+.ti .exhibition-detail-status.is-error {
+  color: #8b1a1a;
+  border-color: #c8a0a0;
+}
+
+@media (min-width: 901px) {
+  .ti .exhibition-detail-section--hero,
+  .ti .exhibition-detail-section--info {
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 900px) {
+  .ti .exhibition-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ti .exhibition-detail-films {
+    grid-template-columns: 1fr;
+  }
+
+  .ti .exhibition-detail-section--hero .exhibition-detail-section__inner {
+    min-height: 220px;
+  }
+
+  .ti .exhibition-detail-section--info .exhibition-detail-section__inner {
+    min-height: 0;
+  }
+
+  .ti .exhibition-film-info {
+    min-height: 0;
+    height: auto;
+  }
+
+  .ti .exhibition-detail-film.exhibition-film-empty {
+    display: none;
+  }
+}

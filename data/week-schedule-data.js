@@ -1,13 +1,13 @@
 /**
  * 이번 주 시간표 정적 데이터 (index.html · test 페이지 공통)
- * 하위 경로에서 열 때는 로드 전에 window.TEST_TI_ASSET_BASE 또는 WEEK_SCHEDULE_ASSET_BASE 를 설정하세요.
+ * 하위 경로에서 열 때는 로드 전에 window.TI_ASSET_BASE 또는 WEEK_SCHEDULE_ASSET_BASE 를 설정하세요.
  *
  * entries 항목:
  *   time, title, opening(개봉), closing(종영), gv(GV), ct(CT) — 여부는 boolean (API True/False)
  */
 (function () {
   var BASE =
-    (typeof window !== "undefined" && typeof window.TEST_TI_ASSET_BASE === "string" && window.TEST_TI_ASSET_BASE) ||
+    (typeof window !== "undefined" && typeof window.TI_ASSET_BASE === "string" && window.TI_ASSET_BASE) ||
     (typeof window !== "undefined" && typeof window.WEEK_SCHEDULE_ASSET_BASE === "string" && window.WEEK_SCHEDULE_ASSET_BASE) ||
     "";
 
@@ -16,11 +16,11 @@
     return BASE + path;
   }
 
-  /** 테스트 UI: 상세는 test/movies/now-playing/ 기준, 포스터만 사이트 루트 images/ */
+  /** 테스트 UI: 상세는 movies/now-playing/ 기준, 포스터만 사이트 루트 images/ */
   var isTestTi =
     typeof window !== "undefined" &&
-    typeof window.TEST_TI_ASSET_BASE === "string" &&
-    window.TEST_TI_ASSET_BASE;
+    typeof window.TI_ASSET_BASE === "string" &&
+    window.TI_ASSET_BASE;
 
   function withDetailBase(path) {
     if (!path) return path;
@@ -281,8 +281,8 @@
 
   window.movieDetailUrlForPoster = function (posterUrl) {
     if (!posterUrl) return "";
-    if (posterUrl.indexOf("movie001.jpg") !== -1) return withBase("movie-detail.html");
-    if (posterUrl.indexOf("movie002.jpg") !== -1) return withBase("movie-detail-type2.html");
+    if (posterUrl.indexOf("movie001.jpg") !== -1) return withBase("movies/now-playing/movie-detail.html");
+    if (posterUrl.indexOf("movie002.jpg") !== -1) return withBase("movies/now-playing/movie-detail.html");
     return "";
   };
 })();

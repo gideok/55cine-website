@@ -3,355 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>55CINE — Demo</title>
+  <meta name="ti-nav-current" content="index.html" />
+  <title>55CINE 오오극장 — 55CINE 오오극장</title>
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="components/site-common.css" />
-  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/ti-fonts.css" />
+  <link rel="stylesheet" href="css/ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/ti-shell.css" />
+  <link rel="stylesheet" href="css/ti-site-footer.css" />
+  <link rel="stylesheet" href="css/ti-intro.css" />
 </head>
-<body>
-  <div id="site-header-mount"></div>
-
-  <main>
-    <section class="hero" id="hero" aria-labelledby="hero-heading">
-      <h2 id="hero-heading" class="visually-hidden" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">메인 캐러셀</h2>
-      <div class="carousel-wrap" role="region" aria-roledescription="carousel" aria-label="상영·예매·시간표·이벤트">
-        <div class="carousel-track" id="carouselTrack">
-          <div class="carousel-slide">
-            <div class="slide-nowplaying">
-              <figure>
-                <img src="images/movie001.jpg" alt="상영작 포스터 1" />
-                <figcaption>상영작 1</figcaption>
-              </figure>
-              <a class="slide-poster-link" href="movie-detail-type2.html">
-                <figure>
-                  <img src="images/movie002.jpg" alt="상영작 포스터 2" />
-                  <figcaption>상영작 2</figcaption>
-                </figure>
-              </a>
-              <figure>
-                <img src="images/movie003.jpg" alt="상영작 포스터 3" />
-                <figcaption>상영작 3</figcaption>
-              </figure>
-              <figure>
-                <img src="images/movie004.jpg" alt="상영작 포스터 4" />
-                <figcaption>상영작 4</figcaption>
-              </figure>
-            </div>
+<body class="ti">
+  <div class="ti-shell" id="tiShell">
+    <div class="ti-left">
+      <div data-ti-mobile-menu-bar></div>
+      <div class="ti-left-panel" id="tiLeftPanel">
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
+      </div>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base=""
+        aria-label="사이트 정보"
+      ></footer>
+    </div>
+    <aside class="ti-right" aria-label="키 비주얼 타이포그래피">
+      <div class="ti-type">
+        <div class="ti-type__grid">
+          <span class="ti-type__block ti-type__block--55"><span class="ti-breathe ti-breathe--a">55CINE</span></span>
+          <span class="ti-type__block ti-type__block--daegu"><span class="ti-breathe ti-breathe--b">DAEGU</span></span>
+          <span class="ti-type__block ti-type__block--oo"><span class="ti-breathe ti-breathe--c">오오극장</span></span>
+          <span class="ti-type__block ti-type__block--dg"><span class="ti-breathe ti-breathe--d">대구</span></span>
+          <span class="ti-type__block ti-type__block--indie"><span class="ti-breathe ti-breathe--e">독립영화</span></span>
+          <span class="ti-type__block ti-type__block--artko"><span class="ti-breathe ti-breathe--f">예술영화</span></span>
+          <span class="ti-type__block ti-type__block--house"><span class="ti-breathe ti-breathe--g">독립영화전용관</span></span>
+          <span class="ti-type__block ti-type__block--art"><span class="ti-breathe ti-breathe--h">ART MOVIE</span></span>
+          <span class="ti-type__block ti-type__block--local"><span class="ti-breathe ti-breathe--i">LOCAL MOVIE</span></span>
+          <div class="ti-type__block ti-type__block--dense" aria-hidden="true">
+            <span class="ti-breathe ti-breathe--j">INDIE HOUSE</span><em>·</em><span class="ti-breathe ti-breathe--k">55 SCREEN</span><em>·</em><span class="ti-breathe ti-breathe--l">DAEGU CINEMA</span>
           </div>
-          <div class="carousel-slide">
-            <div class="slide-placeholder slide-booking">
-              <strong>예매</strong>
-              <p>빠른 예매와 좌석 선택을 이용해 보세요.</p>
-            </div>
+          <div class="ti-type__block ti-type__block--kr" aria-hidden="true">
+            <span><span class="ti-breathe ti-breathe--m">상영</span></span><span><span class="ti-breathe ti-breathe--n">스크린</span></span><span><span class="ti-breathe ti-breathe--o">커뮤니티</span></span><span><span class="ti-breathe ti-breathe--g">예술</span></span><span><span class="ti-breathe ti-breathe--i">로컬</span></span>
           </div>
-          <div class="carousel-slide">
-            <div class="slide-placeholder slide-timetable">
-              <strong>시간표</strong>
-              <p>아래에서 요일별 상영 일정을 확인할 수 있습니다.</p>
-            </div>
-          </div>
-          <div class="carousel-slide">
-            <div class="slide-placeholder slide-event">
-              <strong>이벤트</strong>
-              <p>진행 중인 이벤트와 혜택을 만나보세요.</p>
-            </div>
+          <div class="ti-type__rail" aria-hidden="true">
+            <span><span class="ti-breathe ti-breathe--d">INDIE</span></span><em>·</em><span><span class="ti-breathe ti-breathe--e">CINEMA</span></span><em>·</em><span><span class="ti-breathe ti-breathe--b">SCREEN</span></span><em>·</em><span><span class="ti-breathe ti-breathe--c">COMMUNITY</span></span><em>·</em><span><span class="ti-breathe ti-breathe--h">FILM</span></span>
           </div>
         </div>
-        <div class="carousel-arrows">
-          <button type="button" id="carouselPrev" aria-label="이전 슬라이드">‹</button>
-          <button type="button" id="carouselNext" aria-label="다음 슬라이드">›</button>
-        </div>
       </div>
-      <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="슬라이드 선택"></div>
-    </section>
+    </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base=""
+      aria-label="사이트 정보"
+    ></footer>
+  </div>
 
-    <section class="section-timetable" id="timetable" aria-labelledby="timetable-title">
-      <h2 class="section-title" id="timetable-title">이번주 시간표</h2>
-      <div class="day-tabs-wrap">
-        <div class="day-tabs" id="dayTabs" role="tablist" aria-label="요일 선택"></div>
-      </div>
-      <div id="schedulePanels"></div>
-    </section>
-
-    <section class="section-menu" aria-labelledby="menu-title">
-      <h2 class="section-title" id="menu-title">메뉴</h2>
-      <div class="menu-grid">
-        <a class="menu-card" href="viewing-guide.html">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 6v12H3V9l9-6z"/><path d="M9 12h6M12 9v6"/></svg>
-          관람안내
-        </a>
-        <a class="menu-card" href="membership.html">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20v-1a8 8 0 0116 0v1"/></svg>
-          멤버십
-        </a>
-        <a class="menu-card" href="theater-info.html">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-8h6v8"/></svg>
-          극장안내
-        </a>
-        <a class="menu-card" href="daegwan.html">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-8h6v8"/></svg>
-          대관
-        </a>
-        <a class="menu-card" href="magazine-preview.html">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-          매거진<br>삼삼오오
-        </a>
-        <a class="menu-card" href="#">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
-          예매안내
-        </a>
-        <a class="menu-card" href="osinneun-gil.html">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-          오시는길
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <div id="site-footer-mount"></div>
-
-  <script defer src="components/site-chrome.js"></script>
-  <script defer src="components/site-gnb.js"></script>
-  <script defer src="components/site-font-switcher.js"></script>
-  <script defer src="components/scroll-top.js"></script>
-  <script src="data/week-schedule-data.js"></script>
+  <script src="js/ti-site-footer-include.js"></script>
   <script>
-    (function () {
-      function runDemoApp() {
-      const MOVIE_IMAGES = [
-        "images/movie001.jpg",
-        "images/movie002.jpg",
-        "images/movie003.jpg",
-        "images/movie004.jpg"
-      ];
-      const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
-
-      /* Carousel */
-      const track = document.getElementById("carouselTrack");
-      const carouselWrap = track.parentElement;
-      const dotsWrap = document.getElementById("carouselDots");
-      const slides = track.querySelectorAll(".carousel-slide");
-      let slideIndex = 0;
-      let carouselTimer = null;
-
-      function pauseCarouselAuto() {
-        if (carouselTimer) {
-          clearInterval(carouselTimer);
-          carouselTimer = null;
-        }
-      }
-
-      function resumeCarouselAutoIfAllowed() {
-        if (carouselWrap.matches(":hover")) return;
-        pauseCarouselAuto();
-        carouselTimer = setInterval(function () { goTo(slideIndex + 1); }, 6000);
-      }
-
-      slides.forEach(function (_, i) {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.setAttribute("role", "tab");
-        b.setAttribute("aria-label", "슬라이드 " + (i + 1));
-        b.addEventListener("click", function () { goTo(i); });
-        dotsWrap.appendChild(b);
-      });
-
-      const dots = dotsWrap.querySelectorAll("button");
-
-      function goTo(i) {
-        slideIndex = (i + slides.length) % slides.length;
-        track.style.transform = "translateX(-" + slideIndex * 100 + "%)";
-        dots.forEach(function (d, j) {
-          d.setAttribute("aria-current", j === slideIndex ? "true" : "false");
-        });
-      }
-
-      document.getElementById("carouselPrev").addEventListener("click", function () {
-        goTo(slideIndex - 1);
-      });
-      document.getElementById("carouselNext").addEventListener("click", function () {
-        goTo(slideIndex + 1);
-      });
-
-      goTo(0);
-      resumeCarouselAutoIfAllowed();
-
-      carouselWrap.addEventListener("mouseenter", pauseCarouselAuto);
-      carouselWrap.addEventListener("mouseleave", resumeCarouselAutoIfAllowed);
-
-      /* PC: 마우스 드래그 · 모바일: 터치 스와이프 (Pointer Events) */
-      var SWIPE_THRESHOLD_PX = 48;
-      var dragPointerId = null;
-      var dragStartX = 0;
-      var dragLastX = 0;
-      var dragActive = false;
-
-      function onCarouselPointerDown(e) {
-        if (e.pointerType === "mouse" && e.button !== 0) return;
-        if (e.target.closest && e.target.closest(".carousel-arrows button")) return;
-        dragPointerId = e.pointerId;
-        dragStartX = dragLastX = e.clientX;
-        dragActive = true;
-        pauseCarouselAuto();
-        track.style.transition = "none";
-        carouselWrap.classList.add("is-dragging");
-        try {
-          carouselWrap.setPointerCapture(e.pointerId);
-        } catch (err) {}
-      }
-
-      function onCarouselPointerMove(e) {
-        if (!dragActive || e.pointerId !== dragPointerId) return;
-        dragLastX = e.clientX;
-        var w = carouselWrap.offsetWidth || 1;
-        var pct = -slideIndex * 100 + ((dragLastX - dragStartX) / w) * 100;
-        track.style.transform = "translateX(" + pct + "%)";
-        if (e.pointerType === "touch" && Math.abs(dragLastX - dragStartX) > 8) {
-          e.preventDefault();
-        }
-      }
-
-      function onCarouselPointerUp(e) {
-        if (!dragActive || e.pointerId !== dragPointerId) return;
-        var dx = dragLastX - dragStartX;
-        dragActive = false;
-        dragPointerId = null;
-        track.style.transition = "";
-        carouselWrap.classList.remove("is-dragging");
-        try {
-          carouselWrap.releasePointerCapture(e.pointerId);
-        } catch (err2) {}
-        if (Math.abs(dx) >= SWIPE_THRESHOLD_PX) {
-          if (dx < 0) goTo(slideIndex + 1);
-          else goTo(slideIndex - 1);
-        } else {
-          goTo(slideIndex);
-        }
-        resumeCarouselAutoIfAllowed();
-      }
-
-      carouselWrap.addEventListener("pointerdown", onCarouselPointerDown);
-      carouselWrap.addEventListener("pointermove", onCarouselPointerMove, { passive: false });
-      carouselWrap.addEventListener("pointerup", onCarouselPointerUp);
-      carouselWrap.addEventListener("pointercancel", onCarouselPointerUp);
-
-      var WEEK_SCHEDULE = window.WEEK_SCHEDULE;
-      var MOVIE_POSTER_BY_TITLE = window.MOVIE_POSTER_BY_TITLE;
-      var normalizeWeekScheduleEntry = window.normalizeWeekScheduleEntry;
-      var movieDetailUrlForPoster = window.movieDetailUrlForPoster;
-      var movieDetailUrlForTitle = window.movieDetailUrlForTitle;
-
-      const dayTabs = document.getElementById("dayTabs");
-      const panelsWrap = document.getElementById("schedulePanels");
-      if (
-        WEEK_SCHEDULE &&
-        MOVIE_POSTER_BY_TITLE &&
-        normalizeWeekScheduleEntry &&
-        dayTabs &&
-        panelsWrap
-      ) {
-      const todayWeekdayLabel = WEEKDAY_LABELS[new Date().getDay()];
-      const defaultIndex = Math.max(0, WEEK_SCHEDULE.findIndex(function (day) {
-        return day.weekday === todayWeekdayLabel;
-      }));
-
-      WEEK_SCHEDULE.forEach(function (day, i) {
-        const tab = document.createElement("button");
-        tab.type = "button";
-        tab.className = "day-tab";
-        tab.setAttribute("role", "tab");
-        tab.id = "tab-day-" + i;
-        tab.setAttribute("aria-controls", "panel-day-" + i);
-        tab.textContent = day.label;
-        tab.setAttribute("aria-selected", i === defaultIndex ? "true" : "false");
-        dayTabs.appendChild(tab);
-
-        const panel = document.createElement("div");
-        panel.className = "schedule-panel" + (i === defaultIndex ? " is-active" : "");
-        panel.id = "panel-day-" + i;
-        panel.setAttribute("role", "tabpanel");
-        panel.setAttribute("aria-labelledby", "tab-day-" + i);
-        panel.hidden = i !== defaultIndex;
-
-        day.entries.forEach(function (entry, entryIndex) {
-          const row = document.createElement("div");
-          row.className = "schedule-row";
-          const scheduleEntry = normalizeWeekScheduleEntry(entry);
-          const poster =
-            MOVIE_POSTER_BY_TITLE[scheduleEntry.title] ||
-            MOVIE_POSTER_BY_TITLE[entry.title] ||
-            MOVIE_IMAGES[entryIndex % MOVIE_IMAGES.length];
-          const badgeHtml = scheduleEntry.badges
-            .map(function (badgeInfo) {
-              return (
-                '<span class="movie-status-badge ' +
-                badgeInfo.indexClass +
-                '">' +
-                badgeInfo.label +
-                "</span>"
-              );
-            })
-            .join("");
-          var detailUrl =
-            (movieDetailUrlForTitle && movieDetailUrlForTitle(scheduleEntry.title)) ||
-            (movieDetailUrlForPoster && movieDetailUrlForPoster(poster)) ||
-            "";
-          var posterInner =
-            '<img class="poster-badge" src="' +
-            poster +
-            '" alt="' +
-            scheduleEntry.title +
-            ' 포스터" width="52" height="52" />';
-          var posterBlock = detailUrl
-            ? '<a class="schedule-poster-link" href="' + detailUrl + '">' + posterInner + "</a>"
-            : posterInner;
-          var titleBlock = detailUrl
-            ? '<a class="movie-title-link movie-title-text" href="' + detailUrl + '">' + scheduleEntry.title + "</a>"
-            : '<span class="movie-title-text">' + scheduleEntry.title + "</span>";
-          row.innerHTML =
-            '<span class="slot-label" aria-label="' + (entryIndex + 1) + '회차">' + (entryIndex + 1) + "</span>" +
-            posterBlock +
-            '<span class="movie-title">' + titleBlock + badgeHtml + "</span>" +
-            '<span class="time-pill">' + scheduleEntry.time + "</span>" +
-            '<button type="button" class="booking-btn" aria-label="' +
-            scheduleEntry.title +
-            " " +
-            scheduleEntry.time +
-            ' 예매하기">예매</button>';
-          panel.appendChild(row);
-        });
-        panelsWrap.appendChild(panel);
-
-        tab.addEventListener("click", function () {
-          dayTabs.querySelectorAll(".day-tab").forEach(function (t) {
-            t.setAttribute("aria-selected", "false");
-          });
-          tab.setAttribute("aria-selected", "true");
-          panelsWrap.querySelectorAll(".schedule-panel").forEach(function (p, idx) {
-            const active = idx === i;
-            p.classList.toggle("is-active", active);
-            p.hidden = !active;
-          });
-        });
-      });
-
-      /* 초기 포커스: 오늘 탭이 보이도록 스크롤 */
-      const selected = dayTabs.querySelector('[aria-selected="true"]');
-      if (selected) {
-        selected.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      }
-      }
-      }
-
-      var needsSiteChrome = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
-      if (needsSiteChrome) {
-        document.addEventListener("sitechrome:ready", runDemoApp, { once: true });
-        document.addEventListener("sitechrome:error", runDemoApp, { once: true });
-      } else {
-        runDemoApp();
-      }
-    })();
+    window.TI_ASSET_BASE = "";
   </script>
+  <script src="data/week-schedule-data.js"></script>
+  <script src="js/ti-left-gnb-include.js"></script>
+  <script src="js/ti-mobile-menu.js"></script>
+  <script src="js/ti-scroll-top.js"></script>
+  <script src="js/ti-week-schedule.js"></script>
 </body>
 </html>

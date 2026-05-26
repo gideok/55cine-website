@@ -3,380 +3,117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>멤버십 — 55CINE 오오극장</title>
+  <meta name="ti-nav-current" content="membership.html" />
+  <title>멤버십 — 테스트 UI · 55CINE</title>
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="components/site-common.css" />
-  <style>
-    :root {
-      --mbr-max: 640px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: var(--site-font-family);
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.65;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    main {
-      background: var(--bg-elevated);
-      min-height: 100vh;
-    }
-
-    .page-membership {
-      max-width: var(--mbr-max);
-      margin: 0 auto;
-      padding: 32px 22px 64px;
-    }
-
-    .mbr-header {
-      margin-bottom: 28px;
-    }
-
-    .mbr-acc-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .mbr-acc {
-      margin: 0;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--bg-elevated);
-      box-shadow: 0 4px 16px var(--shadow);
-      overflow: hidden;
-      transition: box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-
-    .mbr-acc[open] {
-      border-color: color-mix(in srgb, var(--brand-gold) 42%, var(--line));
-      box-shadow: 0 8px 28px rgba(28, 22, 16, 0.14);
-    }
-
-    .mbr-acc summary {
-      list-style: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 20px;
-      font-size: 0.98rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--brand-ink);
-      background: linear-gradient(
-        165deg,
-        var(--bg-elevated) 0%,
-        color-mix(in srgb, var(--pill-bg) 55%, var(--bg-elevated)) 100%
-      );
-      border-radius: calc(var(--radius) - 1px);
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .mbr-acc summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .mbr-acc summary::after {
-      content: "";
-      flex-shrink: 0;
-      width: 10px;
-      height: 10px;
-      border-right: 2px solid var(--brand-bronze);
-      border-bottom: 2px solid var(--brand-bronze);
-      transform: rotate(45deg);
-      transition: transform 0.22s ease;
-      margin-top: -4px;
-    }
-
-    .mbr-acc[open] summary::after {
-      transform: rotate(-135deg);
-      margin-top: 4px;
-    }
-
-    .mbr-acc summary:hover {
-      background: linear-gradient(
-        165deg,
-        color-mix(in srgb, var(--pill-bg) 40%, var(--bg-elevated)),
-        color-mix(in srgb, var(--brand-gold-soft, #f5d78a) 22%, var(--pill-bg))
-      );
-    }
-
-    .mbr-acc summary:focus-visible {
-      outline: 2px solid var(--brand-gold);
-      outline-offset: 2px;
-    }
-
-    .mbr-acc__panel {
-      padding: 0 20px 20px;
-      border-top: 1px solid var(--line);
-      background: var(--bg-elevated);
-    }
-
-    .mbr-acc__panel-inner {
-      padding-top: 18px;
-      font-size: 0.94rem;
-      line-height: 1.65;
-      color: color-mix(in srgb, var(--text) 94%, var(--muted));
-    }
-
-    .mbr-acc__list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .mbr-acc__list > li {
-      position: relative;
-      margin-bottom: 12px;
-      padding-left: 0.85rem;
-    }
-
-    .mbr-acc__list > li:last-child {
-      margin-bottom: 0;
-    }
-
-    .mbr-acc__list > li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.55em;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--brand-gold), var(--brand-bronze));
-    }
-
-    .mbr-acc__subhead {
-      margin: 1.25rem 0 10px;
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: var(--brand-walnut);
-    }
-
-    .mbr-acc__subhead:first-child {
-      margin-top: 0;
-    }
-
-    .mbr-acc__dash-list {
-      margin: 0 0 0 0.2rem;
-      padding: 0;
-      list-style: none;
-    }
-
-    .mbr-acc__dash-list li {
-      position: relative;
-      margin-bottom: 8px;
-      padding-left: 1rem;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .mbr-acc__dash-list li:last-child {
-      margin-bottom: 0;
-    }
-
-    .mbr-acc__dash-list li::before {
-      content: "▸";
-      position: absolute;
-      left: 0;
-      color: var(--brand-bronze-deep);
-      font-size: 0.85rem;
-      font-weight: 700;
-    }
-
-    .mbr-cms-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 4px;
-      padding: 14px 20px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--line);
-      background: linear-gradient(165deg, var(--brand-ink) 0%, var(--brand-bronze-deep) 100%);
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.92rem;
-      transition: transform 0.12s ease, box-shadow 0.15s ease;
-      box-shadow: 0 4px 14px var(--shadow);
-    }
-
-    .mbr-cms-link:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px var(--shadow);
-    }
-
-    .mbr-cms-link:focus-visible {
-      outline: 2px solid var(--brand-gold);
-      outline-offset: 3px;
-    }
-
-    .mbr-cms-link::after {
-      content: "↗";
-      font-size: 1rem;
-      opacity: 0.9;
-    }
-
-    @media (max-width: 480px) {
-      .mbr-acc summary {
-        padding: 16px 16px;
-        font-size: 0.92rem;
-      }
-      .mbr-acc__panel {
-        padding: 0 16px 16px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="../components/site-common.css" />
+  <link rel="stylesheet" href="css/ti-fonts.css" />
+  <link rel="stylesheet" href="css/ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/ti-shell.css" />
+  <link rel="stylesheet" href="css/ti-site-footer.css" />
+  <link rel="stylesheet" href="css/ti-page-shell.css" />
+  <link rel="stylesheet" href="css/ti-membership.css" />
 </head>
-<body>
-  <div id="site-header-mount"></div>
-  <main>
-    <article class="page-membership">
-      <header class="section-page-head mbr-header">
-        <div class="section-page-head__row">
-          <h1 class="section-page-head__title" id="membership-page-head-title">
-            <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">멤버십</span>
-          </h1>
-          <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
-            <a href="theater-info.html">소개</a>
-            <a href="viewing-guide.html">관람 안내</a>
-            <a href="membership.html" class="is-current" aria-current="page">멤버십</a>
-            <a href="daegwan.html">대관</a>
-            <a href="osinneun-gil.html">오시는 길</a>
-            
-          </nav>
-        </div>
-        <div class="section-page-head__rule" role="presentation"></div>
-      </header>
-
-      <div class="mbr-acc-stack" id="mbrAccordion">
-        <details class="mbr-acc">
-          <summary>멤버십이 된다는 것은</summary>
-          <div class="mbr-acc__panel">
-            <div class="mbr-acc__panel-inner">
-              <ul class="mbr-acc__list">
-                <li>영화문화다양성을 확대하는 일입니다.</li>
-                <li>독립문화 소수문화를 지키는 일입니다.</li>
-                <li>다양한 취향을 존중하는 일입니다.</li>
-                <li>대기업 멀티플렉스가 아닌, 지역의 영화관을 응원하는 일입니다.</li>
-                <li>영화 창작자들의 미래를 응원하는 일입니다.</li>
-              </ul>
-            </div>
-          </div>
-        </details>
-
-        <details class="mbr-acc">
-          <summary>멤버십 혜택</summary>
-          <div class="mbr-acc__panel">
-            <div class="mbr-acc__panel-inner">
-              <p class="mbr-acc__subhead">영화 관람 혜택</p>
-              <ul class="mbr-acc__dash-list">
-                <li>월 1회 무료 관람 (월 회비 1만원 기준, 회비에 따라 조정)</li>
-                <li>매 관람 시 동반 1인 포함 1,000원 할인</li>
-              </ul>
-              <p class="mbr-acc__subhead">삼삼다방 할인 혜택</p>
-              <ul class="mbr-acc__dash-list">
-                <li>삼삼다방 음료 1,000원 할인</li>
-              </ul>
-              <p class="mbr-acc__subhead">연말정산 소득 공제</p>
-            </div>
-          </div>
-        </details>
-
-        <details class="mbr-acc">
-          <summary>멤버십 가입</summary>
-          <div class="mbr-acc__panel">
-            <div class="mbr-acc__panel-inner">
-              <a
-                class="mbr-cms-link"
-                href="https://www.ihappynanum.com/Nanum/nanum/banner/bridge/DG782YKOAT.nanum?memPayType=null&amp;loginOrga=null&amp;orgaId=null&amp;lang=null"
-                target="_blank"
-                rel="noopener noreferrer"
-              >CMS 링크</a>
-            </div>
-          </div>
-        </details>
+<body class="ti">
+  <div class="ti-shell" id="tiShell">
+    <div class="ti-left">
+      <div data-ti-mobile-menu-bar></div>
+      <div class="ti-left-panel" id="tiLeftPanel">
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
       </div>
-    </article>
-  </main>
-  <div id="site-footer-mount"></div>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base=""
+        aria-label="사이트 정보"
+      ></footer>
+    </div>
+    <aside class="ti-right ti-sub-page" aria-label="멤버십 본문">
+      <div class="ti-sub-scroll">
+        <header class="section-page-head">
+          <div class="section-page-head__row">
+            <h1 id="membership-title" class="section-page-head__title">
+              <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">멤버십</span>
+            </h1>
+            <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+              <a href="theater-info.html">소개</a>
+              <a href="viewing-guide.html">관람 안내</a>
+              <a href="membership.html" class="is-current" aria-current="page">멤버십</a>
+              <a href="daegwan.html">대관</a>
+              <a href="osinneun-gil.html">오시는 길</a>
+            </nav>
+          </div>
+          <div class="section-page-head__rule" role="presentation"></div>
+        </header>
 
-  <script defer src="components/site-chrome.js"></script>
-  <script defer src="components/site-font-switcher.js"></script>
-  <script defer src="components/scroll-top.js"></script>
+        <div class="ti-mbr-stack" id="mbrAccordion">
+          <details class="ti-mbr-acc" open>
+            <summary>멤버십이 된다는 것은</summary>
+            <div class="ti-mbr-acc__panel">
+              <div class="ti-mbr-acc__panel-inner">
+                <ul class="ti-mbr-acc__list">
+                  <li>영화문화다양성을 확대하는 일입니다.</li>
+                  <li>독립문화 소수문화를 지키는 일입니다.</li>
+                  <li>다양한 취향을 존중하는 일입니다.</li>
+                  <li>대기업 멀티플렉스가 아닌, 지역의 영화관을 응원하는 일입니다.</li>
+                  <li>영화 창작자들의 미래를 응원하는 일입니다.</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+
+          <details class="ti-mbr-acc" open>
+            <summary>멤버십 혜택</summary>
+            <div class="ti-mbr-acc__panel">
+              <div class="ti-mbr-acc__panel-inner">
+                <p class="ti-mbr-acc__subhead">영화 관람 혜택</p>
+                <ul class="ti-mbr-acc__dash-list">
+                  <li>월 1회 무료 관람 (월 회비 1만원 기준, 회비에 따라 조정)</li>
+                  <li>매 관람 시 동반 1인 포함 1,000원 할인</li>
+                </ul>
+                <p class="ti-mbr-acc__subhead">삼삼다방 할인 혜택</p>
+                <ul class="ti-mbr-acc__dash-list">
+                  <li>삼삼다방 음료 1,000원 할인</li>
+                </ul>
+                <p class="ti-mbr-acc__subhead">연말정산 소득 공제</p>
+              </div>
+            </div>
+          </details>
+
+          <section class="ti-mbr-static" aria-labelledby="mbr-join-heading">
+            <h2 class="ti-mbr-static__head" id="mbr-join-heading">멤버십 가입</h2>
+            <div class="ti-mbr-acc__panel">
+              <div class="ti-mbr-acc__panel-inner">
+                <a
+                  class="ti-mbr-cms-link"
+                  href="https://www.ihappynanum.com/Nanum/nanum/banner/bridge/DG782YKOAT.nanum?memPayType=null&amp;loginOrga=null&amp;orgaId=null&amp;lang=null"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >CMS 링크</a>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+    </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base=""
+      aria-label="사이트 정보"
+    ></footer>
+  </div>
+
+  <script src="js/ti-site-footer-include.js"></script>
   <script>
-    (function () {
-      function initGnbMenu() {
-        var gnbToggle = document.getElementById("gnbToggle");
-        var gnbPanel = document.getElementById("gnb-panel");
-        if (!gnbToggle || !gnbPanel) return;
-        gnbToggle.addEventListener("click", function () {
-          var open = gnbPanel.classList.toggle("is-open");
-          gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
-          gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
-          if (!open) {
-            gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-              li.classList.remove("is-open");
-            });
-          }
-        });
-        document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
-          depth1.addEventListener("click", function (event) {
-            if (!window.matchMedia("(max-width: 900px)").matches) return;
-            if (!gnbPanel.classList.contains("is-open")) return;
-            var item = depth1.closest(".gnb-item");
-            if (!item || !item.querySelector(".gnb-dropdown")) return;
-            event.preventDefault();
-            var wasOpen = item.classList.contains("is-open");
-            gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-              li.classList.remove("is-open");
-            });
-            if (!wasOpen) item.classList.add("is-open");
-          });
-        });
-      }
-
-      function initAccordionExclusive(root) {
-        if (!root) return;
-        root.querySelectorAll("details.mbr-acc").forEach(function (one) {
-          one.addEventListener("toggle", function () {
-            if (!one.open) return;
-            root.querySelectorAll("details.mbr-acc").forEach(function (other) {
-              if (other !== one) other.removeAttribute("open");
-            });
-          });
-        });
-      }
-
-      var needs = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
-      if (needs) {
-        document.addEventListener("sitechrome:ready", function () {
-          initGnbMenu();
-          initAccordionExclusive(document.getElementById("mbrAccordion"));
-        }, { once: true });
-        document.addEventListener("sitechrome:error", function () {
-          initGnbMenu();
-          initAccordionExclusive(document.getElementById("mbrAccordion"));
-        }, { once: true });
-      } else {
-        initGnbMenu();
-        initAccordionExclusive(document.getElementById("mbrAccordion"));
-      }
-    })();
+    window.TI_ASSET_BASE = "";
   </script>
+  <script src="data/week-schedule-data.js"></script>
+  <script src="js/ti-left-gnb-include.js"></script>
+  <script src="js/ti-mobile-menu.js"></script>
+  <script src="js/ti-scroll-top.js"></script>
+  <script src="js/ti-week-schedule.js"></script>
 </body>
 </html>

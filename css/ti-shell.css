@@ -1,0 +1,654 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body.ti {
+  font-family: "Spoqa Han Sans Neo", system-ui, sans-serif;
+  background: #e8e8e8;
+  color: #111;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* flex 대신 grid 기본: PC에서 grid 미적용 시 푸터가 flex-shrink로 좁아지는 문제 방지 */
+.ti-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: auto;
+  align-items: stretch;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* PC: 좌·우 2열만 (사이트 푸터는 ti-left 안 ti-footer--slot-pc 에서 표시, shell 직계 푸터는 hidden) */
+@media (min-width: 821px) {
+  .ti-shell {
+    grid-template-columns: clamp(300px, 38vw, 440px) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas: "ti-s-left ti-s-right";
+  }
+
+  .ti-shell > .ti-left {
+    grid-area: ti-s-left;
+    flex: unset;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  .ti-shell > .ti-right {
+    grid-area: ti-s-right;
+    align-self: stretch;
+    min-width: 0;
+    min-height: 0;
+  }
+}
+
+.ti-left {
+  flex: 0 0 clamp(300px, 38vw, 440px);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #bdbdbd;
+  background: #f2f2f2;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* data-ti-left-gnb 마운트: display:contents 는 일부 브라우저·플렉스 조합에서 ti-left-bottom 높이가 0에 가까워질 수 있어 래퍼로 둠 */
+.ti-left-gnb-mount {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  align-self: stretch;
+  width: 100%;
+}
+
+.ti-left-top {
+  flex: 0 0 auto;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid #c8c8c8;
+}
+
+.ti-home {
+  display: inline-block;
+  margin-bottom: 18px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #555;
+  text-decoration: none;
+  border-bottom: 1px solid #888;
+  padding-bottom: 2px;
+}
+
+.ti-home:hover {
+  color: #111;
+  border-color: #111;
+}
+
+.ti-gnb {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ti-gnb details {
+  border-bottom: 1px solid #c8c8c8;
+}
+
+.ti-gnb details:first-of-type {
+  border-top: 1px solid #c8c8c8;
+}
+
+.ti-gnb summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 4px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #1a1a1a;
+  user-select: none;
+}
+
+.ti-gnb summary::-webkit-details-marker {
+  display: none;
+}
+
+.ti-gnb summary::after {
+  content: "+";
+  float: right;
+  font-weight: 400;
+  color: #666;
+}
+
+.ti-gnb details[open] summary::after {
+  content: "−";
+}
+
+.ti-gnb ul {
+  margin: 0;
+  padding: 0 0 12px 12px;
+  list-style: none;
+}
+
+.ti-gnb a {
+  display: block;
+  padding: 6px 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #444;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding-left: 10px;
+  margin-left: -2px;
+}
+
+.ti-gnb a:hover {
+  color: #000;
+  border-left-color: #000;
+}
+
+.ti-gnb .ti-current {
+  font-weight: 800;
+  color: #000;
+  border-left-color: #000;
+}
+
+.ti-left-bottom {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px 24px;
+  overflow: hidden;
+}
+
+.ti-sched-title {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.ti-day-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+/* 표시 최대 길이 "12/31(금)" 기준 고정 너비 */
+.ti-day-tab {
+  --ti-day-tab-width: 5.5rem;
+  box-sizing: border-box;
+  width: var(--ti-day-tab-width);
+  min-width: var(--ti-day-tab-width);
+  max-width: var(--ti-day-tab-width);
+  flex: 0 0 var(--ti-day-tab-width);
+  padding: 6px 4px;
+  border: 1px solid #9a9a9a;
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  border-radius: 0;
+  text-align: center;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ti-day-tab[aria-selected="true"] {
+  background: #111;
+  color: #f2f2f2;
+  border-color: #111;
+}
+
+.ti-sched-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 4px;
+}
+
+.ti-panel {
+  display: none;
+}
+
+.ti-panel.is-active {
+  display: block;
+}
+
+.ti-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #c8c8c8;
+  font-size: 0.78rem;
+}
+
+.ti-row:last-child {
+  border-bottom: none;
+}
+
+.ti-slot {
+  flex: 0 0 1.5rem;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #666;
+  font-variant-numeric: tabular-nums;
+}
+
+.ti-poster {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #999;
+  /* filter: grayscale(1); */
+}
+
+.ti-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: #222;
+}
+
+.ti-title-text {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ti-title a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  min-width: 0;
+}
+
+.ti-title a:hover {
+  border-bottom-color: #111;
+}
+
+.ti-badge {
+  flex-shrink: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border: 1px solid #777;
+  color: #444;
+  border-radius: 0;
+}
+
+.ti-badge--open {
+  border-color: #8a6a2a;
+  color: #5a4518;
+  background: #f6efd8;
+}
+
+.ti-badge--end {
+  border-color: #8a5a4a;
+  color: #5a3028;
+  background: #f3e6e2;
+}
+
+.ti-badge--gv {
+  border-color: #3a6a8a;
+  color: #1f4a66;
+  background: #e3eef5;
+}
+
+.ti-badge--ct {
+  border-color: #4a5a8a;
+  color: #2a355f;
+  background: #e8ebf5;
+}
+
+.ti-time {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #333;
+}
+
+.ti-book {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.ti-book:hover {
+  background: #111;
+  color: #f2f2f2;
+}
+
+a.ti-book {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 820px) {
+  body.ti {
+    /* 10 + 48(hamburger) + 10 + 1(border) */
+    --ti-mobile-menu-bar-offset: calc(
+      69px + env(safe-area-inset-top, 0px)
+    );
+  }
+
+  .ti-shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+  }
+
+  .ti-left {
+    min-height: 0;
+  }
+
+  .ti-shell > .ti-left {
+    grid-column: 1;
+    grid-row: auto;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding-top: var(--ti-mobile-menu-bar-offset);
+    border-right: none;
+    border-bottom: 1px solid #bdbdbd;
+  }
+
+  .ti-shell > .ti-right {
+    grid-column: 1;
+    grid-row: auto;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    border-bottom: 1px solid #bdbdbd;
+  }
+
+  .ti-shell > .ti-footer.ti-footer--slot-mobile {
+    grid-column: 1;
+    grid-row: auto;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .ti-left-bottom {
+    max-height: none;
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
+  .ti-sched-scroll {
+    flex: 0 0 auto;
+    overflow-y: visible;
+    max-height: none;
+    -webkit-overflow-scrolling: auto;
+  }
+}
+
+/* --- 모바일 메뉴 바 · 좌측 패널 접기 (test 공통, 원본: ti-exhibition.css) --- */
+.ti-mobile-menu-bar {
+  display: none;
+}
+
+.ti-hamburger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #6a6a6a;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ti-hamburger:active {
+  background: #ececec;
+}
+
+.ti-hamburger__glyph {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ti-hamburger__img {
+  display: block;
+  width: auto;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.ti-hamburger__img--short {
+  height: 8px;
+}
+
+.ti-hamburger__img--mid {
+  height: 9px;
+}
+
+.ti-hamburger__img--long {
+  height: 10px;
+}
+
+.ti-shell.ti-menu-collapsed-mobile .ti-hamburger__glyph {
+  transform: rotate(180deg);
+}
+
+.ti-mobile-menu-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #444;
+}
+
+.ti-left-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 820px) {
+  .ti-mobile-menu-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px max(14px, env(safe-area-inset-right, 0px)) 10px
+      max(14px, env(safe-area-inset-left, 0px));
+    padding-top: calc(10px + env(safe-area-inset-top, 0px));
+    border-bottom: 1px solid #c8c8c8;
+    background: #ebebeb;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+  }
+
+  /* 펼침: 고정 바 아래 뷰포트 오버레이 (스크롤 위치와 무관하게 노출) */
+  .ti-left-panel {
+    position: fixed;
+    top: var(--ti-mobile-menu-bar-offset);
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 29;
+    flex: none;
+    background: #f2f2f2;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100dvh - var(--ti-mobile-menu-bar-offset));
+    opacity: 1;
+    pointer-events: auto;
+    border-bottom: 1px solid #bdbdbd;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transition:
+      max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.32s ease,
+      box-shadow 0.32s ease;
+  }
+
+  body.ti:has(#tiShell:not(.ti-menu-collapsed-mobile)) {
+    overflow: hidden;
+  }
+
+  .ti-shell:not(.ti-menu-collapsed-mobile) > .ti-left {
+    border-bottom: none;
+  }
+
+  /* 접힘: 패널이 flex-grow로 잔여 높이를 먹지 않도록 basis·grow 제거 (ti-left 빈 여백 방지) */
+  .ti-shell.ti-menu-collapsed-mobile > .ti-left {
+    min-height: 0 !important;
+    border-bottom: 1px solid #bdbdbd;
+  }
+
+  .ti-shell.ti-menu-collapsed-mobile .ti-left-panel {
+    flex: 0 1 0px;
+    min-height: 0;
+    max-height: 0;
+    opacity: 0;
+    border-bottom: none;
+    box-shadow: none;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ti-shell.ti-menu-collapsed-mobile .ti-left-gnb-mount {
+    flex: 0 0 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 821px) {
+  .ti-shell.ti-menu-collapsed-mobile .ti-left-panel {
+    max-height: none;
+    opacity: 1;
+    pointer-events: auto;
+    flex: 1 1 auto;
+  }
+
+  .ti-shell.ti-menu-collapsed-mobile .ti-hamburger__glyph {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ti-hamburger__glyph {
+    transition: none !important;
+  }
+
+  .ti-left-panel {
+    transition: none !important;
+  }
+}
+
+/* 우측 하단 맨 위로 (test 공통, ti-scroll-top.js) */
+body.ti .ti-scroll-top {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right, 0px));
+  bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  margin: 0;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid #000;
+  border-radius: 0;
+  background: #0a0a0a;
+  color: #f0f0f0;
+  box-shadow: inset 0 0 0 1px #e8e8e8;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    visibility 0.22s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+body.ti .ti-scroll-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+body.ti .ti-scroll-top:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+  box-shadow: inset 0 0 0 1px #f5f5f5;
+}
+
+body.ti .ti-scroll-top:focus-visible {
+  outline: 2px solid #f5f5f5;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.ti .ti-scroll-top {
+    transition: none;
+  }
+}

@@ -3,428 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>대관 안내 — 55CINE 오오극장</title>
+  <meta name="ti-nav-current" content="daegwan.html" />
+  <title>대관 안내 — 테스트 UI · 55CINE</title>
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="components/site-common.css" />
-  <style>
-    :root {
-      --site-font-family: "Spoqa Han Sans Neo", sans-serif;
-      --brand-gold: #f0ab2a;
-      --brand-gold-mid: #ca9128;
-      --brand-gold-soft: #f5d78a;
-      --brand-bronze: #8b6e3e;
-      --brand-bronze-deep: #5c4a2e;
-      --brand-ink: #1c1610;
-      --brand-walnut: #4a3d27;
-      --bg: #faf8f4;
-      --bg-elevated: #ffffff;
-      --text: var(--brand-ink);
-      --muted: #6b5d48;
-      --line: #e8e2d6;
-      --pill-bg: #f3efe6;
-      --accent: var(--brand-gold);
-      --accent-hover: #d99920;
-      --accent-secondary: var(--brand-bronze);
-      --shadow: rgba(28, 22, 16, 0.12);
-      --radius: 15px;
-      --radius-sm: 12px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: var(--site-font-family);
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.5;
-    }
-
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .font-test-select:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    main {
-      background: var(--bg-elevated);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .btn-menu:hover {
-      border-color: var(--brand-bronze);
-      color: var(--brand-bronze-deep);
-    }
-
-    .page-daegwan {
-      padding: 28px 24px 56px;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .daegwan-photo {
-      margin: 0 0 24px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 8px 28px var(--shadow);
-      line-height: 0;
-    }
-
-    .daegwan-photo img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .form-embed-wrap {
-      margin: 0 0 28px;
-      padding: 20px;
-      background: var(--pill-bg);
-      border: 1px dashed color-mix(in srgb, var(--brand-bronze) 45%, var(--line));
-      border-radius: var(--radius-sm);
-    }
-
-    .form-embed-wrap .form-note {
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
-    .form-embed-slot {
-      min-height: 120px;
-      border-radius: var(--radius-sm);
-      background: var(--bg-elevated);
-    }
-
-    .form-embed-slot iframe {
-      display: block;
-      width: 100%;
-      min-height: 720px;
-      border: 0;
-      border-radius: var(--radius-sm);
-    }
-
-    .daegwan-steps {
-      margin: 0 0 28px;
-      padding: 16px 18px;
-      background: color-mix(in srgb, var(--brand-gold-soft) 22%, var(--bg-elevated));
-      border-radius: var(--radius-sm);
-      border: 1px solid color-mix(in srgb, var(--brand-gold) 35%, transparent);
-      font-size: 0.92rem;
-      line-height: 1.65;
-    }
-
-    .daegwan-steps strong {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--brand-walnut);
-    }
-
-    .daegwan-steps-intro {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .proc-infographic {
-      list-style: none;
-      margin: 18px 0 0;
-      padding: 0;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px clamp(8px, 2.5vw, 12px);
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
-
-    @media (min-width: 1040px) {
-      .proc-infographic {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 360px) {
-      .proc-infographic {
-        gap: 10px 8px;
-      }
-    }
-
-    .proc-infographic__step {
-      display: block;
-      min-width: 0;
-    }
-
-    .proc-infographic__card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      text-align: center;
-      gap: 10px;
-      width: 100%;
-      max-width: 240px;
-      margin: 0 auto;
-      min-height: 118px;
-      padding: 14px 12px 12px;
-      background: linear-gradient(165deg, var(--bg-elevated) 0%, color-mix(in srgb, var(--pill-bg) 55%, var(--bg-elevated)) 100%);
-      border: 1px solid color-mix(in srgb, var(--brand-bronze) 22%, var(--line));
-      border-radius: var(--radius-sm);
-      box-shadow: 0 6px 18px var(--shadow);
-    }
-
-    .proc-infographic__badge {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--brand-ink);
-      background: linear-gradient(145deg, var(--brand-gold) 0%, var(--brand-gold-mid) 100%);
-      box-shadow: 0 2px 8px color-mix(in srgb, var(--brand-gold) 40%, transparent);
-    }
-
-    .proc-infographic__text {
-      font-size: clamp(0.76rem, 2.4vw, 0.82rem);
-      font-weight: 600;
-      line-height: 1.45;
-      color: var(--brand-walnut);
-    }
-
-    .subheading {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin: 28px 0 12px;
-      color: var(--brand-walnut);
-    }
-
-    .fee-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-    }
-
-    .fee-table th,
-    .fee-table td {
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      text-align: center;
-    }
-
-    .fee-table th {
-      background: var(--pill-bg);
-      font-weight: 600;
-    }
-
-    .facility-list {
-      margin: 0;
-      padding-left: 1.2em;
-    }
-
-    .facility-list li {
-      margin-bottom: 8px;
-    }
-
-    .contact-line {
-      margin-top: 20px;
-      font-size: 0.95rem;
-    }
-
-    .contact-line a {
-      color: var(--accent-secondary);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    @media (max-width: 640px) {
-    }
-  </style>
+  <link rel="stylesheet" href="../components/site-common.css" />
+  <link rel="stylesheet" href="css/ti-fonts.css" />
+  <link rel="stylesheet" href="css/ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/ti-shell.css" />
+  <link rel="stylesheet" href="css/ti-site-footer.css" />
+  <link rel="stylesheet" href="css/ti-page-shell.css" />
+  <link rel="stylesheet" href="css/ti-daegwan.css" />
 </head>
-<body>
-  <div id="site-header-mount"></div>
+<body class="ti">
+  <div class="ti-shell" id="tiShell">
+    <div class="ti-left">
+      <div data-ti-mobile-menu-bar></div>
+      <div class="ti-left-panel" id="tiLeftPanel">
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
+      </div>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base=""
+        aria-label="사이트 정보"
+      ></footer>
+    </div>
+    <aside class="ti-right ti-sub-page" aria-label="대관 안내 본문">
+      <div class="ti-sub-scroll">
+        <header class="section-page-head">
+          <div class="section-page-head__row">
+            <h1 id="daegwan-title" class="section-page-head__title">
+              <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">대관</span>
+            </h1>
+            <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+              <a href="theater-info.html">소개</a>
+              <a href="viewing-guide.html">관람 안내</a>
+              <a href="membership.html">멤버십</a>
+              <a href="daegwan.html" class="is-current" aria-current="page">대관</a>
+              <a href="osinneun-gil.html">오시는 길</a>
+            </nav>
+          </div>
+          <div class="section-page-head__rule" role="presentation"></div>
+        </header>
 
-  <main>
-    <article class="page-daegwan" id="daegwan" aria-labelledby="daegwan-title">
-      <header class="section-page-head">
-        <div class="section-page-head__row">
-          <h1 id="daegwan-title" class="section-page-head__title">
-            <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">대관</span>
-          </h1>
-          <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
-            <a href="theater-info.html">소개</a>
-            <a href="viewing-guide.html">관람 안내</a>
-            <a href="membership.html">멤버십</a>
-            <a href="daegwan.html" class="is-current" aria-current="page">대관</a>
-            <a href="osinneun-gil.html">오시는 길</a>
-            
-          </nav>
-        </div>
-        <div class="section-page-head__rule" role="presentation"></div>
-      </header>
+        <article id="daegwan" aria-labelledby="daegwan-title">
+          <figure class="ti-dg-photo">
+            <img
+              src="../images/daegwan.png"
+              width="960"
+              height="540"
+              alt="오오극장 대관 안내"
+              decoding="async"
+              onerror="this.onerror=null;this.src='../images/movie003.jpg';this.alt='오오극장 대관 안내(이미지 준비 중)';"
+            />
+          </figure>
 
-      <figure class="daegwan-photo">
-        <img src="images/daegwan.png" width="960" height="540" alt="오오극장 대관 안내" decoding="async" onerror="this.onerror=null;this.src='images/movie003.jpg';this.alt='오오극장 대관 안내(이미지 준비 중)';" />
-      </figure>
+          <section class="ti-dg-form-wrap" aria-label="대관 신청 구글 폼">
+            <p class="ti-dg-form-note">대관 신청은 구글 폼으로 접수합니다. 폼이 준비되면 아래 영역에 임베드합니다.</p>
+            <div id="daegwan-form-embed" class="ti-dg-form-slot">
+              <!-- 예: iframe 구글 폼 -->
+            </div>
+          </section>
 
-      <section class="form-embed-wrap" aria-label="대관 신청 구글 폼">
-        <p class="form-note">대관 신청은 구글 폼으로 접수합니다. 폼이 준비되면 아래 영역에 임베드합니다.</p>
-        <div id="daegwan-form-embed" class="form-embed-slot">
-          <!-- 예: <iframe title="대관 신청 구글 폼" src="https://docs.google.com/forms/d/e/…/viewform?embedded=true" width="640" height="960"></iframe> -->
-        </div>
-      </section>
+          <section class="ti-dg-steps" aria-labelledby="daegwan-proc-title">
+            <strong id="daegwan-proc-title">대관 절차</strong>
+            <p class="ti-dg-steps-intro">대관의 절차는 아래와 같은 방법으로 진행합니다.</p>
+            <ol class="ti-proc-infographic" aria-label="대관 절차 단계">
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">1</span>
+                  <span class="ti-proc-infographic__text">대관 신청 구글 폼 작성 후 제출</span>
+                </span>
+              </li>
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">2</span>
+                  <span class="ti-proc-infographic__text">대관운영위원회 심의</span>
+                </span>
+              </li>
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">3</span>
+                  <span class="ti-proc-infographic__text">이용승인 및 대관료 통보</span>
+                </span>
+              </li>
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">4</span>
+                  <span class="ti-proc-infographic__text">대관료 납부</span>
+                </span>
+              </li>
+              <li class="ti-proc-infographic__step">
+                <span class="ti-proc-infographic__card">
+                  <span class="ti-proc-infographic__badge" aria-hidden="true">5</span>
+                  <span class="ti-proc-infographic__text">시설이용</span>
+                </span>
+              </li>
+            </ol>
+          </section>
 
-      <section class="daegwan-steps" aria-labelledby="daegwan-proc-title">
-        <strong id="daegwan-proc-title">대관 절차</strong>
-        <p class="daegwan-steps-intro">대관의 절차는 아래와 같은 방법으로 진행합니다.</p>
-        <ol class="proc-infographic" aria-label="대관 절차 단계">
-          <li class="proc-infographic__step">
-            <span class="proc-infographic__card">
-              <span class="proc-infographic__badge" aria-hidden="true">1</span>
-              <span class="proc-infographic__text">대관 신청 구글 폼 작성 후 제출</span>
-            </span>
-          </li>
-          <li class="proc-infographic__step">
-            <span class="proc-infographic__card">
-              <span class="proc-infographic__badge" aria-hidden="true">2</span>
-              <span class="proc-infographic__text">대관운영위원회 심의</span>
-            </span>
-          </li>
-          <li class="proc-infographic__step">
-            <span class="proc-infographic__card">
-              <span class="proc-infographic__badge" aria-hidden="true">3</span>
-              <span class="proc-infographic__text">이용승인 및 대관료 통보</span>
-            </span>
-          </li>
-          <li class="proc-infographic__step">
-            <span class="proc-infographic__card">
-              <span class="proc-infographic__badge" aria-hidden="true">4</span>
-              <span class="proc-infographic__text">대관료 납부</span>
-            </span>
-          </li>
-          <li class="proc-infographic__step">
-            <span class="proc-infographic__card">
-              <span class="proc-infographic__badge" aria-hidden="true">5</span>
-              <span class="proc-infographic__text">시설이용</span>
-            </span>
-          </li>
-        </ol>
-      </section>
+          <h2 class="ti-dg-subheading">대관료</h2>
+          <table class="ti-dg-fee-table">
+            <thead>
+              <tr>
+                <th scope="col">평일 (월~금) 2시간 기준</th>
+                <th scope="col">주말(토,일) 공휴일 2시간 기준</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>33만원 (세금포함)</td>
+                <td>44만원 (세금포함)</td>
+              </tr>
+            </tbody>
+          </table>
 
-      <h2 class="subheading">대관료</h2>
-      <table class="fee-table">
-        <thead>
-          <tr>
-            <th scope="col">평일 (월~금) 2시간 기준</th>
-            <th scope="col">주말(토,일) 공휴일 2시간 기준</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>33만원 (세금포함)</td>
-            <td>44만원 (세금포함)</td>
-          </tr>
-        </tbody>
-      </table>
+          <h2 class="ti-dg-subheading">시설환경</h2>
+          <ul class="ti-dg-facility-list">
+            <li>좌석수 55석(일반좌석 51석 + 휠체어 좌석 4석)</li>
+            <li>각종 영상 파일 상영이 가능한 영사 시스템</li>
+            <li>무선마이크 3, 유선마이크 1 / 행사용 스피커 2조</li>
+            <li>간이 테이블 (3개), 의자(6개)</li>
+          </ul>
 
-      <h2 class="subheading">시설환경</h2>
-      <ul class="facility-list">
-        <li>좌석수 55석(일반좌석 51석 + 휠체어 좌석 4석)</li>
-        <li>각종 영상 파일 상영이 가능한 영사 시스템</li>
-        <li>무선마이크 3, 유선마이크 1 / 행사용 스피커 2조</li>
-        <li>간이 테이블 (3개), 의자(6개)</li>
-      </ul>
+          <p class="ti-dg-contact">
+            문의 :
+            <a href="tel:0534253553">053-425-3553</a>
+            /
+            <a href="mailto:55cinema@daum.net">55cinema@daum.net</a>
+          </p>
+        </article>
 
-      <p class="contact-line">
-        문의 :
-        <a href="tel:0534253553">053-425-3553</a>
-        /
-        <a href="mailto:55cinema@daum.net">55cinema@daum.net</a>
-      </p>
-    </article>
-  </main>
+      </div>
+    </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base=""
+      aria-label="사이트 정보"
+    ></footer>
+  </div>
 
-  <div id="site-footer-mount"></div>
-
-  <script defer src="components/site-chrome.js"></script>
-  <script defer src="components/site-font-switcher.js"></script>
-  <script defer src="components/scroll-top.js"></script>
+  <script src="js/ti-site-footer-include.js"></script>
   <script>
-    (function () {
-      function initGnb() {
-        var gnbToggle = document.getElementById("gnbToggle");
-        var gnbPanel = document.getElementById("gnb-panel");
-        if (gnbToggle && gnbPanel) {
-          gnbToggle.addEventListener("click", function () {
-            var open = gnbPanel.classList.toggle("is-open");
-            gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
-            gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
-            if (!open) {
-              gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-                li.classList.remove("is-open");
-              });
-            }
-          });
-          gnbPanel.querySelectorAll(".gnb-depth2 a").forEach(function (a) {
-            a.addEventListener("click", function () {
-              if (window.matchMedia("(max-width: 900px)").matches) {
-                gnbPanel.classList.remove("is-open");
-                gnbToggle.setAttribute("aria-expanded", "false");
-                gnbToggle.setAttribute("aria-label", "메뉴 열기");
-                gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-                  li.classList.remove("is-open");
-                });
-              }
-            });
-          });
-        }
-
-        document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
-          depth1.addEventListener("click", function (e) {
-            if (!window.matchMedia("(max-width: 900px)").matches) return;
-            var panel = document.getElementById("gnb-panel");
-            if (!panel || !panel.classList.contains("is-open")) return;
-            var item = depth1.closest(".gnb-item");
-            if (!item || !item.querySelector(".gnb-dropdown")) return;
-            e.preventDefault();
-            var wasOpen = item.classList.contains("is-open");
-            document.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-              li.classList.remove("is-open");
-            });
-            if (!wasOpen) item.classList.add("is-open");
-          });
-        });
-      }
-
-      var needsSiteChrome = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
-      if (needsSiteChrome) {
-        document.addEventListener("sitechrome:ready", initGnb, { once: true });
-        document.addEventListener("sitechrome:error", initGnb, { once: true });
-      } else {
-        initGnb();
-      }
-    })();
+    window.TI_ASSET_BASE = "";
   </script>
+  <script src="data/week-schedule-data.js"></script>
+  <script src="js/ti-left-gnb-include.js"></script>
+  <script src="js/ti-mobile-menu.js"></script>
+  <script src="js/ti-scroll-top.js"></script>
+  <script src="js/ti-week-schedule.js"></script>
 </body>
 </html>

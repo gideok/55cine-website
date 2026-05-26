@@ -3,514 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>소개 — 55CINE 오오극장</title>
+  <meta name="ti-nav-current" content="theater-info.html" />
+  <title>소개 — 테스트 UI · 55CINE</title>
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="components/site-common.css" />
-  <style>
-    :root {
-      --site-font-family: "Spoqa Han Sans Neo", sans-serif;
-      --brand-gold: #f0ab2a;
-      --brand-gold-mid: #ca9128;
-      --brand-gold-soft: #f5d78a;
-      --brand-bronze: #8b6e3e;
-      --brand-bronze-deep: #5c4a2e;
-      --brand-ink: #1c1610;
-      --brand-walnut: #4a3d27;
-      --bg: #faf8f4;
-      --bg-elevated: #ffffff;
-      --text: var(--brand-ink);
-      --muted: #6b5d48;
-      --line: #e8e2d6;
-      --pill-bg: #f3efe6;
-      --accent: var(--brand-gold);
-      --shadow: rgba(28, 22, 16, 0.12);
-      --radius: 15px;
-      --radius-sm: 12px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: var(--site-font-family);
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.5;
-    }
-
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    main {
-      background: var(--bg-elevated);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .btn-menu:hover {
-      border-color: var(--brand-bronze);
-      color: var(--brand-bronze-deep);
-    }
-
-    .page-theater {
-      padding: 28px 24px 56px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    .theater-lead-box {
-      margin: 0 0 28px;
-      padding: 24px 22px;
-      border-radius: var(--radius);
-      border: 1px solid color-mix(in srgb, var(--brand-gold) 28%, var(--line));
-      background: linear-gradient(
-        165deg,
-        var(--bg-elevated) 0%,
-        color-mix(in srgb, var(--pill-bg) 75%, var(--bg-elevated)) 55%,
-        color-mix(in srgb, var(--brand-gold-soft) 15%, var(--pill-bg)) 100%
-      );
-      box-shadow: 0 8px 28px var(--shadow);
-      text-align: center;
-    }
-
-    .theater-lead-box__eq {
-      margin: 0 0 12px;
-      font-size: clamp(1.15rem, 3.5vw, 1.45rem);
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      color: var(--brand-walnut);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .theater-lead-box__tagline {
-      margin: 0 0 8px;
-      font-size: clamp(1.02rem, 2.8vw, 1.2rem);
-      font-weight: 800;
-      color: var(--brand-ink);
-      line-height: 1.35;
-    }
-
-    .theater-lead-box__sub {
-      margin: 0;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--muted);
-    }
-
-    .theater-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .theater-grid__item {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-      min-height: 100px;
-      padding: 14px 14px 16px;
-      margin: 0;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
-      background: linear-gradient(180deg, var(--bg-elevated) 0%, color-mix(in srgb, var(--pill-bg) 42%, var(--bg-elevated)) 100%);
-      box-shadow: 0 4px 14px var(--shadow);
-      cursor: pointer;
-      font-family: inherit;
-      text-align: left;
-      color: var(--text);
-      transition:
-        border-color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.12s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .theater-grid__item:hover {
-      border-color: color-mix(in srgb, var(--brand-gold) 45%, var(--line));
-      box-shadow: 0 8px 22px rgba(28, 22, 16, 0.14);
-      transform: translateY(-2px);
-    }
-
-    .theater-grid__item:focus-visible {
-      outline: 2px solid var(--brand-gold-mid);
-      outline-offset: 3px;
-    }
-
-    .theater-grid__mark {
-      flex-shrink: 0;
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      color: var(--brand-bronze-deep);
-    }
-
-    .theater-grid__title {
-      font-size: 0.88rem;
-      font-weight: 800;
-      line-height: 1.4;
-      color: var(--brand-walnut);
-      word-break: keep-all;
-      overflow-wrap: break-word;
-    }
-
-    @media (max-width: 900px) {
-      .theater-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 420px) {
-      .theater-grid__item {
-        min-height: 92px;
-        padding: 12px;
-      }
-      .theater-grid__title {
-        font-size: 0.82rem;
-      }
-    }
-
-    body.theater-modal-open {
-      overflow: hidden;
-    }
-
-    .theater-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
-        max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
-    }
-
-    .theater-modal[hidden] {
-      display: none;
-    }
-
-    .theater-modal__backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(28, 22, 16, 0.45);
-      backdrop-filter: blur(4px);
-      cursor: pointer;
-    }
-
-    .theater-modal__panel {
-      position: relative;
-      z-index: 1;
-      width: min(100%, 520px);
-      max-height: min(78vh, 640px);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: var(--bg-elevated);
-      box-shadow: 0 20px 60px rgba(28, 22, 16, 0.28);
-    }
-
-    .theater-modal__head {
-      flex-shrink: 0;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 18px 12px;
-      border-bottom: 1px solid var(--line);
-      background: color-mix(in srgb, var(--pill-bg) 35%, var(--bg-elevated));
-    }
-
-    .theater-modal__panel-title {
-      margin: 0;
-      font-size: 1.02rem;
-      font-weight: 800;
-      line-height: 1.35;
-      color: var(--brand-walnut);
-      word-break: keep-all;
-    }
-
-    .theater-modal__close {
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: -8px -6px 0 0;
-      border: none;
-      border-radius: 10px;
-      background: transparent;
-      color: var(--muted);
-      font-size: 1.5rem;
-      line-height: 1;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .theater-modal__close:hover {
-      background: color-mix(in srgb, var(--pill-bg) 100%, var(--line));
-      color: var(--brand-ink);
-    }
-
-    .theater-modal__close:focus-visible {
-      outline: 2px solid var(--brand-gold);
-      outline-offset: 2px;
-    }
-
-    .theater-modal__body {
-      margin: 0;
-      padding: 16px 18px 22px;
-      overflow-y: auto;
-      font-size: 0.94rem;
-      line-height: 1.65;
-      color: color-mix(in srgb, var(--text) 94%, var(--muted));
-    }
-  </style>
+  <link rel="stylesheet" href="../components/site-common.css" />
+  <link rel="stylesheet" href="css/ti-fonts.css" />
+  <link rel="stylesheet" href="css/ti-fonts-display.css" />
+  <link rel="stylesheet" href="css/ti-shell.css" />
+  <link rel="stylesheet" href="css/ti-site-footer.css" />
+  <link rel="stylesheet" href="css/ti-page-shell.css" />
+  <link rel="stylesheet" href="css/ti-theater-info.css" />
 </head>
-<body>
-  <div id="site-header-mount"></div>
-
-  <main>
-    <article class="page-theater" id="theater-info" aria-labelledby="theater-info-title">
-      <header class="section-page-head">
-        <div class="section-page-head__row">
-          <h1 id="theater-info-title" class="section-page-head__title">
-            <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">소개</span>
-          </h1>
-          <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
-            <a href="theater-info.html" class="is-current" aria-current="page">소개</a>
-            <a href="viewing-guide.html">관람 안내</a>
-            <a href="membership.html">멤버십</a>
-            <a href="daegwan.html">대관</a>
-            <a href="osinneun-gil.html">오시는 길</a>
-            
-          </nav>
-        </div>
-        <div class="section-page-head__rule" role="presentation"></div>
-      </header>
-
-      <aside class="theater-lead-box" aria-label="오오극장 슬로건">
-        <p class="theater-lead-box__eq">1+2+3+4+5+6+7+8+9+10=55</p>
-        <p class="theater-lead-box__tagline">하나부터 열까지 다 좋은 영화관!</p>
-        <p class="theater-lead-box__sub">독립영화전용관 오오극장의 10가지 특별함</p>
-      </aside>
-
-      <div id="theaterFeatureGrid" class="theater-grid"></div>
-    </article>
-  </main>
-
-  <div id="theaterModal" class="theater-modal" hidden aria-hidden="true">
-    <div class="theater-modal__backdrop" data-theater-modal-backdrop tabindex="-1" aria-hidden="true"></div>
-    <div
-      class="theater-modal__panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="theaterModalTitle"
-      tabindex="-1"
-    >
-      <div class="theater-modal__head">
-        <h2 id="theaterModalTitle" class="theater-modal__panel-title"></h2>
-        <button type="button" class="theater-modal__close" id="theaterModalClose" aria-label="닫기">×</button>
+<body class="ti">
+  <div class="ti-shell" id="tiShell">
+    <div class="ti-left">
+      <div data-ti-mobile-menu-bar></div>
+      <div class="ti-left-panel" id="tiLeftPanel">
+        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
       </div>
-      <p id="theaterModalBody" class="theater-modal__body"></p>
+      <footer
+        class="ti-footer ti-footer--slot-pc site-footer"
+        data-ti-site-footer
+        data-ti-asset-base=""
+        aria-label="사이트 정보"
+      ></footer>
     </div>
+    <aside class="ti-right ti-theater-info" aria-label="소개 본문">
+      <div class="ti-sub-scroll">
+        <header class="section-page-head">
+          <div class="section-page-head__row">
+            <h1 id="theater-info-title" class="section-page-head__title">
+              <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">소개</span>
+            </h1>
+            <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+              <a href="theater-info.html" class="is-current" aria-current="page">소개</a>
+              <a href="viewing-guide.html">관람 안내</a>
+              <a href="membership.html">멤버십</a>
+              <a href="daegwan.html">대관</a>
+              <a href="osinneun-gil.html">오시는 길</a>
+            </nav>
+          </div>
+          <div class="section-page-head__rule" role="presentation"></div>
+        </header>
+
+        <aside class="ti-theater-lead" aria-label="오오극장 슬로건">
+          <p class="ti-theater-lead__eq">1+2+3+4+5+6+7+8+9+10=55</p>
+          <p class="ti-theater-lead__tagline">하나부터 열까지 다 좋은 영화관!</p>
+          <p class="ti-theater-lead__sub">독립영화전용관 오오극장의 10가지 특별함</p>
+        </aside>
+
+        <article class="ti-theater-features" aria-labelledby="theater-features-heading">
+          <h2 id="theater-features-heading" class="visually-hidden">10가지 특별함</h2>
+
+          <section class="ti-theater-item" aria-labelledby="tf-1">
+            <h3 class="ti-theater-item__head" id="tf-1">+1. 지역 최초, 대구 유일의 독립영화전용관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 대구 유일의 독립영화전용관으로, 2015년 서울을 제외한 지역에서 처음으로 설립된 독립영화전용관입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-2">
+            <h3 class="ti-theater-item__head" id="tf-2">+2. 함께 만들어가는 공공의 영화관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 독립영화에 갈증을 느낀 시민들의 자발적인 모금으로 탄생했습니다. 영리 추구를 넘어 영화문화의 다양성을 확장하고 그 저변을 넓혀가는 공공의 영화관으로 자리매김하고자 합니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-3">
+            <h3 class="ti-theater-item__head" id="tf-3">+3. 로컬 시네마</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 극장상영의 기회가 상대적으로 적은 지역의 독립영화, 단편영화, 다큐멘터리 등을 가장 먼저 그리고 집중적으로 소개하는 지역영화 중심의 영화관입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-4">
+            <h3 class="ti-theater-item__head" id="tf-4">+4. 커뮤니티 시네마</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 ‘커뮤니티 시네마’라는 가치를 바탕으로 관객과 다양한 공동체가 함께 상영 프로그램을 만들어가는 ‘영화 공동체’를 지향합니다. 또한 감독과의 대화, 시네토크, 강연 등을 통해 관객과 지속적으로 소통하고자 합니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-5">
+            <h3 class="ti-theater-item__head" id="tf-5">+5. 시민 제작자들과 함께하는 영화관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 청소년, 주부, 노인, 장애인, 이주민 등 다양한 시민들이 만든 영상과 영화를 꾸준히 상영하는 누구에게나 열려 있는 문턱 낮은 영화관입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-6">
+            <h3 class="ti-theater-item__head" id="tf-6">+6. 커뮤니티 카페 ‘삼삼다방’</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 커뮤니티 카페 ‘삼삼다방’을 함께 운영합니다. 이곳은 영화인과 관객이 자유롭게 교류하는 소통의 공간이자 세미나, 영화 감상 모임, 자유 토론 등이 이루어지는 열린 교육의 장입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-7">
+            <h3 class="ti-theater-item__head" id="tf-7">+7. 취향의 공동체, 다채로운 기획전</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 영화 장르만큼이나 다양한 취향이 존중되고 공존하는 공간입니다. 다큐멘터리, 애니메이션, 실험영화 등 폭넓은 프로그램을 통해 관객의 다양한 취향을 담아내는 기획전을 선보입니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-8">
+            <h3 class="ti-theater-item__head" id="tf-8">+8. 독립·자립·인디 예술과 함께하는 영화관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 영화예술을 넘어 지역의 독립·자립·인디 예술 공연과 전시가 펼쳐지는 대안적 복합문화공간입니다. 다양한 저변문화의 흐름을 접하고 예술가들과 만날 수 있는 연결의 장이 되고자 합니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-9">
+            <h3 class="ti-theater-item__head" id="tf-9">+9. 무한한 가능성의 자유로운 영화관</h3>
+            <p class="ti-theater-item__body">
+              오오극장은 예술의 본질인 표현의 자유를 최우선으로 존중합니다. 영화의 무한한 상상력과 가능성을 제한하는 어떠한 경계로부터도 자유로운 공간을 지향합니다.
+            </p>
+          </section>
+          <hr class="ti-theater-divider" aria-hidden="true" />
+
+          <section class="ti-theater-item" aria-labelledby="tf-10">
+            <h3 class="ti-theater-item__head" id="tf-10">+10. 그리고 어떻게 성장할지 우리도 알 수 없는 영화관</h3>
+            <p class="ti-theater-item__body">
+              낡은 시네마테크와 작은 극장 구석에서 시작된 독립영화는 한국 영화의 중요한 토양이 되어 왔습니다. 오오극장은 대구 중구 수동에서 작은 시작을 내딛지만 대구를 넘어 한국 영화문화의 발전에 의미 있는 밑거름이 되도록 꾸준히 성장해 나가겠습니다.
+            </p>
+          </section>
+        </article>
+      </div>
+    </aside>
+    <footer
+      class="ti-footer ti-footer--slot-mobile site-footer"
+      data-ti-site-footer
+      data-ti-asset-base=""
+      aria-label="사이트 정보"
+    ></footer>
   </div>
 
-  <div id="site-footer-mount"></div>
-
-  <script defer src="components/site-chrome.js"></script>
-  <script defer src="components/site-font-switcher.js"></script>
-  <script defer src="components/scroll-top.js"></script>
+  <script src="js/ti-site-footer-include.js"></script>
   <script>
-    (function () {
-      var THEATER_FEATURES = [
-        {
-          title: "지역 최초, 대구 유일의 독립영화전용관",
-          body:
-            "오오극장은 대구 유일의 독립영화전용관으로, 2015년 서울을 제외한 지역에서 처음으로 설립된 독립영화전용관입니다.",
-        },
-        {
-          title: "함께 만들어가는 공공의 영화관",
-          body:
-            "오오극장은 독립영화에 갈증을 느낀 시민들의 자발적인 모금으로 탄생했습니다. 영리 추구를 넘어 영화문화의 다양성을 확장하고 그 저변을 넓혀가는 공공의 영화관으로 자리매김하고자 합니다.",
-        },
-        {
-          title: "로컬 시네마",
-          body:
-            "오오극장은 극장상영의 기회가 상대적으로 적은 지역의 독립영화, 단편영화, 다큐멘터리 등을 가장 먼저 그리고 집중적으로 소개하는 지역영화 중심의 영화관입니다.",
-        },
-        {
-          title: "커뮤니티 시네마",
-          body:
-            "오오극장은 ‘커뮤니티 시네마’라는 가치를 바탕으로 관객과 다양한 공동체가 함께 상영 프로그램을 만들어가는 ‘영화 공동체’를 지향합니다. 또한 감독과의 대화, 시네토크, 강연 등을 통해 관객과 지속적으로 소통하고자 합니다.",
-        },
-        {
-          title: "시민 제작자들과 함께하는 영화관",
-          body:
-            "오오극장은 청소년, 주부, 노인, 장애인, 이주민 등 다양한 시민들이 만든 영상과 영화를 꾸준히 상영하는 누구에게나 열려 있는 문턱 낮은 영화관입니다.",
-        },
-        {
-          title: "커뮤니티 카페 ‘삼삼다방’",
-          body:
-            "오오극장은 커뮤니티 카페 ‘삼삼다방’을 함께 운영합니다. 이곳은 영화인과 관객이 자유롭게 교류하는 소통의 공간이자 세미나, 영화 감상 모임, 자유 토론 등이 이루어지는 열린 교육의 장입니다.",
-        },
-        {
-          title: "취향의 공동체, 다채로운 기획전",
-          body:
-            "오오극장은 영화 장르만큼이나 다양한 취향이 존중되고 공존하는 공간입니다. 다큐멘터리, 애니메이션, 실험영화 등 폭넓은 프로그램을 통해 관객의 다양한 취향을 담아내는 기획전을 선보입니다.",
-        },
-        {
-          title: "독립·자립·인디 예술과 함께하는 영화관",
-          body:
-            "오오극장은 영화예술을 넘어 지역의 독립·자립·인디 예술 공연과 전시가 펼쳐지는 대안적 복합문화공간입니다. 다양한 저변문화의 흐름을 접하고 예술가들과 만날 수 있는 연결의 장이 되고자 합니다.",
-        },
-        {
-          title: "무한한 가능성의 자유로운 영화관",
-          body:
-            "오오극장은 예술의 본질인 표현의 자유를 최우선으로 존중합니다. 영화의 무한한 상상력과 가능성을 제한하는 어떠한 경계로부터도 자유로운 공간을 지향합니다.",
-        },
-        {
-          title: "그리고 어떻게 성장할지 우리도 알 수 없는 영화관",
-          body:
-            "낡은 시네마테크와 작은 극장 구석에서 시작된 독립영화는 한국 영화의 중요한 토양이 되어 왔습니다. 오오극장은 대구 중구 수동에서 작은 시작을 내딛지만 대구를 넘어 한국 영화문화의 발전에 의미 있는 밑거름이 되도록 꾸준히 성장해 나가겠습니다.",
-        },
-      ];
-
-      var grid = document.getElementById("theaterFeatureGrid");
-      var modal = document.getElementById("theaterModal");
-      var modalBackdrop = modal && modal.querySelector("[data-theater-modal-backdrop]");
-      var modalTitle = document.getElementById("theaterModalTitle");
-      var modalBody = document.getElementById("theaterModalBody");
-      var modalClose = document.getElementById("theaterModalClose");
-      var lastFocus = null;
-
-      function openModal(index) {
-        var item = THEATER_FEATURES[index];
-        if (!item || !modal || !modalTitle || !modalBody) return;
-        lastFocus = document.activeElement;
-        modalTitle.textContent = "+" + (index + 1) + ". " + item.title;
-        modalBody.textContent = item.body;
-        modal.hidden = false;
-        modal.setAttribute("aria-hidden", "false");
-        document.body.classList.add("theater-modal-open");
-        modalClose.focus();
-      }
-
-      function closeModal() {
-        if (!modal) return;
-        modal.hidden = true;
-        modal.setAttribute("aria-hidden", "true");
-        document.body.classList.remove("theater-modal-open");
-        if (lastFocus && typeof lastFocus.focus === "function") {
-          lastFocus.focus();
-        }
-        lastFocus = null;
-      }
-
-      if (grid) {
-        THEATER_FEATURES.forEach(function (item, i) {
-          var btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "theater-grid__item";
-          btn.setAttribute("aria-haspopup", "dialog");
-          var mark = document.createElement("span");
-          mark.className = "theater-grid__mark";
-          mark.textContent = "+" + (i + 1) + ".";
-          var title = document.createElement("span");
-          title.className = "theater-grid__title";
-          title.textContent = item.title;
-          btn.appendChild(mark);
-          btn.appendChild(title);
-          btn.addEventListener("click", function () {
-            openModal(i);
-          });
-          grid.appendChild(btn);
-        });
-      }
-
-      if (modalBackdrop) {
-        modalBackdrop.addEventListener("click", closeModal);
-      }
-      if (modalClose) {
-        modalClose.addEventListener("click", closeModal);
-      }
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && modal && !modal.hidden) {
-          closeModal();
-        }
-      });
-
-      function initGnb() {
-        var gnbToggle = document.getElementById("gnbToggle");
-        var gnbPanel = document.getElementById("gnb-panel");
-        if (gnbToggle && gnbPanel) {
-          gnbToggle.addEventListener("click", function () {
-            var open = gnbPanel.classList.toggle("is-open");
-            gnbToggle.setAttribute("aria-expanded", open ? "true" : "false");
-            gnbToggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
-            if (!open) {
-              gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-                li.classList.remove("is-open");
-              });
-            }
-          });
-          gnbPanel.querySelectorAll(".gnb-depth2 a").forEach(function (a) {
-            a.addEventListener("click", function () {
-              if (window.matchMedia("(max-width: 900px)").matches) {
-                gnbPanel.classList.remove("is-open");
-                gnbToggle.setAttribute("aria-expanded", "false");
-                gnbToggle.setAttribute("aria-label", "메뉴 열기");
-                gnbPanel.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-                  li.classList.remove("is-open");
-                });
-              }
-            });
-          });
-        }
-
-        document.querySelectorAll(".gnb-item > .gnb-depth1").forEach(function (depth1) {
-          depth1.addEventListener("click", function (e) {
-            if (!window.matchMedia("(max-width: 900px)").matches) return;
-            var panel = document.getElementById("gnb-panel");
-            if (!panel || !panel.classList.contains("is-open")) return;
-            var item = depth1.closest(".gnb-item");
-            if (!item || !item.querySelector(".gnb-dropdown")) return;
-            e.preventDefault();
-            var wasOpen = item.classList.contains("is-open");
-            document.querySelectorAll(".gnb-item.is-open").forEach(function (li) {
-              li.classList.remove("is-open");
-            });
-            if (!wasOpen) item.classList.add("is-open");
-          });
-        });
-      }
-
-      var needsSiteChrome = document.getElementById("site-header-mount") || document.getElementById("site-footer-mount");
-      if (needsSiteChrome) {
-        document.addEventListener("sitechrome:ready", initGnb, { once: true });
-        document.addEventListener("sitechrome:error", initGnb, { once: true });
-      } else {
-        initGnb();
-      }
-    })();
+    window.TI_ASSET_BASE = "";
   </script>
+  <script src="data/week-schedule-data.js"></script>
+  <script src="js/ti-left-gnb-include.js"></script>
+  <script src="js/ti-mobile-menu.js"></script>
+  <script src="js/ti-scroll-top.js"></script>
+  <script src="js/ti-week-schedule.js"></script>
 </body>
 </html>
