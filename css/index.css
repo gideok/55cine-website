@@ -353,6 +353,7 @@ a {
   font-weight: 600;
   color: var(--accent-secondary);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   min-width: 0;
@@ -387,6 +388,18 @@ a {
   background: color-mix(in srgb, var(--brand-bronze) 18%, var(--bg-elevated));
   color: var(--brand-bronze-deep);
   border-color: color-mix(in srgb, var(--brand-bronze) 45%, transparent);
+}
+
+.movie-status-badge--gv {
+  background: color-mix(in srgb, #3a7ab8 16%, var(--bg-elevated));
+  color: #1f4a66;
+  border-color: color-mix(in srgb, #3a7ab8 45%, transparent);
+}
+
+.movie-status-badge--ct {
+  background: color-mix(in srgb, #4a5a9a 16%, var(--bg-elevated));
+  color: #2a355f;
+  border-color: color-mix(in srgb, #4a5a9a 45%, transparent);
 }
 
 .time-pill {

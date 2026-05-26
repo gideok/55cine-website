@@ -29,10 +29,10 @@
 
   var WEEK_SCHEDULE = window.WEEK_SCHEDULE;
   var MOVIE_POSTER_BY_TITLE = window.MOVIE_POSTER_BY_TITLE;
-  var parseMovieTitleWithStatus = window.parseMovieTitleWithStatus;
+  var normalizeWeekScheduleEntry = window.normalizeWeekScheduleEntry;
   var movieDetailUrlForPoster = window.movieDetailUrlForPoster;
   var movieDetailUrlForTitle = window.movieDetailUrlForTitle;
-  if (!WEEK_SCHEDULE || !MOVIE_POSTER_BY_TITLE || !parseMovieTitleWithStatus) {
+  if (!WEEK_SCHEDULE || !MOVIE_POSTER_BY_TITLE || !normalizeWeekScheduleEntry) {
     return;
   }
 
@@ -86,13 +86,13 @@
       panel.hidden = i !== defaultIndex;
 
       day.entries.forEach(function (entry, entryIndex) {
-        var titleInfo = parseMovieTitleWithStatus(entry.title);
+        var scheduleEntry = normalizeWeekScheduleEntry(entry);
         var poster =
+          MOVIE_POSTER_BY_TITLE[scheduleEntry.title] ||
           MOVIE_POSTER_BY_TITLE[entry.title] ||
-          MOVIE_POSTER_BY_TITLE[titleInfo.cleanTitle] ||
           MOVIE_IMAGES[entryIndex % MOVIE_IMAGES.length];
         var detailUrl = resolveMovieDetailUrl(
-          (movieDetailUrlForTitle && movieDetailUrlForTitle(entry.title)) ||
+          (movieDetailUrlForTitle && movieDetailUrlForTitle(scheduleEntry.title)) ||
             (movieDetailUrlForPoster && movieDetailUrlForPoster(poster)) ||
             ""
         );
@@ -108,7 +108,7 @@
         var img = document.createElement("img");
         img.className = "ti-poster";
         img.src = poster;
-        img.alt = entry.title + " 포스터";
+        img.alt = scheduleEntry.title + " 포스터";
         img.width = 40;
         img.height = 40;
 
@@ -119,22 +119,22 @@
         if (detailUrl) {
           var la = document.createElement("a");
           la.href = detailUrl;
-          la.textContent = titleInfo.cleanTitle;
+          la.textContent = scheduleEntry.title;
           titleText.appendChild(la);
         } else {
-          titleText.textContent = titleInfo.cleanTitle;
+          titleText.textContent = scheduleEntry.title;
         }
         titleWrap.appendChild(titleText);
-        if (titleInfo.badgeLabel) {
+        scheduleEntry.badges.forEach(function (badgeInfo) {
           var badge = document.createElement("span");
-          badge.className = "ti-badge";
-          badge.textContent = titleInfo.badgeLabel;
+          badge.className = "ti-badge" + (badgeInfo.tiClass ? " " + badgeInfo.tiClass : "");
+          badge.textContent = badgeInfo.label;
           titleWrap.appendChild(badge);
-        }
+        });
 
         var timeEl = document.createElement("span");
         timeEl.className = "ti-time";
-        timeEl.textContent = entry.time;
+        timeEl.textContent = scheduleEntry.time;
 
         var bookUrl =
           "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059";
@@ -143,7 +143,7 @@
         book.href = bookUrl;
         book.target = "_blank";
         book.rel = "noopener noreferrer";
-        book.setAttribute("aria-label", entry.title + " " + entry.time + " 예매하기");
+        book.setAttribute("aria-label", scheduleEntry.title + " " + scheduleEntry.time + " 예매하기");
         book.textContent = "예매";
 
         var posterWrap = detailUrl ? document.createElement("a") : document.createElement("span");

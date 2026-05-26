@@ -238,7 +238,7 @@
 
       var WEEK_SCHEDULE = window.WEEK_SCHEDULE;
       var MOVIE_POSTER_BY_TITLE = window.MOVIE_POSTER_BY_TITLE;
-      var parseMovieTitleWithStatus = window.parseMovieTitleWithStatus;
+      var normalizeWeekScheduleEntry = window.normalizeWeekScheduleEntry;
       var movieDetailUrlForPoster = window.movieDetailUrlForPoster;
       var movieDetailUrlForTitle = window.movieDetailUrlForTitle;
 
@@ -247,7 +247,7 @@
       if (
         WEEK_SCHEDULE &&
         MOVIE_POSTER_BY_TITLE &&
-        parseMovieTitleWithStatus &&
+        normalizeWeekScheduleEntry &&
         dayTabs &&
         panelsWrap
       ) {
@@ -277,28 +277,48 @@
         day.entries.forEach(function (entry, entryIndex) {
           const row = document.createElement("div");
           row.className = "schedule-row";
-          const titleInfo = parseMovieTitleWithStatus(entry.title);
-          const poster = MOVIE_POSTER_BY_TITLE[entry.title] || MOVIE_POSTER_BY_TITLE[titleInfo.cleanTitle] || MOVIE_IMAGES[entryIndex % MOVIE_IMAGES.length];
-          const badgeHtml = titleInfo.badgeLabel
-            ? '<span class="movie-status-badge ' + titleInfo.badgeClass + '">' + titleInfo.badgeLabel + "</span>"
-            : "";
+          const scheduleEntry = normalizeWeekScheduleEntry(entry);
+          const poster =
+            MOVIE_POSTER_BY_TITLE[scheduleEntry.title] ||
+            MOVIE_POSTER_BY_TITLE[entry.title] ||
+            MOVIE_IMAGES[entryIndex % MOVIE_IMAGES.length];
+          const badgeHtml = scheduleEntry.badges
+            .map(function (badgeInfo) {
+              return (
+                '<span class="movie-status-badge ' +
+                badgeInfo.indexClass +
+                '">' +
+                badgeInfo.label +
+                "</span>"
+              );
+            })
+            .join("");
           var detailUrl =
-            (movieDetailUrlForTitle && movieDetailUrlForTitle(entry.title)) ||
+            (movieDetailUrlForTitle && movieDetailUrlForTitle(scheduleEntry.title)) ||
             (movieDetailUrlForPoster && movieDetailUrlForPoster(poster)) ||
             "";
-          var posterInner = '<img class="poster-badge" src="' + poster + '" alt="' + entry.title + ' 포스터" width="52" height="52" />';
+          var posterInner =
+            '<img class="poster-badge" src="' +
+            poster +
+            '" alt="' +
+            scheduleEntry.title +
+            ' 포스터" width="52" height="52" />';
           var posterBlock = detailUrl
             ? '<a class="schedule-poster-link" href="' + detailUrl + '">' + posterInner + "</a>"
             : posterInner;
           var titleBlock = detailUrl
-            ? '<a class="movie-title-link movie-title-text" href="' + detailUrl + '">' + titleInfo.cleanTitle + "</a>"
-            : '<span class="movie-title-text">' + titleInfo.cleanTitle + "</span>";
+            ? '<a class="movie-title-link movie-title-text" href="' + detailUrl + '">' + scheduleEntry.title + "</a>"
+            : '<span class="movie-title-text">' + scheduleEntry.title + "</span>";
           row.innerHTML =
             '<span class="slot-label" aria-label="' + (entryIndex + 1) + '회차">' + (entryIndex + 1) + "</span>" +
             posterBlock +
             '<span class="movie-title">' + titleBlock + badgeHtml + "</span>" +
-            '<span class="time-pill">' + entry.time + "</span>" +
-            '<button type="button" class="booking-btn" aria-label="' + entry.title + " " + entry.time + ' 예매하기">예매</button>';
+            '<span class="time-pill">' + scheduleEntry.time + "</span>" +
+            '<button type="button" class="booking-btn" aria-label="' +
+            scheduleEntry.title +
+            " " +
+            scheduleEntry.time +
+            ' 예매하기">예매</button>';
           panel.appendChild(row);
         });
         panelsWrap.appendChild(panel);
