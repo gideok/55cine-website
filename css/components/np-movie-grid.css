@@ -1,0 +1,135 @@
+/* 상영작 목록 — 그리드·카드 */
+
+.ti .ti-np-root .np-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ti .ti-np-root .np-list-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 20px 16px;
+  border: 1px solid #c8c8c8;
+  background: #fff;
+  font-size: 0.9rem;
+  color: #5a5a5a;
+  text-align: center;
+}
+
+.ti .ti-np-root .np-list-status.is-error {
+  color: #8b1a1a;
+  border-color: #c8a0a0;
+}
+
+@media (max-width: 899px) {
+  .ti .ti-np-root .np-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ti .ti-np-root .np-card-body {
+    padding: 8px 8px 10px;
+  }
+
+  .ti .ti-np-root .np-card-title {
+    font-size: 0.82rem;
+  }
+
+  .ti .ti-np-root .np-card-en {
+    font-size: 0.68rem;
+  }
+}
+
+.ti .ti-np-root .np-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #b0b0b0;
+  border-radius: 0;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: none;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+
+.ti .ti-np-root .np-card:hover {
+  background: #fafafa;
+  border-color: #111;
+}
+
+.ti .ti-np-root .np-card:focus-within {
+  outline: 2px solid #333;
+  outline-offset: 0;
+}
+
+.ti .ti-np-root .np-card-media {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  background: #e8e8e8;
+}
+
+.ti .ti-np-root .np-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ti .ti-np-root .np-card-body {
+  padding: 7px 7px 8px;
+  border-top: 1px solid #d4d4d4;
+}
+
+.ti .ti-np-root .np-card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--brand-ink);
+  word-break: keep-all;
+}
+
+.ti .ti-np-root .np-card-en {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
+.ti .ti-np-root .np-stretch-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.ti .ti-np-root .np-mobile-hint {
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  display: block;
+}
+
+@media (min-width: 900px) {
+  .ti .ti-np-root .np-mobile-hint {
+    display: none;
+  }
+}
+
+.ti .ti-np-root .np-sentinel {
+  height: 1px;
+  margin-top: 24px;
+}
+
+.ti .ti-np-root .np-end {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 16px;
+  display: none;
+}
+
+.ti .ti-np-root .np-end.is-visible {
+  display: block;
+}

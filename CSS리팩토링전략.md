@@ -37,19 +37,19 @@
 |------|------|------:|------|
 | **기반** | `fonts.css` | 1 | Spoqa import |
 | | `fonts-display.css` | 1 | display 폰트 import |
-| **셸** | `shell.css` | 654 | 좌 GNB + 우 패널, 모바일 메뉴 고정 |
+| **셸** | `shell.css` + `components/shell-mobile-menu.css` + `shell-scroll-top.css` | ~428+169+55 | 좌 GNB·스케줄 / 모바일 메뉴 / 맨 위로 |
 | | `site-footer.css` | 136 | 푸터 슬롯 |
 | **공통 UI** | `page-shell.css` | 106 | 오오극장 5페이지 + `section-page-subnav` 오버라이드 |
 | | `page-pager.css` | 107 | 페이지네이션·툴바 |
 | | `carousel-chrome.css` | 69 | 캐러셀 화살·인디케이터 |
 | | `detail.css` | 280 | 매거진 상세 공통(`.sd-*`, 이전·다음) |
 | | `logo-spinner.css` | 90 | 로고 스피너 (`past-playing.html` 등) |
-| **목록형** | `magazine-preview.css` | 468 | 프리뷰·지난기사 목록(가장 큼) |
+| **목록형** | `magazine-preview.css` + `mz-thumb-stack` + `preview-list` | ~181+130 | 프리뷰·지난기사 목록 |
 | | `magazine-list-pages.css` | 158 | 연재·GV 카드 |
-| | `now-playing.css` | 423 | 현재/지난/예정 상영작 목록 |
+| | `now-playing.css` + `np-movie-grid` + `np-search-toolbar` | ~89+133+199 | 현재/지난/예정 상영작 목록 |
 | | `exhibition.css` | 233 | 기획전 목록 |
 | | `exhibition-grid-lines.css` | 33 | 기획전 그리드 라인 |
-| **상세 변형** | `magazine-*-detail.css` ×4 | 123~171 | 프리뷰/연재/GV/지난기사 — `sd-pn` 중복 |
+| **상세 변형** | `magazine-*-detail.css` ×4 | ~50~90 | 프리뷰/연재/GV/지난기사 — `sd-pn`은 `sd-prev-next-magazine.css` |
 | | `movie-detail-test.css` | 160 | 영화·기획전 상세 톤 오버라이드 |
 | | `now-playing-movie-detail.css` | 20 | 상영작 상세 미세 조정 |
 | **페이지 전용** | `theater-info.css` 등 5개 | 118~226 | 오오극장 하위 |
@@ -66,7 +66,7 @@
 
 ### D. 정리 대상(워크스페이스 잔존)
 
-- **`test/css/`, `test/js/`:** 1단계 이전 복사본 — **기준은 루트 `css/`·`js/`만**. diff 후 삭제.
+- ~~**`test/css/`, `test/js/`**~~ — **삭제됨 (2026-05)**. 기준은 루트 `css/`·`js/`만.
 - **`.claude/worktrees/...`:** 워크트리 사본 — 본 repo와 혼동 금지.
 
 ---
@@ -101,12 +101,12 @@
 
 | 패턴 | 중복 위치 | 내용 |
 |------|-----------|------|
-| `section-page-subnav` | `site-common` + `magazine-preview` + `page-shell` | 각진 탭·호버·현재 탭 |
-| `.visually-hidden` | `page-shell`, `theater-info` | 동일 유틸 |
-| `.sd-pn-*` | `detail` + 4× `magazine-*-detail` | 이전·다음 카드 |
+| ~~`section-page-subnav`~~ | → `section-page-head.css` | ✅ 통합 |
+| ~~`.visually-hidden`~~ | → `base/utilities.css` | ✅ 통합 |
+| ~~`.sd-pn-*`~~ | → `sd-prev-next-magazine.css` | ✅ 통합 |
 | 목록 카드 | `magazine-preview` + `magazine-list-pages` | 썸네일·타이틀 |
 | 영화/기획전 상세 | `movie-detail-layout` + `movie-detail-test` + `now-playing-movie-detail` | 3중 스택 |
-| 구 타이틀 (`.ti-sub-h1` 등) | `page-shell` + 페이지별 | `section-page-head` 도입 후 dead code 가능 |
+| ~~구 타이틀 (`.ti-sub-h1` 등)~~ | `page-shell` | ✅ 미사용 제거 (`section-page-head` 사용) |
 
 ### 2-4. 네이밍·스코프
 
@@ -197,13 +197,13 @@ special/exhibition/css/
 
 | 페이지 타입 | 대표 URL | 권장 스택 |
 |-------------|----------|-----------|
-| **공통** | (모든 `.ti` 셸 페이지) | fonts → fonts-display → shell → site-footer |
+| **공통** | (모든 `.ti` 셸 페이지) | fonts → fonts-display → shell → shell-mobile-menu → shell-scroll-top → site-footer |
 | **메인** | `/index.html` | 공통 → intro |
-| **매거진 목록** (프리뷰·지난기사) | `/magazine-preview.html`, `/magazine-past-articles.html` | 공통 → site-common → page-pager → magazine-preview → carousel-chrome |
+| **매거진 목록** (프리뷰·지난기사) | `/magazine-preview.html`, … | 공통 → site-common → section-page-head → page-pager → magazine-preview → mz-thumb-stack → preview-list → carousel-chrome |
 | **매거진 목록** (연재·GV) | `/magazine-serial.html`, `/gv-moment.html` | 위 + magazine-list-pages |
-| **매거진 상세** | `/magazine/preview/article-detail.html?id=pv001` | 공통 → detail → `magazine-*-detail.css` 1개 |
+| **매거진 상세** | `/magazine/preview/article-detail.html?id=pv001` | 공통 → detail → sd-prev-next-magazine → `magazine-*-detail.css` 1개 |
 | **오오극장 5페이지** | `/theater-info.html` … | 공통 → site-common → page-shell → `{page}.css` |
-| **상영작 목록** | `/now-playing.html`, `/past-playing.html`, `/upcoming-playing.html` | 공통 → page-pager → now-playing (+ past: logo-spinner) |
+| **상영작 목록** | `/now-playing.html`, … | 공통 → page-pager → now-playing → np-movie-grid → np-search-toolbar (+ past: logo-spinner) |
 | **상영작 상세** | `/movies/now-playing/movie-detail.html?slug=…` | 공통 → site-common → movie-detail-layout → movie-detail-test → now-playing-movie-detail |
 | **기획전 목록** | `/special-exhibition.html` | 공통 → page-pager → exhibition → exhibition-grid-lines → carousel-chrome |
 | **기획전 상세** | `/special/exhibition/exhibition_detail.html?id=…` | 공통 → site-common → movie-detail-layout → movie-detail-test → exhibition-detail |
@@ -217,28 +217,24 @@ special/exhibition/css/
 
 ### Phase 0 — 정리·문서 ✅ (2026-05)
 
-1. ✅ **`css/README.md`** — manifest, 로드 순서, 깊이별 path.
-2. ⏳ **잔존 `test/`** — git 미추적 복사본; 로컬에서 수동 삭제 가능.
-3. ✅ **루트 HTML `../components/`** → `components/` (9파일).
-4. ✅ **`css/index.css`** — 삭제됨 (`intro.css` 사용).
-5. ✅ **`components/magazine-scroll-carousel.css`** — 삭제됨.
-6. ⏳ dead selector (`.ti-sub-h1` 등) — 후속.
+- [x] **`css/README.md`** — manifest, 로드 순서, 깊이별 path.
+- [x] **잔존 `test/`** — 워크스페이스에서 삭제.
+- [x] **루트 HTML `../components/`** → `components/` (9파일).
+- [x] **`css/index.css`** — 삭제됨 (`intro.css` 사용).
+- [x] **`components/magazine-scroll-carousel.css`** — 삭제됨.
+- [x] dead selector — `page-shell.css`의 `.ti-sub-h1`·`.ti-sub-kicker` 제거.
 
 ### Phase 1 — 중복 제거 ✅ (2026-05)
 
-| 작업 | 통합 대상 | 상태 |
-|------|-----------|------|
-| 1-A | `section-page-subnav` → `css/components/section-page-head.css` | ✅ HTML 연결 |
-| 1-B | `.visually-hidden` → `base/utilities.css` | ✅ 오오극장 5페이지 |
-| 1-C | `.sd-pn` → `sd-prev-next-magazine.css` | ✅ 4종 상세 + 중복 제거 |
+- [x] **1-A** `section-page-subnav` → `css/components/section-page-head.css` (+ HTML 연결)
+- [x] **1-B** `.visually-hidden` → `base/utilities.css` (오오극장 5페이지)
+- [x] **1-C** `.sd-pn` → `sd-prev-next-magazine.css` (4종 상세 + 중복 제거)
 
-### Phase 2 — 대형 파일 분할 (진행 중)
+### Phase 2 — 대형 파일 분할 ✅ (2026-05)
 
-| 작업 | 대상 | 상태 |
-|------|------|------|
-| 2-A | `magazine-preview.css` | ✅ `mz-thumb-stack.css`, `preview-list.css` 분리 |
-| 2-B | `now-playing.css` (423) | ⏳ |
-| 2-C | `shell.css` (654) — 선택 | ⏳ |
+- [x] **2-A** `magazine-preview.css` → `mz-thumb-stack.css`, `preview-list.css`
+- [x] **2-B** `now-playing.css` → `np-movie-grid.css`, `np-search-toolbar.css`
+- [x] **2-C** `shell.css` → `shell-mobile-menu.css`, `shell-scroll-top.css` (33 HTML `<link>` 반영)
 
 ### Phase 3 — `components/` 정렬
 
@@ -303,7 +299,7 @@ special/exhibition/css/
 |------|------|----------------|
 | CSS 파일명 | `css/*.css` (ti- 없음) 27개 | `css/{base,layout,components,pages}` + manifest |
 | JS/Partial | `js/*.js`, `partials/*.html` (ti- 없음) | 동일 계층 구조 |
-| 최대 파일 | magazine-preview 468줄, shell 654줄 | ~200줄 단위 component |
+| 최대 파일 | shell-core ~428줄, np-search ~199줄 | ~200줄 단위 component (2단계 분할 완료) |
 | HTML link | 깊이·페이지마다 6~9개 | manifest 6~7종 |
 | 클래스/JS | `.ti-*`, `TI_*` 잔존 | 선택적 후속 개명 |
 | prod/legacy | `components/` + `css/` | components 단계적 흡수 |

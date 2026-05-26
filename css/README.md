@@ -2,12 +2,14 @@
 
 `CSS리팩토링전략.md`의 2단계 작업 기준 문서. HTML에 `<link>`를 추가할 때 **아래 순서**를 지킨다.
 
-## 공통 4종 (대부분 `.ti` 셸 페이지)
+## 공통 6종 (대부분 `.ti` 셸 페이지)
 
 1. `css/fonts.css`
 2. `css/fonts-display.css`
-3. `css/shell.css`
-4. `css/site-footer.css`
+3. `css/shell.css` — grid·좌 GNB·스케줄
+4. `css/components/shell-mobile-menu.css` — 모바일 메뉴·패널 접기
+5. `css/components/shell-scroll-top.css` — 맨 위로 버튼
+6. `css/site-footer.css`
 
 ## 깊이별 경로
 
@@ -55,7 +57,8 @@
 
 ### 상영작 목록
 
-- 공통 4종 → `page-pager.css` → `now-playing.css` (+ `past-playing`: `logo-spinner.css`)
+- 공통 6종 → `page-pager.css` → `now-playing.css` → `np-movie-grid.css` → `np-search-toolbar.css`
+- (`past-playing`만 추가) `logo-spinner.css`
 
 ### 상영작·기획전 상세
 
@@ -70,18 +73,23 @@ css/
   base/
     utilities.css          # .visually-hidden
   components/
-    section-page-head.css  # section-page-subnav 오버라이드
+    section-page-head.css
     sd-prev-next-magazine.css
     mz-thumb-stack.css
     preview-list.css
-  *.css                    # 페이지·도메인별 (shell, magazine-preview, …)
+    np-movie-grid.css
+    np-search-toolbar.css
+    shell-mobile-menu.css
+    shell-scroll-top.css
+  *.css                    # 페이지·도메인별 (shell, magazine-preview, now-playing, …)
 ```
 
 `components/`(루트)는 레거시 공통(`site-common`, `movie-detail-layout`) 전용. 신규 공통 UI는 `css/components/`에 둔다.
 
 ## 스크립트
 
-- `scripts/patch-html-css-bundles.py` — 루트 `../components/` 수정 및 번들 `<link>` 삽입 (일회성·재실행 가능)
+- `scripts/patch-html-css-bundles.py` — 루트 `../components/` 수정 및 Phase 1 번들 `<link>`
+- `scripts/patch-html-shell-np-css.py` — shell·now-playing 분할 후 `<link>` 보강
 
 ## 검증
 

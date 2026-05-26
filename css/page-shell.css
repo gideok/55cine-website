@@ -42,24 +42,3 @@
   margin-block: 0;
   padding-bottom: 32px;
 }
-
-.ti-sub-kicker {
-  margin: 0 0 8px;
-  font-size: clamp(0.68rem, 1.4vw, 0.78rem);
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ti-text-secondary);
-}
-
-.ti-sub-h1 {
-  margin: 0 0 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #bdbdbd;
-  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
-  color: #0a0a0a;
-}
-
