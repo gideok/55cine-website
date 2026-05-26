@@ -186,7 +186,7 @@ def main() -> None:
     move_test_html_to_root()
 
     # ti-left-gnb home link
-    gnb = ROOT / "partials" / "ti-left-gnb.html"
+    gnb = ROOT / "partials" / "left-gnb.html"
     if gnb.exists():
         t = gnb.read_text(encoding="utf-8")
         t = t.replace("__TI_SITE_ROOT__test-intro.html", "__TI_SITE_ROOT__index.html")
@@ -207,7 +207,7 @@ def main() -> None:
         write_text(epd, replace_content(epd.read_text(encoding="utf-8", errors="replace")))
 
     # left-gnb include path logic (no /test/)
-    inc = ROOT / "js" / "ti-left-gnb-include.js"
+    inc = ROOT / "js" / "left-gnb-include.js"
     if inc.exists():
         t = inc.read_text(encoding="utf-8")
         t = t.replace(

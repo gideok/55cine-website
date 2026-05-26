@@ -1,6 +1,6 @@
 /**
- * partials/ti-mobile-menu-bar.html — 모바일 상단 햄버거(820px 이하)
- * partials/ti-left-gnb.html — GNB + 이번주 시간표 뼈대
+ * partials/mobile-menu-bar.html — 모바일 상단 햄버거(820px 이하)
+ * partials/left-gnb.html — GNB + 이번주 시간표 뼈대
  * 마운트: [data-ti-mobile-menu-bar] (선택), [data-ti-left-gnb] (필수)
  * GNB 경로 치환: __TI_SITE_ROOT__(Home·메뉴), __TI_SITE_ROOT__
  * 절대경로 /test/… 는 서브디렉터리 배포(예: /55cine/)에서 동작하지 않음
@@ -72,10 +72,10 @@
     mobilePlaceholder = null;
   }
 
-  var gnbUrl = resolveFromScript("ti-left-gnb.html");
+  var gnbUrl = resolveFromScript("left-gnb.html");
   if (!gnbUrl) return;
 
-  var mobileUrl = mobilePlaceholder ? resolveFromScript("ti-mobile-menu-bar.html") : null;
+  var mobileUrl = mobilePlaceholder ? resolveFromScript("mobile-menu-bar.html") : null;
 
   var prefixes = computePathPrefixes();
 

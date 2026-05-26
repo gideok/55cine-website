@@ -1,6 +1,6 @@
 /* 일반 사이트 footer(components/site-common.css)와 동등한 정보 레이아웃 — TEST ti 셸 전용 */
 /* 마크업은 ti-footer--slot-pc(좌측 시간표 아래, PC만) + ti-footer--slot-mobile(본문 아래, 모바일만) 이중 슬롯.
-   내용은 partials/ti-site-footer.html 한 파일만 수정하면 됨(data-ti-site-footer 로 동시 주입). */
+   내용은 partials/site-footer.html 한 파일만 수정하면 됨(data-ti-site-footer 로 동시 주입). */
 
 .ti .ti-footer.ti-footer--slot-pc {
   flex: 0 0 auto;

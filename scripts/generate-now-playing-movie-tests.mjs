@@ -65,13 +65,13 @@ function buildShell({ title, mainInner, tabSuffix }) {
   <link rel="icon" href="../../../favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="../../../components/site-common.css" />
-  <link rel="stylesheet" href="../../css/ti-fonts.css" />
-  <link rel="stylesheet" href="../../css/ti-fonts-display.css" />
-  <link rel="stylesheet" href="../../css/ti-shell.css" />
-  <link rel="stylesheet" href="../../css/ti-site-footer.css" />
+  <link rel="stylesheet" href="../../css/fonts.css" />
+  <link rel="stylesheet" href="../../css/fonts-display.css" />
+  <link rel="stylesheet" href="../../css/shell.css" />
+  <link rel="stylesheet" href="../../css/site-footer.css" />
   <link rel="stylesheet" href="../../../components/movie-detail-layout.css" />
-  <link rel="stylesheet" href="../../css/ti-movie-detail-test.css" />
-  <link rel="stylesheet" href="../../css/ti-now-playing-movie-detail.css" />
+  <link rel="stylesheet" href="../../css/movie-detail-test.css" />
+  <link rel="stylesheet" href="../../css/now-playing-movie-detail.css" />
 </head>
 <body class="ti">
   <div class="ti-shell" id="tiShell">
@@ -100,15 +100,15 @@ ${mainInner}
     ></footer>
   </div>
 
-  <script src="../../js/ti-site-footer-include.js"></script>
+  <script src="../../js/site-footer-include.js"></script>
   <script>
     window.TI_ASSET_BASE = "../../../";
   </script>
   <script src="../../../data/week-schedule-data.js"></script>
-  <script src="../../js/ti-left-gnb-include.js"></script>
-  <script src="../../js/ti-mobile-menu.js"></script>
-  <script src="../../js/ti-scroll-top.js"></script>
-  <script src="../../js/ti-week-schedule.js"></script>
+  <script src="../../js/left-gnb-include.js"></script>
+  <script src="../../js/mobile-menu.js"></script>
+  <script src="../../js/scroll-top.js"></script>
+  <script src="../../js/week-schedule.js"></script>
   <script>${tabScript}</script>
 </body>
 </html>
