@@ -62,14 +62,14 @@ function buildShell({ title, mainInner, tabSuffix }) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="ti-nav-current" content="now-playing.html" />
   <title>${escapeHtml(title)} — 테스트 UI · 55CINE</title>
-  <link rel="icon" href="../../../favicon.ico" sizes="48x48 32x32 16x16" />
-  <link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="../../../components/site-common.css" />
+  <link rel="icon" href="../../favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../../components/site-common.css" />
   <link rel="stylesheet" href="../../css/fonts.css" />
   <link rel="stylesheet" href="../../css/fonts-display.css" />
   <link rel="stylesheet" href="../../css/shell.css" />
   <link rel="stylesheet" href="../../css/site-footer.css" />
-  <link rel="stylesheet" href="../../../components/movie-detail-layout.css" />
+  <link rel="stylesheet" href="../../components/movie-detail-layout.css" />
   <link rel="stylesheet" href="../../css/components/movie-detail-panel.css" />
   <link rel="stylesheet" href="../../css/components/movie-detail-theme.css" />
   <link rel="stylesheet" href="../../css/now-playing-movie-detail.css" />

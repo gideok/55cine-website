@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="js/site-root.js"></script>
   <meta name="ti-nav-current" content="daegwan.html" />
   <title>대관 안내 — 테스트 UI · 55CINE</title>
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
@@ -54,12 +55,12 @@
         <article id="daegwan" aria-labelledby="daegwan-title">
           <figure class="ti-dg-photo">
             <img
-              src="../images/daegwan.png"
+              src="images/daegwan.png"
               width="960"
               height="540"
               alt="오오극장 대관 안내"
               decoding="async"
-              onerror="this.onerror=null;this.src='../images/movie003.jpg';this.alt='오오극장 대관 안내(이미지 준비 중)';"
+              onerror="this.onerror=null;this.src='images/movie003.jpg';this.alt='오오극장 대관 안내(이미지 준비 중)';"
             />
           </figure>
 
@@ -148,11 +149,8 @@
       aria-label="사이트 정보"
     ></footer>
   </div>
-
   <script src="js/site-footer-include.js"></script>
-  <script>
-    window.TI_ASSET_BASE = "";
-  </script>
+  <!-- TI_ASSET_BASE: js/site-root.js -->
   <script src="data/week-schedule-data.js"></script>
   <script src="js/left-gnb-include.js"></script>
   <script src="js/mobile-menu.js"></script>

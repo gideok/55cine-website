@@ -6,6 +6,10 @@
     if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return url;
     if (url.indexOf("//") === 0) return url;
     if (url.charAt(0) === "/") return url;
+    if (url.startsWith("../")) return url;
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(url);
+    }
     return BASE + url;
   }
 

@@ -39,9 +39,11 @@
         var raw =
           attr != null && attr !== ""
             ? attr
-            : typeof window.TI_ASSET_BASE === "string"
+            : typeof window.TI_ASSET_BASE === "string" && window.TI_ASSET_BASE
               ? window.TI_ASSET_BASE
-              : "../";
+              : window.TiSiteRoot && typeof window.TiSiteRoot.getPrefix === "function"
+                ? window.TiSiteRoot.getPrefix()
+                : "../";
         var base = normBase(raw);
         el.innerHTML = template.replace(/__TI_ASSET_BASE__/g, base);
       }

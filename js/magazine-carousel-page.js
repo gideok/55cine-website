@@ -66,6 +66,9 @@
     if (!path) return "";
     if (/^https?:\/\//i.test(path)) return path;
     if (path.startsWith("../")) return path;
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(path);
+    }
     return SITE_ROOT_PREFIX + path.replace(/^\//, "");
   }
 
@@ -73,6 +76,9 @@
     if (!src) return "";
     if (/^https?:/i.test(src)) return src;
     if (src.startsWith("../")) return src;
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(src);
+    }
     return SITE_ROOT_PREFIX + src.replace(/^\//, "");
   }
 

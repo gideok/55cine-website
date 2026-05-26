@@ -7,22 +7,12 @@
     return BASE + path;
   }
 
-  /** 하위 경로에 맞게 movies/now-playing/… 상세 경로 보정 */
-  function computeTestRoot() {
-    var path = (location.pathname || "").replace(/\\/g, "/");
-    var segments = path.split("/").filter(Boolean);
-    var depth = segments.length;
-    if (depth && /\.html?$/i.test(segments[depth - 1])) {
-      depth = Math.max(0, depth - 1);
-    }
-    return depth > 0 ? new Array(depth).fill("..").join("/") + "/" : "";
-  }
-
   function resolveMovieDetailUrl(url) {
     if (!url || /^https?:/i.test(url)) return url || "";
-    var testRoot = computeTestRoot();
-    if (!testRoot) return url;
-    return testRoot + url.replace(/^\//, "");
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(url);
+    }
+    return url;
   }
 
   var WEEK_SCHEDULE = window.WEEK_SCHEDULE;

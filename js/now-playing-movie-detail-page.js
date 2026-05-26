@@ -31,6 +31,9 @@
     if (!url) return "";
     if (/^https?:\/\//i.test(url)) return url;
     if (url.indexOf("//") === 0) return url;
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(url);
+    }
     if (url.charAt(0) === "/") return url;
     return SITE_BASE + url.replace(/^\//, "");
   }

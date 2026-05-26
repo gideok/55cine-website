@@ -5,12 +5,13 @@
 (function (global) {
   "use strict";
 
-  function assetBase() {
-    return typeof global.TI_ASSET_BASE === "string" ? global.TI_ASSET_BASE : "";
-  }
-
   function logoSrc() {
-    return assetBase() + "images/logo-spinner-bg.png";
+    var path = "images/logo-spinner-bg.png";
+    if (global.TiSiteRoot && typeof global.TiSiteRoot.resolve === "function") {
+      return global.TiSiteRoot.resolve(path);
+    }
+    var base = typeof global.TI_ASSET_BASE === "string" ? global.TI_ASSET_BASE : "";
+    return base + path;
   }
 
   /**

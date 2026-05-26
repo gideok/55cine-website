@@ -13,6 +13,10 @@
   var mobilePlaceholder = document.querySelector("[data-ti-mobile-menu-bar]");
 
   function computePathPrefixes() {
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.relativePrefix === "function") {
+      var rel = window.TiSiteRoot.relativePrefix();
+      return { testRoot: rel, siteRoot: rel };
+    }
     var path = (location.pathname || "").replace(/\\/g, "/");
     var segments = path.split("/").filter(Boolean);
     var depth = segments.length;
@@ -107,9 +111,7 @@
         injectMobileBar(mobileTemplate);
       }
 
-      var html = gnbTemplate
-        .replace(/__TI_SITE_ROOT__/g, prefixes.testRoot)
-        .replace(/__TI_SITE_ROOT__/g, prefixes.siteRoot);
+      var html = gnbTemplate.replace(/__TI_SITE_ROOT__/g, prefixes.siteRoot);
       for (var i = 0; i < gnbMounts.length; i++) {
         gnbMounts[i].innerHTML = html;
         markCurrentNav(gnbMounts[i]);

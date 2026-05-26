@@ -28,8 +28,10 @@
     if (!u) return "";
     if (/^https?:/i.test(u)) return u;
     if (u.startsWith("../")) return u;
-    if (u.indexOf("movies/now-playing/") === 0) return u;
-    return "../" + u.replace(/^\//, "");
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(u);
+    }
+    return u.replace(/^\//, "");
   }
 
   /** SEO 경로: movies/now-playing/{slug}.html (물리 파일 필요, tools/sync-now-playing-slug-pages.js) */

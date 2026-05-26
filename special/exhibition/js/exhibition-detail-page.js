@@ -29,6 +29,9 @@
     var path = url.replace(/^\//, "");
     /* 목록 썸네일: 사이트 루트 images/special/… — TI_ASSET_BASE(../../) */
     if (path.indexOf("images/special/") === 0) {
+      if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+        return window.TiSiteRoot.resolve(path);
+      }
       return BASE + path;
     }
     /* 상영작 포스터: special/exhibition/images/… — 페이지 기준 상대 경로 */

@@ -28,7 +28,7 @@
   top: var(--ti-logo-spinner-ring-top);
   width: var(--ti-logo-spinner-ring-width);
   height: var(--ti-logo-spinner-ring-height);
-  background: url("../../images/logo-spinner-ring.png") center / contain no-repeat;
+  background: url("../images/logo-spinner-ring.png") center / contain no-repeat;
   transform-origin: center center;
   animation: ti-logo-spinner-rotate 1.1s linear infinite;
   pointer-events: none;

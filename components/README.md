@@ -45,3 +45,18 @@
 - **레거시 SEO 경로:** `movies/now-playing/{slug}.html` → 위 URL로 리다이렉트 (`tools/sync-now-playing-slug-redirects.js`)
 
 목록 페이지 `detailUrlMode: "query"`(현재·예정·지난 공통).
+
+## 서브디렉터리 배포 (`/55cine/` 등)
+
+`js/site-root.js`를 **`<head>` 최상단**(viewport 다음)에서 로드합니다.
+
+- 파싱 중 `link`·`script`·`img`의 `css/…`, `js/…` 경로를 `/55cine/css/…`로 자동 보정
+- `TI_ASSET_BASE`를 사이트 루트(`/55cine/`)로 설정 — 이미지·JSON fetch 경로 통일
+- 페이지 링크는 `TiSiteRoot.resolve()`로 `movies/…`, `magazine/…` 처리
+
+자동 감지: 스크립트 URL의 `/js/` 상위 경로.  
+수동 지정(선택):
+
+```html
+<meta name="ti-site-root" content="/55cine/" />
+```

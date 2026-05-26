@@ -13,18 +13,14 @@
 
   function withBase(path) {
     if (!path) return path;
+    if (typeof window !== "undefined" && window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(path);
+    }
     return BASE + path;
   }
 
-  /** 테스트 UI: 상세는 movies/now-playing/ 기준, 포스터만 사이트 루트 images/ */
-  var isTestTi =
-    typeof window !== "undefined" &&
-    typeof window.TI_ASSET_BASE === "string" &&
-    window.TI_ASSET_BASE;
-
-  function withDetailBase(path) {
-    if (!path) return path;
-    return isTestTi ? path : withBase(path);
+  function resolveDetailUrl(path) {
+    return withBase(path);
   }
 
   function coerceBool(value) {
@@ -266,23 +262,27 @@
     if (!Object.prototype.hasOwnProperty.call(nowPlayingByTitle, title)) continue;
     var row = nowPlayingByTitle[title];
     window.MOVIE_POSTER_BY_TITLE[title] = withBase(row.poster);
-    window.MOVIE_DETAIL_BY_TITLE[title] = withDetailBase(row.detailUrl);
+    window.MOVIE_DETAIL_BY_TITLE[title] = row.detailUrl;
   }
 
   window.movieDetailUrlForTitle = function (title) {
     if (!title) return "";
     var info = window.parseMovieTitleWithStatus(title);
-    return (
+    var raw =
       window.MOVIE_DETAIL_BY_TITLE[title] ||
       window.MOVIE_DETAIL_BY_TITLE[info.cleanTitle] ||
-      ""
-    );
+      "";
+    return resolveDetailUrl(raw);
   };
 
   window.movieDetailUrlForPoster = function (posterUrl) {
     if (!posterUrl) return "";
-    if (posterUrl.indexOf("movie001.jpg") !== -1) return withBase("movies/now-playing/movie-detail.html");
-    if (posterUrl.indexOf("movie002.jpg") !== -1) return withBase("movies/now-playing/movie-detail.html");
+    if (posterUrl.indexOf("movie001.jpg") !== -1) {
+      return resolveDetailUrl("movies/now-playing/movie-detail.html");
+    }
+    if (posterUrl.indexOf("movie002.jpg") !== -1) {
+      return resolveDetailUrl("movies/now-playing/movie-detail.html");
+    }
     return "";
   };
 })();

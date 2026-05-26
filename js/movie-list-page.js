@@ -49,8 +49,10 @@
     if (!u) return "";
     if (/^https?:/i.test(u)) return u;
     if (u.startsWith("../")) return u;
-    if (u.indexOf("movies/now-playing/") === 0) return u;
-    return "../" + u.replace(/^\//, "");
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(u);
+    }
+    return u.replace(/^\//, "");
   }
 
   function buildSeoDetailUrl(slug) {
@@ -81,7 +83,11 @@
     if (typeof cfg.fetchList === "function") {
       return Promise.resolve(cfg.fetchList()).then(normalizeListPayload);
     }
-    return fetch(LIST_DATA_URL, { credentials: "same-origin" })
+    var listUrl =
+      window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function"
+        ? window.TiSiteRoot.resolve(LIST_DATA_URL)
+        : LIST_DATA_URL;
+    return fetch(listUrl, { credentials: "same-origin" })
       .then(function (res) {
         if (!res.ok) throw new Error(ERROR_MESSAGE + " (" + res.status + ")");
         return res.json();

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="js/site-root.js"></script>
   <meta name="ti-nav-current" content="magazine-preview.html" />
   <title>매거진 프리뷰 — 테스트 UI · 55CINE</title>
   <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
@@ -57,10 +58,10 @@
             <div class="ti-page-toolbar__leading">
               <div class="view-mode" role="tablist" aria-label="목록 보기 방식">
                 <button type="button" class="mode-btn is-active" data-view="thumb" role="tab" aria-selected="true" aria-label="썸네일형">
-                  <img src="../images/ui/icon-view-thumb.svg" alt="" class="mode-btn__icon" width="18" height="18" decoding="async" />
+                  <img src="images/ui/icon-view-thumb.svg" alt="" class="mode-btn__icon" width="18" height="18" decoding="async" />
                 </button>
                 <button type="button" class="mode-btn" data-view="list" role="tab" aria-selected="false" aria-label="목록형">
-                  <img src="../images/ui/icon-view-list.svg" alt="" class="mode-btn__icon" width="18" height="18" decoding="async" />
+                  <img src="images/ui/icon-view-list.svg" alt="" class="mode-btn__icon" width="18" height="18" decoding="async" />
                 </button>
               </div>
               <p class="ti-page-count" id="pagerCount" aria-live="polite"></p>
@@ -98,11 +99,8 @@
       aria-label="사이트 정보"
     ></footer>
   </div>
-
   <script src="js/site-footer-include.js"></script>
-  <script>
-    window.TI_ASSET_BASE = "";
-  </script>
+  <!-- TI_ASSET_BASE: js/site-root.js -->
   <script src="data/week-schedule-data.js"></script>
   <script src="data/now-playing-data.js"></script>
   <script src="data/magazine-preview-data.js"></script>
