@@ -72,10 +72,11 @@
     var totalPages = Math.max(1, options.totalPages || 1);
     var onChange = options.onChange || function () {};
     var scrollOnChange = options.scrollOnChange !== false;
+    var alwaysVisible = !!options.alwaysVisible;
 
     navEl.innerHTML = "";
 
-    if (!isDesktop() || totalPages <= 1) {
+    if (!isDesktop() || (!alwaysVisible && totalPages <= 1)) {
       navEl.classList.remove("is-visible");
       return;
     }
