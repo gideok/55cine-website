@@ -215,21 +215,51 @@
     var section = document.createElement("section");
     section.className = "exhibition-detail-section exhibition-detail-film";
 
+    if (film && film.title === "EmptyFilms") {
+      section.className += " exhibition-film-empty";
+      var emptyInner = document.createElement("div");
+      emptyInner.className = "exhibition-detail-section__inner exhibition-detail-section__inner--empty-film";
+      section.appendChild(emptyInner);
+      return section;
+    }
+
     var inner = document.createElement("div");
     inner.className = "exhibition-detail-section__inner";
 
     var head = document.createElement("div");
     head.className = "exhibition-film-head";
 
+    var titleRow = document.createElement("div");
+    titleRow.className = "exhibition-film-head-row";
+
     var title = document.createElement("h3");
     title.className = "exhibition-film-title";
     title.textContent = film.title || "";
+    titleRow.appendChild(title);
+
+    var rawSectionName = typeof film.sectionname === "string" ? film.sectionname : "";
+    var trimmedSectionName = rawSectionName.trim();
+    if (trimmedSectionName) {
+      var badge = document.createElement("span");
+      badge.className = "exhibition-film-section-badge";
+
+      var lines = trimmedSectionName.split(/\n+/).slice(0, 2);
+      lines.forEach(function (line, idx) {
+        badge.appendChild(document.createTextNode(line));
+        if (idx < lines.length - 1) {
+          badge.appendChild(document.createElement("br"));
+        }
+      });
+
+      titleRow.appendChild(badge);
+    }
+
+    head.appendChild(titleRow);
 
     var info = document.createElement("p");
     info.className = "exhibition-film-info";
     info.textContent = film.info || "";
 
-    head.appendChild(title);
     if (film.info) head.appendChild(info);
 
     if (film.image) {

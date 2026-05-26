@@ -303,6 +303,10 @@ body.exhibition-poster-lightbox-open {
   height: 100%;
 }
 
+.ti .exhibition-detail-film.exhibition-film-empty .exhibition-detail-section__inner--empty-film {
+  min-height: 140px;
+}
+
 .ti .exhibition-film-head {
   display: flex;
   flex-direction: column;
@@ -310,6 +314,14 @@ body.exhibition-poster-lightbox-open {
   gap: 6px;
   margin: 0;
   box-sizing: border-box;
+  width: 100%;
+}
+
+.ti .exhibition-film-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
   width: 100%;
 }
 
@@ -327,6 +339,26 @@ body.exhibition-poster-lightbox-open {
   font-weight: 700;
   color: var(--brand-ink);
   line-height: 1.35;
+}
+
+.ti .exhibition-film-section-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: 46%;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f0f0f0;
+  color: #222;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: right;
+  white-space: normal;
+  word-break: keep-all;
+  overflow: hidden;
 }
 
 .ti .exhibition-film-info {
@@ -527,5 +559,9 @@ body.exhibition-poster-lightbox-open {
   .ti .exhibition-film-info {
     min-height: 0;
     height: auto;
+  }
+
+  .ti .exhibition-detail-film.exhibition-film-empty {
+    display: none;
   }
 }
