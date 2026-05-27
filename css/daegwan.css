@@ -4,6 +4,13 @@
   color: var(--ti-text);
 }
 
+.ti-right.ti-sub-page #daegwan p,
+.ti-right.ti-sub-page #daegwan .ti-dg-facility-list > li,
+.ti-right.ti-sub-page #daegwan .ti-dg-facility-list__sub li {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 .ti-dg-photo {
   margin: 0 0 24px;
   border-radius: 0;
@@ -27,28 +34,53 @@
   border: 1px solid var(--ti-border);
   border-radius: 0;
   color: var(--ti-text);
-}
-
-.ti-dg-form-wrap .ti-dg-form-note {
-  margin: 0 0 12px;
-  color: var(--ti-text-secondary);
-  font-size: 0.9rem;
   text-align: center;
 }
 
-.ti-dg-form-slot {
-  min-height: 120px;
+.ti-dg-form-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 14px 20px;
   border-radius: 0;
+  border: 1px solid #9a7b1a;
   background: var(--ti-surface-alt);
-  border: 1px solid #d8d8d8;
+  color: var(--ti-text-strong);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
-.ti-dg-form-slot iframe {
-  display: block;
-  width: 100%;
-  min-height: 720px;
-  border: 0;
-  border-radius: 0;
+.ti-dg-form-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  border-color: var(--ti-accent);
+  background: #e8e8e8;
+  color: var(--ti-text-strong);
+}
+
+.ti-dg-form-link:focus-visible {
+  outline: 2px solid var(--ti-accent);
+  outline-offset: 3px;
+}
+
+.ti-dg-form-link::after {
+  content: "↗";
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.ti-dg-form-wrap .ti-dg-form-note {
+  margin: 0;
+  color: var(--ti-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .ti-dg-steps {
@@ -73,6 +105,8 @@
   margin: 8px 0 0;
   color: var(--ti-text-secondary);
   font-size: 0.9rem;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .ti-proc-infographic {
@@ -115,7 +149,7 @@
   max-width: 240px;
   margin: 0 auto;
   min-height: 118px;
-  padding: 14px 12px 12px;
+  padding: 14px 6px 6px;
   background: var(--ti-surface-alt);
   border: 1px solid var(--ti-border);
   border-radius: 0;
@@ -142,6 +176,7 @@
   font-weight: 600;
   line-height: 1.45;
   color: var(--ti-text);
+  text-align: center;
 }
 
 .ti-dg-subheading {
@@ -159,37 +194,93 @@
   border: 1px solid var(--ti-border);
 }
 
-.ti-dg-fee-table th,
 .ti-dg-fee-table td {
   padding: 12px 14px;
-  border: 1px solid #d8d8d8;
-  text-align: center;
+  border: 0;
   color: var(--ti-text);
+  vertical-align: middle;
 }
 
-.ti-dg-fee-table th {
-  background: var(--ti-surface-alt);
-  font-weight: 600;
-  color: var(--ti-text-strong);
+.ti-dg-fee-table tbody tr + tr td {
+  border-top: 1px solid var(--ti-border);
+}
+
+.ti-dg-fee-table__period {
+  text-align: left;
+}
+
+.ti-dg-fee-table__price {
+  text-align: center;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ti-dg-fee-table__note {
+  text-align: right;
+  color: var(--ti-text-secondary);
+  font-size: 0.88rem;
+  white-space: nowrap;
 }
 
 .ti-dg-facility-list {
   margin: 0;
-  padding: 16px 18px 16px 2.2em;
+  padding: 16px 18px;
   color: var(--ti-text);
   font-size: 0.92rem;
   background: var(--ti-surface);
   border: 1px solid var(--ti-border);
-  list-style: disc;
+  list-style: none;
 }
 
-.ti-dg-facility-list li {
-  margin-bottom: 8px;
+.ti-dg-facility-list > li {
+  position: relative;
+  margin-bottom: 14px;
+  padding-left: 0.85rem;
   color: var(--ti-text);
+  line-height: 1.6;
 }
 
-.ti-dg-facility-list li:last-child {
+.ti-dg-facility-list > li:last-child {
   margin-bottom: 0;
+}
+
+.ti-dg-facility-list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ti-accent);
+}
+
+.ti-dg-facility-list__sub {
+  margin: 8px 0 0 0.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ti-dg-facility-list__sub li {
+  position: relative;
+  margin-bottom: 6px;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+  color: var(--ti-text-secondary);
+  line-height: 1.6;
+}
+
+.ti-dg-facility-list__sub li:last-child {
+  margin-bottom: 0;
+}
+
+.ti-dg-facility-list__sub li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--ti-accent);
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .ti-dg-contact {

@@ -85,10 +85,33 @@
   margin-bottom: 0;
 }
 
-.ti-seat-note {
-  margin: 12px 0 8px;
-  font-size: 0.9rem;
+.ti-seat-callout {
+  margin: 16px 0 0;
+  border: 1px solid var(--ti-border);
+  background: var(--ti-surface-alt);
+  overflow: hidden;
+}
+
+.ti-seat-callout__head {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ti-text-strong);
+}
+
+.ti-seat-callout__rule {
+  border-top: 1px solid var(--ti-border);
+}
+
+.ti-seat-callout__body {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  line-height: 1.65;
   color: var(--ti-text-secondary);
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .ti-seat-price {

@@ -65,11 +65,9 @@
             />
           </figure>
 
-          <section class="ti-dg-form-wrap" aria-label="대관 신청 구글 폼">
-            <p class="ti-dg-form-note">대관 신청은 구글 폼으로 접수합니다. 폼이 준비되면 아래 영역에 임베드합니다.</p>
-            <div id="daegwan-form-embed" class="ti-dg-form-slot">
-              <!-- 예: iframe 구글 폼 -->
-            </div>
+          <section class="ti-dg-form-wrap" aria-label="대관 신청">
+            <a href="#" class="ti-dg-form-link" target="_blank" rel="noopener noreferrer">링크</a>
+            <p class="ti-dg-form-note">※ 신청서를 작성하여 제출해주시면 확인 후 극장 담당자가 개별 연락드립니다.</p>
           </section>
 
           <section class="ti-dg-steps" aria-labelledby="daegwan-proc-title">
@@ -79,31 +77,31 @@
               <li class="ti-proc-infographic__step">
                 <span class="ti-proc-infographic__card">
                   <span class="ti-proc-infographic__badge" aria-hidden="true">1</span>
-                  <span class="ti-proc-infographic__text">대관 신청 구글 폼 작성 후 제출</span>
+                  <span class="ti-proc-infographic__text">대관 가능 여부 확인 및 일정 조율</span>
                 </span>
               </li>
               <li class="ti-proc-infographic__step">
                 <span class="ti-proc-infographic__card">
                   <span class="ti-proc-infographic__badge" aria-hidden="true">2</span>
-                  <span class="ti-proc-infographic__text">대관운영위원회 심의</span>
+                  <span class="ti-proc-infographic__text">대관 신청서 제출</span>
                 </span>
               </li>
               <li class="ti-proc-infographic__step">
                 <span class="ti-proc-infographic__card">
                   <span class="ti-proc-infographic__badge" aria-hidden="true">3</span>
-                  <span class="ti-proc-infographic__text">이용승인 및 대관료 통보</span>
+                  <span class="ti-proc-infographic__text">운영위원회 심의 및 이용 승인</span>
                 </span>
               </li>
               <li class="ti-proc-infographic__step">
                 <span class="ti-proc-infographic__card">
                   <span class="ti-proc-infographic__badge" aria-hidden="true">4</span>
-                  <span class="ti-proc-infographic__text">대관료 납부</span>
+                  <span class="ti-proc-infographic__text">대관료 안내 및 납부</span>
                 </span>
               </li>
               <li class="ti-proc-infographic__step">
                 <span class="ti-proc-infographic__card">
                   <span class="ti-proc-infographic__badge" aria-hidden="true">5</span>
-                  <span class="ti-proc-infographic__text">시설이용</span>
+                  <span class="ti-proc-infographic__text">시설 이용</span>
                 </span>
               </li>
             </ol>
@@ -111,26 +109,58 @@
 
           <h2 class="ti-dg-subheading">대관료</h2>
           <table class="ti-dg-fee-table">
-            <thead>
-              <tr>
-                <th scope="col">평일 (월~금) 2시간 기준</th>
-                <th scope="col">주말(토,일) 공휴일 2시간 기준</th>
-              </tr>
-            </thead>
+            <caption class="visually-hidden">대관료</caption>
             <tbody>
               <tr>
-                <td>33만원 (세금포함)</td>
-                <td>44만원 (세금포함)</td>
+                <td class="ti-dg-fee-table__period">평일 (월~금) 1시간</td>
+                <td class="ti-dg-fee-table__price">165,000원</td>
+                <td class="ti-dg-fee-table__note">*부가세 포함</td>
+              </tr>
+              <tr>
+                <td class="ti-dg-fee-table__period">주말 (토, 일) 1시간</td>
+                <td class="ti-dg-fee-table__price">220,000원</td>
+                <td class="ti-dg-fee-table__note">*부가세 포함</td>
               </tr>
             </tbody>
           </table>
 
-          <h2 class="ti-dg-subheading">시설환경</h2>
+          <h2 class="ti-dg-subheading">시설 및 장비 안내</h2>
           <ul class="ti-dg-facility-list">
-            <li>좌석수 55석(일반좌석 51석 + 휠체어 좌석 4석)</li>
-            <li>각종 영상 파일 상영이 가능한 영사 시스템</li>
-            <li>무선마이크 3, 유선마이크 1 / 행사용 스피커 2조</li>
-            <li>간이 테이블 (3개), 의자(6개)</li>
+            <li>
+              좌석 총 55석
+              <ul class="ti-dg-facility-list__sub">
+                <li>일반 좌석 51석 + 휠체어 좌석 4석</li>
+              </ul>
+            </li>
+            <li>
+              영상 및 음향 장비
+              <ul class="ti-dg-facility-list__sub">
+                <li>각종 영상 파일 상영이 가능한 영사 시스템</li>
+                <li>음향 장비 : 무선 마이크 2개, 행사용 스피커 2조</li>
+              </ul>
+            </li>
+            <li>
+              비품
+              <ul class="ti-dg-facility-list__sub">
+                <li>간이 테이블 3개, 의자 5개</li>
+              </ul>
+            </li>
+            <li>
+              발표 장비
+              <ul class="ti-dg-facility-list__sub">
+                <li>PPT 무선 포인터</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h2 class="ti-dg-subheading">시설 및 장비 안내</h2>
+          <ul class="ti-dg-facility-list">
+            <li>대관 신청 전, 전화로 일정 및 대관 가능 여부를 먼저 확인해주시기 바랍니다.</li>
+            <li>대관 시간에는 준비 및 퇴장 시간이 포함되어 있습니다.</li>
+            <li>상영관 내에는 물과 음료를 제외한 음식물의 반입을 금지합니다.</li>
+            <li>대관료 결제는 계좌이체만 가능합니다.</li>
+            <li>사전 협의 및 허가되지 않은 시설 사용은 불가합니다.</li>
+            <li>공간 내 장비 및 시설물 파손 시 이에 대한 배상 책임이 있습니다.</li>
           </ul>
 
           <p class="ti-dg-contact">

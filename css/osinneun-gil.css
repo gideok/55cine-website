@@ -135,6 +135,25 @@
   font-weight: 700;
 }
 
+/* 버스 안내: 정류장명/노선 2컬럼 정렬 */
+.ti-dir-transport-block:first-of-type p {
+  display: grid;
+  grid-template-columns: 9.2rem minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: start;
+}
+
+.ti-dir-transport-block:first-of-type p strong {
+  display: block;
+}
+
+@media (max-width: 520px) {
+  .ti-dir-transport-block:first-of-type p {
+    grid-template-columns: 7.4rem minmax(0, 1fr);
+    column-gap: 8px;
+  }
+}
+
 .ti-dir-parking-note {
   margin: 18px 0 0;
   padding: 12px 14px;
