@@ -226,16 +226,22 @@
 .ti-mbr-acc__doc-link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: 1px solid var(--ti-border);
+  background: var(--ti-surface-alt);
   font-size: 0.92rem;
   font-weight: 700;
-  color: var(--ti-accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  color: var(--ti-text-strong);
+  text-decoration: none;
 }
 
 .ti-mbr-acc__doc-link:hover {
-  color: var(--ti-accent-hover);
+  color: var(--ti-text-strong);
+  border-color: var(--ti-accent);
+  background: #e8e8e8;
 }
 
 .ti-mbr-acc__doc-link::after {
@@ -257,16 +263,36 @@
 
 .ti-mbr-acc__subhead--report {
   margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+  position: relative;
+}
+
+.ti-mbr-acc__subhead--report::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 8px;
+  background: linear-gradient(
+    90deg,
+    var(--ti-accent) 0%,
+    var(--ti-border) 30%,
+    color-mix(in srgb, var(--ti-border) 55%, transparent) 65%,
+    transparent 100%
+  );
 }
 
 .ti-mbr-acc__link-list {
-  margin: 0;
+  margin: 10px 0 0;
   padding: 0;
   list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
 }
 
 .ti-mbr-acc__link-list li {
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 .ti-mbr-acc__link-list li:last-child {
@@ -274,15 +300,25 @@
 }
 
 .ti-mbr-acc__link-list a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  min-width: 0;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--ti-accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  color: var(--ti-text-strong);
+  border-radius: 5px;
+  border: 1px solid var(--ti-border);
+  background: var(--ti-surface-alt);
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .ti-mbr-acc__link-list a:hover {
-  color: var(--ti-accent-hover);
+  color: var(--ti-text-strong);
+  border-color: var(--ti-accent);
+  background: #e8e8e8;
 }
 
 .ti-mbr-cms-link {
@@ -291,7 +327,7 @@
   gap: 10px;
   margin-top: 4px;
   padding: 14px 20px;
-  border-radius: 0;
+  border-radius: 5px;
   border: 1px solid #9a7b1a;
   background: var(--ti-surface-alt);
   color: var(--ti-text-strong);
