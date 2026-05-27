@@ -24,6 +24,22 @@
   color: #0a0a0a;
 }
 
+.ti-dg-photo {
+  margin: 0 0 24px;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+  line-height: 0;
+  border: 1px solid var(--ti-border);
+  background: var(--ti-surface);
+}
+
+.ti-dg-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .ti-theater-lead {
   margin: 0 0 28px;
   padding: 20px 18px;

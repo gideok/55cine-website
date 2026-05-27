@@ -35,6 +35,17 @@
   margin-bottom: 20px;
 }
 
+.ti .ti-sub-scroll .section-page-head__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 10px;
+}
+
 .ti .ti-sub-scroll .section-page-head__title {
   color: var(--ti-text-strong, #0a0a0a);
+}
+
+.ti .ti-sub-scroll .section-page-subnav {
+  width: 100%;
+  justify-content: flex-end;
 }
