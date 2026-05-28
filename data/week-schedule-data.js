@@ -1,5 +1,5 @@
 /**
- * 이번 주 시간표 정적 데이터 (index.html · test 페이지 공통)
+ * 이번 주 시간표 정적 데이터 (5/21~6/3, index.html · test 페이지 공통)
  * 하위 경로에서 열 때는 로드 전에 window.TI_ASSET_BASE 또는 WEEK_SCHEDULE_ASSET_BASE 를 설정하세요.
  *
  * entries 항목:
@@ -117,96 +117,159 @@
 
   window.WEEK_SCHEDULE = [
     {
-      label: "5/14(목)",
+      label: "5/21(목)",
       weekday: "목",
       entries: normalizeEntries([
-        { time: "11:30", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
-        { time: "13:45", title: "빨간 나라를 보았니", opening: false, closing: false, gv: false, ct: false },
-        { time: "16:00", title: "새벽의 Tango", opening: false, closing: false, gv: false, ct: false },
-        { time: "18:15", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
-        { time: "20:05", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false }
+        { time: "11:30", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
+        { time: "13:15", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
+        { time: "15:10", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "17:10", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "19:30", title: "유신의 집행관", opening: false, closing: false, gv: true, ct: false },
       ])
     },
     {
-      label: "5/15(금)",
+      label: "5/22(금)",
       weekday: "금",
       entries: normalizeEntries([
-        { time: "11:30", title: "누룩", opening: false, closing: false, gv: false, ct: false },
-        { time: "13:15", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
-        { time: "15:00", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
-        { time: "16:55", title: "빨간 나라를 보았니", opening: false, closing: false, gv: false, ct: false },
-        { time: "19:30", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false }
+        { time: "11:30", title: "새벽의 Tango", opening: false, closing: false, gv: false, ct: false },
+        { time: "13:50", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
+        { time: "16:10", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "19:00", title: "이반리 장만옥", opening: false, closing: false, gv: true, ct: false },
       ])
     },
     {
-      label: "5/16(토)",
+      label: "5/23(토)",
       weekday: "토",
       entries: normalizeEntries([
-        { time: "11:30", title: "교생실습", opening: false, closing: false, gv: true, ct: false },
-        { time: "13:20", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false },
-        { time: "15:30", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
-        { time: "17:10", title: "힌드의 목소리", opening: false, closing: false, gv: false, ct: false },
-        { time: "19:00", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false }
+        { time: "11:30", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
+        { time: "13:45", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "15:55", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "17:50", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false },
+        { time: "20:00", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
       ])
     },
     {
-      label: "5/17(일)",
+      label: "5/24(일)",
       weekday: "일",
       entries: normalizeEntries([
-        { time: "11:30", title: "힌드의 목소리", opening: false, closing: false, gv: false, ct: false },
-        { time: "13:15", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
-        { time: "14:55", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false },
-        { time: "17:05", title: "세계의 주인", opening: false, closing: false, gv: false, ct: true },
-        { time: "19:20", title: "교생실습", opening: false, closing: false, gv: false, ct: false }
+        { time: "11:30", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false },
+        { time: "13:40", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "15:35", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "17:45", title: "힌드의 목소리", opening: false, closing: false, gv: false, ct: false },
+        { time: "19:30", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
       ])
     },
     {
-      label: "5/18(월)",
+      label: "5/25(월)",
       weekday: "월",
+      entries: normalizeEntries([
+        { time: "11:30", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "13:40", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false },
+        { time: "15:50", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "17:45", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
+        { time: "20:00", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
+      ])
+    },
+    {
+      label: "5/26(화)",
+      weekday: "화",
+      entries: normalizeEntries([
+        { time: "11:00", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
+        { time: "12:50", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "15:00", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
+        { time: "16:40", title: "힌드의 목소리", opening: false, closing: false, gv: false, ct: false },
+        { time: "19:00", title: "어쩔수가없다", opening: false, closing: false, gv: false, ct: false },
+      ])
+    },
+    {
+      label: "5/27(수)",
+      weekday: "수",
       entries: normalizeEntries([
         { time: "11:30", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
         { time: "13:10", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
-        { time: "15:25", title: "새벽의 Tango", opening: false, closing: false, gv: false, ct: false },
-        { time: "17:40", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
-        { time: "19:30", title: "빨간 나라를 보았니", opening: false, closing: true, gv: false, ct: false }
+        { time: "15:50", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "18:05", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "20:15", title: "뒷자리에 태워줘", opening: true, closing: false, gv: false, ct: false },
       ])
     },
     {
-      label: "5/19(화)",
+      label: "5/28(목)",
+      weekday: "목",
+      entries: normalizeEntries([
+        { time: "10:15", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "12:30", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
+        { time: "14:20", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
+        { time: "16:00", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
+        { time: "18:15", title: "뒷자리에 태워줘", opening: false, closing: false, gv: false, ct: false },
+        { time: "20:20", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+      ])
+    },
+    {
+      label: "5/29(금)",
+      weekday: "금",
+      entries: normalizeEntries([
+        { time: "10:15", title: "누룩", opening: false, closing: false, gv: false, ct: false },
+        { time: "11:55", title: "새벽의 Tango", opening: false, closing: false, gv: false, ct: false },
+        { time: "14:10", title: "뒷자리에 태워줘", opening: false, closing: false, gv: false, ct: false },
+        { time: "16:15", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "18:10", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
+        { time: "20:00", title: "인디피크2025 - 단편 : 도시의 행복", opening: false, closing: false, gv: false, ct: false },
+      ])
+    },
+    {
+      label: "5/30(토)",
+      weekday: "토",
+      entries: normalizeEntries([
+        { time: "11:30", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
+        { time: "13:45", title: "뒷자리에 태워줘", opening: false, closing: false, gv: false, ct: false },
+        { time: "15:50", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "17:45", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false },
+        { time: "19:55", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
+      ])
+    },
+    {
+      label: "5/31(일)",
+      weekday: "일",
+      entries: normalizeEntries([
+        { time: "11:30", title: "뒷자리에 태워줘", opening: false, closing: false, gv: false, ct: false },
+        { time: "14:00", title: "남태령", opening: false, closing: false, gv: true, ct: false },
+        { time: "17:15", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "19:10", title: "새벽의 Tango", opening: false, closing: true, gv: false, ct: false },
+      ])
+    },
+    {
+      label: "6/1(월)",
+      weekday: "월",
+      entries: normalizeEntries([
+        { time: "11:30", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
+        { time: "13:20", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "15:15", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
+        { time: "16:55", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "19:10", title: "뒷자리에 태워줘", opening: false, closing: false, gv: false, ct: false },
+      ])
+    },
+    {
+      label: "6/2(화)",
       weekday: "화",
       entries: normalizeEntries([
-        { time: "10:30", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
-        { time: "12:45", title: "누룩", opening: false, closing: false, gv: false, ct: false },
-        { time: "14:25", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
-        { time: "16:15", title: "새벽의 Tango", opening: false, closing: false, gv: false, ct: false },
-        { time: "18:25", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
-        { time: "20:05", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false }
+        { time: "10:15", title: "누룩", opening: false, closing: false, gv: false, ct: false },
+        { time: "11:55", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
+        { time: "14:10", title: "남태령", opening: false, closing: false, gv: false, ct: false },
+        { time: "16:20", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
+        { time: "18:10", title: "달걀 원정대", opening: false, closing: false, gv: false, ct: false },
+        { time: "20:20", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
       ])
     },
     {
-      label: "5/20(수)",
+      label: "6/3(수)",
       weekday: "수",
       entries: normalizeEntries([
-        { time: "10:30", title: "교생실습", opening: false, closing: false, gv: false, ct: false },
-        { time: "12:20", title: "남태령", opening: true, closing: false, gv: false, ct: false },
-        {
-          time: "14:30",
-          title: "너바나'와는 별 관련 없는 '너바나 더 밴드'",
-          opening: true,
-          closing: false,
-          gv: false,
-          ct: false
-        },
-        { time: "16:25", title: "그녀가 돌아온 날", opening: false, closing: false, gv: false, ct: false },
-        { time: "18:10", title: "남태령", opening: true, closing: false, gv: false, ct: false },
-        {
-          time: "20:20",
-          title: "너바나'와는 별 관련 없는 '너바나 더 밴드'",
-          opening: true,
-          closing: false,
-          gv: false,
-          ct: false
-        }
+        { time: "11:00", title: "세계의 주인", opening: false, closing: false, gv: false, ct: false },
+        { time: "13:15", title: "순례자들은 왜 돌아오지 않는가", opening: true, closing: false, gv: false, ct: false },
+        { time: "14:30", title: "너바나 더 밴드", opening: false, closing: false, gv: false, ct: false },
+        { time: "16:25", title: "뒷자리에 태워줘", opening: false, closing: false, gv: false, ct: false },
+        { time: "18:30", title: "순례자들은 왜 돌아오지 않는가", opening: true, closing: false, gv: false, ct: false },
+        { time: "19:45", title: "남태령", opening: false, closing: false, gv: false, ct: false },
       ])
     }
   ];
@@ -249,11 +312,17 @@
       poster: "images/movies/now-playing/namtaeryeong-poster.jpg",
       detailUrl: "movies/now-playing/movie-detail.html?slug=namtaeryeong"
     },
-    "너바나'와는 별 관련 없는 '너바나 더 밴드'": {
+    "너바나 더 밴드": {
       poster: "images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg",
       detailUrl: "movies/now-playing/movie-detail.html?slug=nirvanna-the-band-the-show-the-movie"
+    },
+    "뒷자리에 태워줘": {
+      poster: "images/movies/now-playing/pillion-poster.jpg",
+      detailUrl: "movies/now-playing/movie-detail.html?slug=pillion"
     }
   };
+
+  window.DEFAULT_SCHEDULE_POSTER = withBase("images/schedule-poster-placeholder.svg");
 
   window.MOVIE_POSTER_BY_TITLE = {};
   window.MOVIE_DETAIL_BY_TITLE = {};

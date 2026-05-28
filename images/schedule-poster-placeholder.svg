@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+  <defs>
+    <linearGradient id="ti-poster-bg" x1="18%" y1="12%" x2="82%" y2="88%">
+      <stop offset="0%" stop-color="#f4f4f4"/>
+      <stop offset="48%" stop-color="#ebebeb"/>
+      <stop offset="100%" stop-color="#e0e0e0"/>
+    </linearGradient>
+    <style type="text/css"><![CDATA[
+      @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+      .ti-poster-type {
+        font-family: "Bebas Neue", "Arial Narrow", "Helvetica Neue", sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+        letter-spacing: 0.16em;
+        fill: #6b6b6b;
+      }
+    ]]></style>
+  </defs>
+  <circle cx="40" cy="40" r="39" fill="url(#ti-poster-bg)" stroke="#d6d6d6" stroke-width="1"/>
+  <text class="ti-poster-type" x="40" y="46" text-anchor="middle">55CINE</text>
+</svg>

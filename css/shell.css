@@ -191,12 +191,14 @@ body.ti {
 .ti-day-tabs {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
   margin-bottom: 12px;
 }
 
 /* 표시 최대 길이 "12/31(금)" 기준 고정 너비 */
-.ti-day-tab {
+.ti-day-tab,
+.ti-week-nav-btn {
   --ti-day-tab-width: 5.5rem;
   box-sizing: border-box;
   width: var(--ti-day-tab-width);
@@ -215,6 +217,17 @@ body.ti {
   text-align: center;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+.ti-week-nav-btn {
+  background: #eef2f6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ti-week-nav-btn:hover {
+  background: #e0e8ef;
+  border-color: #666;
 }
 
 .ti-day-tab[aria-selected="true"] {
@@ -266,8 +279,20 @@ body.ti {
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #999;
+  border: 0px solid #999; /* 시간표 포스터 테두리 제거 */
   /* filter: grayscale(1); */
+}
+
+.ti-poster--placeholder {
+  object-fit: cover;
+  background: #e6e6e6;
+}
+
+.ti-sched-empty {
+  margin: 0;
+  padding: 12px 0;
+  font-size: 0.78rem;
+  color: #666;
 }
 
 .ti-title {
@@ -426,5 +451,37 @@ a.ti-book {
     overflow-y: visible;
     max-height: none;
     -webkit-overflow-scrolling: auto;
+  }
+
+  .ti-sched-scroll.ti-sched-scroll--swipe {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+    padding-right: 0;
+  }
+
+  .ti-sched-scroll.ti-sched-scroll--swipe::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ti-sched-scroll.ti-sched-scroll--swipe .ti-panel {
+    display: block;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    box-sizing: border-box;
+    padding-right: 4px;
+  }
+
+  .ti-sched-scroll.ti-sched-scroll--swipe .ti-panel[hidden] {
+    display: block;
   }
 }
