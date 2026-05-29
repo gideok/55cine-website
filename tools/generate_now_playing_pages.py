@@ -387,7 +387,7 @@ DETAIL_TEMPLATE = """<!DOCTYPE html>
           <div class="movie-detail-box-inner">
             <div class="movie-detail-tabs" role="tablist" aria-label="영화 정보 탭">
               <button type="button" class="movie-detail-tab" role="tab" id="{tab_syn_id}" aria-selected="true" aria-controls="{panel_syn_id}">줄거리</button>
-              <button type="button" class="movie-detail-tab" role="tab" id="{tab_tr_id}" aria-selected="false" aria-controls="{panel_tr_id}" tabindex="-1">예고</button>
+              <button type="button" class="movie-detail-tab" role="tab" id="{tab_tr_id}" aria-selected="false" aria-controls="{panel_tr_id}" tabindex="-1">예고편</button>
             </div>
             <div id="{panel_syn_id}" class="movie-detail-tabpanel" role="tabpanel" aria-labelledby="{tab_syn_id}">
               <p class="movie-detail-synopsis">{synopsis}</p>

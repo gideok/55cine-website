@@ -278,47 +278,47 @@
   var nowPlayingByTitle = {
     "달걀 원정대": {
       poster: "images/movies/now-playing/riddle-of-fire-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=riddle-of-fire"
+      detailUrl: "movies/movie-detail.html?slug=riddle-of-fire"
     },
     "그녀가 돌아온 날": {
       poster: "images/movies/now-playing/the-day-she-returns-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=the-day-she-returns"
+      detailUrl: "movies/movie-detail.html?slug=the-day-she-returns"
     },
     "새벽의 Tango": {
       poster: "images/movies/now-playing/tango-at-dawn-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=tango-at-dawn"
+      detailUrl: "movies/movie-detail.html?slug=tango-at-dawn"
     },
     "힌드의 목소리": {
       poster: "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=the-voice-of-hind-rajab"
+      detailUrl: "movies/movie-detail.html?slug=the-voice-of-hind-rajab"
     },
     누룩: {
       poster: "images/movies/now-playing/the-yeast-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=the-yeast"
+      detailUrl: "movies/movie-detail.html?slug=the-yeast"
     },
     "빨간 나라를 보았니": {
       poster: "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=have-you-seen-the-land-of-the-red"
+      detailUrl: "movies/movie-detail.html?slug=have-you-seen-the-land-of-the-red"
     },
     "세계의 주인": {
       poster: "images/movies/now-playing/the-world-of-love-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=the-world-of-love"
+      detailUrl: "movies/movie-detail.html?slug=the-world-of-love"
     },
     "교생실습": {
       poster: "images/movies/now-playing/teaching-practice-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=teaching-practice"
+      detailUrl: "movies/movie-detail.html?slug=teaching-practice"
     },
     "남태령": {
       poster: "images/movies/now-playing/namtaeryeong-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=namtaeryeong"
+      detailUrl: "movies/movie-detail.html?slug=namtaeryeong"
     },
     "너바나 더 밴드": {
       poster: "images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=nirvanna-the-band-the-show-the-movie"
+      detailUrl: "movies/movie-detail.html?slug=nirvanna-the-band-the-show-the-movie"
     },
     "뒷자리에 태워줘": {
       poster: "images/movies/now-playing/pillion-poster.jpg",
-      detailUrl: "movies/now-playing/movie-detail.html?slug=pillion"
+      detailUrl: "movies/movie-detail.html?slug=pillion"
     }
   };
 
@@ -347,10 +347,10 @@
   window.movieDetailUrlForPoster = function (posterUrl) {
     if (!posterUrl) return "";
     if (posterUrl.indexOf("movie001.jpg") !== -1) {
-      return resolveDetailUrl("movies/now-playing/movie-detail.html");
+      return resolveDetailUrl("movies/movie-detail.html");
     }
     if (posterUrl.indexOf("movie002.jpg") !== -1) {
-      return resolveDetailUrl("movies/now-playing/movie-detail.html");
+      return resolveDetailUrl("movies/movie-detail.html");
     }
     return "";
   };

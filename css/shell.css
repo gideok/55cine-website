@@ -189,22 +189,20 @@ body.ti {
 }
 
 .ti-day-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
   margin-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* 표시 최대 길이 "12/31(금)" 기준 고정 너비 */
+/* PC·모바일 공통 4열 — 셀 크기 동일, 그리드 오른쪽 끝 = 아래 예매 버튼 열 */
 .ti-day-tab,
 .ti-week-nav-btn {
-  --ti-day-tab-width: 5.5rem;
   box-sizing: border-box;
-  width: var(--ti-day-tab-width);
-  min-width: var(--ti-day-tab-width);
-  max-width: var(--ti-day-tab-width);
-  flex: 0 0 var(--ti-day-tab-width);
+  width: 100%;
+  min-width: 0;
   padding: 6px 4px;
   border: 1px solid #9a9a9a;
   background: #fff;
@@ -240,7 +238,8 @@ body.ti {
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding-right: 4px;
+  padding-right: 0;
+  box-sizing: border-box;
 }
 
 .ti-panel {

@@ -77,6 +77,7 @@
       "/osinneun-gil.html",
       "/special-exhibition.html",
       "/special-event.html",
+      "/movies/movie-detail.html",
       "/movies/now-playing/",
       "/magazine/preview/",
       "/magazine/serial/",

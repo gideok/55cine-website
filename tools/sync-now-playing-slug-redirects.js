@@ -12,7 +12,7 @@ const OUT_DIR = path.join(ROOT, "movies/now-playing");
 const TEMPLATE_NAME = "movie-detail.html";
 
 function redirectHtml(slug) {
-  const q = "movie-detail.html?slug=" + encodeURIComponent(slug);
+  const q = "../movie-detail.html?slug=" + encodeURIComponent(slug);
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>

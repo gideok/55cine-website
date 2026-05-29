@@ -1,19 +1,20 @@
 /**
- * 현재 상영작 상세 — JSON 샘플 또는 API 응답으로 렌더
- * SEO 경로: movies/now-playing/{slug}.html (파일명 = slug)
+ * 영화 상세 (현재·예정·지난 상영작 공용)
+ * URL: movies/movie-detail.html?slug={slug}&from=now-playing|upcoming|past
  * window.TI_MOVIE_DETAIL_CONFIG
  */
 (function () {
   var cfg = window.TI_MOVIE_DETAIL_CONFIG || {};
   var SITE_BASE = typeof window.TI_ASSET_BASE === "string" ? window.TI_ASSET_BASE : "";
-  var PAGE_BASE = cfg.pageBase || "data/";
+  var PAGE_BASE = cfg.pageBase || "movies/now-playing/data/";
+  var CATALOG_SECTIONS = ["now-playing", "upcoming", "past"];
   var BOOKING_URL =
     cfg.bookingUrl ||
     "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059";
-  var LIST_PAGES = {
-    "now-playing": cfg.listPageUrl || "../../now-playing.html",
-    upcoming: "../../upcoming-playing.html",
-    past: "../../past-playing.html"
+  var LIST_PAGE_PATHS = {
+    "now-playing": "now-playing.html",
+    upcoming: "upcoming-playing.html",
+    past: "past-playing.html"
   };
   var LIST_LABELS = {
     "now-playing": "현재 상영작 목록",
@@ -46,16 +47,27 @@
     if (params.get("slug")) return params.get("slug").trim();
     var path = (location.pathname || "").replace(/\\/g, "/");
     var file = path.split("/").pop() || "";
-    if (file === "movies/now-playing/movie-detail.html") return "";
+    if (file === "movie-detail.html" || file === "movies/now-playing/movie-detail.html") return "";
     if (file.endsWith(".html")) return file.slice(0, -5);
     return "";
   }
 
+  function normalizeCatalogSection(raw) {
+    if (!raw) return "";
+    var s = String(raw).trim().toLowerCase();
+    if (s === "now" || s === "current" || s === "now-playing") return "now-playing";
+    if (s === "upcoming" || s === "scheduled") return "upcoming";
+    if (s === "past" || s === "archive") return "past";
+    return "";
+  }
+
   function getCatalogSection() {
-    if (cfg.catalogSection) return cfg.catalogSection;
+    if (cfg.catalogSection) return normalizeCatalogSection(cfg.catalogSection) || cfg.catalogSection;
     var params = new URLSearchParams(window.location.search);
-    var section = params.get("section");
-    if (section) return section.trim();
+    var fromQuery =
+      normalizeCatalogSection(params.get("from")) ||
+      normalizeCatalogSection(params.get("section"));
+    if (fromQuery) return fromQuery;
     return "now-playing";
   }
 
@@ -64,13 +76,50 @@
     return PAGE_BASE + getCatalogSection() + "-movies.json";
   }
 
+  function moviesFromPayload(payload) {
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray(payload.movies)) return payload.movies;
+    return [];
+  }
+
   function fetchMovieCatalog() {
     if (typeof cfg.fetchMovies === "function") {
       return Promise.resolve(cfg.fetchMovies());
     }
-    return fetch(buildDataUrl(), { credentials: "same-origin" }).then(function (res) {
-      if (!res.ok) throw new Error("영화 데이터를 불러오지 못했습니다. (" + res.status + ")");
-      return res.json();
+    if (cfg.dataUrl) {
+      return fetch(resolveAssetUrl(cfg.dataUrl), { credentials: "same-origin" }).then(function (res) {
+        if (!res.ok) throw new Error("영화 데이터를 불러오지 못했습니다. (" + res.status + ")");
+        return res.json();
+      });
+    }
+
+    return Promise.all(
+      CATALOG_SECTIONS.map(function (section) {
+        var url = PAGE_BASE + section + "-movies.json";
+        return fetch(resolveAssetUrl(url), { credentials: "same-origin" })
+          .then(function (res) {
+            if (!res.ok) return [];
+            return res.json().then(moviesFromPayload);
+          })
+          .catch(function () {
+            return [];
+          });
+      })
+    ).then(function (chunks) {
+      var merged = [];
+      var seen = {};
+      chunks.forEach(function (list) {
+        list.forEach(function (movie) {
+          var key = String(movie.slug || "").toLowerCase();
+          if (!key || seen[key]) return;
+          seen[key] = true;
+          merged.push(movie);
+        });
+      });
+      if (!merged.length) {
+        throw new Error("영화 데이터를 불러오지 못했습니다.");
+      }
+      return merged;
     });
   }
 
@@ -260,7 +309,7 @@
       tabTrailer.setAttribute("aria-controls", "movie-tabpanel-trailer-" + slug);
       tabTrailer.setAttribute("aria-selected", "false");
       tabTrailer.tabIndex = -1;
-      tabTrailer.textContent = "예고";
+      tabTrailer.textContent = "예고편";
       tabs.appendChild(tabTrailer);
     }
 
@@ -354,7 +403,8 @@
     var back = document.querySelector(".np-back a");
     if (!back) return;
     var section = getCatalogSection();
-    back.href = LIST_PAGES[section] || LIST_PAGES["now-playing"];
+    var listPath = LIST_PAGE_PATHS[section] || LIST_PAGE_PATHS["now-playing"];
+    back.href = resolveAssetUrl(listPath);
     back.textContent = LIST_LABELS[section] || LIST_LABELS["now-playing"];
   }
 

@@ -46,6 +46,65 @@
   var enrichedDays = [];
   var scrollSyncBound = false;
   var weekTransitionLock = false;
+  var SCHEDULE_STATE_KEY = "ti-gnb-schedule-state";
+
+  function saveScheduleState() {
+    var days = daysForActiveView();
+    if (!days.length) return;
+    var day = days[scheduleState.activeIndex];
+    try {
+      sessionStorage.setItem(
+        SCHEDULE_STATE_KEY,
+        JSON.stringify({
+          weekView: scheduleState.weekView,
+          activeIndex: scheduleState.activeIndex,
+          dayLabel: day && day.label ? day.label : ""
+        })
+      );
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function getSavedScheduleState() {
+    try {
+      var raw = sessionStorage.getItem(SCHEDULE_STATE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function resolveSavedScheduleIndex(saved, days) {
+    if (!saved || !days.length) return -1;
+    if (saved.dayLabel) {
+      var byLabel = days.findIndex(function (day) {
+        return day.label === saved.dayLabel;
+      });
+      if (byLabel >= 0) return byLabel;
+    }
+    if (typeof saved.activeIndex === "number" && saved.activeIndex >= 0 && saved.activeIndex < days.length) {
+      return saved.activeIndex;
+    }
+    return -1;
+  }
+
+  function applySavedScheduleState(saved) {
+    if (!saved) return false;
+    var targetWeek =
+      saved.weekView === "following" && hasFollowingWeekData() ? "following" : "primary";
+    if (scheduleState.weekView !== targetWeek) {
+      scheduleState.weekView = targetWeek;
+      renderSchedule();
+    }
+    var days = daysForActiveView();
+    if (!days.length) return false;
+    var index = resolveSavedScheduleIndex(saved, days);
+    if (index < 0) index = defaultActiveIndex(days);
+    setActiveIndex(index, { scrollTab: true, scrollPanel: false, skipSave: true });
+    return true;
+  }
 
   function stripTime(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -225,6 +284,16 @@
         panel.hidden = !active;
       });
     }
+
+    if (!options || !options.skipSave) {
+      saveScheduleState();
+    }
+  }
+
+  function bindSchedulePreserveOnNavigate(link) {
+    if (!link || link.dataset.schedulePreserveBound === "1") return;
+    link.dataset.schedulePreserveBound = "1";
+    link.addEventListener("click", saveScheduleState);
   }
 
   function isMobileSwipeMode() {
@@ -294,6 +363,7 @@
           panels.forEach(function (panel, i) {
             panel.classList.toggle("is-active", i === nearest);
           });
+          saveScheduleState();
         }
       },
       { passive: true }
@@ -356,6 +426,7 @@
       var la = document.createElement("a");
       la.href = detailUrl;
       la.textContent = scheduleEntry.title;
+      bindSchedulePreserveOnNavigate(la);
       titleText.appendChild(la);
     } else {
       titleText.textContent = scheduleEntry.title;
@@ -381,7 +452,10 @@
     book.textContent = "예매";
 
     var posterWrap = detailUrl ? document.createElement("a") : document.createElement("span");
-    if (detailUrl) posterWrap.href = detailUrl;
+    if (detailUrl) {
+      posterWrap.href = detailUrl;
+      bindSchedulePreserveOnNavigate(posterWrap);
+    }
     posterWrap.appendChild(img);
 
     row.appendChild(slot);
@@ -431,9 +505,9 @@
 
       if (i === days.length - 1) {
         if (showFollowingNav) {
-          dayTabs.appendChild(createWeekNavButton("→ 다음주시간표", "following"));
+          dayTabs.appendChild(createWeekNavButton("→ 다음주", "following"));
         } else if (showPrimaryNav) {
-          dayTabs.appendChild(createWeekNavButton("← 이번주시간표", "primary"));
+          dayTabs.appendChild(createWeekNavButton("← 이번주", "primary"));
         }
       }
 
@@ -473,11 +547,21 @@
       return compareDates(a.date, b.date);
     });
 
-    scheduleState.weekView = "primary";
-    scheduleState.activeIndex = defaultActiveIndex(daysForActiveView());
+    var saved = getSavedScheduleState();
+    if (saved && saved.dayLabel) {
+      scheduleState.weekView =
+        saved.weekView === "following" && hasFollowingWeekData() ? "following" : "primary";
+      var savedDays = daysForActiveView();
+      var savedIndex = resolveSavedScheduleIndex(saved, savedDays);
+      scheduleState.activeIndex = savedIndex >= 0 ? savedIndex : defaultActiveIndex(savedDays);
+    } else {
+      scheduleState.weekView = "primary";
+      scheduleState.activeIndex = defaultActiveIndex(daysForActiveView());
+    }
 
     renderSchedule();
-    setActiveIndex(scheduleState.activeIndex, { scrollTab: true, scrollPanel: false });
+    setActiveIndex(scheduleState.activeIndex, { scrollTab: true, scrollPanel: false, skipSave: true });
+    saveScheduleState();
 
     bindScrollSync();
 
@@ -487,6 +571,14 @@
       MOBILE_MQ.addListener(updateSwipeLayout);
     }
   }
+
+  function restoreScheduleOnPageShow() {
+    if (!scheduleDom.dayTabs || scheduleDom.dayTabs.dataset.scheduleReady !== "1") return;
+    var saved = getSavedScheduleState();
+    if (saved) applySavedScheduleState(saved);
+  }
+
+  window.addEventListener("pageshow", restoreScheduleOnPageShow);
 
   window.addEventListener("ti-left-gnb:loaded", initTiWeekSchedule);
   initTiWeekSchedule();
