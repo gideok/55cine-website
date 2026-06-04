@@ -2,6 +2,7 @@
  * 상영작 목록 페이지 공통 (현재 / 예정 / 지난)
  * window.TI_MOVIE_LIST_PAGE_CONFIG
  * (하위 호환: TI_NOW_PLAYING_LIST_CONFIG)
+ * 최신 버전 테스트
  */
 (function () {
   var cfg = window.TI_MOVIE_LIST_PAGE_CONFIG || window.TI_NOW_PLAYING_LIST_CONFIG || {};
@@ -145,13 +146,15 @@
     history.replaceState(null, "", url);
   }
 
-  function fetchMoviePage(page, query) {
+  function fetchMoviePage(page, query, epoch) {
     return Promise.resolve(cfg.fetchPage(page, PAGE_SIZE, query || undefined)).then(
       function (res) {
+        if (epoch == null || epoch === state.listEpoch) {
+          state.apiTotal = (res && res.total) || 0;
+          state.apiTotalPages = (res && res.totalPages) || 0;
+          state.page = (res && res.page) || page;
+        }
         var payload = res && res.movies ? res.movies : res;
-        state.apiTotal = (res && res.total) || 0;
-        state.apiTotalPages = (res && res.totalPages) || 0;
-        state.page = (res && res.page) || page;
         return normalizeListPayload(payload);
       }
     );
@@ -259,6 +262,32 @@
     return state.listEpoch;
   }
 
+  function isActiveEpoch(epoch) {
+    return epoch === state.listEpoch;
+  }
+
+  function clearListLoadingUi() {
+    state.isLoadingPage = false;
+    state.isLoadingMore = false;
+    setMobileLoadMoreSpinner(false);
+  }
+
+  /**
+   * @param {number} epoch
+   * @param {Array} list
+   * @param {{ page?: number, mobileApiPage?: number, mobileShown?: number }} [opts]
+   */
+  function completePageLoad(epoch, list, opts) {
+    if (!isActiveEpoch(epoch)) return;
+    clearListLoadingUi();
+    movieList = list || [];
+    opts = opts || {};
+    if (opts.page != null) state.page = opts.page;
+    if (opts.mobileApiPage != null) state.mobileApiPage = opts.mobileApiPage;
+    if (opts.mobileShown != null) state.mobileShown = opts.mobileShown;
+    render();
+  }
+
   function renderCard(m) {
     var article = document.createElement("article");
     article.className = "np-card";
@@ -353,38 +382,35 @@
 
   function listIsEmpty() {
     if (USE_PAGED_API) {
+      if (hasActiveSearch() && !movieList.length) return true;
       return state.apiTotal === 0 || !allMovies().length;
     }
     return !allMovies().length;
   }
 
-  function renderDesktopPage(page) {
-    if (state.isLoadingPage) return;
-    var epoch = bumpListEpoch();
+  function renderDesktopPage(page, reuseEpoch) {
+    var epoch = reuseEpoch != null ? reuseEpoch : bumpListEpoch();
     state.isLoadingPage = true;
     showListMessage(LOADING_MESSAGE, false, true);
-    fetchMoviePage(page, normalizeSearchText(state.searchQuery))
+    fetchMoviePage(page, normalizeSearchText(state.searchQuery), epoch)
       .then(waitForTestSpinner)
       .then(function (list) {
-        if (epoch !== state.listEpoch) return;
-        movieList = list;
-        state.page = page;
-        state.isLoadingPage = false;
-        render();
+        completePageLoad(epoch, list, { page: page });
       })
       .catch(function (err) {
-        if (epoch !== state.listEpoch) return;
-        state.isLoadingPage = false;
+        if (!isActiveEpoch(epoch)) return;
+        clearListLoadingUi();
         movieList = [];
         showListMessage((err && err.message) || ERROR_MESSAGE, true);
       });
   }
 
   function render() {
+    clearListLoadingUi();
     var list = dedupeMoviesBySlug(allMovies());
     if (listIsEmpty()) {
       var msg = searchStatusMessage() || EMPTY_MESSAGE;
-      showListMessage(msg, false);
+      showListMessage(msg, false, false);
       if (countEl && hasActiveSearch()) {
         countEl.textContent = "검색 결과 0편";
       }
@@ -476,6 +502,7 @@
   }
 
   function finishMobileLoadMore(applyFn) {
+    var epoch = state.listEpoch;
     state.isLoadingMore = true;
     setMobileLoadMoreSpinner(true);
     var startedAt = Date.now();
@@ -486,9 +513,9 @@
         var elapsed = Date.now() - startedAt;
         var delay = Math.max(0, minSpinnerMs - elapsed);
         window.setTimeout(function () {
+          if (!isActiveEpoch(epoch)) return;
           applyFn();
-          state.isLoadingMore = false;
-          setMobileLoadMoreSpinner(false);
+          clearListLoadingUi();
           render();
         }, delay);
       });
@@ -521,21 +548,19 @@
     var epoch = state.listEpoch;
     state.isLoadingMore = true;
     setMobileLoadMoreSpinner(true);
-    fetchMoviePage(nextPage, normalizeSearchText(state.searchQuery))
+    fetchMoviePage(nextPage, normalizeSearchText(state.searchQuery), epoch)
       .then(waitForTestSpinner)
       .then(function (pageList) {
-        if (epoch !== state.listEpoch) return;
+        if (!isActiveEpoch(epoch)) return;
         state.mobileApiPage = nextPage;
         movieList = dedupeMoviesBySlug(movieList.concat(pageList));
         state.mobileShown = Math.min(state.mobileShown + PAGE_SIZE, movieList.length);
-        state.isLoadingMore = false;
-        setMobileLoadMoreSpinner(false);
+        clearListLoadingUi();
         render();
       })
       .catch(function () {
-        if (epoch !== state.listEpoch) return;
-        state.isLoadingMore = false;
-        setMobileLoadMoreSpinner(false);
+        if (!isActiveEpoch(epoch)) return;
+        clearListLoadingUi();
       });
   }
 
@@ -568,7 +593,6 @@
   function applyPagedSearch() {
     var query = normalizeSearchText(state.searchQuery);
     var epoch = bumpListEpoch();
-    state.isLoadingPage = true;
     state.isLoadingMore = false;
     setMobileLoadMoreSpinner(false);
     if (io) {
@@ -584,24 +608,24 @@
     state.mobileShown = PAGE_SIZE;
 
     if (isDesktop()) {
-      renderDesktopPage(1);
+      renderDesktopPage(1, epoch);
       return;
     }
 
-    fetchMoviePage(1, query || undefined)
+    state.isLoadingPage = true;
+    fetchMoviePage(1, query || undefined, epoch)
       .then(waitForTestSpinner)
       .then(function (list) {
-        if (epoch !== state.listEpoch) return;
-        movieList = list;
-        state.mobileApiPage = 1;
-        state.mobileShown = PAGE_SIZE;
-        state.isLoadingPage = false;
-        render();
+        completePageLoad(epoch, list, {
+          page: 1,
+          mobileApiPage: 1,
+          mobileShown: PAGE_SIZE
+        });
         setupInfinite();
       })
       .catch(function (err) {
-        if (epoch !== state.listEpoch) return;
-        state.isLoadingPage = false;
+        if (!isActiveEpoch(epoch)) return;
+        clearListLoadingUi();
         movieList = [];
         showListMessage((err && err.message) || ERROR_MESSAGE, true);
       });
@@ -638,9 +662,9 @@
     for (p = 1; p <= targetApiPage; p++) {
       (function (pageNum) {
         chain = chain.then(function () {
-          if (epoch !== state.listEpoch) return;
-          return fetchMoviePage(pageNum, query).then(function (list) {
-            if (epoch !== state.listEpoch) return;
+          if (!isActiveEpoch(epoch)) return;
+          return fetchMoviePage(pageNum, query, epoch).then(function (list) {
+            if (!isActiveEpoch(epoch)) return;
             movieList = dedupeMoviesBySlug(movieList.concat(list));
             state.mobileApiPage = pageNum;
           });
@@ -650,16 +674,16 @@
     chain
       .then(waitForTestSpinner)
       .then(function () {
-        if (epoch !== state.listEpoch) return;
-        state.mobileShown = Math.min(targetShown, movieList.length);
-        state.page = 1;
-        state.isLoadingPage = false;
-        render();
+        if (!isActiveEpoch(epoch)) return;
+        completePageLoad(epoch, movieList, {
+          page: 1,
+          mobileShown: Math.min(targetShown, movieList.length)
+        });
         setupInfinite();
       })
       .catch(function (err) {
-        if (epoch !== state.listEpoch) return;
-        state.isLoadingPage = false;
+        if (!isActiveEpoch(epoch)) return;
+        clearListLoadingUi();
         movieList = [];
         showListMessage((err && err.message) || ERROR_MESSAGE, true);
       });
@@ -697,20 +721,19 @@
 
     var epoch = bumpListEpoch();
     state.isLoadingPage = true;
-    fetchMoviePage(1, query)
+    fetchMoviePage(1, query, epoch)
       .then(waitForTestSpinner)
       .then(function (list) {
-        if (epoch !== state.listEpoch) return;
-        movieList = list;
-        state.mobileApiPage = 1;
-        state.mobileShown = PAGE_SIZE;
-        state.isLoadingPage = false;
-        render();
+        completePageLoad(epoch, list, {
+          page: 1,
+          mobileApiPage: 1,
+          mobileShown: PAGE_SIZE
+        });
         setupInfinite();
       })
       .catch(function (err) {
-        if (epoch !== state.listEpoch) return;
-        state.isLoadingPage = false;
+        if (!isActiveEpoch(epoch)) return;
+        clearListLoadingUi();
         movieList = [];
         showListMessage((err && err.message) || ERROR_MESSAGE, true);
       });
