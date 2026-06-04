@@ -159,8 +159,15 @@
   function createInfoDd(movie) {
     var dd = document.createElement("dd");
     dd.className = "movie-detail-info";
+    var parts = [];
     if (movie.info) {
-      dd.appendChild(document.createTextNode(movie.info + " "));
+      var infoText = String(movie.info).replace(/\s*·\s*$/g, "").trim();
+      if (infoText) parts.push(infoText);
+    }
+    var mins = movie.runningMinutes != null ? Number(movie.runningMinutes) : 0;
+    if (mins > 0) parts.push(mins + "분");
+    if (parts.length) {
+      dd.appendChild(document.createTextNode(parts.join(" · ") + " · "));
     }
     if (movie.ratingImage) {
       var rating = document.createElement("img");
@@ -419,9 +426,17 @@
 
     setStatus("영화 정보를 불러오는 중…", false);
 
-    fetchMovieCatalog()
-      .then(function (catalog) {
-        var movie = findMovieBySlug(catalog, slug);
+    var loadPromise;
+    if (typeof cfg.fetchMovie === "function") {
+      loadPromise = Promise.resolve(cfg.fetchMovie(slug));
+    } else {
+      loadPromise = fetchMovieCatalog().then(function (catalog) {
+        return findMovieBySlug(catalog, slug);
+      });
+    }
+
+    loadPromise
+      .then(function (movie) {
         if (!movie) {
           throw new Error('"' + slug + '" 영화 정보를 찾을 수 없습니다.');
         }

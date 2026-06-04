@@ -1,70 +1,64 @@
 {
   "movies": [
     {
-      "slug": "riddle-of-fire",
-      "poster": "images/movies/now-playing/riddle-of-fire-poster.jpg",
-      "titleKo": "달걀 원정대",
-      "titleEn": "Riddle of Fire"
-    },
-    {
       "slug": "the-day-she-returns",
-      "poster": "images/movies/now-playing/the-day-she-returns-poster.jpg",
       "titleKo": "그녀가 돌아온 날",
-      "titleEn": "The Day She Returns"
-    },
-    {
-      "slug": "tango-at-dawn",
-      "poster": "images/movies/now-playing/tango-at-dawn-poster.jpg",
-      "titleKo": "새벽의 Tango",
-      "titleEn": "Tango at Dawn"
-    },
-    {
-      "slug": "the-voice-of-hind-rajab",
-      "poster": "images/movies/now-playing/the-voice-of-hind-rajab-poster.jpg",
-      "titleKo": "힌드의 목소리",
-      "titleEn": "The Voice of Hind Rajab"
-    },
-    {
-      "slug": "the-yeast",
-      "poster": "images/movies/now-playing/the-yeast-poster.jpg",
-      "titleKo": "누룩",
-      "titleEn": "The Yeast"
-    },
-    {
-      "slug": "have-you-seen-the-land-of-the-red",
-      "poster": "images/movies/now-playing/have-you-seen-the-land-of-the-red-poster.jpg",
-      "titleKo": "빨간 나라를 보았니",
-      "titleEn": "Have You Seen the Land of the Red?"
-    },
-    {
-      "slug": "dear-juhee",
-      "poster": "images/movies/now-playing/dear-juhee-poster.jpg",
-      "titleKo": "주희에게",
-      "titleEn": "Dear Juhee"
-    },
-    {
-      "slug": "the-world-of-love",
-      "poster": "images/movies/now-playing/the-world-of-love-poster.jpg",
-      "titleKo": "세계의 주인",
-      "titleEn": "The World of Love"
-    },
-    {
-      "slug": "teaching-practice",
-      "poster": "images/movies/now-playing/teaching-practice-poster.jpg",
-      "titleKo": "교생실습",
-      "titleEn": "Teaching Practice: Idiot Girls and School Ghost 2"
+      "titleEn": "The Day She Returns",
+      "poster": "images/movies/wp/wp_13_1.jpg"
     },
     {
       "slug": "namtaeryeong",
-      "poster": "images/movies/now-playing/namtaeryeong-poster.jpg",
       "titleKo": "남태령",
-      "titleEn": "The Longest Night: Namtaeryeong"
+      "titleEn": "The Longest Night: Namtaeryeong",
+      "poster": "images/movies/wp/wp_14_1.jpg"
+    },
+    {
+      "slug": "riddle-of-fire",
+      "titleKo": "달걀 원정대",
+      "titleEn": "Riddle of Fire",
+      "poster": "images/movies/wp/wp_15_1.jpg"
+    },
+    {
+      "slug": "the-world-of-love",
+      "titleKo": "세계의 주인",
+      "titleEn": "The World of Love",
+      "poster": "images/movies/wp/wp_16_1.jpg"
+    },
+    {
+      "slug": "pilgrim",
+      "titleKo": "순례자들은 왜 돌아오지 않는가",
+      "titleEn": "Why Don't Pilgrims Return",
+      "poster": "images/movies/wp/wp_17_1.jpg"
     },
     {
       "slug": "nirvanna-the-band-the-show-the-movie",
-      "poster": "images/movies/now-playing/nirvanna-the-band-the-show-the-movie-poster.jpg",
       "titleKo": "너바나 더 밴드",
-      "titleEn": "Nirvanna the Band the Show the Movie"
+      "titleEn": "Nirvanna the Band the Show the Movie",
+      "poster": "images/movies/wp/wp_18_1.jpg"
+    },
+    {
+      "slug": "teaching-practice",
+      "titleKo": "교생실습",
+      "titleEn": "Teaching Practice",
+      "poster": "images/movies/wp/wp_19_1.jpg"
+    },
+    {
+      "slug": "pillion",
+      "titleKo": "뒷자리에 태워줘",
+      "titleEn": "Pillion",
+      "poster": "images/movies/wp/wp_20_1.jpg"
+    },
+    {
+      "slug": "the-yeast",
+      "titleKo": "누룩",
+      "titleEn": "The Yeast",
+      "poster": "images/movies/wp/wp_21_1.jpg"
+    },
+    {
+      "slug": "eureka",
+      "titleKo": "유레카",
+      "titleEn": "Eureka",
+      "poster": "images/movies/wp/wp_22_1.png"
     }
   ]
 }

@@ -58,10 +58,16 @@
     window.TI_MOVIE_DETAIL_CONFIG = {
       pageBase: "movies/now-playing/data/",
       bookingUrl:
-        "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059"
+        "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+      fetchMovie: function (slug) {
+        var params = new URLSearchParams(window.location.search);
+        var from = params.get("from") || params.get("section");
+        return window.TiApi.getMovieBySlug(slug, from || undefined);
+      }
     };
   </script>
-  <script src="../data/week-schedule-data.js"></script>
+    <script src="../js/api/client.js"></script>
+<script src="../data/week-schedule-data.js"></script>
   <script src="../js/left-gnb-include.js"></script>
   <script src="../js/mobile-menu.js"></script>
   <script src="../js/scroll-top.js"></script>

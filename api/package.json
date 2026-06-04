@@ -1,0 +1,35 @@
+{
+  "name": "55cine-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "55cine website backend API (MS SQL Server)",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:migrate": "node scripts/run-all-sql.mjs",
+    "db:inspect": "node scripts/inspect-db.mjs",
+    "db:seed:web-program": "node scripts/seed-web-program.mjs",
+    "db:seed:content": "node scripts/seed-web-program-content.mjs",
+    "db:sync:schedule-images": "node scripts/sync-schedule-page-images.mjs",
+    "db:generate:thumbs": "node scripts/generate-wp-thumbnails.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.1",
+    "dotenv": "^16.5.0",
+    "fastify": "^5.3.3",
+    "mssql": "^11.0.1",
+    "sharp": "^0.34.5",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/mssql": "^9.1.7",
+    "@types/node": "^22.15.21",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

@@ -198,13 +198,14 @@
     return article;
   }
 
-  function showListMessage(message, isError) {
+  function showListMessage(message, isError, isLoading) {
     grid.innerHTML = "";
     var wrap = document.createElement("div");
-    wrap.className = "np-list-status" + (isError ? " is-error" : " is-loading");
+    var statusClass = isError ? " is-error" : isLoading ? " is-loading" : " is-empty";
+    wrap.className = "np-list-status" + statusClass;
     wrap.setAttribute("role", "status");
 
-    if (!isError && window.TiLogoSpinner) {
+    if (isLoading && !isError && window.TiLogoSpinner) {
       wrap.appendChild(
         window.TiLogoSpinner.create({
           size: 72,
@@ -529,7 +530,7 @@
 
   function boot() {
     setupSearch();
-    showListMessage(LOADING_MESSAGE, false);
+    showListMessage(LOADING_MESSAGE, false, true);
 
     fetchMovieList()
       .then(waitForTestSpinner)

@@ -2,7 +2,7 @@
 
 **목표:** Frontend(현재 정적 UI)와 Backend(API·DB)를 분리하고, JSON/전역 변수로 임시 처리 중인 데이터를 API 기반으로 전환한다.  
 **전제:** Phase 1은 정적 HTML·CSS·Vanilla JS·`TI_*_CONFIG` 패턴으로 UI·데이터 접근 계층을 분리해 두었음 ([CSS리팩토링전략.md](./CSS리팩토링전략.md), [designsystem.html](./designsystem.html)).  
-**DB 전제:** **기존 관련 시스템과 동일한 MySQL(MariaDB)** 를 쓰되, DB는 **웹 서버와 분리된 외부 RDB 서버**에 둔다. Phase 2용 PostgreSQL·DB 전용 Docker는 **도입하지 않는다**.  
+**DB 전제:** **기존 관련 시스템과 동일한 Microsoft SQL Server 2019 Standard** 를 쓰되, DB는 **웹 서버와 분리된 외부 RDB 서버**에 둔다. Phase 2용 PostgreSQL·MySQL·DB 전용 Docker는 **도입하지 않는다**.  
 **인프라 전제:** **Frontend(정적) + Backend(API)는 동일 웹 서버**에 배치하고, Nginx가 진입점이 된다 ([§1.2](#12-운영-인프라-구성-일-사용자-5000명-기준)).  
 **URL 전제:** 테스트는 `/55cine/` 서브경로였으나, **운영·스테이징은 도메인 루트 `/`** 에 배포한다 ([§1.3](#13-배포-url-경로-루트-)).
 
@@ -14,10 +14,10 @@
 |------|----------------|----------------|
 | **Frontend** | HTML + CSS + JS 렌더러, `fetch` / `window.*` 데이터 | 동일 UI 유지, **API 클라이언트**로 통일 |
 | **Backend** | 없음 (정적 파일 서버) | REST API + DB + (선택) 관리자 |
-| **데이터** | JSON 파일·`.js` 전역 배열 | **공용 MySQL(MariaDB)** 정규화 + API 응답 JSON |
+| **데이터** | JSON 파일·`.js` 전역 배열 | **공용 MS SQL Server 2019** 정규화 + API 응답 JSON |
 | **배포** | 테스트: `/55cine/` 서브경로 | **단일 웹 서버**, URL **`/`** 정적 + **`/api/`** + 외부 RDB |
 
-**Phase 2에서 하지 않을 것(별도 트랙):** 전면 SPA 전환, 디자인 시스템 통합(P0 토큰), 검색 서버 전문 엔진 도입, **PostgreSQL·DB용 Docker Compose 신규 구축**.
+**Phase 2에서 하지 않을 것(별도 트랙):** 전면 SPA 전환, 디자인 시스템 통합(P0 토큰), 검색 서버 전문 엔진 도입, **PostgreSQL·MySQL/MariaDB·DB용 Docker Compose 신규 구축**.
 
 ---
 
@@ -25,13 +25,13 @@
 
 | 항목 | 내용 |
 |------|------|
-| **DBMS** | **MySQL 5.7+ / MariaDB 10.3+** (운영 환경·기존 관련 시스템과 동일 버전) |
-| **RDB 위치** | **웹 서버 외부** 별도 호스트(또는 관리형 DB). 기존 극장·멤버십 등과 **동일 MariaDB 인스턴스/클러스터** — 스키마·접두어로 웹 영역 분리 |
+| **DBMS** | **Microsoft SQL Server 2019 Standard** (운영·기존 관련 시스템과 동일 에디션·패치 레벨) |
+| **RDB 위치** | **웹 서버 외부** 별도 호스트. 기존 극장·멤버십 등과 **동일 SQL Server 인스턴스** — **database** 또는 **schema**(`web`, `cine` 등)로 웹 영역 분리 |
 | **웹 서버** | **Frontend + Backend API 동일 VM/베어메탈 1대** (또는 동일 K8s 노드). DB 프로세스는 이 서버에 **설치하지 않음** |
 | **Docker** | 선택: **API만** 컨테이너 가능. **DB 컨테이너·로컬 DB Docker는 사용 안 함** |
-| **스키마** | `cine_*` 등 접두어 또는 전용 database — DBA·기존 백엔드와 사전 합의 |
-| **문자셋** | `utf8mb4` / `utf8mb4_unicode_ci` |
-| **권한** | 웹 API DB 계정: `cine_*` CRUD + (필요 시) 기존 테이블 **SELECT만**. `3306`은 **웹 서버 IP만** 허용 |
+| **객체 명명** | `cine_*` 테이블 또는 `web.cine_*` — DBA·기존 백엔드와 사전 합의 |
+| **문자·콜레이션** | 한글·이모지: **`NVARCHAR` / `NCHAR`** (유니코드). DB·컬럼 콜레이션은 기존 극장 DB 정책에 맞춤 (UTF-8 콜레이션 사용 시 DBA 확인) |
+| **권한** | 웹 API 로그인: `cine_*`(또는 `web` schema) **CRUD** + (필요 시) 기존 테이블 **SELECT만**. **`1433`**(기본)은 **웹 서버 IP만** 허용 |
 
 ---
 
@@ -58,10 +58,10 @@
          │  │ 127.0.0.1:3000 (PM2×2) │ │
          │  └──────────┬─────────────┘ │
          └─────────────┼───────────────┘
-                       │ TCP 3306 (사설망/VPN/방화벽 허용 IP만)
+                       │ TCP 1433 (사설망/VPN/방화벽 허용 IP만)
          ┌─────────────▼───────────────┐
          │   외부 RDB 서버               │
-         │   MySQL / MariaDB (공용)    │
+         │   MS SQL Server 2019 (공용) │
          │   + 기존 관련 시스템 테이블    │
          └─────────────────────────────┘
 ```
@@ -70,7 +70,7 @@
 |------|----------|------|
 | 사용자 ↔ 웹 서버 | HTTPS 443 (80→301) | TLS 종료는 **Nginx** |
 | Nginx ↔ API | HTTP `127.0.0.1:3000` | 외부에 API 포트 **직접 노출하지 않음** |
-| API ↔ RDB | MySQL `3306` | **사설 IP·VPC** 권장; 공인 IP 오픈 지양 |
+| API ↔ RDB | SQL Server `1433` | **사설 IP·VPC** 권장; `encrypt=true` 연결 권장 |
 
 ---
 
@@ -183,8 +183,8 @@ server {
 |------|--------|
 | **연결 풀** (Node) | `connectionLimit: 10~20` (PM2 2대 기준 총 20~40, DB `max_connections`와 합의) |
 | **타임아웃** | connect 5s, query 10s |
-| **TLS** | DB가 원격이면 MariaDB SSL 옵션 검토 (사설망이면 생략 가능) |
-| **환경 변수** | `DATABASE_URL`, `DB_HOST`, `DB_PORT` — `.env` 권한 `600` |
+| **TLS** | `encrypt=true` / `trustServerCertificate` — 사내 CA·인증서 정책에 맞춤 (사설망·내부 CA) |
+| **환경 변수** | `DATABASE_URL` 또는 `DB_HOST`/`DB_PORT`/`DB_NAME`/`DB_USER`/`DB_PASSWORD` — `.env` 권한 `600` |
 
 **외부 RDB 서버 (웹 API 관점)**
 
@@ -198,8 +198,8 @@ server {
 
 | 대상 | 인바운드 | 아웃바운드 |
 |------|----------|------------|
-| **웹 서버** | 80, 443 (공인) | 3306 → **RDB IP만**, NTP, (선택) SMTP |
-| **외부 RDB** | 3306 ← **웹 서버 IP만** (+ 기존 앱 서버 IP) | 기존 정책 따름 |
+| **웹 서버** | 80, 443 (공인) | **1433** → **RDB IP만**, NTP, (선택) SMTP |
+| **외부 RDB** | **1433** ← **웹 서버 IP만** (+ 기존 앱 서버 IP) | 기존 정책 따름 |
 | **SSH** | 관리 IP 대역만 | — |
 
 - API `3000` 포트는 **방화벽 미개방** (loopback only).
@@ -214,7 +214,7 @@ server {
 | **Redis** | API 응답 캐시(시간표·목록), 피크 RPS ↑ 또는 DB 부하 ↑ 시 |
 | **CDN** | `images/` 대역폭·해외 접속 ↑ 시 |
 | **웹 서버 이중화** | SLA·무중단 필요 시 로드밸런서 + 정적 동기화 |
-| **전용 DB** | 공용 RDB 경합 시에만 — 현 단계는 **외부 공용 MariaDB 유지** |
+| **전용 DB** | 공용 RDB 경합 시에만 — 현 단계는 **외부 공용 SQL Server 2019 유지** |
 
 ---
 
@@ -328,7 +328,7 @@ server {
 | 책임 | 담당 |
 |------|------|
 | REST API | 목록·상세·GNB 시간표·기획전/행사·매거진 |
-| DB | **공용 MySQL(MariaDB)** — 기존 인스턴스, 신규 테이블만 추가 |
+| DB | **공용 MS SQL Server 2019** — 기존 인스턴스, 신규 테이블·schema만 추가 |
 | 자산 URL | 포스터·썸네일·PDF — 스토리지 경로 또는 CDN URL 필드 |
 | (선택) 관리자 | 상영작·시간표·기사 CRUD |
 | (선택) 외부 연동 | 예매(dtryx), 향후 POS/상영 스케줄 연동 |
@@ -431,7 +431,7 @@ server {
 |------|------|
 | **JS** | `magazine-*-detail-page.js` — `fetchArticle(id)`, `fetchIndex()` |
 | **HTML** | 각 `article-detail.html`에 `/api/magazine/...` **주석 예시** 존재 |
-| **본문** | HTML 문자열(`contentHtml`) 또는 마크다운 — MySQL `LONGTEXT` + sanitize |
+| **본문** | HTML 문자열(`contentHtml`) 또는 마크다운 — `NVARCHAR(MAX)` + sanitize |
 
 ---
 
@@ -534,43 +534,43 @@ function apiGet(path) {
 
 ---
 
-## 7. DB 엔티티 개요 (MySQL / MariaDB)
+## 7. DB 엔티티 개요 (MS SQL Server 2019)
 
-> 물리 테이블명은 **§1.1 접두어**를 붙인 예시이다 (`cine_movies` 등). 실제 명칭은 기존 DB 네이밍 규칙·ERD와 합의 후 확정.
+> 물리 테이블명은 **§1.1** 접두어·schema 예시 (`dbo.cine_movies` 또는 `web.cine_movies`). 실제 명칭은 기존 DB 네이밍·ERD와 합의 후 확정.
 
 ```mermaid
 erDiagram
   cine_movies ||--o{ cine_screenings : has
   cine_movies {
     bigint id PK
-    varchar slug UK
-    varchar title_ko
-    json metadata
+    nvarchar slug UK
+    nvarchar title_ko
+    nvarchar metadata_json
   }
   cine_screenings {
     bigint id PK
     bigint movie_id FK
-    datetime starts_at
+    datetime2 starts_at
     tinyint flags
   }
   cine_schedule_days ||--o{ cine_schedule_entries : contains
   cine_magazine_articles {
     bigint id PK
-    varchar section
-    varchar slug UK
-    longtext content_html
+    nvarchar section
+    nvarchar slug UK
+    nvarchar content_html
   }
   cine_exhibitions ||--o{ cine_exhibition_films : contains
   cine_events {
     bigint id PK
-    varchar slug UK
+    nvarchar slug UK
   }
 ```
 
 | 테이블 (예시) | 설명 |
 |---------------|------|
-| `cine_movies` | 상영작 마스터 (slug UK, `metadata` JSON 컬럼) |
-| `cine_movie_sections` | 현재/예정/지난 구간 이력 (또는 `section` ENUM + 기간) |
+| `cine_movies` | 상영작 마스터 (slug UK, `metadata_json` `NVARCHAR(MAX)` + `ISJSON` 또는 앱 검증) |
+| `cine_movie_sections` | 현재/예정/지난 구간 이력 (`section` + 기간) |
 | `cine_screenings` | 상세 페이지 상영 회차 |
 | `cine_schedule_days` / `cine_schedule_entries` | GNB 주간 시간표 |
 | `cine_movie_title_aliases` | 시간표 표기 제목 ↔ `movie_id` (예: `고양심술` → 교생실습) |
@@ -578,19 +578,21 @@ erDiagram
 | `cine_exhibitions`, `cine_exhibition_films` | 기획전 + 참여 영화 |
 | `cine_events` | 행사 프로그램 |
 
-**MySQL 타입 메모**
+**SQL Server 2019 타입 메모**
 
-- PK: `BIGINT UNSIGNED AUTO_INCREMENT` (기존 시스템이 BIGINT면 맞춤).
-- slug/제목: `VARCHAR(191)` 이하 UK (utf8mb4 인덱스 길이 제한).
-- JSON: MySQL 5.7+ `JSON` 타입 또는 `LONGTEXT` + 앱 검증.
-- 일시: `DATETIME` (타임존은 API·서버 `Asia/Seoul` 고정 문서화).
+- PK: `BIGINT IDENTITY(1,1)` (기존 시스템이 `INT`/`BIGINT`면 맞춤).
+- slug·제목·한글: **`NVARCHAR(n)`** — `VARCHAR`는 비권장(한글).
+- JSON 메타: **`NVARCHAR(MAX)`** + `ISJSON` CHECK 또는 Zod/앱에서만 검증 (2019는 MySQL식 native `JSON` 컬럼 없음).
+- 본문 HTML: **`NVARCHAR(MAX)`**.
+- 일시: **`DATETIME2`** (타임존은 API·서버 **`Asia/Seoul`** 고정 문서화; DB는 `datetimeoffset` 검토 가능).
+- 불리언·플래그: `BIT` / `TINYINT`.
 
 **기존 시스템과의 관계 (P2-0에서 확인)**
 
 - 상영·회원·예매 등 **이미 존재하는 테이블**이 있으면 신규 `cine_*`와 **FK 연결 vs slug만 소프트 참조** 결정.
-- 중복 데이터(영화 마스터가 이미 있음) 시: 웹 전용 뷰·API는 **기존 테이블 읽기** + 웹 전용 보조 테이블만 추가.
+- 중복 데이터(영화 마스터가 이미 있음) 시: 웹 전용 **VIEW**·API는 **기존 테이블 읽기** + 웹 전용 보조 테이블만 추가.
 
-**마이그레이션:** SQL 마이그레이션 파일( Flyway / Liquibase / Prisma migrate ) + JSON 1회 import 스크립트 `scripts/seed-from-json/`.
+**마이그레이션:** Flyway / Liquibase / **Prisma migrate (`provider = "sqlserver"`)** + JSON 1회 import `scripts/seed-from-json/`. DBA 승인 후 **트랜잭션·백업** 절차 준수.
 
 ---
 
@@ -602,7 +604,7 @@ erDiagram
 - **도구:** Node(`tools/`), Python(`scripts/`) 혼재.
 - **배포:** URL **루트 `/`**, 별도 빌드 파이프라인 없음 (`package.json` 없음). (테스트 이력: `/55cine/`)
 - **규모:** 영화 ~50편, 매거진 기사 ~100+, 시간표 주 단위 갱신.
-- **DB:** **기존 MySQL(MariaDB) 공용** — 신규 DBMS·DB 컨테이너 도입 없음.
+- **DB:** **기존 MS SQL Server 2019 Standard 공용** — 신규 DBMS·DB 컨테이너 도입 없음.
 
 ### 8.1 추천 조합 (1순위)
 
@@ -610,9 +612,9 @@ erDiagram
 |------|------|------|
 | **Frontend** | **현 구조 유지** + 선택적 **Vite** (dev proxy만) | HTML/JS 재작성 없이 API 연동; HMR·프록시로 CORS 해소 |
 | **Backend** | **Node.js 20 LTS + Fastify + TypeScript** | `api/` 신규 코드만 TS — Prisma·Zod·라우트 타입 ([§8.6](#86-typescript-도입-검토)) |
-| **ORM** | **Prisma (`provider = "mysql"`)** 또는 **Knex.js** | 마이그레이션·시드; 팀이 PHP/기존 스택이면 **기존 ORM 규칙에 맞춰 Knex만**도 가능 |
-| **DB** | **기존 MySQL / MariaDB** | 관련 시스템과 동일 인스턴스·운영 정책(백업·계정) 재사용 |
-| **연결** | 환경 변수 `DATABASE_URL` (팀 제공) | 예: `mysql://web_api:***@db-host:3306/theater_db` |
+| **ORM** | **Prisma (`provider = "sqlserver"`)** 또는 **Knex.js + `mssql`/`tedious`** | 마이그레이션·시드; 기존 .NET·ADO 스택이면 DBA·백엔드 ORM 규칙 우선 |
+| **DB** | **MS SQL Server 2019 Standard** | 극장·멤버십 등과 동일 인스턴스·백업·계정 정책 재사용 |
+| **연결** | `DATABASE_URL` (팀 제공) | 예: `sqlserver://db-host:1433;database=TheaterDb;user=web_api;password=***;encrypt=true` |
 | **스토리지** | 기존 웹 루트 `images/` → 2차 CDN | DB에는 URL·경로만 저장 |
 | **배포** | **단일 웹 서버** Nginx + PM2(API) | [§1.2](#12-운영-인프라-구성-일-사용자-5000명-기준) 토폴로지 |
 | **로컬 개발** | 정적 로컬 + API 로컬 → **외부 dev RDB** | DB Docker 없음 |
@@ -621,20 +623,21 @@ erDiagram
 
 | 계층 | 기술 | 선택 시점 |
 |------|------|-----------|
-| **Backend** | **Python FastAPI + SQLAlchemy** | 기존 관련 시스템 백엔드가 이미 Python/MySQL일 때 |
-| **Backend** | **PHP (Laravel/Slim)** | 동일 서버의 PHP·MySQL 스택과 통합 배포할 때 |
-| **CMS** | **Strapi (MySQL connector)** | 비개발자 편집 — **DB가 MySQL이어야** 하며 별도 Postgres 에디션은 사용 안 함 |
+| **Backend** | **Python FastAPI + SQLAlchemy + pyodbc** | 기존 관련 시스템이 Python·SQL Server일 때 |
+| **Backend** | **ASP.NET Core + EF Core** | 기존 백엔드가 .NET·SQL Server일 때 — `api/` Node 대신 통합 검토 |
+| **Backend** | **PHP + sqlsrv** | 동일 서버 PHP·SQL Server 스택과 통합 배포할 때 |
 
 ### 8.3 비추천 (현 단계)
 
 | 기술 | 사유 |
 |------|------|
-| **PostgreSQL 신규 도입** | 운영·백업·계정 이원화; 기존 시스템과 DB 불일치 |
-| **Docker Compose로 DB 기동** | 공용 MariaDB 정책과 충돌; 로컬·운영 데이터 원천 분리 곤란 |
-| **Supabase(Postgres)** | DBMS가 요구사항(MySQL)과 다름 |
+| **PostgreSQL·MySQL/MariaDB 신규 도입** | 운영·백업·계정 이원화; **SQL Server 2019**와 불일치 |
+| **Docker Compose로 DB 기동** | 공용 SQL Server 정책과 충돌; 로컬·운영 데이터 원천 분리 곤란 |
+| **Supabase(Postgres)** | DBMS가 요구사항(SQL Server)과 다름 |
+| **Strapi 등 MySQL 전용 CMS** | SQL Server 공식 커넥터 없음 — 관리 UI는 자체 최소 화면(P2-8) 우선 |
 | Next.js / Nuxt 전면 전환 | Phase 1 자산·경로·GNB 셸 재이식 비용 큼 |
 | **Frontend 전면 TypeScript** | 정적 HTML에 `<script>` 직결 구조와 상충; 빌드·전 파일 변환 비용 대비 이득 적음 ([§8.6](#86-typescript-도입-검토)) |
-| MongoDB only | 상영·시간표·slug 관계에 RDB·기존 MySQL 생태계와 맞음 |
+| MongoDB only | 상영·시간표·slug 관계에 RDB·기존 **SQL Server** 생태계와 맞음 |
 
 ### 8.4 권장 저장소 구조 (Phase 2)
 
@@ -652,11 +655,11 @@ api/                     # Backend — TypeScript 전용
     schemas/             # Zod — 요청·응답·DB 매핑
   dist/                  # tsc 빌드 산출 (gitignore, PM2가 실행)
   prisma/
-    schema.prisma
+    schema.prisma        # provider = "sqlserver"
     migrations/
   scripts/
     seed-from-json/
-.env.example             # DATABASE_URL=mysql://...
+.env.example             # DATABASE_URL=sqlserver://host:1433;database=...
 ```
 
 - **`docker-compose.yml`**: API 서비스만 정의 가능(선택). **`db:` 서비스는 두지 않음.**
@@ -702,7 +705,7 @@ api/                     # Backend — TypeScript 전용
 **효율적인 이유**
 
 1. **Greenfield** — `api/`만 신규; 기존 `js/` 변환 없음.
-2. **Prisma** — `schema.prisma` → **생성 타입**으로 쿼리·시드 안전.
+2. **Prisma** — `provider = "sqlserver"` → **생성 타입**으로 쿼리·시드 안전.
 3. **Zod** — `cine_*`·REST 응답 검증 + `z.infer<>`로 타입 추론; OpenAPI와 병행 가능.
 4. **Fastify** — 라우트·쿼리스트링 타입 지정 용이; PM2는 `dist/`만 실행.
 5. **공유** — `api/src/schemas/`를 단일 소스로 두고, Frontend는 문서·OpenAPI로 동기화 (모노레포 `packages/types`는 인원·복잡도 증가 시).
@@ -721,13 +724,13 @@ api/                     # Backend — TypeScript 전용
 - 전면 프레임워크 전환(Next/Nuxt)을 별도 트랙으로 승인했을 때.
 - 팀 전원 TS·번들러 운영이 일상화된 이후.
 
-### 8.5 개발·운영 연결 (MySQL)
+### 8.5 개발·운영 연결 (SQL Server)
 
 | 환경 | 웹 서버 (Front+Back) | RDB |
 |------|----------------------|-----|
-| 로컬 | PC에서 정적 + `localhost:3000` API | **외부 dev** MariaDB (SSH 터널/VPN) |
-| 스테이징 | **1대** Nginx + API (2 vCPU / 4 GB 가능) | 외부 RDB · 스테이징 schema |
-| 운영 | **1대** Nginx + API ([§1.2.4](#124-웹-서버-적정-사양-권장) 4 vCPU / 8 GB) | **외부** 공용 MariaDB |
+| 로컬 | PC에서 정적 + `localhost:3000` API | **외부 dev** SQL Server 2019 (VPN·SSH 터널·사내 dev 인스턴스) |
+| 스테이징 | **1대** Nginx + API (2 vCPU / 4 GB 가능) | 외부 RDB · 스테이징 DB 또는 schema |
+| 운영 | **1대** Nginx + API ([§1.2.4](#124-웹-서버-적정-사양-권장) 4 vCPU / 8 GB) | **외부** 공용 **SQL Server 2019 Standard** |
 
 **P2-0 필수 산출물:** 기존 DB ERD·`cine_*` 테이블 명세·웹 API DB 계정·**웹 서버→RDB 방화벽 허용 IP** 합의서.
 
@@ -737,9 +740,9 @@ api/                     # Backend — TypeScript 전용
 
 | 단계 | 작업 | 산출물 |
 |------|------|--------|
-| **P2-0** | **기존 MySQL ERD 합의** + API 스키마·OpenAPI (TS/Zod 타입 단일 소스 후보) | 합의서, `openapi.yaml` |
-| **P2-1** | **`api/` TypeScript** Fastify 스켈레톤 + DB 연결 (`tsc`→`dist`, `/api/v1/health`) | `package.json`, `tsconfig.json`, migration 1차 |
-| **P2-2** | JSON → **MySQL** 시드 (movies, magazine) | seed SQL/스크립트 |
+| **P2-0** | **기존 SQL Server ERD 합의** + API 스키마·OpenAPI (TS/Zod 타입 단일 소스 후보) | 합의서, `openapi.yaml` |
+| **P2-1** | **`api/` TypeScript** Fastify + **SQL Server** 연결 (`tsc`→`dist`, `/api/v1/health`) | `package.json`, `tsconfig.json`, Prisma/Knex migration 1차 |
+| **P2-2** | JSON → **SQL Server** 시드 (movies, magazine) | seed SQL/스크립트 |
 | **P2-3** | `GET /movies`, `GET /movies/{slug}` | Frontend 3목록+상세 연동 |
 | **P2-4** | `GET /schedule/week` | GNB `week-schedule.js` 연동, 테스트 날짜 제거 |
 | **P2-5** | Magazine API + 상세 4종 | `fetchArticle` / `fetchIndex` |
@@ -774,11 +777,11 @@ api/                     # Backend — TypeScript 전용
 - [ ] Nginx: 정적 `location /` + `location /api/` → API 프록시 테스트
 - [ ] (선택) `/55cine/` → `/` 301 리다이렉트·주요 페이지·GNB 링크 루트 URL 확인 ([§1.3](#13-배포-url-경로-루트-))
 - [ ] `TiSiteRoot.debug()` — `prefix: "/"` (운영·로컬 루트 서빙 시)
-- [ ] 기존 MySQL에 `cine_*`(가칭) 테이블 마이그레이션 **DBA/담당 승인**
-- [ ] API DB 계정이 **기존 테이블 미변경** 권한인지 확인
-- [ ] PostgreSQL/Docker DB 관련 문서·스크립트 없음 확인
+- [ ] 기존 **SQL Server**에 `cine_*`(가칭) 테이블·schema 마이그레이션 **DBA/담당 승인**
+- [ ] API DB 로그인: `cine_*` CRUD + 기존 테이블 **SELECT만**(변경 없음) 확인
+- [ ] PostgreSQL·MySQL·Docker DB 관련 문서·스크립트 없음 확인
 - [ ] 운영 웹 서버 디렉터리·Nginx vhost ([§1.2.2](#122-웹-서버-내부-구성)) 반영
-- [ ] 외부 RDB 방화벽: 웹 서버 IP → `3306` 허용
+- [ ] 외부 RDB 방화벽: 웹 서버 IP → **`1433`** 허용
 - [ ] PM2(API×2) + Nginx 재시작·로그 로테이션 설정
 - [ ] `api/` 배포: `npm run build` → `dist/` 실행 ([§8.6](#86-typescript-도입-검토))
 
@@ -796,4 +799,4 @@ api/                     # Backend — TypeScript 전용
 
 ---
 
-*작성: Phase 2 킥오프 — Frontend/Backend 분리, JSON 인벤토리, **외부 공용 MySQL(MariaDB)**, **단일 웹 서버 + 외부 RDB**, **URL 루트 `/`**, **Backend TS / Frontend JS** 반영.*
+*작성: Phase 2 킥오프 — Frontend/Backend 분리, JSON 인벤토리, **외부 공용 MS SQL Server 2019 Standard**, **단일 웹 서버 + 외부 RDB**, **URL 루트 `/`**, **Backend TS / Frontend JS** 반영.*

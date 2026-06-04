@@ -1,10 +1,16 @@
 {
   "movies": [
     {
-      "slug": "pillion",
-      "poster": "images/movies/now-playing/pillion-poster.jpg",
-      "titleKo": "뒷자리에 태워줘",
-      "titleEn": "Pillion"
+      "slug": "sheep-in-the-box",
+      "titleKo": "상자 속의 양",
+      "titleEn": "Sheep in The Box",
+      "poster": "images/movies/wp/wp_23_1.jpg"
+    },
+    {
+      "slug": "manok",
+      "titleKo": "이반리 장만옥",
+      "titleEn": "Manok",
+      "poster": "images/movies/wp/wp_24_1.jpg"
     }
   ]
 }

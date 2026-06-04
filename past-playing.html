@@ -99,12 +99,16 @@
   </div>
   <script src="js/site-footer-include.js"></script>
   <!-- TI_ASSET_BASE: js/site-root.js -->
-  <script src="data/week-schedule-data.js"></script>
+    <script src="js/api/client.js"></script>
+<script src="data/week-schedule-data.js"></script>
   <script>
     window.TI_MOVIE_LIST_PAGE_CONFIG = {
       dataUrl: "movies/now-playing/data/past-list.json",
       detailUrlMode: "query",
       detailSection: "past",
+      fetchList: function () {
+        return window.TiApi.getMovieList("past");
+      },
       /* 조치필요(테스트스피너): 스피너 확인용 3초 지연 — 배포 전 제거 */
       testSpinnerDelayMs: 50,
       emptyMessage: "표시할 지난 상영작이 없습니다.",

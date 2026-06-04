@@ -18,15 +18,31 @@
     return url;
   }
 
-  var WEEK_SCHEDULE = window.WEEK_SCHEDULE;
-  var MOVIE_POSTER_BY_TITLE = window.MOVIE_POSTER_BY_TITLE;
-  var DEFAULT_SCHEDULE_POSTER = window.DEFAULT_SCHEDULE_POSTER;
-  var normalizeWeekScheduleEntry = window.normalizeWeekScheduleEntry;
-  var movieDetailUrlForPoster = window.movieDetailUrlForPoster;
-  var movieDetailUrlForTitle = window.movieDetailUrlForTitle;
+  var scheduleBootstrapped = false;
+  var scheduleFetchStarted = false;
 
-  if (!WEEK_SCHEDULE || !MOVIE_POSTER_BY_TITLE || !normalizeWeekScheduleEntry) {
-    return;
+  function getWeekScheduleRef() {
+    return window.WEEK_SCHEDULE;
+  }
+
+  function getMoviePosterMap() {
+    return window.MOVIE_POSTER_BY_TITLE || {};
+  }
+
+  function getNormalizeEntry() {
+    return window.normalizeWeekScheduleEntry;
+  }
+
+  function getDefaultSchedulePoster() {
+    return window.DEFAULT_SCHEDULE_POSTER;
+  }
+
+  function getMovieDetailUrlForPoster() {
+    return window.movieDetailUrlForPoster;
+  }
+
+  function getMovieDetailUrlForTitle() {
+    return window.movieDetailUrlForTitle;
   }
 
   var BOOK_URL =
@@ -47,6 +63,8 @@
   var scrollSyncBound = false;
   var weekTransitionLock = false;
   var SCHEDULE_STATE_KEY = "ti-gnb-schedule-state";
+  /** API 응답 anchor — 백엔드 서버 기준 '오늘' */
+  var scheduleAnchorToday = null;
 
   function saveScheduleState() {
     var days = daysForActiveView();
@@ -129,19 +147,14 @@
     };
   }
 
-  /**
-   * GNB 시간표 '오늘' 기준일.
-   * 조치필요: 배포 전 getScheduleToday() 안의 테스트 분기(5/27 고정)를 삭제하고
-   * `return stripTime(new Date());` 만 남길 것.
-   */
+  function parseAnchorIso(iso) {
+    var m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return null;
+    return stripTime(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
+  }
+
   function getScheduleToday() {
-    // 조치필요: 배포 전 아래 테스트 블록 전체 삭제
-    var scheduleTestTodayLabel = "5/27(수)";
-    var scheduleTestParsed = parseScheduleLabel(scheduleTestTodayLabel, new Date().getFullYear());
-    if (scheduleTestParsed && scheduleTestParsed.date) {
-      return stripTime(scheduleTestParsed.date);
-    }
-    // 조치필요: 배포 전 위 블록 삭제 후 아래 return 만 유지
+    if (scheduleAnchorToday) return scheduleAnchorToday;
     return stripTime(new Date());
   }
 
@@ -239,8 +252,9 @@
   }
 
   function posterForTitle(title) {
+    var posters = getMoviePosterMap();
     return resolvePosterSrc(
-      MOVIE_POSTER_BY_TITLE[title] || DEFAULT_SCHEDULE_POSTER || "images/schedule-poster-placeholder.svg"
+      posters[title] || getDefaultSchedulePoster() || "images/schedule-poster-placeholder.svg"
     );
   }
 
@@ -390,14 +404,19 @@
   }
 
   function buildRow(entry, entryIndex) {
-    var scheduleEntry = normalizeWeekScheduleEntry(entry);
+    var normalize = getNormalizeEntry();
+    if (!normalize) return document.createElement("div");
+    var scheduleEntry = normalize(entry);
     var poster = posterForTitle(scheduleEntry.title);
+    var posters = getMoviePosterMap();
     var hasPoster = Boolean(
-      MOVIE_POSTER_BY_TITLE[scheduleEntry.title] || MOVIE_POSTER_BY_TITLE[entry.title]
+      posters[scheduleEntry.title] || posters[entry.title]
     );
+    var detailForTitle = getMovieDetailUrlForTitle();
+    var detailForPoster = getMovieDetailUrlForPoster();
     var detailUrl = resolveMovieDetailUrl(
-      (movieDetailUrlForTitle && movieDetailUrlForTitle(scheduleEntry.title)) ||
-        (movieDetailUrlForPoster && movieDetailUrlForPoster(poster)) ||
+      (detailForTitle && detailForTitle(scheduleEntry.title)) ||
+        (detailForPoster && detailForPoster(poster)) ||
         ""
     );
 
@@ -533,15 +552,62 @@
     updateSwipeLayout();
   }
 
+  function canInitSchedule() {
+    var schedule = getWeekScheduleRef();
+    return Boolean(schedule && schedule.length && getNormalizeEntry());
+  }
+
+  function loadWeekScheduleFromApi() {
+    if (scheduleFetchStarted) {
+      return Promise.resolve();
+    }
+    scheduleFetchStarted = true;
+    var api = window.TiApi;
+    if (!api || typeof api.getWeekSchedule !== "function") {
+      scheduleFetchStarted = false;
+      return Promise.reject(new Error("TiApi 클라이언트가 로드되지 않았습니다."));
+    }
+    return api.getWeekSchedule().then(function (payload) {
+      if (payload && payload.anchor) {
+        scheduleAnchorToday = parseAnchorIso(payload.anchor);
+      }
+      if (typeof window.applyWeekScheduleApiPayload === "function") {
+        window.applyWeekScheduleApiPayload(payload);
+      }
+    });
+  }
+
+  function bootstrapWeekSchedule() {
+    if (scheduleBootstrapped || !canInitSchedule()) return;
+    scheduleBootstrapped = true;
+    initTiWeekSchedule();
+  }
+
+  function startWeekScheduleLoading() {
+    if (canInitSchedule()) {
+      bootstrapWeekSchedule();
+      return;
+    }
+    loadWeekScheduleFromApi()
+      .then(function () {
+        bootstrapWeekSchedule();
+      })
+      .catch(function (err) {
+        scheduleFetchStarted = false;
+        console.warn("[week-schedule] API 로드 실패:", err);
+      });
+  }
+
   function initTiWeekSchedule() {
     scheduleDom.dayTabs = document.getElementById("tiDayTabs");
     scheduleDom.panelsWrap = document.getElementById("tiSchedulePanels");
     scheduleDom.schedTitle = document.querySelector(".ti-sched-title");
     if (!scheduleDom.dayTabs || !scheduleDom.panelsWrap) return;
+    if (!canInitSchedule()) return;
     if (scheduleDom.dayTabs.dataset.scheduleReady === "1") return;
 
     scheduleDom.dayTabs.dataset.scheduleReady = "1";
-    enrichedDays = inferScheduleDates(WEEK_SCHEDULE, getScheduleToday());
+    enrichedDays = inferScheduleDates(getWeekScheduleRef(), getScheduleToday());
     enrichedDays.sort(function (a, b) {
       if (!a.date || !b.date) return 0;
       return compareDates(a.date, b.date);
@@ -579,11 +645,11 @@
   }
 
   window.addEventListener("pageshow", restoreScheduleOnPageShow);
-
-  window.addEventListener("ti-left-gnb:loaded", initTiWeekSchedule);
-  initTiWeekSchedule();
-  window.addEventListener("load", initTiWeekSchedule);
+  window.addEventListener("ti-week-schedule:data-ready", bootstrapWeekSchedule);
+  window.addEventListener("ti-left-gnb:loaded", startWeekScheduleLoading);
+  window.addEventListener("load", startWeekScheduleLoading);
+  startWeekScheduleLoading();
   if (document.readyState === "complete") {
-    window.requestAnimationFrame(initTiWeekSchedule);
+    window.requestAnimationFrame(startWeekScheduleLoading);
   }
 })();

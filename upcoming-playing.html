@@ -60,7 +60,8 @@
   </div>
   <script src="js/site-footer-include.js"></script>
   <!-- TI_ASSET_BASE: js/site-root.js -->
-  <script src="data/week-schedule-data.js"></script>
+    <script src="js/api/client.js"></script>
+<script src="data/week-schedule-data.js"></script>
   <script>
     window.TI_MOVIE_LIST_PAGE_CONFIG = {
       dataUrl: "movies/now-playing/data/upcoming-list.json",
@@ -68,7 +69,10 @@
       detailSection: "upcoming",
       emptyMessage: "표시할 예정작이 없습니다.",
       loadingMessage: "예정작 목록을 불러오는 중…",
-      errorMessage: "예정작 목록을 표시할 수 없습니다."
+      errorMessage: "예정작 목록을 표시할 수 없습니다.",
+      fetchList: function () {
+        return window.TiApi.getMovieList("upcoming");
+      }
     };
   </script>
   <script src="js/left-gnb-include.js"></script>

@@ -42,7 +42,8 @@
   gap: 14px;
 }
 
-.ti .ti-np-root .np-list-status.is-loading {
+.ti .ti-np-root .np-list-status.is-loading,
+.ti .ti-np-root .np-list-status.is-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
