@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="js/site-root.js"></script>
+  <title>55CINE 디자인 시스템 — 55CINE 오오극장</title>
+  <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/fonts-display.css" />
+  <link rel="stylesheet" href="components/site-common.css" />
+  <link rel="stylesheet" href="css/page-shell.css" />
+  <link rel="stylesheet" href="css/components/section-page-head.css" />
+  <link rel="stylesheet" href="css/designsystem.css" />
+</head>
+<body class="ds-page">
+  <div class="ds-layout">
+    <nav class="ds-nav" aria-label="디자인 시스템 목차">
+      <p class="ds-nav__brand">55CINE · 오오극장</p>
+      <p class="ds-nav__title">Design System</p>
+      <ul>
+        <li><a href="#overview">개요</a></li>
+        <li><a href="#architecture">레이아웃 아키텍처</a></li>
+        <li><a href="#tokens-site">토큰 — site-common</a></li>
+        <li><a href="#tokens-ti">토큰 — TI 서브 페이지</a></li>
+        <li><a href="#typography">타이포그래피</a></li>
+        <li><a href="#breakpoints">브레이크포인트</a></li>
+        <li><a href="#radius-border">모서리·테두리</a></li>
+        <li><a href="#components">컴포넌트</a></li>
+        <li><a href="#css-bundles">CSS 번들</a></li>
+        <li><a href="#files">주요 파일</a></li>
+      </ul>
+    </nav>
+
+    <main class="ds-main">
+      <header class="ds-hero" id="overview">
+        <h1>55CINE 오오극장 디자인 시스템</h1>
+        <p>
+          정적 HTML + CSS 기반의 TI(Test Interface) 셸을 중심으로, 좌측 GNB·시간표와 우측 본문 패널이
+          공존하는 이중 레이아웃입니다. 매거진·상영작 상세는 <code>site-common.css</code>의 웜 골드
+          팔레트를, 오오극장 정보·상영 목록·GNB는 그레이·각진(0 radius) UI를 사용합니다.
+        </p>
+        <p class="ds-meta">문서 기준: 2026-05 · 소스 <code>components/site-common.css</code>, <code>css/shell.css</code>, <code>css/page-shell.css</code></p>
+      </header>
+
+      <section class="ds-section" id="architecture">
+        <h2>레이아웃 아키텍처</h2>
+        <p>
+          <code>body.ti</code> + <code>.ti-shell</code> 그리드. PC(≥821px)에서 좌 <code>.ti-left</code>
+          (GNB + 이번주 시간표 + 푸터) / 우 <code>.ti-right</code> (페이지 본문). 모바일(≤820px)에서는
+          세로 스택 + 햄버거 메뉴.
+        </p>
+        <div class="ds-demo-shell" role="img" aria-label="TI 셸 구조 다이어그램">
+          <div class="ds-demo-shell__left">
+            <strong>ti-left</strong><br />
+            Home · GNB(아코디언)<br />
+            이번주/다음주 시간표<br />
+            푸터(PC)
+          </div>
+          <div class="ds-demo-shell__right">
+            <strong>ti-right</strong><br />
+            section-page-head · 본문<br />
+            (소개/멤버십/상영작 등)
+          </div>
+        </div>
+        <p>인트로(<code>index.html</code>)만 우측이 다크 타이포 그리드(<code>intro.css</code>, 배경 <code>#070707</code>).</p>
+        <div class="ds-demo-shell">
+          <div class="ds-demo-shell__left">GNB</div>
+          <div class="ds-demo-shell__right ds-demo-shell__right--dark">55CINE 타이포 키비주얼</div>
+        </div>
+        <table class="ds-table">
+          <thead>
+            <tr><th>영역</th><th>클래스</th><th>배경</th><th>비고</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>셸 바깥</td><td><code>body.ti</code></td><td>#e8e8e8</td><td>전체 캔버스</td></tr>
+            <tr><td>좌 패널</td><td><code>.ti-left</code></td><td>#f2f2f2</td><td>border-right #bdbdbd</td></tr>
+            <tr><td>우 패널(일반)</td><td><code>.ti-sub-page</code></td><td>#f9f9f9</td><td>max-width 640px 본문</td></tr>
+            <tr><td>우 패널(인트로)</td><td><code>.ti-right</code></td><td>#070707</td><td>애니메이션 타이포</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="ds-section" id="tokens-site">
+        <h2>디자인 토큰 — site-common (:root)</h2>
+        <p>매거진 상세·<code>components/site-common.css</code>를 로드하는 페이지. 골드·브론즈 웜 톤, 둥근 모서리.</p>
+        <div class="ds-swatch-grid">
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#f0ab2a"></div><div class="ds-swatch__meta"><strong>--brand-gold</strong>#f0ab2a · accent</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#8b6e3e"></div><div class="ds-swatch__meta"><strong>--brand-bronze</strong>#8b6e3e</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#1c1610"></div><div class="ds-swatch__meta"><strong>--brand-ink</strong>#1c1610 · text</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#faf8f4"></div><div class="ds-swatch__meta"><strong>--bg</strong>#faf8f4</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#e8e2d6"></div><div class="ds-swatch__meta"><strong>--line</strong>#e8e2d6</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#f3efe6"></div><div class="ds-swatch__meta"><strong>--pill-bg</strong>#f3efe6</div></div>
+        </div>
+        <div class="ds-table-wrap">
+          <table class="ds-table">
+            <thead><tr><th>토큰</th><th>값</th><th>용도</th></tr></thead>
+            <tbody>
+              <tr><td><code>--site-font-family</code></td><td>Spoqa Han Sans Neo</td><td>전역 본문</td></tr>
+              <tr><td><code>--accent</code></td><td>var(--brand-gold)</td><td>링크·강조</td></tr>
+              <tr><td><code>--radius</code> / <code>--radius-sm</code></td><td>14px / 12px</td><td>카드·이미지·서브네비(기본)</td></tr>
+              <tr><td><code>--shadow</code></td><td>rgba(28,22,16,0.12)</td><td>카드 elevation</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="ds-section" id="tokens-ti">
+        <h2>디자인 토큰 — TI 서브 페이지 (--ti-*)</h2>
+        <p><code>css/page-shell.css</code>의 <code>.ti-right.ti-sub-page</code> 스코프. 오오극장 5페이지·좌석후원·멤버십 등.</p>
+        <div class="ds-swatch-grid">
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#ffffff"></div><div class="ds-swatch__meta"><strong>--ti-surface</strong>#ffffff</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#f2f2f2"></div><div class="ds-swatch__meta"><strong>--ti-surface-alt</strong>#f2f2f2</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#5c4a0f"></div><div class="ds-swatch__meta"><strong>--ti-accent</strong>#5c4a0f</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#9a7b1a"></div><div class="ds-swatch__meta"><strong>강조 보더(관행)</strong>#9a7b1a · 멤버십/대관</div></div>
+          <div class="ds-swatch"><div class="ds-swatch__chip" style="background:#bdbdbd"></div><div class="ds-swatch__meta"><strong>--ti-border</strong>#bdbdbd</div></div>
+        </div>
+        <div class="ds-callout">
+          섹션 강조에 <code>#9a7b1a</code>가 하드코딩되어 있으며, <code>--ti-accent(#5c4a0f)</code>와 별도로
+          공존합니다. 통합 시 둘 중 하나로 정리하는 것을 권장합니다.
+        </div>
+        <div class="ds-table-wrap">
+          <table class="ds-table">
+            <thead><tr><th>토큰</th><th>값</th></tr></thead>
+            <tbody>
+              <tr><td><code>--ti-content-max</code></td><td>640px</td></tr>
+              <tr><td><code>--ti-text</code> / <code>--ti-text-strong</code></td><td>#1a1a1a / #0a0a0a</td></tr>
+              <tr><td><code>--ti-text-secondary</code></td><td>#3d3d3d</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="ds-section" id="typography">
+        <h2>타이포그래피</h2>
+        <h3>본문 (기본)</h3>
+        <p class="ds-type-sample" style="font-family:var(--site-font-family);font-size:0.94rem">Spoqa Han Sans Neo — 본문·GNB·시간표·오오극장 페이지 (0.72rem~1.2rem 구간)</p>
+        <h3>디스플레이 (인트로·포스터 플레이스홀더)</h3>
+        <p class="ds-type-sample ds-type-sample--display" style="font-size:1.4rem">Syne · Bebas Neue — <code>fonts-display.css</code>, intro 키비주얼</p>
+        <h3>모노</h3>
+        <p class="ds-type-sample ds-type-sample--mono" style="font-size:0.85rem">IBM Plex Mono — 코드·문서 표</p>
+        <div class="ds-table-wrap">
+          <table class="ds-table">
+            <thead><tr><th>패턴</th><th>크기</th><th>굵기</th><th>예시 클래스</th></tr></thead>
+            <tbody>
+              <tr><td>페이지 H1 (서브)</td><td>clamp(1.05rem, 2.1vw, 1.5rem)</td><td>700</td><td><code>.section-page-head__title</code></td></tr>
+              <tr><td>GNB summary</td><td>0.78rem</td><td>700</td><td><code>.ti-gnb summary</code></td></tr>
+              <tr><td>시간표 행</td><td>0.78rem</td><td>600</td><td><code>.ti-row</code></td></tr>
+              <tr><td>서브네비</td><td>0.82rem</td><td>700</td><td><code>.section-page-subnav a</code></td></tr>
+              <tr><td>본문 justify</td><td>0.9~0.94rem</td><td>400</td><td>theater-info, daegwan, membership</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="ds-section" id="breakpoints">
+        <h2>브레이크포인트</h2>
+        <div class="ds-table-wrap">
+          <table class="ds-table">
+            <thead><tr><th>px</th><th>역할</th></tr></thead>
+            <tbody>
+              <tr><td><strong>821px+</strong></td><td>PC 2열 셸, GNB 항상 표시, 푸터 좌측 슬롯</td></tr>
+              <tr><td><strong>820px↓</strong></td><td>모바일 스택, 햄버거, 시간표 스와이프, 푸터 하단 슬롯</td></tr>
+              <tr><td>899px↓</td><td>상영작 그리드 3열 → 2열</td></tr>
+              <tr><td>720px↓</td><td>section-page-head 세로 배치</td></tr>
+              <tr><td>480px↓</td><td>멤버십·서브네비 컴팩트</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="ds-section" id="radius-border">
+        <h2>모서리·테두리</h2>
+        <p>TI 영역은 <strong>border-radius: 0</strong>(각진 UI)가 기본. site-common·매거진 카드는 <strong>12~14px</strong> 라운드.</p>
+        <div class="ds-demo-row">
+          <div class="ds-radius-demo ds-radius-demo--round" style="--radius:14px">14px</div>
+          <div class="ds-radius-demo ds-radius-demo--square">0</div>
+        </div>
+        <p>이미지 inner-border: <code>.ti-dg-photo::after</code>, <code>.ti-seat-photo::after</code> — inset 10px, 3px 흰 테두리.</p>
+        <p>그라데이션 구분선: membership h3, osinneun-gil h3 — 왼쪽 진함 → 오른쪽 투명.</p>
+      </section>
+
+      <section class="ds-section" id="components">
+        <h2>컴포넌트</h2>
+
+        <h3>section-page-head + subnav</h3>
+        <div class="ds-demo-stack ti ti-sub-scroll" style="max-width:640px;padding:16px;background:#f9f9f9">
+          <header class="section-page-head">
+            <div class="section-page-head__row">
+              <h2 class="section-page-head__title">
+                <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep">·</span><span class="section-page-head__child">멤버십</span>
+              </h2>
+              <nav class="section-page-subnav" aria-label="데모">
+                <a href="#">소개</a>
+                <a href="#" class="is-current">멤버십</a>
+                <a href="#">대관</a>
+              </nav>
+            </div>
+            <div class="section-page-head__rule" role="presentation"></div>
+          </header>
+        </div>
+        <p>TI 오버라이드: subnav 현재 항목 <code>border-radius: 0</code>, 배경 #1a1a1a (<code>section-page-head.css</code>).</p>
+
+        <h3>버튼·링크 CTA</h3>
+        <ul>
+          <li><strong>각진 CTA</strong> — <code>.ti-mbr-cms-link</code>, <code>.ti-dg-form-link</code>, <code>.ti-book</code> (GNB 예매)</li>
+          <li><strong>필 버튼</strong> — site-common 서브네비 현재 탭 (pill 999px, TI에서는 사각)</li>
+          <li><strong>외부 링크</strong> — <code>↗</code> 의사 요소 (::after)</li>
+        </ul>
+
+        <h3>GNB 시간표</h3>
+        <ul>
+          <li>요일 탭 4열 그리드 — <code>.ti-day-tab</code>, <code>.ti-week-nav-btn</code></li>
+          <li>상영 행 — 포스터 40px 원형, 배지(개봉/종영/GV), 예매 링크</li>
+          <li>placeholder 포스터 — <code>images/schedule-poster-placeholder.svg</code></li>
+        </ul>
+
+        <h3>상영작 카드 (np-card)</h3>
+        <p>3열 그리드(PC), border #b0b0b0, radius 0, hover border #111.</p>
+
+        <h3>영화 상세 (ti-md-theme)</h3>
+        <p><code>movie-detail-theme.css</code>가 site-common 골드 토큰을 그레이로 덮어씀. layout은 <code>components/movie-detail-layout.css</code>.</p>
+
+        <h3>멤버십 섹션 카드</h3>
+        <p><code>.ti-mbr-static</code> — border #9a7b1a, 헤더 <code>.ti-mbr-static__head</code>, 본문 패널 공유 클래스.</p>
+      </section>
+
+      <section class="ds-section" id="css-bundles">
+        <h2>CSS 번들 (페이지 타입)</h2>
+        <p>공통 6종: <code>fonts.css</code>, <code>fonts-display.css</code>, <code>shell.css</code>, <code>shell-mobile-menu.css</code>, <code>shell-scroll-top.css</code>, <code>site-footer.css</code></p>
+        <ul class="ds-bundle-list">
+          <li><strong>인트로</strong> — + intro.css</li>
+          <li><strong>오오극장 5+1</strong> — + site-common, section-page-head, utilities, page-shell, {page}.css</li>
+          <li><strong>상영작 목록</strong> — + page-pager, now-playing, np-movie-grid, np-search-toolbar</li>
+          <li><strong>영화 상세</strong> — + site-common, movie-detail-layout, movie-detail-panel, movie-detail-theme, now-playing-movie-detail</li>
+          <li><strong>매거진 목록/상세</strong> — + site-common, magazine-*, detail.css, carousel 등</li>
+        </ul>
+        <p>상세: <code>css/README.md</code>, <code>CSS리팩토링전략.md</code></p>
+      </section>
+
+      <section class="ds-section" id="files">
+        <h2>주요 파일 맵</h2>
+        <div class="ds-table-wrap">
+          <table class="ds-table">
+            <thead><tr><th>파일</th><th>역할</th></tr></thead>
+            <tbody>
+              <tr><td><code>css/shell.css</code></td><td>GNB, 시간표, ti-shell 그리드</td></tr>
+              <tr><td><code>css/page-shell.css</code></td><td>--ti-* 토큰, 서브 스크롤, photo inner-border</td></tr>
+              <tr><td><code>components/site-common.css</code></td><td>:root 브랜드 토큰, section-page-head, 푸터</td></tr>
+              <tr><td><code>js/site-root.js</code></td><td>루트 <code>/</code> 기본, (선택) 서브경로·asset resolve</td></tr>
+              <tr><td><code>partials/left-gnb.html</code></td><td>GNB + 시간표 마운트</td></tr>
+              <tr><td><code>js/week-schedule.js</code></td><td>주간 시간표 로직</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>검토·개선 제안: <a href="디자인시스템검토.md">디자인시스템검토.md</a></p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

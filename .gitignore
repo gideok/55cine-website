@@ -1,1 +1,39 @@
 documents/
+
+# --- 디자인·참고 자료 (배포/소스에 불필요) ---
+images/시간표.png
+images/오오극장 로고 외.zip
+images/오오극장 로고.ai
+images/기획전리스트_Grid_시안.psd
+images/기획전리스트_Grid_시안*.png
+images/**/*.psd
+images/**/*.ai
+images/*.zip
+images/[붙임2]*/
+
+# --- 로컬·스크래치 ---
+tmp/
+# Claude Code 병렬 작업용 git worktree (.claude/worktrees/<id>/ — gitlink로 커밋되지 않음)
+.claude/
+
+# --- 환경·의존성 (Phase 2 API 등) ---
+.env
+.env.*
+!.env.example
+node_modules/
+
+# --- OS·에디터 ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+# --- 로그·빌드 산출 ---
+*.log
+npm-debug.log*
+dist/
+.cache/

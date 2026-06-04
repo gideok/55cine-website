@@ -3,7 +3,7 @@
  * partials/left-gnb.html — GNB + 이번주 시간표 뼈대
  * 마운트: [data-ti-mobile-menu-bar] (선택), [data-ti-left-gnb] (필수)
  * GNB 경로 치환: __TI_SITE_ROOT__(Home·메뉴), __TI_SITE_ROOT__
- * 절대경로 /test/… 는 서브디렉터리 배포(예: /55cine/)에서 동작하지 않음
+ * 절대경로 `/…` 링크는 서브디렉터리 배포 시 깨질 수 있음 — 상대·TiSiteRoot 권장
  * 현재 항목: <meta name="ti-nav-current" content="파일명.html" />
  */
 (function () {

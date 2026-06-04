@@ -1,5 +1,5 @@
 /**
- * 사이트 루트 접두어 (/55cine/ 등 서브디렉터리 배포)
+ * 사이트 루트 접두어 — 운영 기본 `/`, (선택) /55cine/ 등 서브디렉터리 배포
  * <head> 최상단에서 로드 — CSS/JS link·script href 자동 보정
  */
 (function (global) {
