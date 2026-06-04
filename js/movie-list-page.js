@@ -36,7 +36,25 @@
   var searchInput = document.getElementById("npSearchInput");
   var searchWrap = document.getElementById("npSearch");
   var io = null;
-  var state = { page: 1, mobileShown: PAGE_SIZE, searchQuery: "", isLoadingMore: false };
+  var searchDebounceTimer = null;
+  var USE_PAGED_API = typeof cfg.fetchPage === "function";
+  var SEARCH_DEBOUNCE_MS =
+    USE_PAGED_API && typeof searchCfg.debounceMs === "number"
+      ? Math.max(0, searchCfg.debounceMs)
+      : USE_PAGED_API
+        ? 350
+        : 0;
+  var state = {
+    page: 1,
+    mobileShown: PAGE_SIZE,
+    searchQuery: "",
+    isLoadingMore: false,
+    isLoadingPage: false,
+    apiTotal: 0,
+    apiTotalPages: 0,
+    mobileApiPage: 0,
+    listEpoch: 0
+  };
   var movieList = [];
 
   if (!grid) return;
@@ -59,10 +77,35 @@
     return "movies/now-playing/" + slug + ".html";
   }
 
+  function buildListReturnParams() {
+    var ret = new URLSearchParams();
+    if (USE_PAGED_API) {
+      if (isDesktop()) {
+        if (state.page > 1) ret.set("page", String(state.page));
+      } else {
+        if (state.mobileApiPage > 1) ret.set("page", String(state.mobileApiPage));
+        if (state.mobileShown > PAGE_SIZE) {
+          ret.set("mobileShown", String(state.mobileShown));
+        }
+      }
+      var sq = normalizeSearchText(state.searchQuery);
+      if (sq) ret.set("q", sq);
+    }
+    return ret;
+  }
+
   function buildQueryDetailUrl(slug) {
     var q = "slug=" + encodeURIComponent(slug);
     if (DETAIL_SECTION) {
       q += "&from=" + encodeURIComponent(DETAIL_SECTION);
+    }
+    if (USE_PAGED_API) {
+      var ret = buildListReturnParams();
+      ret.forEach(function (value, key) {
+        if (key === "page") q += "&listPage=" + encodeURIComponent(value);
+        else if (key === "q") q += "&listQ=" + encodeURIComponent(value);
+        else if (key === "mobileShown") q += "&mobileShown=" + encodeURIComponent(value);
+      });
     }
     return "movies/movie-detail.html?" + q;
   }
@@ -74,12 +117,50 @@
 
   function detailHref(item) {
     if (!item) return "";
+    if (USE_PAGED_API && item.slug) return rootPath(buildDetailUrl(item.slug));
     if (item.detailUrl) return rootPath(item.detailUrl);
     if (item.slug) return rootPath(buildDetailUrl(item.slug));
     return "";
   }
 
+  function readListStateFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    return {
+      page: Math.max(1, parseInt(params.get("page"), 10) || 1),
+      q: params.get("q") || "",
+      mobileShown: Math.max(
+        PAGE_SIZE,
+        parseInt(params.get("mobileShown"), 10) || PAGE_SIZE
+      )
+    };
+  }
+
+  function syncListUrl() {
+    if (!USE_PAGED_API || typeof history === "undefined" || !history.replaceState) {
+      return;
+    }
+    var params = buildListReturnParams();
+    var qs = params.toString();
+    var url = window.location.pathname + (qs ? "?" + qs : "");
+    history.replaceState(null, "", url);
+  }
+
+  function fetchMoviePage(page, query) {
+    return Promise.resolve(cfg.fetchPage(page, PAGE_SIZE, query || undefined)).then(
+      function (res) {
+        var payload = res && res.movies ? res.movies : res;
+        state.apiTotal = (res && res.total) || 0;
+        state.apiTotalPages = (res && res.totalPages) || 0;
+        state.page = (res && res.page) || page;
+        return normalizeListPayload(payload);
+      }
+    );
+  }
+
   function fetchMovieList() {
+    if (USE_PAGED_API) {
+      return fetchMoviePage(1, normalizeSearchText(state.searchQuery));
+    }
     if (typeof cfg.fetchList === "function") {
       return Promise.resolve(cfg.fetchList()).then(normalizeListPayload);
     }
@@ -136,6 +217,7 @@
   }
 
   function filteredMovies() {
+    if (USE_PAGED_API) return movieList;
     var query = normalizeSearchText(state.searchQuery);
     if (!query) return movieList;
     return movieList.filter(function (m) {
@@ -151,13 +233,30 @@
     return Math.max(1, Math.ceil(n / PAGE_SIZE));
   }
 
+  function dedupeMoviesBySlug(list) {
+    var seen = Object.create(null);
+    return list.filter(function (m) {
+      var key = (m && m.slug) || (m && m.titleKo) || "";
+      if (!key || seen[key]) return false;
+      seen[key] = true;
+      return true;
+    });
+  }
+
   function sliceForView() {
-    var list = allMovies();
+    var list = dedupeMoviesBySlug(allMovies());
     if (isDesktop()) {
+      /* API 페이지 모드: movieList 가 이미 해당 페이지 분량만 담김 */
+      if (USE_PAGED_API) return list;
       var start = (state.page - 1) * PAGE_SIZE;
       return list.slice(start, start + PAGE_SIZE);
     }
     return list.slice(0, state.mobileShown);
+  }
+
+  function bumpListEpoch() {
+    state.listEpoch += 1;
+    return state.listEpoch;
   }
 
   function renderCard(m) {
@@ -225,18 +324,68 @@
     if (endEl) endEl.classList.remove("is-visible");
   }
 
+  function hasActiveSearch() {
+    return !!normalizeSearchText(state.searchQuery);
+  }
+
   function searchStatusMessage() {
-    if (!normalizeSearchText(state.searchQuery)) return "";
-    if (!movieList.length) return "";
+    if (!hasActiveSearch()) return "";
+    if (USE_PAGED_API && state.apiTotal === 0) return SEARCH_NO_RESULTS;
+    if (!USE_PAGED_API && !movieList.length) return "";
     return SEARCH_NO_RESULTS;
   }
 
+  function formatDesktopCountText(countTotal, tp) {
+    if (USE_PAGED_API && hasActiveSearch()) {
+      return "검색 " + countTotal + "편 · " + state.page + " / " + tp + " 페이지";
+    }
+    return Pager.formatMovies(countTotal, state.page, tp);
+  }
+
+  function formatMobileCountText(list) {
+    var totalCount = USE_PAGED_API ? state.apiTotal : list.length;
+    var shown = Math.min(state.mobileShown, list.length);
+    if (USE_PAGED_API && hasActiveSearch()) {
+      return "검색 " + totalCount + "편 · " + shown + "편 표시";
+    }
+    return "총 " + totalCount + "편 · " + shown + "편 표시";
+  }
+
+  function listIsEmpty() {
+    if (USE_PAGED_API) {
+      return state.apiTotal === 0 || !allMovies().length;
+    }
+    return !allMovies().length;
+  }
+
+  function renderDesktopPage(page) {
+    if (state.isLoadingPage) return;
+    var epoch = bumpListEpoch();
+    state.isLoadingPage = true;
+    showListMessage(LOADING_MESSAGE, false, true);
+    fetchMoviePage(page, normalizeSearchText(state.searchQuery))
+      .then(waitForTestSpinner)
+      .then(function (list) {
+        if (epoch !== state.listEpoch) return;
+        movieList = list;
+        state.page = page;
+        state.isLoadingPage = false;
+        render();
+      })
+      .catch(function (err) {
+        if (epoch !== state.listEpoch) return;
+        state.isLoadingPage = false;
+        movieList = [];
+        showListMessage((err && err.message) || ERROR_MESSAGE, true);
+      });
+  }
+
   function render() {
-    var list = allMovies();
-    if (!list.length) {
+    var list = dedupeMoviesBySlug(allMovies());
+    if (listIsEmpty()) {
       var msg = searchStatusMessage() || EMPTY_MESSAGE;
       showListMessage(msg, false);
-      if (countEl && normalizeSearchText(state.searchQuery) && movieList.length) {
+      if (countEl && hasActiveSearch()) {
         countEl.textContent = "검색 결과 0편";
       }
       return;
@@ -248,10 +397,11 @@
     });
 
     if (isDesktop()) {
-      var tp = totalPages(list.length);
+      var tp = USE_PAGED_API ? Math.max(1, state.apiTotalPages) : totalPages(list.length);
+      var countTotal = USE_PAGED_API ? state.apiTotal : list.length;
       if (countEl) {
-        var countText = Pager.formatMovies(list.length, state.page, tp);
-        if (normalizeSearchText(state.searchQuery) && movieList.length !== list.length) {
+        var countText = formatDesktopCountText(countTotal, tp);
+        if (!USE_PAGED_API && hasActiveSearch() && movieList.length !== list.length) {
           countText += " · 전체 " + movieList.length + "편 중";
         }
         countEl.textContent = countText;
@@ -262,34 +412,46 @@
           totalPages: tp,
           scrollRootSelector: SCROLL_ROOT,
           onChange: function (p) {
-            state.page = p;
-            render();
+            if (USE_PAGED_API) {
+              if (p !== state.page) renderDesktopPage(p);
+            } else {
+              state.page = p;
+              render();
+            }
           }
         });
       }
     } else {
       if (Pager) Pager.updateVisibility(pager, 0);
+      var totalCount = USE_PAGED_API ? state.apiTotal : list.length;
       if (countEl) {
-        var mobileCount =
-          "총 " + list.length + "편 · " + Math.min(state.mobileShown, list.length) + "편 표시";
-        if (normalizeSearchText(state.searchQuery) && movieList.length !== list.length) {
+        var mobileCount = formatMobileCountText(list);
+        if (!USE_PAGED_API && hasActiveSearch() && movieList.length !== list.length) {
           mobileCount += " (전체 " + movieList.length + "편)";
         }
         countEl.textContent = mobileCount;
       }
       if (endEl) {
-        endEl.classList.toggle(
-          "is-visible",
-          state.mobileShown >= list.length && list.length > 0
-        );
+        var allLoaded =
+          USE_PAGED_API
+            ? state.mobileApiPage >= state.apiTotalPages && state.mobileShown >= list.length
+            : state.mobileShown >= list.length;
+        endEl.classList.toggle("is-visible", allLoaded && list.length > 0);
       }
     }
+
+    if (USE_PAGED_API) syncListUrl();
   }
 
   function onResizeMode() {
     state.page = 1;
     state.mobileShown = PAGE_SIZE;
-    render();
+    state.mobileApiPage = 0;
+    if (USE_PAGED_API) {
+      loadInitialPaged();
+    } else {
+      render();
+    }
   }
 
   function setMobileLoadMoreSpinner(visible) {
@@ -313,15 +475,10 @@
     }
   }
 
-  function loadMoreOnMobile() {
-    if (isDesktop() || state.isLoadingMore) return;
-    var list = allMovies();
-    if (state.mobileShown >= list.length) return;
-
+  function finishMobileLoadMore(applyFn) {
     state.isLoadingMore = true;
     setMobileLoadMoreSpinner(true);
     var startedAt = Date.now();
-    /* 조치필요(테스트스피너): 무한 스크롤 스피너 최소 표시 시간 */
     var minSpinnerMs = TEST_SPINNER_DELAY_MS || 360;
 
     window.requestAnimationFrame(function () {
@@ -329,13 +486,57 @@
         var elapsed = Date.now() - startedAt;
         var delay = Math.max(0, minSpinnerMs - elapsed);
         window.setTimeout(function () {
-          state.mobileShown = Math.min(state.mobileShown + PAGE_SIZE, list.length);
+          applyFn();
           state.isLoadingMore = false;
           setMobileLoadMoreSpinner(false);
           render();
         }, delay);
       });
     });
+  }
+
+  function loadMoreOnMobile() {
+    if (isDesktop() || state.isLoadingMore || state.isLoadingPage) return;
+    var list = allMovies();
+
+    if (!USE_PAGED_API) {
+      if (state.mobileShown >= list.length) return;
+      finishMobileLoadMore(function () {
+        state.mobileShown = Math.min(state.mobileShown + PAGE_SIZE, list.length);
+      });
+      return;
+    }
+
+    if (state.mobileShown < list.length) {
+      finishMobileLoadMore(function () {
+        state.mobileShown = Math.min(state.mobileShown + PAGE_SIZE, list.length);
+      });
+      return;
+    }
+
+    if (state.mobileApiPage < 1) return;
+    if (state.mobileApiPage >= state.apiTotalPages) return;
+
+    var nextPage = state.mobileApiPage + 1;
+    var epoch = state.listEpoch;
+    state.isLoadingMore = true;
+    setMobileLoadMoreSpinner(true);
+    fetchMoviePage(nextPage, normalizeSearchText(state.searchQuery))
+      .then(waitForTestSpinner)
+      .then(function (pageList) {
+        if (epoch !== state.listEpoch) return;
+        state.mobileApiPage = nextPage;
+        movieList = dedupeMoviesBySlug(movieList.concat(pageList));
+        state.mobileShown = Math.min(state.mobileShown + PAGE_SIZE, movieList.length);
+        state.isLoadingMore = false;
+        setMobileLoadMoreSpinner(false);
+        render();
+      })
+      .catch(function () {
+        if (epoch !== state.listEpoch) return;
+        state.isLoadingMore = false;
+        setMobileLoadMoreSpinner(false);
+      });
   }
 
   function setupInfinite() {
@@ -364,12 +565,155 @@
     });
   }
 
+  function applyPagedSearch() {
+    var query = normalizeSearchText(state.searchQuery);
+    var epoch = bumpListEpoch();
+    state.isLoadingPage = true;
+    state.isLoadingMore = false;
+    setMobileLoadMoreSpinner(false);
+    if (io) {
+      io.disconnect();
+      io = null;
+    }
+    showListMessage(LOADING_MESSAGE, false, true);
+    movieList = [];
+    state.mobileApiPage = 0;
+    state.apiTotal = 0;
+    state.apiTotalPages = 0;
+    state.page = 1;
+    state.mobileShown = PAGE_SIZE;
+
+    if (isDesktop()) {
+      renderDesktopPage(1);
+      return;
+    }
+
+    fetchMoviePage(1, query || undefined)
+      .then(waitForTestSpinner)
+      .then(function (list) {
+        if (epoch !== state.listEpoch) return;
+        movieList = list;
+        state.mobileApiPage = 1;
+        state.mobileShown = PAGE_SIZE;
+        state.isLoadingPage = false;
+        render();
+        setupInfinite();
+      })
+      .catch(function (err) {
+        if (epoch !== state.listEpoch) return;
+        state.isLoadingPage = false;
+        movieList = [];
+        showListMessage((err && err.message) || ERROR_MESSAGE, true);
+      });
+  }
+
   function onSearchInput() {
     if (!searchInput) return;
     state.searchQuery = searchInput.value;
     state.page = 1;
     state.mobileShown = PAGE_SIZE;
+
+    if (USE_PAGED_API) {
+      if (searchDebounceTimer) window.clearTimeout(searchDebounceTimer);
+      if (SEARCH_DEBOUNCE_MS > 0) {
+        searchDebounceTimer = window.setTimeout(applyPagedSearch, SEARCH_DEBOUNCE_MS);
+      } else {
+        applyPagedSearch();
+      }
+      return;
+    }
+
     render();
+  }
+
+  function loadMobilePagedRestore(targetApiPage, targetShown, query) {
+    var epoch = bumpListEpoch();
+    state.isLoadingPage = true;
+    movieList = [];
+    state.mobileApiPage = 0;
+    state.apiTotal = 0;
+    state.apiTotalPages = 0;
+    var chain = Promise.resolve();
+    var p;
+    for (p = 1; p <= targetApiPage; p++) {
+      (function (pageNum) {
+        chain = chain.then(function () {
+          if (epoch !== state.listEpoch) return;
+          return fetchMoviePage(pageNum, query).then(function (list) {
+            if (epoch !== state.listEpoch) return;
+            movieList = dedupeMoviesBySlug(movieList.concat(list));
+            state.mobileApiPage = pageNum;
+          });
+        });
+      })(p);
+    }
+    chain
+      .then(waitForTestSpinner)
+      .then(function () {
+        if (epoch !== state.listEpoch) return;
+        state.mobileShown = Math.min(targetShown, movieList.length);
+        state.page = 1;
+        state.isLoadingPage = false;
+        render();
+        setupInfinite();
+      })
+      .catch(function (err) {
+        if (epoch !== state.listEpoch) return;
+        state.isLoadingPage = false;
+        movieList = [];
+        showListMessage((err && err.message) || ERROR_MESSAGE, true);
+      });
+  }
+
+  function loadInitialPaged() {
+    var urlState = readListStateFromUrl();
+    if (searchInput && urlState.q) {
+      searchInput.value = urlState.q;
+      state.searchQuery = urlState.q;
+    }
+
+    showListMessage(LOADING_MESSAGE, false, true);
+    movieList = [];
+    state.mobileApiPage = 0;
+    state.apiTotal = 0;
+    state.apiTotalPages = 0;
+    state.mobileShown = PAGE_SIZE;
+
+    var query = normalizeSearchText(state.searchQuery);
+    var initialPage = urlState.page;
+
+    if (isDesktop()) {
+      state.page = initialPage;
+      renderDesktopPage(initialPage);
+      return;
+    }
+
+    state.page = 1;
+
+    if (urlState.page > 1 || urlState.mobileShown > PAGE_SIZE) {
+      loadMobilePagedRestore(urlState.page, urlState.mobileShown, query);
+      return;
+    }
+
+    var epoch = bumpListEpoch();
+    state.isLoadingPage = true;
+    fetchMoviePage(1, query)
+      .then(waitForTestSpinner)
+      .then(function (list) {
+        if (epoch !== state.listEpoch) return;
+        movieList = list;
+        state.mobileApiPage = 1;
+        state.mobileShown = PAGE_SIZE;
+        state.isLoadingPage = false;
+        render();
+        setupInfinite();
+      })
+      .catch(function (err) {
+        if (epoch !== state.listEpoch) return;
+        state.isLoadingPage = false;
+        movieList = [];
+        showListMessage((err && err.message) || ERROR_MESSAGE, true);
+      });
   }
 
   var SEARCH_SVG =
@@ -467,18 +811,44 @@
     }
   }
 
-  function ensureSearchTrailingHost() {
+  function normalizeSearchToolbarLayout() {
+    var toolbar = document.querySelector(".ti-np-root .ti-page-toolbar");
+    if (!toolbar) return;
+    var legacy = toolbar.querySelector(".ti-page-toolbar__trailing");
+    if (legacy) {
+      var pagerInLegacy = legacy.querySelector(".ti-page-pager");
+      if (pagerInLegacy) toolbar.appendChild(pagerInLegacy);
+      legacy.classList.remove("ti-page-toolbar__trailing");
+      legacy.classList.add("ti-page-toolbar__meta");
+    }
+    var meta = toolbar.querySelector(".ti-page-toolbar__meta");
+    if (meta) {
+      var pagerInMeta = meta.querySelector(".ti-page-pager");
+      if (pagerInMeta) toolbar.appendChild(pagerInMeta);
+    }
+    if (meta || toolbar.querySelector(".np-search")) {
+      toolbar.classList.add("ti-page-toolbar--with-search");
+    }
+  }
+
+  function ensureSearchMetaRow() {
     var toolbar = document.querySelector(".ti-np-root .ti-page-toolbar");
     if (!toolbar) return null;
-    var trailing = toolbar.querySelector(".ti-page-toolbar__trailing");
-    if (!trailing) {
-      trailing = document.createElement("div");
-      trailing.className = "ti-page-toolbar__trailing";
+    normalizeSearchToolbarLayout();
+    var meta = toolbar.querySelector(".ti-page-toolbar__meta");
+    if (!meta) {
+      meta = document.createElement("div");
+      meta.className = "ti-page-toolbar__meta";
+      var count = toolbar.querySelector(".ti-page-count");
+      if (count) meta.appendChild(count);
+      toolbar.classList.add("ti-page-toolbar--with-search");
+      toolbar.insertBefore(meta, toolbar.firstChild);
       var pagerEl = document.getElementById("npPager");
-      if (pagerEl) trailing.appendChild(pagerEl);
-      toolbar.appendChild(trailing);
+      if (pagerEl && pagerEl.parentElement !== toolbar) {
+        toolbar.appendChild(pagerEl);
+      }
     }
-    return trailing;
+    return meta;
   }
 
   function setupSearch() {
@@ -486,16 +856,17 @@
       if (searchWrap) searchWrap.hidden = true;
       return;
     }
+    normalizeSearchToolbarLayout();
     if (searchWrap) searchWrap.hidden = false;
     if (!searchInput) {
-      var trailing = ensureSearchTrailingHost();
+      var metaRow = ensureSearchMetaRow();
       searchWrap = searchWrap || document.getElementById("npSearch");
       if (!searchWrap) {
         searchWrap = document.createElement("div");
         searchWrap.id = "npSearch";
         searchWrap.className = "np-search";
-        if (trailing) {
-          trailing.insertBefore(searchWrap, trailing.firstChild);
+        if (metaRow) {
+          metaRow.appendChild(searchWrap);
         } else {
           var head = document.querySelector(".ti-np-root .np-head");
           if (head) head.insertAdjacentElement("afterend", searchWrap);
@@ -526,12 +897,27 @@
     setupSearchToggle();
     searchInput.addEventListener("input", onSearchInput);
     searchInput.addEventListener("search", onSearchInput);
+    if (USE_PAGED_API) {
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        if (searchDebounceTimer) {
+          window.clearTimeout(searchDebounceTimer);
+          searchDebounceTimer = null;
+        }
+        applyPagedSearch();
+      });
+    }
   }
 
   function boot() {
     setupSearch();
-    showListMessage(LOADING_MESSAGE, false, true);
+    if (USE_PAGED_API) {
+      loadInitialPaged();
+      return;
+    }
 
+    showListMessage(LOADING_MESSAGE, false, true);
     fetchMovieList()
       .then(waitForTestSpinner)
       .then(function (list) {

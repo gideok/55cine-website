@@ -65,6 +65,22 @@
     });
   }
 
+  /**
+   * 상영작 목록 페이지 단위 (PC 페이지네이션 / 모바일 추가 로드)
+   * @returns {{ movies: Array, page: number, pageSize: number, total: number, totalPages: number }}
+   */
+  function getMovieListPage(section, page, pageSize, query) {
+    var path =
+      "/movies?section=" +
+      encodeURIComponent(section) +
+      "&page=" +
+      encodeURIComponent(String(page)) +
+      "&pageSize=" +
+      encodeURIComponent(String(pageSize));
+    if (query) path += "&q=" + encodeURIComponent(query);
+    return apiGet(path);
+  }
+
   function getMovieCatalog() {
     return apiGet("/movies/catalog").then(function (data) {
       return data.movies || [];
@@ -81,6 +97,7 @@
     apiGet: apiGet,
     getWeekSchedule: getWeekSchedule,
     getMovieList: getMovieList,
+    getMovieListPage: getMovieListPage,
     getMovieCatalog: getMovieCatalog,
     getMovieBySlug: getMovieBySlug,
     formatAnchorDate: formatAnchorDate

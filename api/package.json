@@ -12,6 +12,7 @@
     "db:inspect": "node scripts/inspect-db.mjs",
     "db:seed:web-program": "node scripts/seed-web-program.mjs",
     "db:seed:content": "node scripts/seed-web-program-content.mjs",
+    "db:migrate:nowshowing-archive": "node scripts/migrate-nowshowing-archive.mjs",
     "db:sync:schedule-images": "node scripts/sync-schedule-page-images.mjs",
     "db:generate:thumbs": "node scripts/generate-wp-thumbnails.mjs"
   },

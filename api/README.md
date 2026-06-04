@@ -40,11 +40,12 @@ npm run db:inspect
 
 | 필드 | 용도 | 파일 예 |
 |------|------|---------|
-| `img_thumb` | GNB 시간표 (`/schedule/week`) | `images/movies/wp/wp_{seq}_1.jpg` |
-| `img1` | 상영작 목록·상세 (`/movies`) | `images/movies/wp/thumb_wp_{seq}_1.jpg` (40×40) |
+| `img1` | 상영작 목록·상세 (`/movies`) — 원본 | `images/movies/wp/wp_{seq}_1.jpg` |
+| `img_thumb` | GNB 시간표 (`/schedule/week`) — 40×40 | `images/movies/wp/thumb_wp_{seq}_1.jpg` |
 
 ```bash
-npm run db:generate:thumbs   # img1←img_thumb 후 thumb_wp_* 생성
+npm run db:migrate:nowshowing-archive   # nowshowing page/2+ → web_program
+npm run db:generate:thumbs              # img1 원본 → img_thumb 40×40 생성
 ```
 
 ## 프론트 연동

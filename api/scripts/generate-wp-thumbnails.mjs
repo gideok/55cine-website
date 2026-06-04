@@ -1,6 +1,6 @@
 /**
- * wp_* 원본 → 40×40 thumb_wp_* 생성 후 web_program.img1 갱신
- * img_thumb 는 원본 경로 유지 (GNB 시간표용)
+ * web_program.img1(원본 wp_*) → 40×40 thumb_wp_* 생성 후 img_thumb 갱신
+ * img1 = 목록·상세 원본, img_thumb = GNB 시간표용 40×40
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -29,24 +29,17 @@ async function main() {
 
   const pool = await sql.connect(cfg);
 
-  const copied = await pool.request().query(`
-    UPDATE dbo.web_program
-    SET img1 = img_thumb
-    WHERE img_thumb IS NOT NULL AND LTRIM(RTRIM(img_thumb)) <> ''
-  `);
-  console.log("img1 ← img_thumb rows:", copied.rowsAffected[0]);
-
   const rows = (
     await pool.request().query(`
       SELECT seq, prog_id, slug, img_thumb, img1
       FROM dbo.web_program
-      WHERE img_thumb IS NOT NULL AND img_thumb LIKE 'images/movies/wp/wp_%'
+      WHERE img1 IS NOT NULL AND img1 LIKE 'images/movies/wp/wp_%'
     `)
   ).recordset;
 
   let generated = 0;
   for (const row of rows) {
-    const srcRel = String(row.img_thumb).trim();
+    const srcRel = String(row.img1).trim();
     const thumbFile = thumbNameFromSource(srcRel);
     if (!thumbFile) continue;
 
@@ -67,8 +60,8 @@ async function main() {
     await pool
       .request()
       .input("seq", sql.Int, row.seq)
-      .input("img1", sql.NVarChar, destRel)
-      .query(`UPDATE dbo.web_program SET img1 = @img1 WHERE seq = @seq`);
+      .input("imgThumb", sql.NVarChar, destRel)
+      .query(`UPDATE dbo.web_program SET img_thumb = @imgThumb WHERE seq = @seq`);
 
     console.log("OK", row.slug || row.prog_id, destRel);
     generated++;

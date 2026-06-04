@@ -274,14 +274,16 @@
     if (movie.releaseDate) meta.appendChild(createMetaRow("개봉", movie.releaseDate));
     c2Inner.appendChild(meta);
 
-    var bookBtn = document.createElement("a");
-    bookBtn.className = "md2-booking-btn";
-    bookBtn.href = bookingUrl;
-    bookBtn.target = "_blank";
-    bookBtn.rel = "noopener noreferrer";
-    bookBtn.setAttribute("aria-label", (movie.titleKo || "") + " 예매하기");
-    bookBtn.textContent = "예매하기";
-    c2Inner.appendChild(bookBtn);
+    if (getCatalogSection() !== "past") {
+      var bookBtn = document.createElement("a");
+      bookBtn.className = "md2-booking-btn";
+      bookBtn.href = bookingUrl;
+      bookBtn.target = "_blank";
+      bookBtn.rel = "noopener noreferrer";
+      bookBtn.setAttribute("aria-label", (movie.titleKo || "") + " 예매하기");
+      bookBtn.textContent = "예매하기";
+      c2Inner.appendChild(bookBtn);
+    }
     c2.appendChild(c2Inner);
     grid.appendChild(c2);
 
@@ -411,7 +413,18 @@
     if (!back) return;
     var section = getCatalogSection();
     var listPath = LIST_PAGE_PATHS[section] || LIST_PAGE_PATHS["now-playing"];
-    back.href = resolveAssetUrl(listPath);
+    var params = new URLSearchParams(window.location.search);
+    var listPage = params.get("listPage");
+    var listQ = params.get("listQ");
+    var mobileShown = params.get("mobileShown");
+    var returnQs = new URLSearchParams();
+    if (listPage) returnQs.set("page", listPage);
+    if (listQ) returnQs.set("q", listQ);
+    if (mobileShown) returnQs.set("mobileShown", mobileShown);
+    var href = listPath;
+    var retStr = returnQs.toString();
+    if (retStr) href += "?" + retStr;
+    back.href = resolveAssetUrl(href);
     back.textContent = LIST_LABELS[section] || LIST_LABELS["now-playing"];
   }
 

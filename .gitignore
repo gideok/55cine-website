@@ -38,3 +38,6 @@ npm-debug.log*
 dist/
 api/dist/
 .cache/
+api/.cache-nowshowing-urls.json
+api/.tmp-*.html
+api/migrate-archive.log

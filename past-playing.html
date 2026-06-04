@@ -41,9 +41,9 @@
             <p class="np-kicker">상영작</p>
             <h1 class="np-title" id="np-page-title">지난 상영작</h1>
           </header>
-          <div class="ti-page-toolbar">
-            <p class="ti-page-count" id="npCount" aria-live="polite"></p>
-            <div class="ti-page-toolbar__trailing">
+          <div class="ti-page-toolbar ti-page-toolbar--with-search">
+            <div class="ti-page-toolbar__meta">
+              <p class="ti-page-count" id="npCount" aria-live="polite"></p>
               <div class="np-search" id="npSearch">
                 <button
                   type="button"
@@ -79,8 +79,8 @@
                   </label>
                 </div>
               </div>
-              <nav class="ti-page-pager" id="npPager" aria-label="페이지"></nav>
             </div>
+            <nav class="ti-page-pager" id="npPager" aria-label="페이지"></nav>
           </div>
           <div class="np-grid" id="npGrid"></div>
           <div class="np-load-more" id="npLoadMore" hidden aria-live="polite" aria-busy="false"></div>
@@ -106,8 +106,8 @@
       dataUrl: "movies/now-playing/data/past-list.json",
       detailUrlMode: "query",
       detailSection: "past",
-      fetchList: function () {
-        return window.TiApi.getMovieList("past");
+      fetchPage: function (page, pageSize, query) {
+        return window.TiApi.getMovieListPage("past", page, pageSize, query);
       },
       /* 조치필요(테스트스피너): 스피너 확인용 3초 지연 — 배포 전 제거 */
       testSpinnerDelayMs: 50,
@@ -116,9 +116,9 @@
       errorMessage: "지난 상영작 목록을 표시할 수 없습니다.",
       search: {
         enabled: true,
-        placeholder: "감독, 제목, 영어제목",
-        noResultsMessage: "검색 결과가 없습니다.",
-        fields: ["titleKo", "titleEn", "director"]
+        debounceMs: 350,
+        placeholder: "제목·영문제목·감독 검색",
+        noResultsMessage: "검색 결과가 없습니다."
       }
     };
   </script>

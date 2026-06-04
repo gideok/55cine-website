@@ -3,7 +3,8 @@ import { z } from "zod";
 import {
   getAllMovieDetails,
   getMovieDetail,
-  getMovieList
+  getMovieList,
+  getMovieListPage
 } from "../services/movies.service.js";
 
 const sectionSchema = z.enum(["now-playing", "upcoming", "past"]);
@@ -11,7 +12,12 @@ const sectionSchema = z.enum(["now-playing", "upcoming", "past"]);
 export async function registerMovieRoutes(app: FastifyInstance): Promise<void> {
   app.get("/movies", async (request, reply) => {
     const parsed = z
-      .object({ section: sectionSchema })
+      .object({
+        section: sectionSchema,
+        page: z.coerce.number().int().min(1).optional(),
+        pageSize: z.coerce.number().int().min(1).max(50).optional(),
+        q: z.string().optional()
+      })
       .safeParse(request.query);
 
     if (!parsed.success) {
@@ -21,7 +27,18 @@ export async function registerMovieRoutes(app: FastifyInstance): Promise<void> {
     }
 
     try {
-      const data = await getMovieList(parsed.data.section);
+      const { section, page, pageSize, q } = parsed.data;
+      if (page != null || pageSize != null) {
+        const data = await getMovieListPage(
+          section,
+          page ?? 1,
+          pageSize ?? 6,
+          q?.trim() || undefined
+        );
+        reply.header("Cache-Control", "public, max-age=60");
+        return data;
+      }
+      const data = await getMovieList(section);
       reply.header("Cache-Control", "public, max-age=120");
       return data;
     } catch (err) {
