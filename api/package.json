@@ -14,7 +14,8 @@
     "db:seed:content": "node scripts/seed-web-program-content.mjs",
     "db:migrate:nowshowing-archive": "node scripts/migrate-nowshowing-archive.mjs",
     "db:sync:schedule-images": "node scripts/sync-schedule-page-images.mjs",
-    "db:generate:thumbs": "node scripts/generate-wp-thumbnails.mjs"
+    "db:generate:thumbs": "node scripts/generate-wp-thumbnails.mjs",
+    "db:admin:close-stale-now-playing": "node scripts/admin-close-stale-now-playing.mjs --execute"
   },
   "engines": {
     "node": ">=20"

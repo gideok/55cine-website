@@ -32,7 +32,11 @@ npm run db:migrate
 npm run db:inspect
 ```
 
-**관리자 수동 SQL** (`db:migrate` 대상 아님): `sql/admin/sync_prog_base_date_close_from_종영.sql` — `prog_daily` 종영 회차 `date_sc` → `prog_base.date_close` 동기화.
+**관리자 수동 SQL** (`db:migrate` 대상 아님):
+
+- `sql/admin/sync_prog_base_date_close_from_종영.sql` — `prog_daily` 종영 회차 `date_sc` → `prog_base.date_close` 동기화.
+- `sql/admin/close_now_playing_no_schedule_after_2026-05-01.sql` — `2026-05-01` 이후 `prog_daily` 회차 없는 현재상영작 → `date_close = 2025-12-31`.
+- `node scripts/admin-close-stale-now-playing.mjs` (`--execute`) — 위 종영 일괄 처리 스크립트 실행.
 
 `SCHEDULE_USE_MOCK` 을 설정하지 않으면 실 DB 를 조회합니다. 플래그는 `web_program_schedule` 우선, 없으면 `prog_label` 파싱 fallback.
 
