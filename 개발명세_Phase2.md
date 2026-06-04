@@ -609,7 +609,7 @@ erDiagram
 | 계층 | 기술 | 이유 |
 |------|------|------|
 | **Frontend** | **현 구조 유지** + 선택적 **Vite** (dev proxy만) | HTML/JS 재작성 없이 API 연동; HMR·프록시로 CORS 해소 |
-| **Backend** | **Node.js 20 LTS + Fastify** | `tools/*.js`와 동일 런타임; JSON 스키마와 TypeScript/Zod 타입 공유 용이 |
+| **Backend** | **Node.js 20 LTS + Fastify + TypeScript** | `api/` 신규 코드만 TS — Prisma·Zod·라우트 타입 ([§8.6](#86-typescript-도입-검토)) |
 | **ORM** | **Prisma (`provider = "mysql"`)** 또는 **Knex.js** | 마이그레이션·시드; 팀이 PHP/기존 스택이면 **기존 ORM 규칙에 맞춰 Knex만**도 가능 |
 | **DB** | **기존 MySQL / MariaDB** | 관련 시스템과 동일 인스턴스·운영 정책(백업·계정) 재사용 |
 | **연결** | 환경 변수 `DATABASE_URL` (팀 제공) | 예: `mysql://web_api:***@db-host:3306/theater_db` |
@@ -633,17 +633,25 @@ erDiagram
 | **Docker Compose로 DB 기동** | 공용 MariaDB 정책과 충돌; 로컬·운영 데이터 원천 분리 곤란 |
 | **Supabase(Postgres)** | DBMS가 요구사항(MySQL)과 다름 |
 | Next.js / Nuxt 전면 전환 | Phase 1 자산·경로·GNB 셸 재이식 비용 큼 |
+| **Frontend 전면 TypeScript** | 정적 HTML에 `<script>` 직결 구조와 상충; 빌드·전 파일 변환 비용 대비 이득 적음 ([§8.6](#86-typescript-도입-검토)) |
 | MongoDB only | 상영·시간표·slug 관계에 RDB·기존 MySQL 생태계와 맞음 |
 
 ### 8.4 권장 저장소 구조 (Phase 2)
 
 ```
-55cine-website/          # Frontend (기존, 정적 배포)
-api/                     # Backend (동일 repo 또는 sibling)
+55cine-website/          # Frontend (Vanilla JS, 빌드 없음 — 정적 배포)
+  js/                    # 기존 .js 유지
+  js/api/                # (신규) fetch 클라이언트 — .js + JSDoc 권장
+api/                     # Backend — TypeScript 전용
+  package.json
+  tsconfig.json
   src/
+    index.ts
     routes/
     services/
-  prisma/                # provider = "mysql"
+    schemas/             # Zod — 요청·응답·DB 매핑
+  dist/                  # tsc 빌드 산출 (gitignore, PM2가 실행)
+  prisma/
     schema.prisma
     migrations/
   scripts/
@@ -653,6 +661,65 @@ api/                     # Backend (동일 repo 또는 sibling)
 
 - **`docker-compose.yml`**: API 서비스만 정의 가능(선택). **`db:` 서비스는 두지 않음.**
 - DB 마이그레이션은 CI 또는 배포 전 **공용 DB에 대해** DBA 승인 후 적용.
+- **배포:** `api/`에서 `npm run build` 후 `node dist/index.js` (또는 `tsx`는 dev만).
+
+### 8.6 TypeScript 도입 검토
+
+**현황 (2026년 기준)**
+
+| 항목 | 수치·상태 |
+|------|-----------|
+| **Frontend JS** | `js/` 약 22파일 · ~5,500줄, IIFE + `window.TI_*_CONFIG` |
+| **빌드** | 루트 `package.json` 없음 — HTML이 `.js`를 **그대로** 로드 |
+| **배포** | Nginx 정적 + (예정) `/api/` 프록시 |
+| **데이터** | JSON shape가 사실상 스키마 — API 전환 시 계약 정의가 핵심 |
+
+**결론: 계층별 채택**
+
+| 계층 | TypeScript | 판단 |
+|------|------------|------|
+| **Frontend** (`js/`, `components/`) | **Phase 2 비권장** | 정적 배포·기존 패턴 유지가 효율적 ([§3.1](#31-frontend-유지보강)) |
+| **Backend** (`api/`) | **권장** | 신규 코드베이스 — Prisma Client·Fastify·Zod와 궁합 좋음 |
+| **도구** (`tools/`, `scripts/`) | **유지 (JS/Python)** | 일회성·배치; TS 전환 우선순위 낮음 |
+
+#### Frontend — Vanilla JS 유지
+
+**TS 전환이 비효율적인 이유**
+
+1. **빌드 파이프라인 필수** — 모든 페이지 `script src`를 `dist/`로 바꾸고, dev·배포에 번들러(Vite/esbuild) 추가.
+2. **이미 추상화됨** — `TI_*_CONFIG`, `TiSiteRoot`, 페이지별 렌더러로 규모(~50편·기사 100+)에 충분.
+3. **Phase 2 목표와 불일치** — “HTML/CSS 유지 + `fetch*`만 API로 교체”; TS는 범위·리스크만 키움.
+4. **타입 이득 제한** — DOM·설정 객체 위주; 복잡한 제네릭·대규모 모듈 그래프 없음.
+
+**대안 (가벼운 계약)**
+
+- `js/api/client.js`에 **JSDoc `@typedef`** (MovieListItem, ScheduleWeek 등) — 에디터 자동완성.
+- P2-0 **`openapi.yaml`** → (선택) `openapi-typescript`로 **개발용** `.d.ts` 생성, Frontend는 여전히 `.js`.
+- API 응답은 Phase 1 JSON과 **동일 shape** 유지 → 런타임 깨짐은 통합 테스트·스테이징으로 검증.
+
+#### Backend — TypeScript 권장
+
+**효율적인 이유**
+
+1. **Greenfield** — `api/`만 신규; 기존 `js/` 변환 없음.
+2. **Prisma** — `schema.prisma` → **생성 타입**으로 쿼리·시드 안전.
+3. **Zod** — `cine_*`·REST 응답 검증 + `z.infer<>`로 타입 추론; OpenAPI와 병행 가능.
+4. **Fastify** — 라우트·쿼리스트링 타입 지정 용이; PM2는 `dist/`만 실행.
+5. **공유** — `api/src/schemas/`를 단일 소스로 두고, Frontend는 문서·OpenAPI로 동기화 (모노레포 `packages/types`는 인원·복잡도 증가 시).
+
+**스택 예시**
+
+| 용도 | 패키지 |
+|------|--------|
+| 런타임 | `typescript`, `tsx`(dev), `fastify`, `@prisma/client` |
+| 검증 | `zod` (또는 `fastify-type-provider-zod`) |
+| 빌드 | `tsc` → `dist/`, `npm run build`를 배포 전 필수 |
+
+#### 2차에 Frontend TS를 검토할 때
+
+- 관리자 UI를 **React/Vue SPA**로 새로 만들 때.
+- 전면 프레임워크 전환(Next/Nuxt)을 별도 트랙으로 승인했을 때.
+- 팀 전원 TS·번들러 운영이 일상화된 이후.
 
 ### 8.5 개발·운영 연결 (MySQL)
 
@@ -670,8 +737,8 @@ api/                     # Backend (동일 repo 또는 sibling)
 
 | 단계 | 작업 | 산출물 |
 |------|------|--------|
-| **P2-0** | **기존 MySQL ERD 합의** + API 스키마·OpenAPI | 합의서, `openapi.yaml` |
-| **P2-1** | Fastify 스켈레톤 + **공용 DB 연결** (`/api/v1/health`, DB ping) | `.env`, migration 1차 |
+| **P2-0** | **기존 MySQL ERD 합의** + API 스키마·OpenAPI (TS/Zod 타입 단일 소스 후보) | 합의서, `openapi.yaml` |
+| **P2-1** | **`api/` TypeScript** Fastify 스켈레톤 + DB 연결 (`tsc`→`dist`, `/api/v1/health`) | `package.json`, `tsconfig.json`, migration 1차 |
 | **P2-2** | JSON → **MySQL** 시드 (movies, magazine) | seed SQL/스크립트 |
 | **P2-3** | `GET /movies`, `GET /movies/{slug}` | Frontend 3목록+상세 연동 |
 | **P2-4** | `GET /schedule/week` | GNB `week-schedule.js` 연동, 테스트 날짜 제거 |
@@ -713,6 +780,7 @@ api/                     # Backend (동일 repo 또는 sibling)
 - [ ] 운영 웹 서버 디렉터리·Nginx vhost ([§1.2.2](#122-웹-서버-내부-구성)) 반영
 - [ ] 외부 RDB 방화벽: 웹 서버 IP → `3306` 허용
 - [ ] PM2(API×2) + Nginx 재시작·로그 로테이션 설정
+- [ ] `api/` 배포: `npm run build` → `dist/` 실행 ([§8.6](#86-typescript-도입-검토))
 
 ---
 
@@ -728,4 +796,4 @@ api/                     # Backend (동일 repo 또는 sibling)
 
 ---
 
-*작성: Phase 2 킥오프 — Frontend/Backend 분리, JSON 인벤토리, **외부 공용 MySQL(MariaDB)**, **단일 웹 서버 + 외부 RDB**, **URL 루트 `/` 배포** 반영.*
+*작성: Phase 2 킥오프 — Frontend/Backend 분리, JSON 인벤토리, **외부 공용 MySQL(MariaDB)**, **단일 웹 서버 + 외부 RDB**, **URL 루트 `/`**, **Backend TS / Frontend JS** 반영.*

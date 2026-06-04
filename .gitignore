@@ -36,4 +36,5 @@ desktop.ini
 *.log
 npm-debug.log*
 dist/
+api/dist/
 .cache/
