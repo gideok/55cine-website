@@ -11,6 +11,7 @@ export type AppConfig = {
   host: string;
   port: number;
   apiPrefix: string;
+  repoRoot: string;
   timezone: string;
   scheduleUseMock: boolean;
   db: {
@@ -96,6 +97,7 @@ export const config: AppConfig = {
   host: process.env.API_HOST || "0.0.0.0",
   port: Number(process.env.API_PORT || 3000),
   apiPrefix: (process.env.API_PREFIX || "/api/v1").replace(/\/$/, ""),
+  repoRoot: path.resolve(__dirname, "../.."),
   timezone: process.env.TZ || "Asia/Seoul",
   scheduleUseMock: parseBool(process.env.SCHEDULE_USE_MOCK, false),
   db: dbFromEnv()
