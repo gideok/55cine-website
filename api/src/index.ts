@@ -6,6 +6,7 @@ import { registerHealthRoutes } from "./routes/health.js";
 import { registerScheduleRoutes } from "./routes/schedule.js";
 import { registerMovieRoutes } from "./routes/movies.js";
 import { registerSpecialRoutes } from "./routes/special.js";
+import { registerMagazineRoutes } from "./routes/magazine.js";
 
 const app = Fastify({
   logger: true
@@ -22,6 +23,7 @@ await app.register(
     await registerScheduleRoutes(api);
     await registerMovieRoutes(api);
     await registerSpecialRoutes(api);
+    await registerMagazineRoutes(api);
   },
   { prefix: config.apiPrefix }
 );

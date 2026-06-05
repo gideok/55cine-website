@@ -107,13 +107,14 @@
     <script src="js/api/client.js"></script>
 <script src="data/week-schedule-data.js"></script>
   <script src="data/now-playing-data.js"></script>
-  <script src="data/gv-moment-data.js"></script>
   <script src="js/left-gnb-include.js"></script>
   <script src="js/mobile-menu.js"></script>
   <script src="js/scroll-top.js"></script>
   <script src="js/week-schedule.js"></script>
   <script>
     window.TI_MAGAZINE_CAROUSEL_CONFIG = {
+      usePaginatedApi: true,
+      apiSection: "gv-moment",
       dataKey: "GV_MOMENT_DATA",
       listId: "gvList",
       itemClass: "gv-item",
@@ -126,17 +127,10 @@
       useTitleWrap: true,
       showDate: true,
       resolveHref: function (item) {
-        if (!item || item.id == null) return "";
-        var slug = "gm" + String(item.id).padStart(3, "0");
-        return "magazine/gv-moment/article-detail.html?id=" + encodeURIComponent(slug);
+        if (item && item.detailUrl) return item.detailUrl;
+        if (!item || !item.id) return "";
+        return "magazine/gv-moment/article-detail.html?id=" + encodeURIComponent(item.id);
       }
-      /* 목록 데이터 API 전환 예시:
-      fetchList: function () {
-        return fetch("magazine/gv-moment/data/index.json").then(function (r) {
-          return r.json().then(function (d) { return d.items; });
-        });
-      }
-      */
     };
   </script>
   <script src="js/page-pager.js"></script>

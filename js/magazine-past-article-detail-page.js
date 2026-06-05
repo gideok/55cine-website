@@ -93,6 +93,9 @@
     if (typeof cfg.fetchArticle === "function") {
       return Promise.resolve(cfg.fetchArticle(id));
     }
+    if (window.TiApi && typeof window.TiApi.getMagazineDetail === "function") {
+      return window.TiApi.getMagazineDetail(id);
+    }
     return fetch(buildDataUrl(id), { credentials: "same-origin" }).then(function (res) {
       if (!res.ok) throw new Error("기사를 불러오지 못했습니다. (" + res.status + ")");
       return res.json();
@@ -227,7 +230,7 @@
   }
 
   function renderArticle(article) {
-    var neighbors = findNeighbors(article.id);
+    var neighbors = article.neighbors || findNeighbors(article.id);
     root.innerHTML = "";
     if (statusEl) statusEl.hidden = true;
 
@@ -287,7 +290,10 @@
       return;
     }
 
-    Promise.all([fetchIndex().catch(function () { return []; }), fetchArticle(id)])
+    Promise.all([
+      window.TiApi && window.TiApi.getMagazineDetail ? Promise.resolve([]) : fetchIndex().catch(function () { return []; }),
+      fetchArticle(id)
+    ])
       .then(function (results) {
         indexItems = results[0] || [];
         renderArticle(results[1]);

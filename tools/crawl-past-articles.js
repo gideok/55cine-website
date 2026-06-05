@@ -81,14 +81,27 @@ async function collectEntryUrls() {
 
 /** 본문 영역만: contents_style ~ container_postbtn 직전 */
 function extractBodyHtml(html) {
-  const openTag = '<div class="tt_article_useless_p_margin contents_style">';
-  const startIdx = html.indexOf(openTag);
+  const openTags = [
+    '<div class="tt_article_useless_p_margin contents_style">',
+    '<div class="contents_style">'
+  ];
+
+  let startIdx = -1;
+  let openTag = "";
+  for (const tag of openTags) {
+    const idx = html.indexOf(tag);
+    if (idx >= 0 && (startIdx < 0 || idx < startIdx)) {
+      startIdx = idx;
+      openTag = tag;
+    }
+  }
   if (startIdx < 0) return "";
 
   const contentStart = startIdx + openTag.length;
   const endMarkers = [
     '<div class="container_postbtn',
     '<div class="container_postbtn ',
+    '<div class="related-articles',
     '<div id="entry',
   ];
 
@@ -97,8 +110,14 @@ function extractBodyHtml(html) {
     const i = html.indexOf(marker, contentStart);
     if (i > contentStart && i < endIdx) endIdx = i;
   }
+  if (endIdx === html.length) {
+    const sysIdx = html.indexOf("<!-- System - START -->", contentStart);
+    if (sysIdx > contentStart) endIdx = sysIdx;
+  }
 
-  return html.slice(contentStart, endIdx).trim();
+  let body = html.slice(contentStart, endIdx).trim();
+  body = body.replace(/<\/div>\s*$/i, "").trim();
+  return body;
 }
 
 function isExcludedImageUrl(url) {

@@ -18,7 +18,12 @@
     "db:admin:close-stale-now-playing": "node scripts/admin-close-stale-now-playing.mjs --execute",
     "db:migrate:special": "node scripts/migrate-special-program.mjs --execute",
     "db:backfill:special-info": "node scripts/migrate-special-program.mjs --backfill-info --execute",
-    "db:sync:special": "node scripts/sync-special-from-55cine.mjs --sync-page --execute"
+    "db:sync:special": "node scripts/sync-special-from-55cine.mjs --sync-page --execute",
+    "db:migrate:magazine": "node scripts/migrate-magazine.mjs --execute",
+    "db:sync:magazine": "node scripts/sync-magazine-from-tistory.mjs --empty-only --execute",
+    "db:import:magazine": "node scripts/sync-magazine-from-tistory.mjs --import-missing --execute",
+    "db:sync:magazine:serial": "node scripts/sync-magazine-from-tistory.mjs --section=serial --execute",
+    "db:sync:magazine:gv-moment": "node scripts/sync-magazine-from-tistory.mjs --section=gv-moment --execute"
   },
   "engines": {
     "node": ">=20"

@@ -114,6 +114,26 @@
     return apiGet(path);
   }
 
+  /**
+   * 매거진 목록 (페이지 단위)
+   * @param {{ section?: string, isPast?: boolean, page?: number, pageSize?: number }} opts
+   */
+  function getMagazineListPage(opts) {
+    opts = opts || {};
+    var path = "/magazine?";
+    var parts = [];
+    if (opts.isPast) parts.push("isPast=true");
+    else if (opts.section) parts.push("section=" + encodeURIComponent(opts.section));
+    if (opts.page != null) parts.push("page=" + encodeURIComponent(String(opts.page)));
+    if (opts.pageSize != null) parts.push("pageSize=" + encodeURIComponent(String(opts.pageSize)));
+    return apiGet(path + parts.join("&"));
+  }
+
+  /** @param {string} publicId pv001, sr001 … */
+  function getMagazineDetail(publicId) {
+    return apiGet("/magazine/" + encodeURIComponent(publicId));
+  }
+
   global.TiApi = {
     apiGet: apiGet,
     getWeekSchedule: getWeekSchedule,
@@ -123,6 +143,8 @@
     getMovieBySlug: getMovieBySlug,
     getSpecialList: getSpecialList,
     getSpecialDetail: getSpecialDetail,
+    getMagazineListPage: getMagazineListPage,
+    getMagazineDetail: getMagazineDetail,
     formatAnchorDate: formatAnchorDate
   };
 })(typeof window !== "undefined" ? window : globalThis);

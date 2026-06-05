@@ -17,6 +17,9 @@ npm run dev
 - 주간 시간표: `GET http://localhost:3000/api/v1/schedule/week?anchor=2026-06-04`
 - 기획전·행사 목록: `GET http://localhost:3000/api/v1/special?kind=exhibition` · `kind=event`
 - 기획전·행사 상세: `GET http://localhost:3000/api/v1/special/e000001?kind=exhibition`
+- 매거진 목록: `GET http://localhost:3000/api/v1/magazine?section=preview&page=1&pageSize=8`
+- 매거진 지난기사: `GET http://localhost:3000/api/v1/magazine?isPast=true&page=1&pageSize=12`
+- 매거진 상세: `GET http://localhost:3000/api/v1/magazine/pv001`
 
 ## DB (cine55)
 
@@ -31,6 +34,7 @@ npm run dev
 | `web_special_item` | 기획전 상영작 (`title_en`, `info`, `running_minutes`, `running_time_label` — `prog_base.name2`·`runningtime` 참고) |
 | `web_special` 일시 | `created_at`, `updated_at` |
 | `web_special_screening` | 항목별 상영 회차 (`date_sc`, `time_sc`, `is_gv`) |
+| `web_magazine` | 매거진 삼삼오오 — 프리뷰·연재·GV·지난기사 (`section`, `is_past`, `body_html`, `img_thumb`) |
 
 ```bash
 # 루트 .env 에 DB_* 설정 후
@@ -38,6 +42,7 @@ npm run db:migrate
 npm run db:inspect
 npm run db:migrate:special   # JSON → web_special + images/special/sp/sp_{seq}_*
 npm run db:sync:special      # 55cine.com/special/ 상단 + 상세 페이지 동기화
+npm run db:migrate:magazine  # magazine JSON → web_magazine + images/magazine/body/
 ```
 
 **관리자 수동 SQL** (`db:migrate` 대상 아님):

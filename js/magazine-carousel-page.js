@@ -4,12 +4,23 @@
  */
 (function () {
   var cfg = window.TI_MAGAZINE_CAROUSEL_CONFIG;
-  if (!cfg || !cfg.dataKey) return;
+  if (!cfg || (!cfg.dataKey && !cfg.usePaginatedApi)) return;
 
   var ITEMS_PER_PAGE_LIST = 12;
   var SITE_ROOT_PREFIX = cfg.siteRootPrefix || "../";
   var currentPage = 1;
   var currentView = "thumb";
+
+  var paginatedMode = !!(cfg.usePaginatedApi && window.TiApi && window.TiApi.getMagazineListPage);
+  var apiTotal = 0;
+  var apiTotalPages = 1;
+  var pageCache = {};
+  var pageFetchPromises = {};
+  var listItemsAccum = [];
+  var listLoadedPages = 0;
+  var listHasMore = true;
+  var listLoading = false;
+  var listScrollObs = null;
 
   var COL_BREAKPOINT = window.matchMedia("(max-width: 820px)");
   var MOBILE_THUMB_ROWS = 2;
@@ -44,15 +55,84 @@
   var btnNext = document.getElementById("mzPagerNext");
 
   function refreshDataset() {
+    if (paginatedMode) return;
     var raw = window[cfg.dataKey];
     dataset = Array.isArray(raw) ? raw.slice() : [];
+  }
+
+  function fetchMagazinePageApi(pageNum, pageSize) {
+    if (typeof cfg.fetchPage === "function") {
+      return Promise.resolve(cfg.fetchPage(pageNum, pageSize));
+    }
+    return window.TiApi.getMagazineListPage({
+      section: cfg.apiSection,
+      isPast: !!cfg.apiIsPast,
+      page: pageNum,
+      pageSize: pageSize
+    });
+  }
+
+  function ensureThumbPageLoaded(pageIndex) {
+    var pageNum = pageIndex + 1;
+    if (pageCache[pageNum]) return Promise.resolve(pageCache[pageNum]);
+    if (pageFetchPromises[pageNum]) return pageFetchPromises[pageNum];
+
+    pageFetchPromises[pageNum] = fetchMagazinePageApi(pageNum, thumbItemsPerPage)
+      .then(function (res) {
+        apiTotal = res.total;
+        apiTotalPages = res.totalPages;
+        pageCache[pageNum] = res.items || [];
+        refreshThumbSlideAt(pageIndex);
+        delete pageFetchPromises[pageNum];
+        updatePagerChrome();
+        return pageCache[pageNum];
+      })
+      .catch(function (err) {
+        delete pageFetchPromises[pageNum];
+        throw err;
+      });
+    return pageFetchPromises[pageNum];
+  }
+
+  function prefetchThumbAdjacent(activeIdx) {
+    ensureThumbPageLoaded(activeIdx);
+    if (activeIdx > 0) ensureThumbPageLoaded(activeIdx - 1);
+    if (activeIdx < thumbTotalPages - 1) ensureThumbPageLoaded(activeIdx + 1);
+  }
+
+  function refreshThumbSlideAt(pageIndex) {
+    if (!mzSwipeTrack) return;
+    var slide = mzSwipeTrack.children[pageIndex];
+    if (!slide) return;
+    var grid = slide.querySelector(".se-grid");
+    if (!grid) return;
+    var items = paginatedMode ? pageCache[pageIndex + 1] || [] : getThumbPageItems(pageIndex);
+    grid.innerHTML = "";
+    items.forEach(function (item) {
+      grid.appendChild(createItemElement(item, false));
+    });
   }
 
   function loadDataset() {
     if (typeof cfg.fetchList === "function") {
       return Promise.resolve(cfg.fetchList()).then(function (list) {
         dataset = Array.isArray(list) ? list.slice() : [];
-        window[cfg.dataKey] = dataset;
+        if (cfg.dataKey) window[cfg.dataKey] = dataset;
+        return dataset;
+      });
+    }
+    if (paginatedMode) {
+      pageCache = {};
+      pageFetchPromises = {};
+      listItemsAccum = [];
+      listLoadedPages = 0;
+      listHasMore = true;
+      return fetchMagazinePageApi(1, thumbItemsPerPage || 8).then(function (res) {
+        apiTotal = res.total;
+        apiTotalPages = res.totalPages;
+        thumbTotalPages = apiTotalPages;
+        pageCache[1] = res.items || [];
+        dataset = res.items || [];
         return dataset;
       });
     }
@@ -83,10 +163,14 @@
   }
 
   function getListTotalPages() {
+    if (paginatedMode) return apiTotalPages || 1;
     return Math.max(1, Math.ceil(dataset.length / ITEMS_PER_PAGE_LIST));
   }
 
   function getListPageItems(page) {
+    if (paginatedMode) {
+      return pageCache[page] || listItemsAccum;
+    }
     var start = (page - 1) * ITEMS_PER_PAGE_LIST;
     return dataset.slice(start, start + ITEMS_PER_PAGE_LIST);
   }
@@ -134,6 +218,7 @@
   }
 
   function getThumbTotalPages() {
+    if (paginatedMode) return Math.max(1, apiTotalPages);
     return Math.max(1, Math.ceil(dataset.length / thumbItemsPerPage));
   }
 
@@ -216,9 +301,17 @@
       var grid = document.createElement("div");
       grid.className = "se-grid";
 
-      getThumbPageItems(p).forEach(function (item) {
-        grid.appendChild(createItemElement(item, false));
-      });
+      var items = paginatedMode ? pageCache[p + 1] : getThumbPageItems(p);
+      if (items && items.length) {
+        items.forEach(function (item) {
+          grid.appendChild(createItemElement(item, false));
+        });
+      } else if (paginatedMode) {
+        var loading = document.createElement("p");
+        loading.className = "se-loading-hint";
+        loading.textContent = "불러오는 중…";
+        grid.appendChild(loading);
+      }
 
       slide.appendChild(grid);
       mzSwipeTrack.appendChild(slide);
@@ -301,11 +394,21 @@
     return { page: currentPage, totalPages: getListTotalPages() };
   }
 
+  function getDisplayTotalCount() {
+    if (paginatedMode) return apiTotal;
+    return dataset.length;
+  }
+
   function updatePagerChrome() {
     var st = getPagerState();
 
     if (pagerCountEl && Pager) {
-      pagerCountEl.textContent = Pager.formatCount(dataset.length, st.page, st.totalPages, "건");
+      pagerCountEl.textContent = Pager.formatCount(
+        getDisplayTotalCount(),
+        st.page,
+        st.totalPages,
+        "건"
+      );
     }
 
     if (Pager && Pager.isDesktop()) {
@@ -354,12 +457,18 @@
       thumbActivePage = next;
       updatePagerChrome();
     }
+    if (paginatedMode) prefetchThumbAdjacent(thumbActivePage);
   }
 
   function goToThumbPage(pageIndex) {
     if (!mzSwipeViewport) return;
     pageIndex = Math.max(0, Math.min(thumbTotalPages - 1, pageIndex));
     thumbActivePage = pageIndex;
+    if (paginatedMode) {
+      ensureThumbPageLoaded(pageIndex).finally(function () {
+        prefetchThumbAdjacent(pageIndex);
+      });
+    }
     var w = mzSwipeViewport.clientWidth;
     mzSwipeViewport.scrollTo({ left: pageIndex * w, behavior: "smooth" });
     updatePagerChrome();
@@ -379,7 +488,7 @@
   function applyThumbLayoutFromViewport() {
     if (currentView !== "thumb" || !mzSwipeViewport || !mzSwipeTrack) return;
 
-    refreshDataset();
+    if (!paginatedMode) refreshDataset();
     var cols = getGridColumns();
     if (mzThumbStack) {
       mzThumbStack.style.setProperty("--mz-thumb-cols", String(cols));
@@ -390,16 +499,38 @@
 
     var prevIpp = thumbItemsPerPage;
     var itemOffset = thumbActivePage * prevIpp;
+    var ippChanged = nextIpp !== prevIpp;
     thumbItemsPerPage = nextIpp;
 
-    var newTotal = Math.max(1, Math.ceil(dataset.length / thumbItemsPerPage));
-    thumbActivePage = Math.floor(itemOffset / thumbItemsPerPage);
+    if (paginatedMode && ippChanged) {
+      pageCache = {};
+      pageFetchPromises = {};
+      fetchMagazinePageApi(1, thumbItemsPerPage).then(function (res) {
+        apiTotal = res.total;
+        apiTotalPages = res.totalPages;
+        thumbTotalPages = apiTotalPages;
+        pageCache[1] = res.items || [];
+        thumbActivePage = 0;
+        buildThumbSlides();
+        var w = mzSwipeViewport.clientWidth;
+        mzSwipeViewport.scrollLeft = 0;
+        updatePagerChrome();
+        prefetchThumbAdjacent(0);
+      });
+      return;
+    }
+
+    var newTotal = getThumbTotalPages();
+    thumbActivePage = paginatedMode
+      ? thumbActivePage
+      : Math.floor(itemOffset / thumbItemsPerPage);
     if (thumbActivePage >= newTotal) thumbActivePage = newTotal - 1;
     if (thumbActivePage < 0) thumbActivePage = 0;
 
     thumbTotalPages = newTotal;
 
-    var nextKey = cols + "x" + thumbItemsPerPage + "n" + dataset.length;
+    var nextKey =
+      (paginatedMode ? "api" : "local") + cols + "x" + thumbItemsPerPage + "n" + getDisplayTotalCount();
     if (nextKey !== thumbLayoutKey || mzSwipeTrack.childElementCount === 0) {
       buildThumbSlides();
       thumbLayoutKey = nextKey;
@@ -414,6 +545,8 @@
     if (mzSwipeHint) {
       mzSwipeHint.hidden = thumbTotalPages <= 1;
     }
+
+    if (paginatedMode) prefetchThumbAdjacent(thumbActivePage);
   }
 
   function scheduleThumbLayout() {
@@ -423,11 +556,113 @@
     }, 48);
   }
 
+  function isMobileListInfinite() {
+    return !!cfg.infiniteScrollList && COL_BREAKPOINT.matches && currentView === "list";
+  }
+
+  function teardownListInfiniteScroll() {
+    if (listScrollObs) {
+      listScrollObs.disconnect();
+      listScrollObs = null;
+    }
+    var sentinel = document.getElementById("mzListScrollSentinel");
+    if (sentinel && sentinel.parentNode) sentinel.parentNode.removeChild(sentinel);
+  }
+
+  function setupListInfiniteScroll() {
+    teardownListInfiniteScroll();
+    if (!isMobileListInfinite() || !listEl) return;
+
+    var sentinel = document.createElement("div");
+    sentinel.id = "mzListScrollSentinel";
+    sentinel.className = "mz-list-sentinel";
+    sentinel.setAttribute("aria-hidden", "true");
+    listEl.appendChild(sentinel);
+
+    var scrollRoot = document.querySelector(".ti-mz-scroll") || null;
+    listScrollObs = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) loadMoreListItems();
+        });
+      },
+      { root: scrollRoot, rootMargin: "240px 0px", threshold: 0 }
+    );
+    listScrollObs.observe(sentinel);
+  }
+
+  function loadMoreListItems() {
+    if (!paginatedMode || listLoading || !listHasMore || !isMobileListInfinite()) return;
+    listLoading = true;
+    var nextPage = listLoadedPages + 1;
+    fetchMagazinePageApi(nextPage, ITEMS_PER_PAGE_LIST)
+      .then(function (res) {
+        listLoadedPages = nextPage;
+        listHasMore = nextPage < res.totalPages;
+        pageCache[nextPage] = res.items || [];
+        (res.items || []).forEach(function (item) {
+          listItemsAccum.push(item);
+          listEl.insertBefore(
+            createItemElement(item, !!cfg.showExcerptInList),
+            document.getElementById("mzListScrollSentinel")
+          );
+        });
+        apiTotal = res.total;
+        apiTotalPages = res.totalPages;
+        updatePagerChrome();
+      })
+      .finally(function () {
+        listLoading = false;
+      });
+  }
+
+  function fetchListPageItems(page) {
+    if (!paginatedMode) return Promise.resolve(getListPageItems(page));
+    if (pageCache[page]) return Promise.resolve(pageCache[page]);
+    return fetchMagazinePageApi(page, ITEMS_PER_PAGE_LIST).then(function (res) {
+      pageCache[page] = res.items || [];
+      apiTotal = res.total;
+      apiTotalPages = res.totalPages;
+      return pageCache[page];
+    });
+  }
+
   function renderListView() {
     if (!listEl) return;
     listEl.classList.remove("is-thumb");
     listEl.classList.add("is-list");
+
+    if (isMobileListInfinite()) {
+      if (listLoadedPages === 0) {
+        listEl.innerHTML = "";
+        listItemsAccum = [];
+        listHasMore = true;
+        fetchListPageItems(1).then(function (items) {
+          listLoadedPages = 1;
+          listHasMore = apiTotalPages > 1;
+          items.forEach(function (item) {
+            listItemsAccum.push(item);
+            listEl.appendChild(createItemElement(item, !!cfg.showExcerptInList));
+          });
+          setupListInfiniteScroll();
+          updatePagerChrome();
+        });
+      } else {
+        setupListInfiniteScroll();
+      }
+      return;
+    }
+
+    teardownListInfiniteScroll();
     listEl.innerHTML = "";
+    if (paginatedMode) {
+      fetchListPageItems(currentPage).then(function (items) {
+        items.forEach(function (item) {
+          listEl.appendChild(createItemElement(item, !!cfg.showExcerptInList));
+        });
+      });
+      return;
+    }
     getListPageItems(currentPage).forEach(function (item) {
       listEl.appendChild(createItemElement(item, !!cfg.showExcerptInList));
     });
@@ -436,8 +671,12 @@
   function goToListPage(page) {
     var total = getListTotalPages();
     page = Math.max(1, Math.min(total, page));
-    if (page === currentPage) return;
+    if (page === currentPage && !isMobileListInfinite()) return;
     currentPage = page;
+    if (isMobileListInfinite()) {
+      listLoadedPages = 0;
+      listItemsAccum = [];
+    }
     renderListView();
     updatePagerChrome();
     var scrollEl = document.querySelector(".ti-mz-scroll");
@@ -473,6 +712,9 @@
       });
     } else {
       currentPage = 1;
+      listLoadedPages = 0;
+      listItemsAccum = [];
+      teardownListInfiniteScroll();
       renderListView();
       updatePagerChrome();
     }
