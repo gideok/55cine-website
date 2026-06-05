@@ -1,8 +1,49 @@
 {
   "id": "e000004",
-  "title": "대구독립영화연말정산 2025 12/27(토)~28(일)",
-  "image": "images/special/exhibition/special_exhibition_thumb_04.png",
-  "introduction": "대구독립영화 연말정산 2025는 올해 주요 작품들을 모은 단편 14편을 선보입니다. 상영편 수는 작년에 비해 축소되었지만, 지역 창작자들이 보여주는 다양한 시선과 이야기들을 밀도 있게 만나볼 수 있는 자리입니다.\n\n올해는 특히 오오극장 개관 10주년을 기념해 마련한 특별 프로그램이 함께합니다. 〈경계의 영화 : 대구 영화라는 낯선 풍경> 북토크 에서는 지난 10년간 오오극장과 함께 성장해온 대구독립영화의 흐름을 되돌아보고, 지역 영화 제작 환경의 변화와 축적된 성과를 살펴봅니다. 이어지는 〈멈춤과 흐름 사이: 전환기의 대구독립영화와 우리〉포럼 에서는 전환기를 맞이한 대구독립영화의 미래를 함께 논의하며, 지속 가능한 창작 환경을 위한 새로운 방향을 모색합니다.\n\n대구독립영화 연말정산 2025는 영화인과 관객이 한자리에 모여 지역 영화의 과거·현재·미래를 나누는 뜻깊은 자리입니다. 변화의 시기 속에서도 창작의 흐름이 이어질 수 있도록 많은 관심과 참여를 바랍니다",
+  "title": "대구독립영화연말정산 202512/27(토)~28(일)",
+  "image": "images/special/sp/sp_29_main.gif",
+  "introduction": "대구독립영화 연말정산 2025는 올해 주요 작품들을 모은 단편 14편을 선보입니다. 상영편 수는 작년에 비해 축소되었지만, 지역 창작자들이 보여주는 다양한 시선과 이야기들을 밀도 있게 만나볼 수 있는 자리입니다.",
   "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
-  "films": []
+  "films": [
+    {
+      "title": "여름, 아빠",
+      "image": "images/special/sp/sp_29_41.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "Summer Appa  | 2025 | 드라마,코미디  | 25min 49sec 감독 – 김가은 출연 – 강방식, 한재은",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "72번지를 찾아서",
+      "image": "images/special/sp/sp_29_42.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "72 Bokhyeon | 2025 | 다큐멘터리 | 37min 15sec 감독 – 박재현",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "월드 프리미어",
+      "image": "images/special/sp/sp_29_43.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "World Premiere | 2025 | 코미디 | 33min 44sec 감독 – 김선빈 출연 – 정회린, 김연교, 문상훈",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "커뮤니티",
+      "image": "images/special/sp/sp_29_44.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "COMMUNITY | 2025 | 드라마 | 36min 35sec 감독 – 박유진, 진현정 출연 – 박유진, 진현정",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
 }

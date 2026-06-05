@@ -15,7 +15,10 @@
     "db:migrate:nowshowing-archive": "node scripts/migrate-nowshowing-archive.mjs",
     "db:sync:schedule-images": "node scripts/sync-schedule-page-images.mjs",
     "db:generate:thumbs": "node scripts/generate-wp-thumbnails.mjs",
-    "db:admin:close-stale-now-playing": "node scripts/admin-close-stale-now-playing.mjs --execute"
+    "db:admin:close-stale-now-playing": "node scripts/admin-close-stale-now-playing.mjs --execute",
+    "db:migrate:special": "node scripts/migrate-special-program.mjs --execute",
+    "db:backfill:special-info": "node scripts/migrate-special-program.mjs --backfill-info --execute",
+    "db:sync:special": "node scripts/sync-special-from-55cine.mjs --sync-page --execute"
   },
   "engines": {
     "node": ">=20"

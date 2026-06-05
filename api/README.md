@@ -15,6 +15,8 @@ npm run dev
 
 - Health: `GET http://localhost:3000/api/v1/health`
 - 주간 시간표: `GET http://localhost:3000/api/v1/schedule/week?anchor=2026-06-04`
+- 기획전·행사 목록: `GET http://localhost:3000/api/v1/special?kind=exhibition` · `kind=event`
+- 기획전·행사 상세: `GET http://localhost:3000/api/v1/special/e000001?kind=exhibition`
 
 ## DB (cine55)
 
@@ -25,11 +27,17 @@ npm run dev
 | `web_program` | `prog_id`별 slug, `detail_url`, 썸네일·이미지, 감독·출연·info·synopsis·trailer_url |
 | 상영시간표(상세) | `prog_daily` (`prog_id`, `date_sc`, `time_sc`) — `web_program` 컬럼 없음 |
 | `web_program_schedule` | `prog_daily.seq` FK — `is_opening`, `is_closing`, `is_gv`, `is_ct` |
+| `web_special` | 기획전·행사 메인 (`public_id` e000003 / ev000001, `kind`, `title`, `date_label`, `body`, `img_main`) |
+| `web_special_item` | 기획전 상영작 (`title_en`, `info`, `running_minutes`, `running_time_label` — `prog_base.name2`·`runningtime` 참고) |
+| `web_special` 일시 | `created_at`, `updated_at` |
+| `web_special_screening` | 항목별 상영 회차 (`date_sc`, `time_sc`, `is_gv`) |
 
 ```bash
 # 루트 .env 에 DB_* 설정 후
 npm run db:migrate
 npm run db:inspect
+npm run db:migrate:special   # JSON → web_special + images/special/sp/sp_{seq}_*
+npm run db:sync:special      # 55cine.com/special/ 상단 + 상세 페이지 동기화
 ```
 
 **관리자 수동 SQL** (`db:migrate` 대상 아님):

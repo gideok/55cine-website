@@ -4,6 +4,7 @@
  */
 (function () {
   var cfg = window.TI_EVENT_DETAIL_CONFIG || {};
+  var BASE = typeof window.TI_ASSET_BASE === "string" ? window.TI_ASSET_BASE : "";
   var PAGE_BASE = cfg.pageBase || "";
   var BOOKING_URL =
     cfg.bookingUrl ||
@@ -15,12 +16,26 @@
 
   if (!root) return;
 
+  function resolveSiteSpecialPath(path) {
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(path);
+    }
+    return BASE + path;
+  }
+
   function resolveAssetUrl(url) {
     if (!url) return "";
     if (/^https?:\/\//i.test(url)) return url;
     if (url.indexOf("//") === 0) return url;
     if (url.charAt(0) === "/") return url;
-    return PAGE_BASE + url.replace(/^\//, "");
+    var path = url.replace(/^\//, "");
+    if (path.indexOf("images/special/") === 0) {
+      return resolveSiteSpecialPath(path);
+    }
+    if (path.indexOf("images/") === 0) {
+      return PAGE_BASE + path;
+    }
+    return PAGE_BASE + "images/" + path;
   }
 
   function getEventId() {
@@ -50,6 +65,9 @@
   function fetchEventDetail(id) {
     if (typeof cfg.fetchDetail === "function") {
       return Promise.resolve(cfg.fetchDetail(id));
+    }
+    if (window.TiApi && typeof window.TiApi.getSpecialDetail === "function") {
+      return window.TiApi.getSpecialDetail(id, "event");
     }
     var url = buildDataUrl(id);
     return fetch(url, { credentials: "same-origin" }).then(function (res) {

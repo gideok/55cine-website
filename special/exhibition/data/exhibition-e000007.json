@@ -1,8 +1,19 @@
 {
   "id": "e000007",
-  "title": "관객프로그래머 초이스! – 삼희 : The Adventure of 3 Joys 11/29(토) 오후 2시 GV",
-  "image": "images/special/exhibition/special_exhibition_thumb_07.png",
+  "title": "관객프로그래머 초이스! - 삼희 : The Adventure of 3 Joys11/29(토) 오후 2시 GV",
+  "image": "images/special/exhibition/special_exhibition_thumb_000007.png",
   "introduction": "",
   "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
-  "films": []
+  "films": [
+    {
+      "title": "삼희 : The Adventure of 3 Joys",
+      "image": "2025040492141.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "Sam-hee : The Adventure of 3 Joys /한국/2025/118min 감독: 문혜인 출연: 문혜인, 현우석, 변중희 독립영화 배우인 혜림은 촬영 중 수중 사고를 겪은 뒤 번아웃이 찾아왔다. 혜림은 서울에서의 생활을 정리하고 외따로 떨어진 경기도 양주로 이사와 고립된 생활을 시작한다. 트라우마와의 조용한 분투를 이어가던 혜림은 우연히 낡고 오래된 ‘삼희 아파트'를 발견하고 관심을 갖게 된다. 삼희 아파트와 관계하며 혜림의 일상에 모험이 시작된다.",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
 }

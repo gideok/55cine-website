@@ -39,8 +39,14 @@
   var scrollEndTimer;
   var layoutTimer;
 
-  function refreshDataset() {
+  function loadDataset() {
+    if (window.TiApi && typeof window.TiApi.getSpecialList === "function") {
+      return window.TiApi.getSpecialList("event").then(function (items) {
+        dataset = Array.isArray(items) ? items.slice() : [];
+      });
+    }
     dataset = Array.isArray(window.EVENT_PROGRAM_DATA) ? window.EVENT_PROGRAM_DATA.slice() : [];
+    return Promise.resolve();
   }
 
   function getGridColumns() {
@@ -211,7 +217,6 @@
   }
 
   function applyLayoutFromViewport() {
-    refreshDataset();
     var cols = getGridColumns();
     var nextIpp = computeItemsPerPage();
     if (nextIpp < cols) nextIpp = cols;
@@ -259,6 +264,17 @@
   if (btnNext) btnNext.addEventListener("click", function () { goToPage(activePage + 1); });
 
   window.addEventListener("resize", scheduleLayout, { passive: true });
-  applyLayoutFromViewport();
+
+  if (pageCountEl) pageCountEl.textContent = "불러오는 중…";
+  loadDataset()
+    .then(function () {
+      applyLayoutFromViewport();
+    })
+    .catch(function (err) {
+      console.error(err);
+      dataset = [];
+      if (pageCountEl) pageCountEl.textContent = "목록을 불러오지 못했습니다.";
+      applyLayoutFromViewport();
+    });
 })();
 

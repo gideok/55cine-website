@@ -5,6 +5,7 @@ import { closePool } from "./db/pool.js";
 import { registerHealthRoutes } from "./routes/health.js";
 import { registerScheduleRoutes } from "./routes/schedule.js";
 import { registerMovieRoutes } from "./routes/movies.js";
+import { registerSpecialRoutes } from "./routes/special.js";
 
 const app = Fastify({
   logger: true
@@ -20,6 +21,7 @@ await app.register(
     await registerHealthRoutes(api);
     await registerScheduleRoutes(api);
     await registerMovieRoutes(api);
+    await registerSpecialRoutes(api);
   },
   { prefix: config.apiPrefix }
 );

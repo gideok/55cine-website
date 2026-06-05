@@ -21,21 +21,40 @@
 
   if (!root) return;
 
+  function normalizeExhibitionThumbPath(path) {
+    return String(path).replace(
+      /(images\/special\/exhibition\/special_exhibition_thumb_)0+(\d+)(\.png)$/i,
+      function (_, prefix, num, ext) {
+        var n = parseInt(num, 10);
+        var padded = n < 100 ? String(n).padStart(2, "0") : String(n);
+        return prefix + padded + ext;
+      }
+    );
+  }
+
+  function resolveSiteSpecialPath(path) {
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(path);
+    }
+    return BASE + path;
+  }
+
   function resolveAssetUrl(url) {
     if (!url) return "";
     if (/^https?:\/\//i.test(url)) return url;
     if (url.indexOf("//") === 0) return url;
     if (url.charAt(0) === "/") return url;
     var path = url.replace(/^\//, "");
-    /* 목록 썸네일: 사이트 루트 images/special/… — TI_ASSET_BASE(../../) */
+    path = normalizeExhibitionThumbPath(path);
+    /* sp·exhibition 썸네일: 사이트 루트 images/special/… */
     if (path.indexOf("images/special/") === 0) {
-      if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
-        return window.TiSiteRoot.resolve(path);
-      }
-      return BASE + path;
+      return resolveSiteSpecialPath(path);
     }
-    /* 상영작 포스터: special/exhibition/images/… — 페이지 기준 상대 경로 */
-    return PAGE_BASE + path;
+    /* 상영작 포스터: special/exhibition/images/… — 페이지 기준 */
+    if (path.indexOf("images/") === 0) {
+      return PAGE_BASE + path;
+    }
+    return PAGE_BASE + "images/" + path;
   }
 
   function getExhibitionId() {
@@ -56,6 +75,9 @@
   function fetchExhibitionDetail(id) {
     if (typeof cfg.fetchDetail === "function") {
       return Promise.resolve(cfg.fetchDetail(id));
+    }
+    if (window.TiApi && typeof window.TiApi.getSpecialDetail === "function") {
+      return window.TiApi.getSpecialDetail(id, "exhibition");
     }
     var url = buildDataUrl(id);
     return fetch(url, { credentials: "same-origin" }).then(function (res) {

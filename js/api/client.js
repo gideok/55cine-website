@@ -93,6 +93,27 @@
     return apiGet(path);
   }
 
+  /**
+   * 기획전·행사 목록
+   * @param {"exhibition"|"event"} kind
+   */
+  function getSpecialList(kind) {
+    return apiGet("/special?kind=" + encodeURIComponent(kind)).then(function (data) {
+      return data.items || [];
+    });
+  }
+
+  /**
+   * 기획전·행사 상세 (JSON 샘플과 동일 필드)
+   * @param {string} publicId e000001, ev000001 …
+   * @param {"exhibition"|"event"} [kind]
+   */
+  function getSpecialDetail(publicId, kind) {
+    var path = "/special/" + encodeURIComponent(publicId);
+    if (kind) path += "?kind=" + encodeURIComponent(kind);
+    return apiGet(path);
+  }
+
   global.TiApi = {
     apiGet: apiGet,
     getWeekSchedule: getWeekSchedule,
@@ -100,6 +121,8 @@
     getMovieListPage: getMovieListPage,
     getMovieCatalog: getMovieCatalog,
     getMovieBySlug: getMovieBySlug,
+    getSpecialList: getSpecialList,
+    getSpecialDetail: getSpecialDetail,
     formatAnchorDate: formatAnchorDate
   };
 })(typeof window !== "undefined" ? window : globalThis);
