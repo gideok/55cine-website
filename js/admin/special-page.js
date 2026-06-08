@@ -83,7 +83,7 @@
         return (
           "<tr>" +
           "<td>" +
-          esc(item.publicId) +
+          item.seq +
           "</td>" +
           "<td>" +
           kindLabel(item.kind) +
@@ -95,11 +95,11 @@
           esc(item.dateLabel) +
           "</td>" +
           '<td class="actions">' +
-          '<a class="admin-btn" data-admin-edit href="special-edit.html?id=' +
-          encodeURIComponent(item.publicId) +
+          '<a class="admin-btn" data-admin-edit href="special-edit.html?seq=' +
+          encodeURIComponent(String(item.seq)) +
           '">수정</a>' +
           '<button type="button" class="admin-btn admin-btn--danger" data-del="' +
-          esc(item.publicId) +
+          item.seq +
           '">삭제</button>' +
           "</td></tr>"
         );
@@ -108,7 +108,7 @@
 
     listEl.innerHTML =
       '<div class="admin-table-wrap"><table class="admin-table">' +
-      "<thead><tr><th>ID</th><th>구분</th><th>제목</th><th>일정</th><th></th></tr></thead><tbody>" +
+      "<thead><tr><th>seq</th><th>구분</th><th>제목</th><th>일정</th><th></th></tr></thead><tbody>" +
       (rows || '<tr><td colspan="5">데이터 없음</td></tr>') +
       "</tbody></table></div>" +
       TiAdminList.renderPagerHtml(data, PAGER_PREFIX);
@@ -118,9 +118,9 @@
 
     listEl.querySelectorAll("[data-del]").forEach(function (btn) {
       btn.onclick = function () {
-        var id = btn.getAttribute("data-del");
-        if (!confirm(id + " 을(를) 삭제할까요?")) return;
-        TiAdminApi.deleteSpecial(id)
+        var seq = Number(btn.getAttribute("data-del"));
+        if (!confirm("seq " + seq + " 을(를) 삭제할까요?")) return;
+        TiAdminApi.deleteSpecial(seq)
           .then(function () {
             loadList();
           })
@@ -151,7 +151,7 @@
       '<select id="spKind"><option value="">전체</option><option value="exhibition">기획전</option><option value="event">행사</option></select>' +
       "</div>" +
       '<div class="admin-toolbar__col admin-toolbar__col--search">' +
-      '<input type="search" id="spSearch" placeholder="제목·ID 검색" value="' +
+      '<input type="search" id="spSearch" placeholder="제목·seq 검색" value="' +
       esc(state.q) +
       '" autocomplete="off">' +
       '<button type="button" class="admin-btn admin-btn--primary" id="spSearchBtn">검색</button>' +

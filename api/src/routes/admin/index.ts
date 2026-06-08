@@ -10,7 +10,6 @@ import {
 } from "../../services/admin/web-program-admin.service.js";
 import {
   getAdminSpecialList,
-  getAdminSpecialByPublicId,
   createAdminSpecial,
   updateAdminSpecial,
   deleteAdminSpecial
@@ -54,28 +53,53 @@ function zodBodyMessage(result: z.SafeParseError<unknown>): string {
   return path + first.message;
 }
 
+const specialImageBodyFields = {
+  mainImageTempPath: z.string().max(500).nullable().optional(),
+  removeMainImage: z.boolean().optional()
+};
+
 const filmItemSchema = z.object({
   itemSeq: z.number().int().optional(),
-  title: z.string().optional().default(""),
-  image: z.string().optional().default(""),
-  titleEn: z.string().optional().default(""),
-  info: z.string().optional().default(""),
-  runningTimeLabel: z.string().optional().default(""),
-  director: z.string().optional().default(""),
-  cast: z.string().optional().default(""),
+  title: z.string().max(300, "작품 제목은 300자 이하여야 합니다.").optional().default(""),
+  image: z.string().max(500).optional().default(""),
+  imageTempPath: z.string().max(500).nullable().optional(),
+  removeImage: z.boolean().optional(),
+  titleEn: z.string().max(300, "영문 제목은 300자 이하여야 합니다.").optional().default(""),
+  info: z.string().max(300, "정보는 300자 이하여야 합니다.").optional().default(""),
+  runningTimeLabel: z.string().max(120, "상영시간은 120자 이하여야 합니다.").optional().default(""),
+  director: z.string().max(200, "감독명은 200자 이하여야 합니다.").optional().default(""),
+  cast: z.string().max(1000, "출연진은 1000자 이하여야 합니다.").optional().default(""),
   description: z.string().optional().default(""),
-  sectionName: z.string().optional().default(""),
+  sectionName: z.string().max(200, "섹션명은 200자 이하여야 합니다.").optional().default(""),
   isEmptySpacer: z.boolean().optional().default(false),
   screenings: z
     .array(
       z.object({
-        date: z.string().min(1),
-        time: z.string().min(1),
+        date: z.string().min(1).max(10, "상영일은 YYYY-MM-DD 형식(10자)이어야 합니다."),
+        time: z
+          .string()
+          .min(1)
+          .max(8)
+          .transform((s) => s.trim().slice(0, 5)),
         gv: z.boolean().optional().default(false)
       })
     )
     .optional()
     .default([])
+});
+
+const specialWriteBodySchema = z.object({
+  kind: kindSchema,
+  title: z.string().min(1, "제목을 입력해 주세요.").max(500, "제목은 500자 이하여야 합니다."),
+  dateLabel: z.string().max(300, "기간 라벨은 300자 이하여야 합니다.").nullable().optional(),
+  body: z.string().nullable().optional(),
+  imgMain: z.string().max(500).nullable().optional(),
+  films: z.array(filmItemSchema).optional(),
+  ...specialImageBodyFields
+});
+
+const specialUpdateBodySchema = specialWriteBodySchema.omit({ kind: true }).partial().extend({
+  title: z.string().min(1, "제목을 입력해 주세요.").max(500, "제목은 500자 이하여야 합니다.").optional()
 });
 
 function sendError(reply: import("fastify").FastifyReply, code: number, errCode: string, message: string) {
@@ -191,11 +215,12 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
-  app.get("/admin/special/:publicId", async (request, reply) => {
-    const params = z.object({ publicId: z.string().min(1) }).safeParse(request.params);
-    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "publicId 필요");
+  app.get("/admin/special/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
     try {
-      const detail = await getAdminSpecialByPublicId(params.data.publicId);
+      const { getAdminSpecialBySeq } = await import("../../services/admin/special-admin.service.js");
+      const detail = await getAdminSpecialBySeq(params.data.seq);
       if (!detail) return sendError(reply, 404, "NOT_FOUND", "콘텐츠를 찾을 수 없습니다.");
       return detail;
     } catch (err) {
@@ -205,62 +230,52 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post("/admin/special", async (request, reply) => {
-    const body = z
-      .object({
-        publicId: z.string().min(1),
-        kind: kindSchema,
-        title: z.string().min(1),
-        dateLabel: z.string().nullable().optional(),
-        body: z.string().nullable().optional(),
-        imgMain: z.string().nullable().optional(),
-        bookingUrl: z.string().nullable().optional(),
-        listOrder: z.number().int().optional(),
-        films: z.array(filmItemSchema).optional()
-      })
-      .safeParse(request.body);
-    if (!body.success) return sendError(reply, 400, "INVALID_BODY", "요청 본문이 올바르지 않습니다.");
+    const body = specialWriteBodySchema.safeParse(request.body);
+    if (!body.success) return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
     try {
       const created = await createAdminSpecial(body.data);
       reply.code(201);
       return created;
     } catch (err) {
       request.log.error(err);
-      const msg = err instanceof Error ? err.message : "기획전·행사 생성 실패";
+      const raw = err instanceof Error ? err.message : "";
+      let msg = raw || "기획전·행사 생성 실패";
+      if (/truncat/i.test(raw)) {
+        msg = "입력값이 허용 길이를 초과했습니다. 제목·기간·작품 정보 등 필드 길이를 확인해 주세요.";
+      } else if (/임시 파일 없음/i.test(raw)) {
+        msg = "이미지 임시 파일을 찾을 수 없습니다. 이미지를 다시 업로드한 뒤 저장해 주세요.";
+      }
       return sendError(reply, 500, "SPECIAL_CREATE_FAILED", msg);
     }
   });
 
-  app.put("/admin/special/:publicId", async (request, reply) => {
-    const params = z.object({ publicId: z.string().min(1) }).safeParse(request.params);
-    const body = z
-      .object({
-        title: z.string().min(1).optional(),
-        dateLabel: z.string().nullable().optional(),
-        body: z.string().nullable().optional(),
-        imgMain: z.string().nullable().optional(),
-        bookingUrl: z.string().nullable().optional(),
-        listOrder: z.number().int().optional(),
-        films: z.array(filmItemSchema).optional()
-      })
-      .safeParse(request.body);
-    if (!params.success || !body.success) {
-      return sendError(reply, 400, "INVALID_BODY", "요청 본문이 올바르지 않습니다.");
-    }
+  app.put("/admin/special/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    const body = specialUpdateBodySchema.safeParse(request.body);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    if (!body.success) return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
     try {
-      const updated = await updateAdminSpecial(params.data.publicId, body.data);
+      const updated = await updateAdminSpecial(params.data.seq, body.data);
       if (!updated) return sendError(reply, 404, "NOT_FOUND", "콘텐츠를 찾을 수 없습니다.");
       return updated;
     } catch (err) {
       request.log.error(err);
-      return sendError(reply, 500, "SPECIAL_UPDATE_FAILED", "기획전·행사 수정 실패");
+      const raw = err instanceof Error ? err.message : "";
+      let msg = "기획전·행사 수정 실패";
+      if (/truncat/i.test(raw)) {
+        msg = "입력값이 허용 길이를 초과했습니다. 제목·기간·작품 정보 등 필드 길이를 확인해 주세요.";
+      } else if (/임시 파일 없음/i.test(raw)) {
+        msg = "이미지 임시 파일을 찾을 수 없습니다. 이미지를 다시 업로드한 뒤 저장해 주세요.";
+      }
+      return sendError(reply, 500, "SPECIAL_UPDATE_FAILED", msg);
     }
   });
 
-  app.delete("/admin/special/:publicId", async (request, reply) => {
-    const params = z.object({ publicId: z.string().min(1) }).safeParse(request.params);
-    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "publicId 필요");
+  app.delete("/admin/special/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
     try {
-      const ok = await deleteAdminSpecial(params.data.publicId);
+      const ok = await deleteAdminSpecial(params.data.seq);
       if (!ok) return sendError(reply, 404, "NOT_FOUND", "콘텐츠를 찾을 수 없습니다.");
       return { ok: true };
     } catch (err) {
@@ -396,6 +411,7 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       const category = fields.category as
         | "special-main"
         | "special-item"
+        | "special-temp"
         | "magazine-body"
         | "magazine-cover"
         | "magazine-thumb"
@@ -407,6 +423,12 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       if (category === "magazine-temp") {
         const { saveMagazineTempFile } = await import("../../services/admin/magazine-assets.service.js");
         const saved = await saveMagazineTempFile(uploadBuffer, uploadFilename);
+        return saved;
+      }
+
+      if (category === "special-temp") {
+        const { saveSpecialTempFile } = await import("../../services/admin/special-assets.service.js");
+        const saved = await saveSpecialTempFile(uploadBuffer, uploadFilename);
         return saved;
       }
 

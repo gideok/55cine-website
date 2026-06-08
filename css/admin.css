@@ -514,6 +514,7 @@
 }
 
 .admin-film-list {
+  background-color: #EDEDE9;
   border: 1px dashed #d4d4d8;
   border-radius: 8px;
   padding: 1rem;
@@ -610,6 +611,103 @@
 
 .admin-cover-preview img.is-placeholder {
   opacity: 1;
+}
+
+.admin-cover-preview--film {
+  max-width: 220px;
+  margin-top: 0.5rem;
+}
+
+.admin-cover-preview--main {
+  width: 360px;
+  max-width: 100%;
+}
+
+.admin-cover-preview--main .admin-cover-preview__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 360px;
+  max-width: 100%;
+  height: 202px;
+  background: #f4f4f5;
+  color: #a1a1aa;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.admin-cover-preview--main img {
+  width: 360px;
+  max-width: 100%;
+  height: 202px;
+  object-fit: cover;
+}
+
+.admin-badge--kind-exhibition {
+  background: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+.admin-badge--kind-event {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.admin-floating-dock {
+  position: fixed;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.admin-floating-dock.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.admin-floating-dock__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 5.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid #e4e4e7;
+  background: #fafafa;
+  color: #3f3f46;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.admin-floating-dock__btn:hover {
+  background: #f4f4f5;
+  color: #18181b;
+}
+
+.admin-floating-dock__btn--primary {
+  background: #eef2ff;
+  color: #3730a3;
+  border-color: #c7d2fe;
+}
+
+.admin-floating-dock__btn--primary:hover {
+  background: #e0e7ff;
+  color: #312e81;
 }
 
 .admin-cover-preview__spinner {

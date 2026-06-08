@@ -79,7 +79,7 @@ type ScreeningRow = {
   is_gv: boolean;
 };
 
-const DEFAULT_BOOKING_URL =
+export const DEFAULT_BOOKING_URL =
   "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059";
 
 function formatFilmInfoLine(row: {

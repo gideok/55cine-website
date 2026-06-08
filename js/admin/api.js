@@ -111,17 +111,17 @@
       if (q) path += "&q=" + encodeURIComponent(q);
       return apiJson("GET", path);
     },
-    getSpecial: function (publicId) {
-      return apiJson("GET", "/admin/special/" + encodeURIComponent(publicId));
+    getSpecial: function (seq) {
+      return apiJson("GET", "/admin/special/" + encodeURIComponent(String(seq)));
     },
     createSpecial: function (body) {
       return apiJson("POST", "/admin/special", body);
     },
-    updateSpecial: function (publicId, body) {
-      return apiJson("PUT", "/admin/special/" + encodeURIComponent(publicId), body);
+    updateSpecial: function (seq, body) {
+      return apiJson("PUT", "/admin/special/" + encodeURIComponent(String(seq)), body);
     },
-    deleteSpecial: function (publicId) {
-      return apiJson("DELETE", "/admin/special/" + encodeURIComponent(publicId));
+    deleteSpecial: function (seq) {
+      return apiJson("DELETE", "/admin/special/" + encodeURIComponent(String(seq)));
     },
     getMagazineList: function (opts) {
       opts = opts || {};
@@ -152,6 +152,9 @@
     uploadFile: uploadFile,
     uploadMagazineTemp: function (file) {
       return uploadFile(file, { category: "magazine-temp" });
+    },
+    uploadSpecialTemp: function (file) {
+      return uploadFile(file, { category: "special-temp" });
     },
     uploadProgramPoster: function (file, programSeq) {
       return uploadFile(file, { category: "program", programSeq: String(programSeq) });

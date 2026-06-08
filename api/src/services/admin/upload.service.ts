@@ -7,6 +7,7 @@ const ALLOWED_EXT = new Set([".jpg", ".jpeg", ".png", ".gif", ".webp"]);
 export type UploadCategory =
   | "special-main"
   | "special-item"
+  | "special-temp"
   | "magazine-body"
   | "magazine-cover"
   | "magazine-thumb"
@@ -33,6 +34,9 @@ export function resolveUploadPath(
     case "special-item":
       if (!opts.specialSeq || opts.itemSeq == null) throw new Error("specialSeq, itemSeq 필요");
       return `images/special/sp/sp_${opts.specialSeq}_${opts.itemSeq}${ext}`;
+    case "special-temp":
+      if (!opts.tempId) throw new Error("tempId 필요");
+      return `images/special/_tmp/${opts.tempId}${ext}`;
     case "magazine-body":
       if (!opts.magazineSeq || opts.imageIndex == null) throw new Error("magazineSeq, imageIndex 필요");
       return `images/magazine/body/wm_${opts.magazineSeq}_${opts.imageIndex}${ext}`;

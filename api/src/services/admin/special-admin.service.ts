@@ -1,6 +1,41 @@
+import { randomUUID } from "node:crypto";
 import sql from "mssql";
 import { getPool } from "../../db/pool.js";
-import type { SpecialKind } from "../special.service.js";
+import { DEFAULT_BOOKING_URL, type SpecialKind } from "../special.service.js";
+import {
+  deleteSpecialSpFiles,
+  finalizeSpecialItemImage,
+  finalizeSpecialMainImage
+} from "./special-assets.service.js";
+
+/** dbo.web_special / web_special_item NVARCHAR 컬럼 길이 — 초과 시 SQL Server truncation 오류 */
+export const SPECIAL_FIELD_LIMITS = {
+  publicId: 20,
+  title: 500,
+  dateLabel: 300,
+  imgMain: 500,
+  itemTitle: 300,
+  imgPath: 500,
+  titleEn: 300,
+  info: 300,
+  runningTimeLabel: 120,
+  director: 200,
+  cast: 1000,
+  sectionName: 200,
+  dateSc: 10,
+  timeSc: 5
+} as const;
+
+function clipText(val: string | null | undefined, max: number): string | null {
+  if (val == null) return null;
+  const s = String(val);
+  if (!s) return null;
+  return s.length > max ? s.slice(0, max) : s;
+}
+
+function makeTempPublicId(): string {
+  return `t${randomUUID().replace(/-/g, "").slice(0, 19)}`;
+}
 
 export type AdminSpecialListItem = {
   seq: number;
@@ -162,7 +197,7 @@ export async function getAdminSpecialList(opts: {
     req.input("kind", sql.NVarChar, opts.kind);
   }
   if (q) {
-    parts.push("(title LIKE @q OR public_id LIKE @q)");
+    parts.push("(title LIKE @q OR public_id LIKE @q OR CAST(seq AS NVARCHAR(20)) LIKE @q)");
     req.input("q", sql.NVarChar, `%${q}%`);
   }
   const where = parts.length ? parts.join(" AND ") : "1=1";
@@ -196,22 +231,7 @@ export async function getAdminSpecialList(opts: {
   };
 }
 
-export async function getAdminSpecialByPublicId(
-  publicId: string
-): Promise<AdminSpecialDetail | null> {
-  const pool = await getPool();
-  const main = await pool
-    .request()
-    .input("publicId", sql.NVarChar, publicId)
-    .query<SpecialRow>(`
-      SELECT seq, public_id, kind, title, date_label, body, img_main, booking_url, list_order
-      FROM dbo.web_special WHERE public_id = @publicId
-    `);
-  const row = main.recordset[0];
-  if (!row) return null;
-
-  const films = row.kind === "exhibition" ? await loadFilms(pool, row.seq) : [];
-
+function mapAdminDetail(row: SpecialRow, films: AdminSpecialFilmItem[]): AdminSpecialDetail {
   return {
     seq: row.seq,
     publicId: row.public_id,
@@ -220,39 +240,115 @@ export async function getAdminSpecialByPublicId(
     dateLabel: row.date_label?.trim() || null,
     body: row.body?.trim() || "",
     imgMain: row.img_main?.trim() || "",
-    bookingUrl: row.booking_url?.trim() || "",
+    bookingUrl: row.booking_url?.trim() || DEFAULT_BOOKING_URL,
     listOrder: row.list_order,
     films
   };
 }
 
-export type CreateSpecialInput = {
-  publicId: string;
+function formatPublicId(kind: SpecialKind, seq: number): string {
+  const n = String(seq).padStart(6, "0");
+  return kind === "event" ? `ev${n}` : `e${n}`;
+}
+
+async function getNextListOrder(req: sql.Request): Promise<number> {
+  const res = await req.query<{ nextOrder: number }>(`
+    SELECT ISNULL(MAX(list_order), 0) + 1 AS nextOrder FROM dbo.web_special
+  `);
+  return res.recordset[0]?.nextOrder ?? 1;
+}
+
+export async function getAdminSpecialBySeq(seq: number): Promise<AdminSpecialDetail | null> {
+  const pool = await getPool();
+  const main = await pool.request().input("seq", sql.Int, seq).query<SpecialRow>(`
+      SELECT seq, public_id, kind, title, date_label, body, img_main, booking_url, list_order
+      FROM dbo.web_special WHERE seq = @seq
+    `);
+  const row = main.recordset[0];
+  if (!row) return null;
+
+  const films = row.kind === "exhibition" ? await loadFilms(pool, row.seq) : [];
+  return mapAdminDetail(row, films);
+}
+
+export type SpecialFilmInput = AdminSpecialFilmItem & {
+  imageTempPath?: string | null;
+  removeImage?: boolean;
+};
+
+export type SpecialImageInput = {
+  mainImageTempPath?: string | null;
+  removeMainImage?: boolean;
+};
+
+export type CreateSpecialInput = SpecialImageInput & {
   kind: SpecialKind;
   title: string;
   dateLabel?: string | null;
   body?: string | null;
   imgMain?: string | null;
-  bookingUrl?: string | null;
-  listOrder?: number;
-  films?: AdminSpecialFilmItem[];
+  films?: SpecialFilmInput[];
 };
 
+export type UpdateSpecialInput = SpecialImageInput & {
+  title?: string;
+  dateLabel?: string | null;
+  body?: string | null;
+  imgMain?: string | null;
+  films?: SpecialFilmInput[];
+};
+
+function normalizeSpecialFilms(films: SpecialFilmInput[] | undefined): SpecialFilmInput[] | undefined {
+  if (!films) return films;
+  return films.map((film) => ({
+    ...film,
+    title: clipText(film.title, SPECIAL_FIELD_LIMITS.itemTitle) ?? "",
+    image: clipText(film.image, SPECIAL_FIELD_LIMITS.imgPath) ?? "",
+    titleEn: clipText(film.titleEn, SPECIAL_FIELD_LIMITS.titleEn) ?? "",
+    info: clipText(film.info, SPECIAL_FIELD_LIMITS.info) ?? "",
+    runningTimeLabel: clipText(film.runningTimeLabel, SPECIAL_FIELD_LIMITS.runningTimeLabel) ?? "",
+    director: clipText(film.director, SPECIAL_FIELD_LIMITS.director) ?? "",
+    cast: clipText(film.cast, SPECIAL_FIELD_LIMITS.cast) ?? "",
+    sectionName: clipText(film.sectionName, SPECIAL_FIELD_LIMITS.sectionName) ?? "",
+    screenings: film.screenings?.map((sc) => ({
+      ...sc,
+      date: clipText(sc.date, SPECIAL_FIELD_LIMITS.dateSc) ?? "",
+      time: (clipText(sc.time, SPECIAL_FIELD_LIMITS.timeSc) ?? "").slice(0, SPECIAL_FIELD_LIMITS.timeSc)
+    }))
+  }));
+}
+
+function normalizeSpecialInput<T extends CreateSpecialInput | UpdateSpecialInput>(input: T): T {
+  const out = { ...input };
+  if ("title" in out && out.title !== undefined) {
+    out.title = clipText(out.title, SPECIAL_FIELD_LIMITS.title) ?? "";
+  }
+  if (out.dateLabel !== undefined) out.dateLabel = clipText(out.dateLabel, SPECIAL_FIELD_LIMITS.dateLabel);
+  if (out.imgMain !== undefined) out.imgMain = clipText(out.imgMain, SPECIAL_FIELD_LIMITS.imgMain);
+  if (out.films !== undefined) out.films = normalizeSpecialFilms(out.films);
+  return out;
+}
+
 export async function createAdminSpecial(input: CreateSpecialInput): Promise<AdminSpecialDetail> {
+  const data = normalizeSpecialInput(input);
   const pool = await getPool();
   const transaction = new sql.Transaction(pool);
   await transaction.begin();
 
   try {
-    const insertRes = await new sql.Request(transaction)
-      .input("publicId", sql.NVarChar, input.publicId)
-      .input("kind", sql.NVarChar, input.kind)
-      .input("title", sql.NVarChar, input.title)
-      .input("dateLabel", sql.NVarChar, input.dateLabel ?? null)
-      .input("body", sql.NVarChar(sql.MAX), input.body ?? null)
-      .input("imgMain", sql.NVarChar, input.imgMain ?? null)
-      .input("bookingUrl", sql.NVarChar, input.bookingUrl ?? null)
-      .input("listOrder", sql.Int, input.listOrder ?? 0)
+    const insertReq = new sql.Request(transaction);
+    const listOrder = await getNextListOrder(insertReq);
+    const tempPublicId = makeTempPublicId();
+
+    const insertRes = await insertReq
+      .input("publicId", sql.NVarChar, tempPublicId)
+      .input("kind", sql.NVarChar, data.kind)
+      .input("title", sql.NVarChar, data.title)
+      .input("dateLabel", sql.NVarChar, data.dateLabel ?? null)
+      .input("body", sql.NVarChar(sql.MAX), data.body ?? null)
+      .input("imgMain", sql.NVarChar, null)
+      .input("bookingUrl", sql.NVarChar, DEFAULT_BOOKING_URL)
+      .input("listOrder", sql.Int, listOrder)
       .query<{ seq: number }>(`
         INSERT INTO dbo.web_special (public_id, kind, title, date_label, body, img_main, booking_url, list_order)
         OUTPUT INSERTED.seq
@@ -262,12 +358,31 @@ export async function createAdminSpecial(input: CreateSpecialInput): Promise<Adm
     const seq = insertRes.recordset[0]?.seq;
     if (!seq) throw new Error("INSERT 실패");
 
-    if (input.kind === "exhibition" && input.films?.length) {
-      await replaceFilms(transaction, seq, input.films);
+    const publicId = formatPublicId(data.kind, seq);
+    await new sql.Request(transaction)
+      .input("seq", sql.Int, seq)
+      .input("publicId", sql.NVarChar, publicId)
+      .query(`UPDATE dbo.web_special SET public_id = @publicId WHERE seq = @seq`);
+
+    const imgMain = await finalizeSpecialMainImage({
+      seq,
+      mainImageTempPath: data.mainImageTempPath,
+      removeMainImage: data.removeMainImage,
+      existingMain: data.imgMain ?? null
+    });
+    if (imgMain) {
+      await new sql.Request(transaction)
+        .input("seq", sql.Int, seq)
+        .input("imgMain", sql.NVarChar, imgMain)
+        .query(`UPDATE dbo.web_special SET img_main = @imgMain WHERE seq = @seq`);
+    }
+
+    if (data.kind === "exhibition" && data.films?.length) {
+      await replaceFilmsWithAssets(transaction, seq, data.films);
     }
 
     await transaction.commit();
-    const detail = await getAdminSpecialByPublicId(input.publicId);
+    const detail = await getAdminSpecialBySeq(seq);
     if (!detail) throw new Error("생성 후 조회 실패");
     return detail;
   } catch (err) {
@@ -276,10 +391,10 @@ export async function createAdminSpecial(input: CreateSpecialInput): Promise<Adm
   }
 }
 
-async function replaceFilms(
+async function replaceFilmsWithAssets(
   transaction: sql.Transaction,
   specialSeq: number,
-  films: AdminSpecialFilmItem[]
+  films: SpecialFilmInput[]
 ): Promise<void> {
   await new sql.Request(transaction)
     .input("seq", sql.Int, specialSeq)
@@ -287,12 +402,15 @@ async function replaceFilms(
 
   for (let i = 0; i < films.length; i++) {
     const film = films[i];
+    const pendingAsset = !!(film.imageTempPath || film.removeImage);
+    const initialImg = pendingAsset ? null : film.image || null;
+
     const itemRes = await new sql.Request(transaction)
       .input("specialSeq", sql.Int, specialSeq)
       .input("sortOrder", sql.Int, i)
       .input("title", sql.NVarChar, film.title || null)
       .input("isEmptySpacer", sql.Bit, film.isEmptySpacer ? 1 : 0)
-      .input("imgPath", sql.NVarChar, film.image || null)
+      .input("imgPath", sql.NVarChar, initialImg)
       .input("titleEn", sql.NVarChar, film.titleEn || null)
       .input("info", sql.NVarChar, film.info || null)
       .input("runningTimeLabel", sql.NVarChar, film.runningTimeLabel || null)
@@ -313,7 +431,24 @@ async function replaceFilms(
       `);
 
     const itemSeq = itemRes.recordset[0]?.item_seq;
-    if (!itemSeq || !film.screenings?.length) continue;
+    if (!itemSeq) continue;
+
+    const finalImg = await finalizeSpecialItemImage({
+      specialSeq,
+      itemSeq,
+      imageTempPath: film.imageTempPath,
+      removeImage: film.removeImage,
+      existingImage: pendingAsset ? null : film.image || null
+    });
+
+    if (finalImg !== initialImg) {
+      await new sql.Request(transaction)
+        .input("itemSeq", sql.Int, itemSeq)
+        .input("imgPath", sql.NVarChar, finalImg)
+        .query(`UPDATE dbo.web_special_item SET img_path = @imgPath WHERE item_seq = @itemSeq`);
+    }
+
+    if (!film.screenings?.length) continue;
 
     for (let j = 0; j < film.screenings.length; j++) {
       const sc = film.screenings[j];
@@ -331,78 +466,95 @@ async function replaceFilms(
   }
 }
 
-export type UpdateSpecialInput = {
-  title?: string;
-  dateLabel?: string | null;
-  body?: string | null;
-  imgMain?: string | null;
-  bookingUrl?: string | null;
-  listOrder?: number;
-  films?: AdminSpecialFilmItem[];
-};
-
 export async function updateAdminSpecial(
-  publicId: string,
+  seq: number,
   input: UpdateSpecialInput
 ): Promise<AdminSpecialDetail | null> {
+  const data = normalizeSpecialInput(input);
   const pool = await getPool();
-  const existing = await getAdminSpecialByPublicId(publicId);
+  const existing = await getAdminSpecialBySeq(seq);
   if (!existing) return null;
 
   const transaction = new sql.Transaction(pool);
   await transaction.begin();
 
   try {
-    const req = new sql.Request(transaction).input("publicId", sql.NVarChar, publicId);
+    const req = new sql.Request(transaction).input("seq", sql.Int, seq);
     const fields: string[] = [];
 
-    if (input.title !== undefined) {
+    if (data.title !== undefined) {
       fields.push("title = @title");
-      req.input("title", sql.NVarChar, input.title);
+      req.input("title", sql.NVarChar, data.title);
     }
-    if (input.dateLabel !== undefined) {
+    if (data.dateLabel !== undefined) {
       fields.push("date_label = @dateLabel");
-      req.input("dateLabel", sql.NVarChar, input.dateLabel);
+      req.input("dateLabel", sql.NVarChar, data.dateLabel);
     }
-    if (input.body !== undefined) {
+    if (data.body !== undefined) {
       fields.push("body = @body");
-      req.input("body", sql.NVarChar(sql.MAX), input.body);
+      req.input("body", sql.NVarChar(sql.MAX), data.body);
     }
-    if (input.imgMain !== undefined) {
+    if (data.mainImageTempPath !== undefined || data.removeMainImage) {
+      const imgMain = await finalizeSpecialMainImage({
+        seq: existing.seq,
+        mainImageTempPath: data.mainImageTempPath,
+        removeMainImage: data.removeMainImage,
+        existingMain: existing.imgMain
+      });
       fields.push("img_main = @imgMain");
-      req.input("imgMain", sql.NVarChar, input.imgMain);
+      req.input("imgMain", sql.NVarChar, imgMain);
+    } else if (data.imgMain !== undefined) {
+      fields.push("img_main = @imgMain");
+      req.input("imgMain", sql.NVarChar, data.imgMain);
     }
-    if (input.bookingUrl !== undefined) {
-      fields.push("booking_url = @bookingUrl");
-      req.input("bookingUrl", sql.NVarChar, input.bookingUrl);
-    }
-    if (input.listOrder !== undefined) {
-      fields.push("list_order = @listOrder");
-      req.input("listOrder", sql.Int, input.listOrder);
-    }
-
+    fields.push("booking_url = @bookingUrl");
+    req.input("bookingUrl", sql.NVarChar, DEFAULT_BOOKING_URL);
     if (fields.length) {
       fields.push("updated_at = SYSUTCDATETIME()");
-      await req.query(`UPDATE dbo.web_special SET ${fields.join(", ")} WHERE public_id = @publicId`);
+      await req.query(`UPDATE dbo.web_special SET ${fields.join(", ")} WHERE seq = @seq`);
     }
 
-    if (input.films !== undefined && existing.kind === "exhibition") {
-      await replaceFilms(transaction, existing.seq, input.films);
+    if (data.films !== undefined && existing.kind === "exhibition") {
+      await replaceFilmsWithAssets(transaction, existing.seq, data.films);
     }
 
     await transaction.commit();
-    return getAdminSpecialByPublicId(publicId);
+    return getAdminSpecialBySeq(seq);
   } catch (err) {
     await transaction.rollback();
     throw err;
   }
 }
 
-export async function deleteAdminSpecial(publicId: string): Promise<boolean> {
+export async function deleteAdminSpecial(seq: number): Promise<boolean> {
   const pool = await getPool();
+
+  const existingRes = await pool.request().input("seq", sql.Int, seq).query<{
+    seq: number;
+    img_main: string | null;
+    img_path: string | null;
+  }>(`
+    SELECT s.seq, s.img_main, i.img_path
+    FROM dbo.web_special s
+    LEFT JOIN dbo.web_special_item i ON i.special_seq = s.seq
+    WHERE s.seq = @seq
+  `);
+
+  const existingRows = existingRes.recordset;
+  if (!existingRows.length) return false;
+
+  const imagePaths = existingRows.flatMap((row) =>
+    [row.img_main, row.img_path].filter((p): p is string => !!p?.trim())
+  );
+
   const res = await pool
     .request()
-    .input("publicId", sql.NVarChar, publicId)
-    .query(`DELETE FROM dbo.web_special WHERE public_id = @publicId`);
-  return (res.rowsAffected[0] ?? 0) > 0;
+    .input("seq", sql.Int, seq)
+    .query(`DELETE FROM dbo.web_special WHERE seq = @seq`);
+
+  const deleted = (res.rowsAffected[0] ?? 0) > 0;
+  if (deleted) {
+    await deleteSpecialSpFiles(seq, imagePaths);
+  }
+  return deleted;
 }
