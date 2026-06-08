@@ -1,0 +1,39 @@
+{
+  "id": "e000210",
+  "title": "오렌지필름 단편기획전 [침묵의 언어]",
+  "image": "images/special/sp/sp_464_main.jpg",
+  "introduction": "오렌지필름 8월 기획전 – 침묵의 언어 조용함이 필요한 세상입니다. 침묵은 또 하나의 언어로 세상에 말을 합니다. 세 편의 작품에서 말이 없는 순간 역으로 가장 크게 전달 되는 말이 무엇인지 생각해보면 어떨까요? 각자의 삶에서 무언가를 버티고, 견디며 시간을 보내고 있을 누군가와 함께 보고싶습니다. 상영일정: 08/06(토) 16:00 GV: <파테르> 이상환 감독 진행: 조은별 관객프로그래머",
+  "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+  "films": [
+    {
+      "title": "클린 미 (Clean Me , 2014)",
+      "image": "images/special/sp/sp_464_273.jpg",
+      "info": "",
+      "director": "강상우",
+      "cast": "강태영, 민찬기, 변중희",
+      "description": "출소한 병철은 법무보호복지공단에 입소한다. 그곳에선 모두들 청소에 여념이 없다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "트랜짓 (Transit, 2022)",
+      "image": "images/special/sp/sp_464_274.jpg",
+      "info": "",
+      "director": "문혜인",
+      "cast": "김규나, 우지현, 변중희",
+      "description": "시작 단계의 아역배우 백호와 오랜만에 현장에 복귀한 트랜스젠더 조명기사 미호. 둘은 어쩐지 현장의 구석 어딘가에서 자꾸만 마주친다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "파테르 (Parterre , 2019)",
+      "image": "images/special/sp/sp_464_275.jpg",
+      "info": "",
+      "director": "이상환",
+      "cast": "이한주, 장준휘",
+      "description": "미등록 체류자인 오성은 전국체전에 나가고 싶지만 무국적자라는 이유로 기회가 주어지지 않는다",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
+}

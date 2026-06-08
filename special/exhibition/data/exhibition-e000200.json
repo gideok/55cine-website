@@ -1,0 +1,39 @@
+{
+  "id": "e000200",
+  "title": "오렌지필름 단편기획전 HOME SWEET HOME",
+  "image": "images/special/sp/sp_474_main.png",
+  "introduction": "오렌지필름 4월 단편기획전 <HOME SWEET HOME> 집, 집, 집. 누군가는 만나고, 누군가는 쉬고, 누군가는 떠나는 그 곳. 당신에게 집은 어떤 의미인가요? 오는 4월 집을 중심으로 하는 단편 세편을 함께보면 어떨까요? 상영일시: 4월 16일(토) 16:30 상영작",
+  "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+  "films": [
+    {
+      "title": "<듀티>",
+      "image": "images/special/sp/sp_474_281.jpg",
+      "info": "",
+      "director": "한정선",
+      "cast": "이유진",
+      "description": "간호사 지연은 독립하기 위해 집을 찾고 있다. 지연의 엄마는 꾀병을 부려 병원에 찾아온다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "<202 201>",
+      "image": "images/special/sp/sp_474_282.jpg",
+      "info": "",
+      "director": "조영명",
+      "cast": "한태은, 오난숙",
+      "description": "김선제 우리집 블루투스 스피커를 자꾸 연결하는 옆집. 내 공간을 침범하는 옆집은 누구일까?",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "<내일의 연인들>",
+      "image": "images/special/sp/sp_474_283.jpg",
+      "info": "",
+      "director": "김양희",
+      "cast": "이태경, 우지현",
+      "description": "29세의 대학원생 정안은 어느 날, 선애 누나의 전화를 받는다. 선애는 엄마 친구의 딸로 어린 시절부터 함께 자라며 알고 지냈다. 5년 만에 연락한 선애는 이혼을 했다며 전남편과 함께 살던 빌라가 팔릴 때까지, 정안에게 집을 봐달라고 부탁한다. 정안은 회사를 그만두고 대학원에 다니며 인생의 유예기간을 갖던 중이라 선애의 제안을 반갑게 여긴다. 만난 지 얼마되지 않은 연인 지원과 단둘만의 시간을 갖고 싶었기 때문이다. 공들여 꾸민 아늑한 선애의 집에서 정안과 지원은 마치 진짜 부부인 양 생활하며 서로에 대한 감정을 키워 나간다. 그리고 결코 행복해 보이지 않는 그들의 부모와 무슨 연유인지 몰라도 이 집을 떠나간 선애 부부를 생각하며, 언젠가는 찾아올 이별의 순간을 생각하게 된다.",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
+}

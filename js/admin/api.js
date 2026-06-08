@@ -2,16 +2,32 @@
  * 관리자 API 클라이언트 — /api/v1/admin/*
  */
 (function (global) {
-  var API_BASE =
-    (global.TI_API_BASE || "/api/v1").replace(/\/$/, "");
+  if (typeof global.TI_API_BASE !== "string" || !global.TI_API_BASE) {
+    var loc = global.location;
+    if (loc) {
+      var host = loc.hostname || "";
+      var port = loc.port || "";
+      var isLocal = host === "localhost" || host === "127.0.0.1";
+      if (isLocal && (port === "8080" || port === "5500" || port === "8888" || port === "")) {
+        global.TI_API_BASE = "http://localhost:3000/api/v1";
+      } else {
+        global.TI_API_BASE = "/api/v1";
+      }
+    }
+  }
 
-  function adminHeaders() {
-    return {
+  var API_BASE = (global.TI_API_BASE || "/api/v1").replace(/\/$/, "");
+
+  function adminHeaders(withJsonBody) {
+    var headers = {
       Accept: "application/json",
-      "Content-Type": "application/json",
       // 추후수정 및 로그인 연동 — 스텁 인증 헤더
       "X-Admin-Auth": "true"
     };
+    if (withJsonBody) {
+      headers["Content-Type"] = "application/json";
+    }
+    return headers;
   }
 
   function parseError(res, body) {
@@ -23,12 +39,13 @@
 
   function apiJson(method, path, body) {
     var url = API_BASE + (path.charAt(0) === "/" ? path : "/" + path);
+    var hasBody = body !== undefined;
     var opts = {
       method: method,
       credentials: "same-origin",
-      headers: adminHeaders()
+      headers: adminHeaders(hasBody)
     };
-    if (body !== undefined) opts.body = JSON.stringify(body);
+    if (hasBody) opts.body = JSON.stringify(body);
     return fetch(url, opts).then(function (res) {
       return res.json().catch(function () {
         return {};
@@ -42,10 +59,10 @@
   function uploadFile(file, fields) {
     var url = API_BASE + "/admin/upload";
     var form = new FormData();
-    form.append("file", file);
     Object.keys(fields || {}).forEach(function (key) {
       form.append(key, String(fields[key]));
     });
+    form.append("file", file);
     return fetch(url, {
       method: "POST",
       credentials: "same-origin",
@@ -117,21 +134,27 @@
       if (opts.q) parts.push("q=" + encodeURIComponent(opts.q));
       return apiJson("GET", "/admin/magazine?" + parts.join("&"));
     },
-    getMagazine: function (publicId) {
-      return apiJson("GET", "/admin/magazine/" + encodeURIComponent(publicId));
+    getMagazine: function (seq) {
+      return apiJson("GET", "/admin/magazine/" + encodeURIComponent(String(seq)));
     },
     createMagazine: function (body) {
       return apiJson("POST", "/admin/magazine", body);
     },
-    updateMagazine: function (publicId, body) {
-      return apiJson("PUT", "/admin/magazine/" + encodeURIComponent(publicId), body);
+    updateMagazine: function (seq, body) {
+      return apiJson("PUT", "/admin/magazine/" + encodeURIComponent(String(seq)), body);
     },
-    deleteMagazine: function (publicId) {
-      return apiJson("DELETE", "/admin/magazine/" + encodeURIComponent(publicId));
+    deleteMagazine: function (seq) {
+      return apiJson("DELETE", "/admin/magazine/" + encodeURIComponent(String(seq)));
     },
-    markMagazinePast: function (publicId) {
-      return apiJson("POST", "/admin/magazine/" + encodeURIComponent(publicId) + "/mark-past");
+    markMagazinePast: function (seq) {
+      return apiJson("POST", "/admin/magazine/" + encodeURIComponent(String(seq)) + "/mark-past");
     },
-    uploadFile: uploadFile
+    uploadFile: uploadFile,
+    uploadMagazineTemp: function (file) {
+      return uploadFile(file, { category: "magazine-temp" });
+    },
+    uploadProgramPoster: function (file, programSeq) {
+      return uploadFile(file, { category: "program", programSeq: String(programSeq) });
+    }
   };
 })(typeof window !== "undefined" ? window : globalThis);

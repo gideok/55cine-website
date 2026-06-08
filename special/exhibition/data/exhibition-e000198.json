@@ -1,0 +1,39 @@
+{
+  "id": "e000198",
+  "title": "오렌지필름 단편기획전 MIXTAPE VOL.6=7",
+  "image": "images/special/sp/sp_476_main.png",
+  "introduction": "오렌지필름 2월 단편기획전 <MIXTAPE VOL.7> 오렌지필름 7주년을 축하합니다. 7주년을 기념하여 2021년 오렌지필름에서 상영했던 작품 중 극장의 추천작 1편, 감독의 추천작 1편, 배급사의 추천작 1편 상영 합니다. 상영일시: 2월 26일(토) 16:30 GV:<Save the cat>허지예 감독, <늦은 휴가>나상진 감독,<졸업>한태희 감독 진행: 임아현 관객프로그래머 상영작 정보",
+  "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+  "films": [
+    {
+      "title": "Save The cat (2021) 오오극장 추천",
+      "image": "images/special/sp/sp_476_287.jpg",
+      "info": "",
+      "director": "허지예",
+      "cast": "",
+      "description": "주연: 옥자연,이태경 계약 기간이 얼마 남지 않은 영우와 진희의 작업실 앞에 고양이가 한 마리 버려진다. 고양이는 작업실에 들어와 둘의 이야기를 휘젓고 다닌다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "늦은 휴가(2019) 허지예 감독 추천",
+      "image": "images/special/sp/sp_476_288.jpg",
+      "info": "",
+      "director": "나상진",
+      "cast": "",
+      "description": "주연: 이상희 늦여름, 드디어 선아는 첫 직장을 갖게 된다. 친구였던 진향을 몇 년 만에 만나고 그녀를 통해 완규도 만난다. 계절을 지나며 그들의 만남은 이어지기도 끊어지기도 한다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "졸업(2017) 센트럴파크 배급사 추천",
+      "image": "images/special/sp/sp_476_289.jpg",
+      "info": "",
+      "director": "한태희",
+      "cast": "",
+      "description": "주연: 이유진 도연은 생일마다 발송인 불명의 택배를 받는다. 지금까지 받았던 DVD 3장을 나열해보는 도연은 세 영화 모두 자신과 민아가 별 다섯 개를 준 영화들이라는 것을 알게 된다.",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
+}

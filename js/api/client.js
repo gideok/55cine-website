@@ -129,9 +129,26 @@
     return apiGet(path + parts.join("&"));
   }
 
-  /** @param {string} publicId pv001, sr001 … */
-  function getMagazineDetail(publicId) {
-    return apiGet("/magazine/" + encodeURIComponent(publicId));
+  /** @param {number|string} seq web_magazine.seq */
+  function getMagazineDetail(seq) {
+    var url = API_BASE + "/magazine/" + encodeURIComponent(String(seq));
+    return fetch(url, {
+      credentials: "same-origin",
+      cache: "no-store",
+      headers: { Accept: "application/json" }
+    }).then(function (res) {
+      if (!res.ok) {
+        return res.json().catch(function () {
+          return {};
+        }).then(function (body) {
+          var msg =
+            (body.error && body.error.message) ||
+            "요청 실패 (" + res.status + ")";
+          throw new Error(msg);
+        });
+      }
+      return res.json();
+    });
   }
 
   global.TiApi = {

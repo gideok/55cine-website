@@ -1,0 +1,39 @@
+{
+  "id": "e000191",
+  "title": "오렌지필름 단편기획전 ( )하다",
+  "image": "images/special/sp/sp_483_main.jpg",
+  "introduction": "사람은 태어나, ( )하다, 죽는다’라는 명제가 있습니다. 이 명제를 마주 할 때 저마다 떠오르는 빈칸의 답이 다르듯,어쩌면 사는 것은 정해진 답이 없이,빈칸을 채워가는 일인지도 모르겠습니다.그리고 실제의 삶에서 이와 같은 빈칸을, 오지 않은 문장들을 늘 마주하며 채워가는‘작가’들이있습니다. 오는 11월은 ‘작가’가 주인공인 3편의단편을 보고, 우리 모두 각자의 빈칸에 대해서 생각해보면 어떨까요. 상영일정: 11월 20일(토) 16:30 GV: 적어도 끝까지 걷지는 않았다/김진영 감독, Save the cat/허지예 감독, 우리는 서로 사랑해야 한다/이루리 감독 참석 모더레이터: 임아현 관객프로그래머 상영작",
+  "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+  "films": [
+    {
+      "title": "적어도 끝까지 걷지는 않았다 (2018)",
+      "image": "images/special/sp/sp_483_316.jpg",
+      "info": "",
+      "director": "",
+      "cast": "손용범, 최설민, 이나길",
+      "description": "하루키 마니아인 소설가 지망생 재형은 하루키처럼 되고 싶다. 그러나 글은 잘 써지지 않고 방황하기 일쑤다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "SAVE THE CAT (2021)",
+      "image": "images/special/sp/sp_483_317.jpg",
+      "info": "",
+      "director": "",
+      "cast": "옥자연, 이태경",
+      "description": "계약기간이 얼마 남지 않은 영우와 진희의 작업실 앞에 고양이가 한 마리 버려진다. 고양이는 작업실에 들어와 둘의 이야기를 휘젓고 다닌다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "우리는 서로 사랑해야 한다 (2021)",
+      "image": "images/special/sp/sp_483_318.jpg",
+      "info": "",
+      "director": "",
+      "cast": "이유빈, 홍하나임, 도연우",
+      "description": "강을 끼고 있는 마을, 장문안(䢿). 산하의 친구가 강에 빠져 죽은 지 1년 뒤, 마을에 하나 뿐인 중학교가 폐교를 결정한다.",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
+}

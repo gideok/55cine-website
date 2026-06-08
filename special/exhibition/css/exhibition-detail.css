@@ -571,3 +571,10 @@ body.exhibition-poster-lightbox-open {
     display: none;
   }
 }
+
+/* 이전·다음 네비 — 썸네일·2열 레이아웃은 sd-prev-next-magazine.css 와 동일 */
+.ti .ti-ex-detail-panel .sd-inner--ex-nav {
+  margin-top: 24px;
+  padding-left: 8px;
+  padding-right: 8px;
+}

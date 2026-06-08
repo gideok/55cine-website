@@ -28,6 +28,12 @@ export type SpecialFilmItem = {
   screenings: SpecialScreening[];
 };
 
+export type SpecialNeighbor = {
+  publicId: string;
+  title: string;
+  thumbnail: string;
+};
+
 export type SpecialDetail = {
   id: string;
   title: string;
@@ -35,6 +41,10 @@ export type SpecialDetail = {
   introduction: string;
   bookingUrl: string;
   films: SpecialFilmItem[];
+  neighbors?: {
+    prev: SpecialNeighbor | null;
+    next: SpecialNeighbor | null;
+  };
 };
 
 type SpecialRow = {
@@ -151,6 +161,46 @@ function mapFilmItem(item: ItemRow, screenings: ScreeningRow[]): SpecialFilmItem
   };
 }
 
+async function fetchSpecialNeighbor(
+  pool: sql.ConnectionPool,
+  kind: SpecialKind,
+  listOrder: number,
+  seq: number,
+  direction: "prev" | "next"
+): Promise<SpecialNeighbor | null> {
+  const req = pool.request().input("kind", sql.NVarChar, kind);
+  req.input("listOrder", sql.Int, listOrder);
+  req.input("seq", sql.Int, seq);
+
+  // prev/next = special-exhibition 목록(list_order DESC) 순서와 동일
+  // prev = 목록에서 앞(더 최신), next = 목록에서 뒤(더 이전)
+  const cmp =
+    direction === "prev"
+      ? `(list_order > @listOrder OR (list_order = @listOrder AND seq > @seq))`
+      : `(list_order < @listOrder OR (list_order = @listOrder AND seq < @seq))`;
+  const order =
+    direction === "prev" ? `list_order ASC, seq ASC` : `list_order DESC, seq DESC`;
+
+  const res = await req.query<SpecialRow>(`
+    SELECT TOP 1 seq, public_id, kind, title, img_main, list_order
+    FROM dbo.web_special
+    WHERE kind = @kind AND ${cmp}
+    ORDER BY ${order}
+  `);
+
+  const row = res.recordset[0];
+  if (!row) return null;
+  const thumbKind = row.kind as SpecialKind;
+  const thumbnail =
+    (row.img_main && String(row.img_main).trim()) ||
+    listThumbFallback(thumbKind, row.public_id);
+  return {
+    publicId: row.public_id,
+    title: row.title,
+    thumbnail
+  };
+}
+
 export async function getSpecialList(kind: SpecialKind): Promise<SpecialListItem[]> {
   const pool = await getPool();
   const result = await pool
@@ -228,12 +278,18 @@ export async function getSpecialDetail(
         )
       : [];
 
+  const [prev, next] = await Promise.all([
+    fetchSpecialNeighbor(pool, specialKind, row.list_order, row.seq, "prev"),
+    fetchSpecialNeighbor(pool, specialKind, row.list_order, row.seq, "next")
+  ]);
+
   return {
     id: row.public_id,
     title: row.title,
     image,
     introduction: row.body?.trim() || "",
     bookingUrl: row.booking_url?.trim() || DEFAULT_BOOKING_URL,
-    films
+    films,
+    neighbors: { prev, next }
   };
 }

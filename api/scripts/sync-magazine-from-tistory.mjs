@@ -2,9 +2,10 @@
  * 55cinema.tistory.com → web_magazine + JSON 보강
  *
  * Usage:
- *   node scripts/sync-magazine-from-tistory.mjs --public-id=pa067 --execute
+ *   node scripts/sync-magazine-from-tistory.mjs --seq=67 --execute
  *   node scripts/sync-magazine-from-tistory.mjs --empty-only --execute
  *   node scripts/sync-magazine-from-tistory.mjs --audit
+ *   node scripts/sync-magazine-from-tistory.mjs --backfill-created-at --execute
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -24,8 +25,9 @@ const execute = process.argv.includes("--execute");
 const auditOnly = process.argv.includes("--audit");
 const emptyOnly = process.argv.includes("--empty-only");
 const importMissing = process.argv.includes("--import-missing");
-const publicIdArg = process.argv.find((a) => a.startsWith("--public-id="));
-const targetPublicId = publicIdArg ? publicIdArg.split("=")[1] : null;
+const backfillCreatedAt = process.argv.includes("--backfill-created-at");
+const seqArg = process.argv.find((a) => a.startsWith("--seq="));
+const targetSeq = seqArg ? Number(seqArg.split("=")[1]) : null;
 const sectionArg = process.argv.find((a) => a.startsWith("--section="));
 const targetSection = sectionArg ? sectionArg.split("=")[1] : null;
 
@@ -183,6 +185,33 @@ function extractOgImage(html) {
   return normalizeRemoteUrl(url);
 }
 
+function extractTistoryDateText(html) {
+  const patterns = [
+    /<(?:span|p|div|time)[^>]*\bclass=["'][^"']*\bdate\b[^"']*["'][^>]*>([\s\S]*?)<\/(?:span|p|div|time)>/i,
+    /\bclass=["'][^"']*\bdate\b[^"']*["'][^>]*>([\s\S]*?)<\//i
+  ];
+  for (const re of patterns) {
+    const m = html.match(re);
+    if (m && stripTags(m[1])) return stripTags(m[1]);
+  }
+  return "";
+}
+
+function parseTistoryCreatedAt(text) {
+  if (!text) return null;
+  const t = text.replace(/\s+/g, " ").trim();
+  const m = t.match(/^(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.(?:\s*(\d{1,2}):(\d{2}))?/);
+  if (!m) return null;
+  const y = Number(m[1]);
+  const mo = Number(m[2]);
+  const d = Number(m[3]);
+  const h = m[4] != null ? Number(m[4]) : 0;
+  const mi = m[5] != null ? Number(m[5]) : 0;
+  const iso = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}T${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}:00+09:00`;
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
 function extractArticle(html, sourceUrl) {
   const ogTitle = html.match(/property="og:title" content="([^"]+)"/);
   const title = decodeHtml((ogTitle && ogTitle[1]) || "")
@@ -194,6 +223,9 @@ function extractArticle(html, sourceUrl) {
       html.match(/name="published_time" content="([^"]+)"/) ||
       [])[1] || "";
 
+  const dateText = extractTistoryDateText(html);
+  const createdAt = parseTistoryCreatedAt(dateText);
+
   const bodyHtml = extractBodyHtml(html);
   const imgUrls = extractBodyImageUrls(bodyHtml);
   const ogImage = extractOgImage(html);
@@ -202,7 +234,7 @@ function extractArticle(html, sourceUrl) {
   }
 
   const excerpt = stripTags(bodyHtml).slice(0, 220);
-  return { title, published, bodyHtml, imgUrls, excerpt, sourceUrl, ogImage };
+  return { title, published, dateText, createdAt, bodyHtml, imgUrls, excerpt, sourceUrl, ogImage };
 }
 
 function extFromUrl(url) {
@@ -276,8 +308,8 @@ function bodyImageDestRel(seq, idx, ext) {
   return `images/magazine/body/wm_${seq}_${idx}${ext}`;
 }
 
-function pastThumbDestRel(publicId, idx, ext) {
-  return `images/magazine/past-articles/${publicId}-${String(idx).padStart(2, "0")}${ext}`;
+function pastThumbDestRel(seq, idx, ext) {
+  return `images/magazine/past-articles/${seq}-${String(idx).padStart(2, "0")}${ext}`;
 }
 
 function formatDate(iso) {
@@ -288,10 +320,10 @@ function formatDate(iso) {
 }
 
 function jsonPathForRow(row) {
-  if (row.is_past) return path.join(PAST_DATA_DIR, `${row.public_id}.json`);
+  if (row.is_past) return path.join(PAST_DATA_DIR, `${row.seq}.json`);
   const folder =
     row.section === "serial" ? "serial" : row.section === "gv-moment" ? "gv-moment" : "preview";
-  return path.join(ROOT, "magazine", folder, "data", `${row.public_id}.json`);
+  return path.join(ROOT, "magazine", folder, "data", `${row.seq}.json`);
 }
 
 async function collectCategoryUrls(catUrl, maxPages = 30) {
@@ -309,17 +341,17 @@ async function collectCategoryUrls(catUrl, maxPages = 30) {
 
 async function loadDbRows(pool) {
   const clauses = [];
-  if (targetPublicId) clauses.push(`public_id = '${targetPublicId.replace(/'/g, "''")}'`);
+  if (targetSeq) clauses.push(`seq = ${Number(targetSeq)}`);
   else if (emptyOnly) clauses.push(`LEN(ISNULL(body_html,'')) = 0`);
   if (targetSection) clauses.push(`section = '${targetSection.replace(/'/g, "''")}'`);
 
   const where = clauses.length ? clauses.join(" AND ") : "1=1";
 
   const res = await pool.request().query(`
-    SELECT seq, public_id, section, is_past, title, source_url, list_order, img_thumb, img_cover
+    SELECT seq, section, is_past, title, source_url, img_thumb, img_cover
     FROM dbo.web_magazine
     WHERE ${where}
-    ORDER BY public_id
+    ORDER BY seq
   `);
   return res.recordset;
 }
@@ -327,17 +359,17 @@ async function loadDbRows(pool) {
 async function syncOne(pool, row) {
   const sourceUrl = row.source_url?.trim();
   if (!sourceUrl) {
-    console.warn("skip (no source_url):", row.public_id);
+    console.warn("skip (no source_url):", row.seq);
     return false;
   }
 
-  console.log("fetch", row.public_id, sourceUrl);
+  console.log("fetch", row.seq, sourceUrl);
   await sleep(DELAY_MS);
   const html = await fetchText(sourceUrl);
   const parsed = extractArticle(html, sourceUrl);
 
   if (!parsed.bodyHtml && !parsed.imgUrls.length) {
-    console.warn("empty parse:", row.public_id);
+    console.warn("empty parse:", row.seq);
     return false;
   }
 
@@ -356,13 +388,13 @@ async function syncOne(pool, row) {
       attachments.push({ path: bodyRel, alt: parsed.title });
 
       if (row.is_past) {
-        const pastRel = pastThumbDestRel(row.public_id, i + 1, ext);
+        const pastRel = pastThumbDestRel(row.seq, i + 1, ext);
         const pastAbs = path.join(ROOT, pastRel.replace(/\//g, path.sep));
         if (execute) fs.copyFileSync(bodyAbs, pastAbs);
         if (i === 0) attachments[0].path = pastRel;
       }
     } catch (err) {
-      console.error("  img fail", row.public_id, remote.slice(0, 80), err.message);
+      console.error("  img fail", row.seq, remote.slice(0, 80), err.message);
     }
   }
 
@@ -378,10 +410,11 @@ async function syncOne(pool, row) {
       : pairs[0]?.local || attachments[0]?.path || row.img_thumb || "";
   const coverRel = keepListThumb ? row.img_cover || row.img_thumb : thumbRel;
   const publishedAt = parsed.published ? new Date(parsed.published) : null;
+  const createdAt = parsed.createdAt || publishedAt;
 
   const jsonPayload = {
-    id: row.public_id,
-    slug: row.public_id,
+    id: row.seq,
+    slug: String(row.seq),
     title: parsed.title || row.title,
     publishedAt: publishedAt && !Number.isNaN(publishedAt.getTime()) ? publishedAt.toISOString() : "",
     publishedLabel: formatDate(parsed.published),
@@ -390,8 +423,7 @@ async function syncOne(pool, row) {
     thumbnail: coverRel,
     bodyHtml,
     attachments: attachments.map((a) => ({ path: a.path, alt: parsed.title })),
-    sourceUrl,
-    articleUrl: sourceUrl
+    sourceUrl
   };
   if (!row.is_past) {
     jsonPayload.movieTitle = parseMovieTitle(jsonPayload.title);
@@ -425,14 +457,15 @@ async function syncOne(pool, row) {
       .input("title", sql.NVarChar, jsonPayload.title)
       .input("publishedLabel", sql.NVarChar, jsonPayload.publishedLabel || null)
       .input("publishedAt", sql.DateTime2, publishedAt && !Number.isNaN(publishedAt.getTime()) ? publishedAt : null)
-      .input("excerpt", sql.NVarChar, jsonPayload.excerpt || null)
+      .input("createdAt", sql.DateTime2, createdAt && !Number.isNaN(createdAt.getTime()) ? createdAt : null)
       .input("bodyHtml", sql.NVarChar(sql.MAX), bodyHtml)
       .input("imgThumb", sql.NVarChar, thumbRel || null)
       .input("imgCover", sql.NVarChar, coverRel || null)
       .query(`
         UPDATE dbo.web_magazine
         SET title = @title, published_label = @publishedLabel, published_at = @publishedAt,
-            excerpt = @excerpt, body_html = @bodyHtml, img_thumb = @imgThumb, img_cover = @imgCover,
+            created_at = COALESCE(@createdAt, created_at),
+            body_html = @bodyHtml, img_thumb = @imgThumb, img_cover = @imgCover,
             updated_at = SYSUTCDATETIME()
         WHERE seq = @seq
       `);
@@ -440,7 +473,7 @@ async function syncOne(pool, row) {
 
   console.log(
     execute ? "ok" : "dry",
-    row.public_id,
+    row.seq,
     "body=" + bodyHtml.length,
     "imgs=" + pairs.length,
     "thumb=" + (thumbRel || "-")
@@ -460,21 +493,10 @@ function normalizeSourceKey(url) {
 function buildSourceIndex(rows) {
   const bySource = new Map();
   for (const row of rows) {
-    for (const field of ["source_url", "article_url"]) {
-      const key = normalizeSourceKey(row[field]);
-      if (key) bySource.set(key, row);
-    }
+    const key = normalizeSourceKey(row.source_url);
+    if (key) bySource.set(key, row);
   }
   return bySource;
-}
-
-async function nextPublicId(pool, prefix) {
-  const res = await pool.request().query(`
-    SELECT MAX(CAST(SUBSTRING(public_id, LEN('${prefix}') + 1, 10) AS INT)) AS n
-    FROM dbo.web_magazine WHERE public_id LIKE '${prefix}%'
-  `);
-  const n = res.recordset[0]?.n || 0;
-  return `${prefix}${String(n + 1).padStart(3, "0")}`;
 }
 
 function parseMovieTitle(title) {
@@ -491,21 +513,19 @@ function parseSubtitle(title) {
 const IMPORT_SECTIONS = [
   {
     section: "preview",
-    prefix: "pv",
     catUrl: CATEGORY_URLS[0].url,
     dataDir: path.join(ROOT, "magazine", "preview", "data"),
     isPast: false
   },
   {
     section: "serial",
-    prefix: "sr",
     catUrl: CATEGORY_URLS[1].url,
     dataDir: path.join(ROOT, "magazine", "serial", "data"),
     isPast: false
   }
 ];
 
-async function importOneNew(pool, cfg, sourceUrl, listOrder) {
+async function importOneNew(pool, cfg, sourceUrl) {
   console.log("import", sourceUrl);
   await sleep(DELAY_MS);
   const html = await fetchText(sourceUrl);
@@ -515,39 +535,36 @@ async function importOneNew(pool, cfg, sourceUrl, listOrder) {
     return false;
   }
 
-  const publicId = await nextPublicId(pool, cfg.prefix);
   const publishedAt = parsed.published ? new Date(parsed.published) : null;
+  const createdAt = parsed.createdAt || publishedAt || new Date();
 
   let seq = 0;
   if (execute) {
     const ins = await pool
       .request()
-      .input("publicId", sql.NVarChar, publicId)
       .input("section", sql.NVarChar, cfg.section)
       .input("isPast", sql.Bit, 0)
       .input("title", sql.NVarChar, parsed.title)
       .input("movieTitle", sql.NVarChar, parseMovieTitle(parsed.title))
       .input("subtitle", sql.NVarChar, parseSubtitle(parsed.title))
-      .input("publishedLabel", sql.NVarChar, formatDate(parsed.published) || null)
+      .input("publishedLabel", sql.NVarChar, formatDate(parsed.published) || parsed.dateText || null)
       .input("publishedAt", sql.DateTime2, publishedAt && !Number.isNaN(publishedAt.getTime()) ? publishedAt : null)
-      .input("excerpt", sql.NVarChar, parsed.excerpt || null)
+      .input("createdAt", sql.DateTime2, createdAt)
       .input("bodyHtml", sql.NVarChar(sql.MAX), "")
       .input("imgThumb", sql.NVarChar, null)
       .input("imgCover", sql.NVarChar, null)
       .input("sourceUrl", sql.NVarChar, sourceUrl)
-      .input("articleUrl", sql.NVarChar, sourceUrl)
-      .input("listOrder", sql.Int, listOrder)
       .query(`
         INSERT INTO dbo.web_magazine (
-          public_id, section, is_past, title, movie_title, subtitle,
-          published_label, published_at, excerpt, body_html,
-          img_thumb, img_cover, source_url, article_url, list_order
+          section, is_past, title, movie_title, subtitle,
+          published_label, published_at, created_at, body_html,
+          img_thumb, img_cover, source_url
         )
         OUTPUT INSERTED.seq
         VALUES (
-          @publicId, @section, @isPast, @title, @movieTitle, @subtitle,
-          @publishedLabel, @publishedAt, @excerpt, @bodyHtml,
-          @imgThumb, @imgCover, @sourceUrl, @articleUrl, @listOrder
+          @section, @isPast, @title, @movieTitle, @subtitle,
+          @publishedLabel, @publishedAt, @createdAt, @bodyHtml,
+          @imgThumb, @imgCover, @sourceUrl
         )
       `);
     seq = ins.recordset[0].seq;
@@ -555,33 +572,27 @@ async function importOneNew(pool, cfg, sourceUrl, listOrder) {
     seq = 9999;
   }
 
-  const row = { seq, public_id: publicId, section: cfg.section, is_past: cfg.isPast };
+  const row = { seq, section: cfg.section, is_past: cfg.isPast };
   return syncOne(pool, { ...row, source_url: sourceUrl, title: parsed.title });
 }
 
 async function runImportMissing(pool) {
   const dbRes = await pool.request().query(`
-    SELECT public_id, section, is_past, source_url, article_url
+    SELECT seq, section, is_past, source_url
     FROM dbo.web_magazine
   `);
   const bySource = buildSourceIndex(dbRes.recordset);
-  const maxOrderRes = await pool.request().query(`
-    SELECT section, MAX(list_order) AS mx FROM dbo.web_magazine GROUP BY section
-  `);
-  const maxOrder = new Map(maxOrderRes.recordset.map((r) => [r.section, r.mx || 0]));
 
   let imported = 0;
   for (const cfg of IMPORT_SECTIONS) {
     const urls = await collectCategoryUrls(cfg.catUrl);
     const missing = urls.filter((u) => !bySource.has(normalizeSourceKey(u)));
     console.log(`\n${cfg.section}: import ${missing.length} missing`);
-    let order = maxOrder.get(cfg.section) || 0;
     for (const url of missing) {
-      order += 1;
       try {
-        if (await importOneNew(pool, cfg, url, order)) {
+        if (await importOneNew(pool, cfg, url)) {
           imported += 1;
-          bySource.set(normalizeSourceKey(url), { public_id: "new" });
+          bySource.set(normalizeSourceKey(url), { seq: 0 });
         }
       } catch (err) {
         console.error("FAIL import", url, err.message);
@@ -591,16 +602,74 @@ async function runImportMissing(pool) {
   console.log("\nImported:", imported);
 }
 
+async function backfillCreatedAtOne(pool, row) {
+  const sourceUrl = row.source_url?.trim();
+  if (!sourceUrl) {
+    console.warn("skip (no source_url):", row.seq);
+    return false;
+  }
+
+  console.log("backfill", row.seq, sourceUrl);
+  await sleep(DELAY_MS);
+  const html = await fetchText(sourceUrl);
+  const dateText = extractTistoryDateText(html);
+  const createdAt = parseTistoryCreatedAt(dateText);
+  if (!createdAt) {
+    console.warn("no .date parse:", row.seq, dateText || "(empty)");
+    return false;
+  }
+
+  if (execute) {
+    await pool
+      .request()
+      .input("seq", sql.Int, row.seq)
+      .input("createdAt", sql.DateTime2, createdAt)
+      .query(`
+        UPDATE dbo.web_magazine
+        SET created_at = @createdAt, updated_at = SYSUTCDATETIME()
+        WHERE seq = @seq
+      `);
+  }
+
+  console.log(execute ? "ok" : "dry", row.seq, createdAt.toISOString(), dateText);
+  return true;
+}
+
+async function runBackfillCreatedAt(pool) {
+  const clauses = [];
+  if (targetSeq) clauses.push(`seq = ${Number(targetSeq)}`);
+  if (targetSection) clauses.push(`section = '${targetSection.replace(/'/g, "''")}'`);
+  const where = clauses.length ? clauses.join(" AND ") : "LEN(ISNULL(source_url,'')) > 0";
+
+  const res = await pool.request().query(`
+    SELECT seq, section, is_past, source_url
+    FROM dbo.web_magazine
+    WHERE ${where}
+    ORDER BY seq
+  `);
+
+  console.log("backfill targets:", res.recordset.length, execute ? "(execute)" : "(dry-run)");
+  let ok = 0;
+  for (const row of res.recordset) {
+    try {
+      if (await backfillCreatedAtOne(pool, row)) ok += 1;
+    } catch (err) {
+      console.error("FAIL backfill", row.seq, err.message);
+    }
+  }
+  console.log("\nBackfilled:", ok, "/", res.recordset.length);
+}
+
 async function runAudit(pool) {
   const dbRes = await pool.request().query(`
-    SELECT public_id, section, is_past, source_url, article_url, LEN(ISNULL(body_html,'')) as body_len
+    SELECT seq, section, is_past, source_url, LEN(ISNULL(body_html,'')) as body_len
     FROM dbo.web_magazine
   `);
   const bySource = buildSourceIndex(dbRes.recordset);
 
   const emptyBody = dbRes.recordset.filter((r) => !r.body_len);
   console.log("\n=== DB 빈 본문 ===", emptyBody.length);
-  emptyBody.forEach((r) => console.log(" ", r.public_id, r.section, r.is_past ? "past" : ""));
+  emptyBody.forEach((r) => console.log(" ", r.seq, r.section, r.is_past ? "past" : ""));
 
   for (const cat of CATEGORY_URLS) {
     console.log("\n=== Tistory category:", cat.section, "===");
@@ -638,6 +707,12 @@ async function main() {
     return;
   }
 
+  if (backfillCreatedAt) {
+    await runBackfillCreatedAt(pool);
+    await pool.close();
+    return;
+  }
+
   const rows = await loadDbRows(pool);
   console.log("sync targets:", rows.length, execute ? "(execute)" : "(dry-run)");
 
@@ -646,7 +721,7 @@ async function main() {
     try {
       if (await syncOne(pool, row)) ok += 1;
     } catch (err) {
-      console.error("FAIL", row.public_id, err.message);
+      console.error("FAIL", row.seq, err.message);
     }
   }
 

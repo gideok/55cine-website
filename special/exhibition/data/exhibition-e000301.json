@@ -1,0 +1,49 @@
+{
+  "id": "e000301",
+  "title": "에스퍼의 빛 연계 전작전",
+  "image": "images/special/sp/sp_373_main.jpg",
+  "introduction": "document.createElement('video'); http://55cine.com/wp-content/uploads/2025/11/Comp-2.mp4 ≪정재훈 2009-2025≫ 햇빛은 강하게 빛나고, 새들도 동네를 떠난다. 오직 극장 상영만을 위한 작품을 만드는 정재훈 감독의 작업이 정말 오랜만에 스크린에 오르게 되었습니다. 감독의 장편데뷔작 <호수길>부터 최신작 <에스퍼의 빛>까지의 작품을 상영합니다. 11/15(토) 13:00 호수길 11/16(일) 13:00 환호성 11/22(일) 13:00 도돌이 언덕에 난기류 GV 정재훈 감독 참석 11월 23일(일) 13:00 Trans-Continetal-Railway",
+  "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+  "films": [
+    {
+      "title": "🎬호수길 Hosu-gil",
+      "image": "images/special/sp/sp_373_98.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "다큐멘터리 | 2009 | 1.33:1 | 컬러 | 72min 햇빛이 가득한 산동네. 동네에는 나무도 있고, 사람도 있고, 동물도 있고, 집도 있다. 어느 밤, 동네에 알 수 없는 빛이 번쩍인다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "🎬환호성 Hurrahh!",
+      "image": "images/special/sp/sp_373_99.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "극/다큐멘터리 혼합 | 2011 | 1.33:1 | 컬러 | 74min 한 남자가 온 힘을 다해 일터와 집을 오간다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "🎬도돌이 언덕에 난기류 Turbulence at Dodoli Hill",
+      "image": "images/special/sp/sp_373_100.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "다큐멘터리 | 2017 | 1.85:1 & 1.33:1 | 컬러 | 212min 등장인물은 다음과 같다. 수렵인 1, 2, 3, 4. 취부사, 용접공, 사상공. 쭈쭈, 딘, 아하.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "🎬Trans-Continental-Railway",
+      "image": "images/special/sp/sp_373_101.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "실험 및 뮤직비디오 | 2021 | 1.85:1 | 컬러 | 52min 이 영화는 유기농맥주의 세 번째 앨범 <Trans-Continental Railway>의 뮤직비디오로, 극장에서의 상영만을 목표로 제작되었다.",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
+}

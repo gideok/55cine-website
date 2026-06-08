@@ -145,7 +145,9 @@ export async function getAdminProgramList(opts: {
     SELECT ${PROGRAM_SELECT}
     ${PROGRAM_JOIN}
     WHERE ${where}
-    ORDER BY wp.seq DESC
+    ORDER BY
+      TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open))) DESC,
+      wp.seq DESC
     OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY
   `);
 

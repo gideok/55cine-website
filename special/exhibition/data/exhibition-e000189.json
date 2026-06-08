@@ -1,0 +1,39 @@
+{
+  "id": "e000189",
+  "title": "오렌지필름 단편기획전 식식[食食]한사람들",
+  "image": "images/special/sp/sp_485_main.jpg",
+  "introduction": "기획의도: 사 람 이 만 나 관 계 를 맺 는 시 간 의 한 쪽 에 는 음 식 이 자 리 하 고 있 다 고 생 각 합 니 다 . 그 래 서 음 식 을 보 면 자 연 스 럽 게 생 각 나 는 사 람 과 기 억 이 있 는 것 같 아 요 . 감 정 을 채 워 주 던 , 혹 은 건 드 리 는 음 식 과 사 람 들 을 다 룬 단 편 세 편 을 함 께 보 면 어 떨 까 요 ? 상영일정: 10월 30일(토) 16:30 상영작",
+  "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+  "films": [
+    {
+      "title": "오토바이와 햄버거",
+      "image": "images/special/sp/sp_485_319.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "최민영ㅣ2021ㅣ극영화ㅣcolorㅣ39분 가혜는 오토바이를 훔쳐 동생 광현의 방학식에 맞춰 햄버거를 사주려는 계획을 세운다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "나는 아직도 그녀의 족발이 그립다",
+      "image": "images/special/sp/sp_485_320.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "김진화ㅣ2018ㅣ극영화ㅣcolorㅣ24분 '예비군 훈련을 마친 준홍은 군휴가때 먹었던 전 여자친구네 족발이 미치도록 먹고 싶다. 결국 5년 만에 찾아간 ‘미란이네’ 족발집에서 준홍은 불편한 존재들을 만나게 되고, 딱 하나 남은 족발 마저 그 존재들에게 빼앗길 위기에 처한다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "신김치",
+      "image": "images/special/sp/sp_485_321.jpg",
+      "info": "",
+      "director": "",
+      "cast": "",
+      "description": "이준섭ㅣ2020ㅣ극영화ㅣcolorㅣ19분 다해는 신김치보다 겉절이를 좋아한다.",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
+}

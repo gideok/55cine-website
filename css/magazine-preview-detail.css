@@ -35,6 +35,22 @@
   white-space: normal;
 }
 
+.ti .sd-right--preview .sd-body .imageblock,
+.ti .sd-right--preview .sd-body figure {
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.ti .sd-right--preview .sd-body .imageblock img,
+.ti .sd-right--preview .sd-body figure img,
+.ti .sd-right--preview .sd-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border: 1px solid #d4d4d4;
+}
+
 .ti .preview-detail-status {
   margin: 0 0 16px;
   padding: 14px 16px;

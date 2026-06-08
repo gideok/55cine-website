@@ -1,6 +1,12 @@
 (function () {
   if (!window.TiAdminAuth.require()) return;
 
+  var SPECIAL_LIST_FIELDS = ["kind", "q", "page", "pageSize"];
+
+  function specialListUrl() {
+    return TiAdminList.listUrl("special.html", "special", null, SPECIAL_LIST_FIELDS);
+  }
+
   var params = new URLSearchParams(window.location.search);
   var publicId = params.get("id");
   var isNew = !publicId;
@@ -147,7 +153,7 @@
       '<button type="button" class="admin-btn" id="addFilm">+ 작품 추가</button></div>' +
       '<div class="admin-form-actions">' +
       '<button type="submit" class="admin-btn admin-btn--primary">저장</button>' +
-      '<a class="admin-btn" href="special.html">목록</a>' +
+      '<a class="admin-btn" href="' + esc(specialListUrl()) + '">목록</a>' +
       "</div></form>";
 
     document.getElementById("kind").value = kind;

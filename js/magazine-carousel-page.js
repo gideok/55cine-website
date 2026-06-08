@@ -54,6 +54,17 @@
   var btnPrev = document.getElementById("mzPagerPrev");
   var btnNext = document.getElementById("mzPagerNext");
 
+  function decodeHtmlEntities(text) {
+    if (!text) return "";
+    var el = document.createElement("textarea");
+    el.innerHTML = text;
+    return el.value;
+  }
+
+  function displayText(text) {
+    return decodeHtmlEntities(text || "");
+  }
+
   function refreshDataset() {
     if (paginatedMode) return;
     var raw = window[cfg.dataKey];
@@ -235,12 +246,12 @@
     var thumbLink = document.createElement("a");
     thumbLink.className = cfg.thumbLinkClass;
     thumbLink.href = href;
-    thumbLink.setAttribute("aria-label", item.title || "");
+    thumbLink.setAttribute("aria-label", displayText(item.title));
 
     var image = document.createElement("img");
     image.className = cfg.thumbClass;
     image.src = thumbSrc(item.thumbnail || "");
-    image.alt = (item.title || "") + " 썸네일";
+    image.alt = displayText(item.title) + " 썸네일";
     image.loading = "lazy";
     thumbLink.appendChild(image);
 
@@ -252,7 +263,7 @@
       titleLink.href = href;
       var title = document.createElement("h2");
       title.className = cfg.titleClass;
-      title.textContent = item.title || "";
+      title.textContent = displayText(item.title);
       titleLink.appendChild(title);
       titleWrap.appendChild(titleLink);
       if (cfg.showDate && item.date && cfg.dateClass) {
@@ -272,14 +283,14 @@
     var titleLink = document.createElement("a");
     titleLink.className = cfg.titleLinkClass;
     titleLink.href = href;
-    titleLink.textContent = item.title || "";
+    titleLink.textContent = displayText(item.title);
     body.appendChild(titleLink);
 
     if (withExcerpt && cfg.excerptLinkClass && item.excerpt) {
       var excerptLink = document.createElement("a");
       excerptLink.className = cfg.excerptLinkClass;
       excerptLink.href = href;
-      excerptLink.textContent = item.excerpt;
+      excerptLink.textContent = displayText(item.excerpt);
       body.appendChild(excerptLink);
     }
 

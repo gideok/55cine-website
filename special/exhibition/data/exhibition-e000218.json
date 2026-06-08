@@ -1,0 +1,39 @@
+{
+  "id": "e000218",
+  "title": "오렌지필름 단편기획전 [기꺼이 사랑 – 조현철 배우전]",
+  "image": "images/special/sp/sp_456_main.jpg",
+  "introduction": "오렌지필름 10월 기획전 / 기꺼이 사랑 – 조현철 배우전 💚 기획 의도 : 결말을 알고도 다시 보고 싶은 마음. 그래서 기꺼이 다시 시간을 보내는 게 사랑이라고 생각합니다. 오는 10월에는 기꺼이, 다시라는 마음을 부를 수 있는 배우 조현철님의 단편을 모아서 상영하고자 합니다. 상영일정: 10/22(토) 15:00 상영작",
+  "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+  "films": [
+    {
+      "title": "희광이",
+      "image": "images/special/sp/sp_456_245.jpg",
+      "info": "",
+      "director": "장만민",
+      "cast": "조현철",
+      "description": "천주교 박해가 극심했던 1830년 조선의 어느 해안가 마을. 다래는 천주교를 믿은 죄로 형장으로 향한다. 동이는 다래를 묻어주고자 삽을 들고 형장으로 가는 길에 죄인의 목을 베는 희광이, 현을 만난다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "알레르기",
+      "image": "images/special/sp/sp_456_246.jpg",
+      "info": "",
+      "director": "김인선",
+      "cast": "이옥섭, 조현철, 태인호",
+      "description": "알레르기로 인해 소녀는 예전에는 몰랐던 미묘한 감정을 발견해간다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "부스럭",
+      "image": "images/special/sp/sp_456_247.jpg",
+      "info": "",
+      "director": "이태안, 조현철",
+      "cast": "천우희, 조현철",
+      "description": "친구 `현철`과 `미진`이 헤어진 후, 그들의 이별 사유를 파헤치고자 직접 나선 `세영`이 겪게 되는 미스터리한 일들을 담아낸 이야기",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
+}

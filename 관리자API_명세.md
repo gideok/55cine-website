@@ -193,13 +193,12 @@ CASCADE로 item·screening 삭제.
 | `page` | number | 페이지 |
 | `pageSize` | number | 페이지 크기 |
 
-### `GET /admin/magazine/:publicId`
+### `GET /admin/magazine/:seq`
 
 ### `POST /admin/magazine`
 
 ```json
 {
-  "publicId": "pv086",
   "section": "preview",
   "title": "제목",
   "movieTitle": null,
@@ -211,20 +210,31 @@ CASCADE로 item·screening 삭제.
   "imgThumb": null,
   "imgCover": null,
   "sourceUrl": null,
-  "articleUrl": null,
-  "listOrder": 0
+  "createdAt": null
 }
 ```
 
-### `PUT /admin/magazine/:publicId`
+목록 정렬: `created_at` 역순 (기본).
 
-### `DELETE /admin/magazine/:publicId`
+### `PUT /admin/magazine/:seq`
 
-### `POST /admin/magazine/:publicId/mark-past`
+### `DELETE /admin/magazine/:seq`
 
-지난기사 처리: `is_past=1`, `public_id`를 다음 `pa###` 로 변경.
+### `POST /admin/magazine/:seq/mark-past`
 
-**응답**: 갱신된 기사 객체 (`publicId` 변경됨)
+지난기사 처리: `is_past=1` 설정. **seq 는 유지**됩니다.
+
+**응답**: 갱신된 기사 객체
+
+---
+
+## 공개 API (매거진)
+
+### `GET /api/v1/magazine/:seq`
+
+대외 식별자는 `web_magazine.seq` (양의 정수).
+
+목록 응답 `items[]`: `{ seq, id, title, detailUrl, ... }` — `detailUrl`은 `?id={seq}` 형식.
 
 ---
 

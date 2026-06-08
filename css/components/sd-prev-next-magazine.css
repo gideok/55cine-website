@@ -3,7 +3,8 @@
 .ti .sd-right--preview .sd-pn-cols,
 .ti .sd-right--serial .sd-pn-cols,
 .ti .sd-right--gv-moment .sd-pn-cols,
-.ti .sd-right--past-article .sd-pn-cols {
+.ti .sd-right--past-article .sd-pn-cols,
+.ti .ti-ex-detail-panel .sd-pn-cols {
   align-items: stretch;
   gap: 8px;
 }
@@ -11,7 +12,8 @@
 .ti .sd-right--preview .sd-pn-col,
 .ti .sd-right--serial .sd-pn-col,
 .ti .sd-right--gv-moment .sd-pn-col,
-.ti .sd-right--past-article .sd-pn-col {
+.ti .sd-right--past-article .sd-pn-col,
+.ti .ti-ex-detail-panel .sd-pn-col {
   display: flex;
   flex-direction: column;
   align-self: stretch;
@@ -27,7 +29,9 @@
 .ti .sd-right--gv-moment .sd-pn-card,
 .ti .sd-right--gv-moment .sd-pn-body.sd-pn-body--empty,
 .ti .sd-right--past-article .sd-pn-card,
-.ti .sd-right--past-article .sd-pn-body.sd-pn-body--empty {
+.ti .sd-right--past-article .sd-pn-body.sd-pn-body--empty,
+.ti .ti-ex-detail-panel .sd-pn-card,
+.ti .ti-ex-detail-panel .sd-pn-body.sd-pn-body--empty {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -42,14 +46,17 @@
 .ti .sd-right--gv-moment .sd-pn-thumb-wrap,
 .ti .sd-right--gv-moment .sd-pn-thumb-wrap--empty,
 .ti .sd-right--past-article .sd-pn-thumb-wrap,
-.ti .sd-right--past-article .sd-pn-thumb-wrap--empty {
+.ti .sd-right--past-article .sd-pn-thumb-wrap--empty,
+.ti .ti-ex-detail-panel .sd-pn-thumb-wrap,
+.ti .ti-ex-detail-panel .sd-pn-thumb-wrap--empty {
   flex-shrink: 0;
 }
 
 .ti .sd-right--preview .sd-pn-item-title,
 .ti .sd-right--serial .sd-pn-item-title,
 .ti .sd-right--gv-moment .sd-pn-item-title,
-.ti .sd-right--past-article .sd-pn-item-title {
+.ti .sd-right--past-article .sd-pn-item-title,
+.ti .ti-ex-detail-panel .sd-pn-item-title {
   flex: 1 1 auto;
   min-height: 0;
   box-sizing: border-box;
@@ -58,7 +65,8 @@
 .ti .sd-right--preview .sd-pn-empty-note,
 .ti .sd-right--serial .sd-pn-empty-note,
 .ti .sd-right--gv-moment .sd-pn-empty-note,
-.ti .sd-right--past-article .sd-pn-empty-note {
+.ti .sd-right--past-article .sd-pn-empty-note,
+.ti .ti-ex-detail-panel .sd-pn-empty-note {
   flex: 1 1 auto;
   display: flex;
   align-items: center;
@@ -71,7 +79,8 @@
 .ti .sd-right--serial .sd-pn-thumb-wrap:not(.sd-pn-thumb-wrap--empty),
 .ti .sd-right--gv-moment .sd-pn-thumb-wrap:not(.sd-pn-thumb-wrap--empty),
 .ti .sd-right--past-article .sd-pn-thumb-wrap:not(.sd-pn-thumb-wrap--empty),
-.ti .sd-right--past-article .sd-pn-thumb-wrap {
+.ti .sd-right--past-article .sd-pn-thumb-wrap,
+.ti .ti-ex-detail-panel .sd-pn-thumb-wrap:not(.sd-pn-thumb-wrap--empty) {
   width: 100%;
   height: auto;
   aspect-ratio: 401 / 226;
@@ -80,7 +89,8 @@
 .ti .sd-right--preview .sd-pn-thumb,
 .ti .sd-right--serial .sd-pn-thumb,
 .ti .sd-right--gv-moment .sd-pn-thumb,
-.ti .sd-right--past-article .sd-pn-thumb {
+.ti .sd-right--past-article .sd-pn-thumb,
+.ti .ti-ex-detail-panel .sd-pn-thumb {
   width: 100%;
   height: auto;
   aspect-ratio: 401 / 226;
@@ -90,7 +100,8 @@
 .ti .sd-right--preview .sd-pn-thumb-wrap--empty,
 .ti .sd-right--serial .sd-pn-thumb-wrap--empty,
 .ti .sd-right--gv-moment .sd-pn-thumb-wrap--empty,
-.ti .sd-right--past-article .sd-pn-thumb-wrap--empty {
+.ti .sd-right--past-article .sd-pn-thumb-wrap--empty,
+.ti .ti-ex-detail-panel .sd-pn-thumb-wrap--empty {
   width: 100%;
   height: auto;
   aspect-ratio: 401 / 226;
@@ -100,14 +111,16 @@
   .ti .sd-right--preview .sd-pn-cols,
   .ti .sd-right--serial .sd-pn-cols,
   .ti .sd-right--gv-moment .sd-pn-cols,
-  .ti .sd-right--past-article .sd-pn-cols {
+  .ti .sd-right--past-article .sd-pn-cols,
+  .ti .ti-ex-detail-panel .sd-pn-cols {
     gap: 8px;
   }
 
   .ti .sd-right--preview .sd-pn-col,
   .ti .sd-right--serial .sd-pn-col,
   .ti .sd-right--gv-moment .sd-pn-col,
-  .ti .sd-right--past-article .sd-pn-col {
+  .ti .sd-right--past-article .sd-pn-col,
+  .ti .ti-ex-detail-panel .sd-pn-col {
     flex: 1 1 0;
     max-width: calc(50% - 4px);
   }

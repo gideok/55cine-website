@@ -12,6 +12,7 @@
   var root = document.getElementById("previewDetailRoot");
   var statusEl = document.getElementById("previewDetailStatus");
   var indexItems = [];
+  var imageCacheKey = "";
 
   if (!root) return;
 
@@ -29,6 +30,9 @@
   }
 
   function resolveAssetUrl(url) {
+    if (window.TiMagazineAsset && typeof window.TiMagazineAsset.resolve === "function") {
+      return window.TiMagazineAsset.resolve(url, { base: BASE, cacheKey: imageCacheKey });
+    }
     if (!url) return "";
     if (/^https?:\/\//i.test(url)) return url;
     if (url.indexOf("//") === 0) return "https:" + url;
@@ -42,9 +46,8 @@
   function normalizeArticleId(raw) {
     if (!raw) return "";
     var id = String(raw).trim();
-    if (/^pv\d{3}$/i.test(id)) return id.toLowerCase();
-    if (/^\d+$/.test(id)) return "pv" + String(parseInt(id, 10)).padStart(3, "0");
-    return id;
+    if (/^\d+$/.test(id) && parseInt(id, 10) > 0) return id;
+    return "";
   }
 
   function getArticleId() {
@@ -168,6 +171,11 @@
   }
 
   function renderArticle(article) {
+    imageCacheKey =
+      window.TiMagazineAsset && typeof window.TiMagazineAsset.cacheKeyFromArticle === "function"
+        ? window.TiMagazineAsset.cacheKeyFromArticle(article)
+        : String(Date.now());
+
     var neighbors = article.neighbors || findNeighbors(article.id);
     root.innerHTML = "";
     if (statusEl) statusEl.hidden = true;
@@ -210,7 +218,7 @@
       var coverImg = document.createElement("img");
       coverImg.src = resolveAssetUrl(article.coverImage);
       coverImg.alt = (article.title || "") + " 썸네일";
-      coverImg.loading = "lazy";
+      coverImg.loading = "eager";
       coverImg.decoding = "async";
       coverFig.appendChild(coverImg);
       coverWrap.appendChild(coverFig);

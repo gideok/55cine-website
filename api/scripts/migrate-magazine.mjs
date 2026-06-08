@@ -36,17 +36,6 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
-function loadListOrderMap(dataDir) {
-  const indexPath = path.join(dataDir, "index.json");
-  if (!fs.existsSync(indexPath)) return new Map();
-  const index = readJson(indexPath);
-  const map = new Map();
-  (index.items || []).forEach((item, idx) => {
-    if (item.id) map.set(String(item.id).toLowerCase(), idx + 1);
-  });
-  return map;
-}
-
 function resolveSourceFile(relPath) {
   if (!relPath || /^https?:\/\//i.test(relPath)) return null;
   const rel = String(relPath).replace(/^\//, "");
@@ -137,13 +126,12 @@ async function deleteAllMagazine(pool) {
 
 async function insertArticle(pool, row) {
   if (!execute) {
-    console.log("dry insert", row.publicId, row.section, "isPast=", row.isPast, row.title.slice(0, 40));
+    console.log("dry insert", row.section, "isPast=", row.isPast, row.title.slice(0, 40));
     return row.seqHint ?? 0;
   }
 
   const res = await pool
     .request()
-    .input("publicId", sql.NVarChar, row.publicId)
     .input("section", sql.NVarChar, row.section)
     .input("isPast", sql.Bit, row.isPast ? 1 : 0)
     .input("title", sql.NVarChar, row.title)
@@ -151,24 +139,22 @@ async function insertArticle(pool, row) {
     .input("subtitle", sql.NVarChar, row.subtitle)
     .input("publishedLabel", sql.NVarChar, row.publishedLabel)
     .input("publishedAt", sql.DateTime2, row.publishedAt)
-    .input("excerpt", sql.NVarChar, row.excerpt)
     .input("bodyHtml", sql.NVarChar(sql.MAX), row.bodyHtml)
     .input("imgThumb", sql.NVarChar, row.imgThumb)
     .input("imgCover", sql.NVarChar, row.imgCover)
     .input("sourceUrl", sql.NVarChar, row.sourceUrl)
-    .input("articleUrl", sql.NVarChar, row.articleUrl)
-    .input("listOrder", sql.Int, row.listOrder)
+    .input("createdAt", sql.DateTime2, row.createdAt)
     .query(`
       INSERT INTO dbo.web_magazine (
-        public_id, section, is_past, title, movie_title, subtitle,
-        published_label, published_at, excerpt, body_html,
-        img_thumb, img_cover, source_url, article_url, list_order
+        section, is_past, title, movie_title, subtitle,
+        published_label, published_at, created_at, body_html,
+        img_thumb, img_cover, source_url
       )
       OUTPUT INSERTED.seq
       VALUES (
-        @publicId, @section, @isPast, @title, @movieTitle, @subtitle,
-        @publishedLabel, @publishedAt, @excerpt, @bodyHtml,
-        @imgThumb, @imgCover, @sourceUrl, @articleUrl, @listOrder
+        @section, @isPast, @title, @movieTitle, @subtitle,
+        @publishedLabel, @publishedAt, @createdAt, @bodyHtml,
+        @imgThumb, @imgCover, @sourceUrl
       )
     `);
   return res.recordset[0].seq;
@@ -190,10 +176,34 @@ function parsePublishedAt(data) {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-function mapJsonToRow(data, section, isPast, listOrder) {
-  const publicId = String(data.id || data.slug || "").trim().toLowerCase();
+function parseTistoryDateLabel(text) {
+  if (!text) return null;
+  const t = String(text).replace(/\s+/g, " ").trim();
+  const dotted = t.match(/^(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.(?:\s*(\d{1,2}):(\d{2}))?/);
+  if (dotted) {
+    const y = Number(dotted[1]);
+    const mo = Number(dotted[2]);
+    const d = Number(dotted[3]);
+    const h = dotted[4] != null ? Number(dotted[4]) : 0;
+    const mi = dotted[5] != null ? Number(dotted[5]) : 0;
+    const iso = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}T${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}:00+09:00`;
+    const date = new Date(iso);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+  const slash = t.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (slash) {
+    const date = new Date(`${slash[1]}-${slash[2].padStart(2, "0")}-${slash[3].padStart(2, "0")}T00:00:00+09:00`);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+  return null;
+}
+
+function parseCreatedAt(data) {
+  return parsePublishedAt(data) || parseTistoryDateLabel(data.publishedLabel || data.date) || new Date();
+}
+
+function mapJsonToRow(data, section, isPast) {
   return {
-    publicId,
     section,
     isPast,
     title: String(data.title || "").trim(),
@@ -201,54 +211,50 @@ function mapJsonToRow(data, section, isPast, listOrder) {
     subtitle: data.subtitle ? String(data.subtitle).trim() : null,
     publishedLabel: (data.publishedLabel || data.date || "").trim() || null,
     publishedAt: parsePublishedAt(data),
-    excerpt: data.excerpt ? String(data.excerpt).trim().slice(0, 2000) : null,
+    createdAt: parseCreatedAt(data),
     bodyHtml: data.bodyHtml || "",
     imgThumb: (data.thumbnail || data.coverImage || "").trim() || null,
     imgCover: (data.coverImage || data.thumbnail || "").trim() || null,
-    sourceUrl: data.sourceUrl ? String(data.sourceUrl).trim() : null,
-    articleUrl: data.articleUrl ? String(data.articleUrl).trim() : null,
-    listOrder
+    sourceUrl: (data.sourceUrl || data.articleUrl)
+      ? String(data.sourceUrl || data.articleUrl).trim()
+      : null
   };
 }
 
 async function migrateSection(pool, entry, stats) {
   const { section, dir, isPast, idPrefix } = entry;
-  const orderMap = loadListOrderMap(dir);
   const files = listArticleFiles(dir, idPrefix);
 
   for (const file of files) {
     const data = readJson(path.join(dir, file));
-    const publicId = String(data.id || data.slug || "").trim().toLowerCase();
-    if (!publicId) {
-      stats.skip += 1;
-      continue;
-    }
+    const legacyId = String(data.id || data.slug || "").trim().toLowerCase();
+    const sourceUrl = (data.sourceUrl || data.articleUrl)
+      ? String(data.sourceUrl || data.articleUrl).trim()
+      : null;
 
-    const exists = await pool
-      .request()
-      .input("publicId", sql.NVarChar, publicId)
-      .query(`SELECT seq FROM dbo.web_magazine WHERE public_id = @publicId`);
+    let exists = { recordset: [] };
+    if (sourceUrl) {
+      exists = await pool
+        .request()
+        .input("sourceUrl", sql.NVarChar, sourceUrl)
+        .query(`SELECT seq FROM dbo.web_magazine WHERE source_url = @sourceUrl`);
+    }
 
     if (exists.recordset.length && !force) {
       stats.skip += 1;
-      console.log("skip (exists):", publicId);
+      console.log("skip (exists):", legacyId || sourceUrl);
       continue;
     }
 
     if (exists.recordset.length && force) {
       if (execute) {
-        await pool
-          .request()
-          .input("publicId", sql.NVarChar, publicId)
-          .query(`DELETE FROM dbo.web_magazine WHERE public_id = @publicId`);
+        for (const r of exists.recordset) {
+          await pool.request().input("seq", sql.Int, r.seq).query(`DELETE FROM dbo.web_magazine WHERE seq = @seq`);
+        }
       }
     }
 
-    const numMatch = publicId.match(/(\d+)$/);
-    const fallbackOrder = numMatch ? Number(numMatch[1]) : stats.inserted + 1;
-    const listOrder = orderMap.get(publicId) ?? fallbackOrder;
-
-    const row = mapJsonToRow(data, section, isPast, listOrder);
+    const row = mapJsonToRow(data, section, isPast);
     const seq = await insertArticle(pool, row);
 
     const { html, copied } = rewriteBodyHtmlImages(row.bodyHtml, seq || 1, dir);
@@ -258,7 +264,7 @@ async function migrateSection(pool, entry, stats) {
 
     stats.inserted += 1;
     if (execute) {
-      console.log("ok", publicId, "seq=", seq, "bodyImgs=", copied);
+      console.log("ok", legacyId || seq, "seq=", seq, "bodyImgs=", copied);
     }
   }
 }

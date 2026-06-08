@@ -4,7 +4,7 @@
  * Usage:
  *   node scripts/sync-special-from-55cine.mjs --url http://55cine.com/2026/04/03/under03/ --public-id e000001
  *   node scripts/sync-special-from-55cine.mjs --sync-page          # /special/ 상단 10건
- *   node scripts/sync-special-from-55cine.mjs --sync-page --execute
+ *   node scripts/sync-special-from-55cine.mjs --sync-category --from-page=1 --to-page=35 --purge-exhibition --execute
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -23,8 +23,20 @@ const BOOKING_DEFAULT =
 
 const execute = process.argv.includes("--execute");
 const syncPage = process.argv.includes("--sync-page");
+const syncCategory = process.argv.includes("--sync-category");
+const purgeExhibition = process.argv.includes("--purge-exhibition");
 const urlArg = process.argv.find((a) => a.startsWith("--url="))?.split("=")[1];
 const publicIdArg = process.argv.find((a) => a.startsWith("--public-id="))?.split("=")[1];
+
+function readIntArg(name, fallback) {
+  const raw = process.argv.find((a) => a.startsWith(`--${name}=`))?.split("=")[1];
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : fallback;
+}
+
+const fromPage = readIntArg("from-page", 1);
+const toPage = readIntArg("to-page", 35);
+const fetchDelayMs = readIntArg("delay-ms", 250);
 
 function decodeHtml(text) {
   return String(text || "")
@@ -63,9 +75,14 @@ function yearFromPostUrl(url) {
   return m ? Number(m[1]) : new Date().getFullYear();
 }
 
-function extractDateLabel(title) {
+function extractDateLabel(title, extraDateText) {
+  const extra = String(extraDateText || "").trim();
+  if (extra) return extra.replace(/\s+/g, " ").trim();
+
   const t = String(title || "").trim();
   const patterns = [
+    /(\d{2}\/\d{2}\([^)]+\)(?:\s*~\s*\d{1,2}\/\d{1,2}\([^)]+\))?[\s\S]*)$/u,
+    /(\d{1,2}\/\d{1,2}\([^)]+\)(?:\s*~\s*\d{1,2}\/\d{1,2}\([^)]+\))?[\s\S]*)$/u,
     /(\d{2}\/\d{2}\([^)]+\)[\s\S]*)$/u,
     /(\d{1,2}\/\d{1,2}\([^)]+\)[\s\S]*)$/u
   ];
@@ -74,6 +91,80 @@ function extractDateLabel(title) {
     if (m) return m[1].trim();
   }
   return null;
+}
+
+function parseEntryTitleHtml(html) {
+  const m = html.match(/<h2[^>]*class="entry-title"[^>]*>([\s\S]*?)<\/h2>/i);
+  if (!m) return { title: null, dateFromFont: null };
+
+  let raw = m[1];
+  let dateFromFont = null;
+  const fontClosed = raw.match(/<font[^>]*>([\s\S]*?)<\/font>/i);
+  if (fontClosed) {
+    dateFromFont = stripTags(fontClosed[1].replace(/<br\s*\/?>/gi, " ")).trim() || null;
+    raw = raw.replace(/<font[\s\S]*?<\/font>/gi, "");
+  } else {
+    const fontOpen = raw.match(/<font[^>]*>([\s\S]*)$/i);
+    if (fontOpen) {
+      dateFromFont = stripTags(fontOpen[1].replace(/<br\s*\/?>/gi, " ")).trim() || null;
+      raw = raw.replace(/<font[^>]*>[\s\S]*$/i, "");
+    }
+  }
+
+  raw = raw.replace(/<br\s*\/?>/gi, " ");
+  raw = raw.replace(/<\/br>/gi, " ");
+
+  const bracketTokens = [];
+  raw = raw.replace(/<([^\s\/<>][^<>]*)>/g, (_, inner) => {
+    const t = inner.trim();
+    if (!t || /^font$/i.test(t)) return " ";
+    const token = `\u0000BRK${bracketTokens.length}\u0000`;
+    bracketTokens.push(`<${t}>`);
+    return token;
+  });
+  raw = raw.replace(/<\/[^>]+>/g, "");
+
+  let title = decodeHtml(stripTags(raw)).replace(/\s+/g, " ").trim();
+  for (let i = 0; i < bracketTokens.length; i++) {
+    title = title.replace(`\u0000BRK${i}\u0000`, bracketTokens[i]);
+  }
+  return { title, dateFromFont };
+}
+
+function extractEntryContentHtml(html) {
+  const m = html.match(
+    /<div class="entry-content">([\s\S]*?)<\/div>\s*<nav class="navigation post-navigation"/i
+  );
+  return m ? m[1] : "";
+}
+
+function htmlBlockToPlainText(html) {
+  let content = String(html || "");
+  content = content.replace(/<br\s*\/?>/gi, "\n");
+  content = content.replace(/<\/p>/gi, "\n");
+  content = content.replace(/<hr[^>]*>/gi, "\n");
+  content = content.replace(/<\/h[1-6]>/gi, "\n");
+  content = content.replace(/<\/tr>/gi, "\n");
+  content = content.replace(/<\/li>/gi, "\n");
+  content = content.replace(/<td[^>]*>/gi, " ");
+  content = content.replace(/<th[^>]*>/gi, " ");
+  return decodeHtml(stripTags(content))
+    .replace(/\u00a0/g, " ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function extractIntroduction(html) {
+  let entry = extractEntryContentHtml(html);
+  if (!entry) {
+    const alertMatch = html.match(/class="stag-alert[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
+    return alertMatch ? stripTags(alertMatch[1]) : "";
+  }
+
+  entry = entry.replace(/<div class="wp-block-image">[\s\S]*?<\/div>/gi, "");
+  entry = entry.replace(/<div id=['"]jp-relatedposts['"][\s\S]*?<\/div>/gi, "");
+  return htmlBlockToPlainText(entry);
 }
 
 function parseScheduleFromToggleTitle(text, year) {
@@ -156,18 +247,71 @@ function buildInfoLine(titleEn, year, genre, minutes, rating) {
   return chunks.join(" | ");
 }
 
-function parseDetailPage(html, pageUrl) {
-  const year = yearFromPostUrl(pageUrl);
-  const ogTitle = decodeHtml(html.match(/property="og:title" content="([^"]*)"/i)?.[1] || "");
-  const title = ogTitle.replace(/\s*\|\s*오오극장\s*$/u, "").trim();
-  const introMatch = html.match(/class="stag-alert[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
-  const introduction = introMatch ? stripTags(introMatch[1]) : "";
-  const ogImage = normalizeWpImageUrl(
-    html.match(/property="og:image" content="([^"]*)"/i)?.[1] || ""
-  );
-  const bookingHref = html.match(/href="(https:\/\/www\.dtryx\.com\/cinema\/main\.do[^"]*)"/i)?.[1];
-  const bookingUrl = bookingHref ? decodeHtml(bookingHref) : BOOKING_DEFAULT;
+function parseFilmFromFigcaption(figHtml) {
+  const flat = figHtml.replace(/<br\s*\/?>/gi, "\n");
+  const lines = flat
+    .replace(/<strong>/gi, "")
+    .replace(/<\/strong>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .split("\n")
+    .map((l) => decodeHtml(l).trim())
+    .filter(Boolean);
 
+  if (!lines.length) return null;
+
+  if (lines[0].includes("|")) {
+    const meta = parseFigcaption(figHtml);
+    const titleYear = lines[0].split("|")[0].trim();
+    const titleMatch =
+      titleYear.match(/^(.+?)\s*\(\s*[^,]+,\s*(\d{4})\s*\)/u) ||
+      titleYear.match(/^(.+?)\s*\((\d{4})\)/u) ||
+      titleYear.match(/^(.+?)\s*\(/u);
+    return {
+      title: meta.titleKo || (titleMatch ? titleMatch[1].trim() : titleYear),
+      titleEn: meta.titleEn,
+      info: meta.info,
+      runningMinutes: meta.runningMinutes,
+      runningTimeLabel: meta.runningTimeLabel,
+      director: "",
+      cast: "",
+      description: meta.description,
+      screenings: []
+    };
+  }
+
+  let title = lines[0];
+  const titleYear = title.match(/^(.+?)\s*\((\d{4})\)\s*$/u);
+  if (titleYear) title = `${titleYear[1].trim()} (${titleYear[2]})`;
+
+  let director = "";
+  let cast = "";
+  for (const line of lines.slice(1)) {
+    if (/^감독:/.test(line)) director = line.replace(/^감독:\s*/, "").trim();
+    if (/^출연:/.test(line)) cast = line.replace(/^출연:\s*/, "").trim();
+  }
+
+  let description = "";
+  let creditIdx = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^감독:/.test(lines[i]) || /^출연:/.test(lines[i])) creditIdx = i;
+  }
+  if (creditIdx >= 0) description = lines.slice(creditIdx + 1).join(" ").trim();
+  else description = lines.slice(1).join(" ").trim();
+
+  return {
+    title,
+    titleEn: null,
+    info: null,
+    runningMinutes: null,
+    runningTimeLabel: null,
+    director,
+    cast,
+    description,
+    screenings: []
+  };
+}
+
+function parseStagToggleFilms(html, year) {
   const films = [];
   const toggleRe =
     /stag-toggle-title">((?:&lt;[^&]+&gt;|[^<])+?)<\/span>[\s\S]*?<figure class="aligncenter">([\s\S]*?)<\/figure>/gi;
@@ -182,6 +326,7 @@ function parseDetailPage(html, pageUrl) {
     const imgMatch = figHtml.match(/<img[^>]+src="([^"]+)"/i);
     const capMatch = figHtml.match(/<figcaption>([\s\S]*?)<\/figcaption>/i);
     const meta = capMatch ? parseFigcaption(capMatch[1]) : {};
+    const creditMeta = capMatch ? parseFilmFromFigcaption(capMatch[1]) : null;
     films.push({
       title: meta.titleKo || filmTitle,
       imageUrl: normalizeWpImageUrl(imgMatch?.[1] || ""),
@@ -189,12 +334,68 @@ function parseDetailPage(html, pageUrl) {
       info: meta.info,
       runningMinutes: meta.runningMinutes,
       runningTimeLabel: meta.runningTimeLabel,
-      description: meta.description,
+      director: creditMeta?.director || "",
+      cast: creditMeta?.cast || "",
+      description: meta.description || creditMeta?.description || "",
       screenings
     });
   }
+  return films;
+}
 
-  return { title, introduction, ogImage, bookingUrl, films, year };
+function parseWpBlockFilms(html) {
+  const films = [];
+  const entry = extractEntryContentHtml(html) || html;
+  const re =
+    /<div class="wp-block-image">[\s\S]*?<img[^>]+src="([^"]+)"[\s\S]*?<figcaption>([\s\S]*?)<\/figcaption>[\s\S]*?<\/figure>\s*<\/div>/gi;
+  let block;
+  while ((block = re.exec(entry))) {
+    const parsed = parseFilmFromFigcaption(block[2]);
+    if (!parsed?.title) continue;
+    films.push({
+      ...parsed,
+      imageUrl: normalizeWpImageUrl(block[1])
+    });
+  }
+  return films;
+}
+
+function mergeFilmLists(stagFilms, wpFilms) {
+  if (!stagFilms.length) return wpFilms;
+  if (!wpFilms.length) return stagFilms;
+  if (stagFilms.length === wpFilms.length) {
+    return stagFilms.map((sf, i) => ({
+      ...sf,
+      imageUrl: wpFilms[i].imageUrl || sf.imageUrl,
+      description: sf.description || wpFilms[i].description,
+      director: sf.director || wpFilms[i].director,
+      cast: sf.cast || wpFilms[i].cast,
+      titleEn: sf.titleEn || wpFilms[i].titleEn,
+      info: sf.info || wpFilms[i].info,
+      runningMinutes: sf.runningMinutes ?? wpFilms[i].runningMinutes,
+      runningTimeLabel: sf.runningTimeLabel || wpFilms[i].runningTimeLabel
+    }));
+  }
+  return stagFilms;
+}
+
+function parseDetailPage(html, pageUrl) {
+  const year = yearFromPostUrl(pageUrl);
+  const { title: entryTitle, dateFromFont } = parseEntryTitleHtml(html);
+  const ogTitle = decodeHtml(html.match(/property="og:title" content="([^"]*)"/i)?.[1] || "");
+  const title = (entryTitle || ogTitle.replace(/\s*\|\s*오오극장\s*$/u, "")).trim();
+  const introduction = extractIntroduction(html);
+  const ogImage = normalizeWpImageUrl(
+    html.match(/property="og:image" content="([^"]*)"/i)?.[1] || ""
+  );
+  const bookingHref = html.match(/href="(https:\/\/www\.dtryx\.com\/cinema\/main\.do[^"]*)"/i)?.[1];
+  const bookingUrl = bookingHref ? decodeHtml(bookingHref) : BOOKING_DEFAULT;
+
+  const stagFilms = parseStagToggleFilms(html, year);
+  const wpFilms = parseWpBlockFilms(html);
+  const films = mergeFilmLists(stagFilms, wpFilms);
+
+  return { title, dateFromFont, introduction, ogImage, bookingUrl, films, year };
 }
 
 function loadSourceUrlMap() {
@@ -225,6 +426,70 @@ function parseSpecialPageUrls(html) {
     urls.push(u);
   }
   return urls;
+}
+
+function categoryPageUrl(page) {
+  if (page <= 1) return "http://55cine.com/category/special/";
+  return `http://55cine.com/category/special/page/${page}/`;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function collectCategorySpecialUrls(from, to) {
+  const all = [];
+  const seen = new Set();
+  for (let page = from; page <= to; page++) {
+    const html = await fetchHtml(categoryPageUrl(page));
+    const urls = parseSpecialPageUrls(html);
+    console.log(`category page ${page}: ${urls.length} article link(s)`);
+    for (const url of urls) {
+      if (seen.has(url)) continue;
+      seen.add(url);
+      all.push(url);
+    }
+    if (page < to) await sleep(fetchDelayMs);
+  }
+  return all;
+}
+
+function publicIdFromListIndex(index, total) {
+  const n = total - index;
+  return `e${String(n).padStart(6, "0")}`;
+}
+
+async function purgeExhibitionRows(pool) {
+  const before = await pool.request().query(`
+    SELECT COUNT(*) AS cnt FROM dbo.web_special WHERE kind = N'exhibition'
+  `);
+  const cnt = before.recordset[0]?.cnt ?? 0;
+  if (!cnt) {
+    console.log("purge: exhibition rows 0 — skip");
+    return 0;
+  }
+  const res = await pool.request().query(`
+    DELETE FROM dbo.web_special WHERE kind = N'exhibition'
+  `);
+  const deleted = res.rowsAffected[0] ?? 0;
+  console.log(`purge: deleted exhibition web_special ${deleted} row(s)`);
+  return deleted;
+}
+
+function purgeExhibitionJsonFiles() {
+  if (!fs.existsSync(EXH_DATA_DIR)) return 0;
+  const files = fs
+    .readdirSync(EXH_DATA_DIR)
+    .filter((f) => /^exhibition-e\d+\.json$/i.test(f));
+  if (!execute) {
+    console.log(`purge-json dry-run: would remove ${files.length} file(s)`);
+    return files.length;
+  }
+  for (const f of files) {
+    fs.unlinkSync(path.join(EXH_DATA_DIR, f));
+  }
+  console.log(`purge-json: removed ${files.length} exhibition JSON file(s)`);
+  return files.length;
 }
 
 function dbImagePath(mainSeq, itemSeq, ext) {
@@ -261,7 +526,7 @@ async function getSeqByPublicId(pool, publicId) {
 }
 
 async function upsertSpecial(pool, publicId, listOrder, detail, sourceUrl) {
-  const dateLabel = extractDateLabel(detail.title);
+  const dateLabel = extractDateLabel(detail.title, detail.dateFromFont);
 
   if (!execute) {
     console.log(
@@ -343,6 +608,8 @@ async function upsertSpecial(pool, publicId, listOrder, detail, sourceUrl) {
       .input("info", sql.NVarChar, film.info)
       .input("runningMinutes", sql.Int, film.runningMinutes)
       .input("runningTimeLabel", sql.NVarChar, film.runningTimeLabel)
+      .input("director", sql.NVarChar, film.director || null)
+      .input("castNames", sql.NVarChar, film.cast || null)
       .input("description", sql.NVarChar(sql.MAX), film.description)
       .query(`
         INSERT INTO dbo.web_special_item (
@@ -354,7 +621,7 @@ async function upsertSpecial(pool, publicId, listOrder, detail, sourceUrl) {
         VALUES (
           @specialSeq, @sortOrder, @title, 0,
           @titleEn, @info, @runningMinutes, @runningTimeLabel,
-          NULL, NULL, @description, NULL
+          @director, @castNames, @description, NULL
         )
       `);
     const itemSeq = insItem.recordset[0].item_seq;
@@ -411,8 +678,8 @@ function writeExhibitionJson(publicId, detail, mainImageRel, filmImageRels) {
       title: f.title,
       image: filmImageRels[idx] || "",
       info: buildInfoLine(f.titleEn, "", f.info, f.runningTimeLabel, ""),
-      director: "",
-      cast: "",
+      director: f.director || "",
+      cast: f.cast || "",
       description: f.description,
       sectionname: "",
       screenings: f.screenings.map((s) => ({
@@ -436,7 +703,14 @@ async function main() {
 
   const jobs = [];
 
-  if (syncPage) {
+  if (syncCategory) {
+    const urls = await collectCategorySpecialUrls(fromPage, toPage);
+    const total = urls.length;
+    urls.forEach((url, idx) => {
+      const publicId = publicIdFromListIndex(idx, total);
+      jobs.push({ url, publicId, listOrder: total - idx });
+    });
+  } else if (syncPage) {
     const html = await fetchHtml("http://55cine.com/special/");
     const urls = parseSpecialPageUrls(html);
     const map = loadSourceUrlMap();
@@ -455,19 +729,46 @@ async function main() {
       listOrder: listOrderFromPublicId(publicIdArg || "e000001", "exhibition")
     });
   } else {
-    console.error("Use --sync-page or --url=... --public-id=e000001 [--execute]");
+    console.error(
+      "Use --sync-category | --sync-page | --url=... --public-id=e000001 [--purge-exhibition] [--execute]"
+    );
     process.exit(1);
   }
 
-  console.log("Mode:", execute ? "EXECUTE" : "DRY-RUN", "jobs:", jobs.length);
+  console.log(
+    "Mode:",
+    execute ? "EXECUTE" : "DRY-RUN",
+    "jobs:",
+    jobs.length,
+    purgeExhibition ? "(purge exhibition)" : ""
+  );
 
   const pool = execute ? await sql.connect(cfg) : null;
   try {
-    for (const job of jobs) {
-      const html = await fetchHtml(job.url);
-      const detail = parseDetailPage(html, job.url);
-      await upsertSpecial(pool, job.publicId, job.listOrder, detail, job.url);
+    if (purgeExhibition) {
+      purgeExhibitionJsonFiles();
+      if (pool) await purgeExhibitionRows(pool);
     }
+
+    let ok = 0;
+    let fail = 0;
+    for (let i = 0; i < jobs.length; i++) {
+      const job = jobs[i];
+      try {
+        if (i > 0) await sleep(fetchDelayMs);
+        const html = await fetchHtml(job.url);
+        const detail = parseDetailPage(html, job.url);
+        await upsertSpecial(pool, job.publicId, job.listOrder, detail, job.url);
+        ok += 1;
+        if ((i + 1) % 10 === 0 || i + 1 === jobs.length) {
+          console.log(`progress ${i + 1}/${jobs.length} (ok=${ok}, fail=${fail})`);
+        }
+      } catch (err) {
+        fail += 1;
+        console.error("FAIL", job.publicId, job.url, err.message || err);
+      }
+    }
+    console.log(`done: ok=${ok}, fail=${fail}, total=${jobs.length}`);
   } finally {
     if (pool) await pool.close();
   }

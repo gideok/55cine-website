@@ -6,6 +6,9 @@
   var cfg = window.TI_EXHIBITION_DETAIL_CONFIG || {};
   var BASE = typeof window.TI_ASSET_BASE === "string" ? window.TI_ASSET_BASE : "";
   var PAGE_BASE = cfg.pageBase || "";
+  var LIST_PAGE_URL = cfg.listPageUrl || "../../special-exhibition.html";
+  var DETAIL_PAGE_URL = cfg.detailPageUrl || "exhibition_detail.html";
+  var indexItems = [];
   var BOOKING_URL =
     cfg.bookingUrl ||
     "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059";
@@ -72,6 +75,153 @@
    * 추후 API 연동 시 cfg.fetchDetail 만 교체하면 됨.
    * @returns {Promise<object>}
    */
+  function fetchExhibitionIndex() {
+    if (window.TiApi && typeof window.TiApi.getSpecialList === "function") {
+      return window.TiApi.getSpecialList("exhibition").then(function (items) {
+        return (items || []).map(function (it) {
+          return {
+            publicId: it.publicId,
+            title: it.title,
+            thumbnail: it.thumbnail
+          };
+        });
+      });
+    }
+    return Promise.resolve([]);
+  }
+
+  function resolveListPageUrl(pathWithQuery) {
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
+      return window.TiSiteRoot.resolve(pathWithQuery);
+    }
+    return BASE + String(pathWithQuery || "").replace(/^\//, "");
+  }
+
+  function getListReturnUrl() {
+    var base = LIST_PAGE_URL;
+    var params = new URLSearchParams(window.location.search);
+    var listPage = params.get("listPage");
+    if (!listPage) return resolveListPageUrl(base);
+    var sep = base.indexOf("?") >= 0 ? "&" : "?";
+    return resolveListPageUrl(base + sep + "page=" + encodeURIComponent(listPage));
+  }
+
+  function applyListBackLink() {
+    var href = getListReturnUrl();
+    var back = document.querySelector(".np-back a");
+    if (back) back.href = href;
+  }
+
+  function detailHref(publicId) {
+    var url = DETAIL_PAGE_URL + "?id=" + encodeURIComponent(publicId);
+    var params = new URLSearchParams(window.location.search);
+    var listPage = params.get("listPage");
+    if (listPage) url += "&listPage=" + encodeURIComponent(listPage);
+    return url;
+  }
+
+  function normalizeNeighbor(item) {
+    if (!item) return null;
+    var publicId = item.publicId || item.id;
+    if (!publicId) return null;
+    return {
+      publicId: String(publicId),
+      title: item.title || "",
+      thumbnail: item.thumbnail || ""
+    };
+  }
+
+  function findNeighbors(publicId) {
+    var idx = -1;
+    for (var i = 0; i < indexItems.length; i++) {
+      if (indexItems[i].publicId === publicId) {
+        idx = i;
+        break;
+      }
+    }
+    if (idx < 0) {
+      return { prev: null, next: null };
+    }
+    return {
+      prev: idx > 0 ? normalizeNeighbor(indexItems[idx - 1]) : null,
+      next: idx < indexItems.length - 1 ? normalizeNeighbor(indexItems[idx + 1]) : null
+    };
+  }
+
+  function renderPrevNext(neighbors) {
+    var nav = document.createElement("nav");
+    nav.className = "sd-nav";
+    nav.setAttribute("aria-label", "기획전 이동");
+
+    var back = document.createElement("a");
+    back.className = "sd-back";
+    back.href = getListReturnUrl();
+    back.textContent = "← 기획전 목록";
+    nav.appendChild(back);
+
+    var cols = document.createElement("div");
+    cols.className = "sd-pn-cols";
+    cols.setAttribute("aria-label", "이전·다음 기획전");
+
+    function buildCol(dir, item) {
+      var col = document.createElement("div");
+      col.className = "sd-pn-col sd-pn-col--" + dir;
+      var label = document.createElement("p");
+      label.className = "sd-pn-dir";
+      label.textContent = dir === "prev" ? "이전" : "다음";
+      col.appendChild(label);
+
+      if (!item) {
+        var empty = document.createElement("div");
+        empty.className = "sd-pn-body sd-pn-body--empty";
+        var thumbEmpty = document.createElement("div");
+        thumbEmpty.className = "sd-pn-thumb-wrap sd-pn-thumb-wrap--empty";
+        thumbEmpty.setAttribute("aria-hidden", "true");
+        empty.appendChild(thumbEmpty);
+        var note = document.createElement("p");
+        note.className = "sd-pn-empty-note";
+        note.textContent = "—";
+        empty.appendChild(note);
+        col.appendChild(empty);
+        return col;
+      }
+
+      var card = document.createElement("a");
+      card.className = "sd-pn-card";
+      card.href = detailHref(item.publicId);
+      card.setAttribute("aria-label", (dir === "prev" ? "이전: " : "다음: ") + item.title);
+
+      var thumbWrap = document.createElement("div");
+      thumbWrap.className = "sd-pn-thumb-wrap";
+      if (item.thumbnail) {
+        var thumb = document.createElement("img");
+        thumb.className = "sd-pn-thumb";
+        thumb.src = resolveAssetUrl(item.thumbnail);
+        thumb.alt = "";
+        thumb.loading = "lazy";
+        thumbWrap.appendChild(thumb);
+      }
+      card.appendChild(thumbWrap);
+
+      var title = document.createElement("p");
+      title.className = "sd-pn-item-title";
+      title.textContent = item.title;
+      card.appendChild(title);
+      col.appendChild(card);
+      return col;
+    }
+
+    neighbors = neighbors || { prev: null, next: null };
+    cols.appendChild(buildCol("prev", normalizeNeighbor(neighbors.prev)));
+    cols.appendChild(buildCol("next", normalizeNeighbor(neighbors.next)));
+    nav.appendChild(cols);
+
+    var wrap = document.createElement("div");
+    wrap.className = "sd-inner sd-inner--ex-nav";
+    wrap.appendChild(nav);
+    return wrap;
+  }
+
   function fetchExhibitionDetail(id) {
     if (typeof cfg.fetchDetail === "function") {
       return Promise.resolve(cfg.fetchDetail(id));
@@ -423,6 +573,15 @@
     }
 
     root.appendChild(grid);
+
+    var neighbors = data.neighbors
+      ? {
+          prev: normalizeNeighbor(data.neighbors.prev),
+          next: normalizeNeighbor(data.neighbors.next)
+        }
+      : findNeighbors(data.id);
+    root.appendChild(renderPrevNext(neighbors));
+
     setStatus("");
 
     root.querySelectorAll(".exhibition-film-poster, .exhibition-detail-poster").forEach(function (img) {
@@ -495,12 +654,19 @@
   window.addEventListener("ti-shell:relayout", scheduleEqualizeFilmRows, { passive: true });
 
   function boot() {
+    applyListBackLink();
     var id = getExhibitionId();
     setStatus("기획전 정보를 불러오는 중…", false);
 
-    fetchExhibitionDetail(id)
-      .then(function (data) {
-        renderExhibitionDetail(data);
+    Promise.all([
+      fetchExhibitionIndex().catch(function () {
+        return [];
+      }),
+      fetchExhibitionDetail(id)
+    ])
+      .then(function (results) {
+        indexItems = results[0] || [];
+        renderExhibitionDetail(results[1]);
       })
       .catch(function (err) {
         root.innerHTML = "";

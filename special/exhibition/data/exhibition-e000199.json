@@ -1,0 +1,39 @@
+{
+  "id": "e000199",
+  "title": "오렌지필름 단편기획전 지그재그",
+  "image": "images/special/sp/sp_475_main.jpg",
+  "introduction": "오렌지필름 3월 단편기획전 <지그재그> 음악, 영화에서 다음에 이어진 음이나 장면이 예상치 못하게 흘러갈 때 우리는 묘한 기대와 함께 몰입하게 됩니다. 오는 3월 일상을 기반으로 유쾌한 변주가 이어지는 작품 3편을 함께 보면 어떨까요? 상영일시: 3월 19일(토) 16:30 GV:<귀신친구>백지혜 배우, 신소연 배우 <텐트틴트>이준섭 감독, 김성곤 배우 진행: 더폴락 김인혜 대표 상영작",
+  "bookingUrl": "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059",
+  "films": [
+    {
+      "title": "<텐트틴트>",
+      "image": "images/special/sp/sp_475_284.jpg",
+      "info": "",
+      "director": "이준섭",
+      "cast": "심달기,  김성곤,  신민재",
+      "description": "동주는 오래 사귄 연인 성곤과의 지루한 연애를 개선하기 위해 성곤을 집에서 내쫓지만, 결국 관계 회복은 산으로 간다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "<내코가 석재>",
+      "image": "images/special/sp/sp_475_285.jpg",
+      "info": "",
+      "director": "김보람",
+      "cast": "윤금선아, 박예주",
+      "description": "비대면 진료가 일상이 된 근미래, 만성 비염 환자 보형은 이비인후과 화상 진료 후 아주 특별한 치료법을 배달받는다.",
+      "sectionname": "",
+      "screenings": []
+    },
+    {
+      "title": "<귀신친구>",
+      "image": "images/special/sp/sp_475_286.jpg",
+      "info": "",
+      "director": "정혜연",
+      "cast": "신소연,  조희봉, 백지혜",
+      "description": "죽은 친구 지혜의 집을 방문한 소연이 지혜의 방에서 발견한 자위기구를 숨겨주기 위해 고군분투하는 이야기.",
+      "sectionname": "",
+      "screenings": []
+    }
+  ]
+}

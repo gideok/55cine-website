@@ -78,10 +78,17 @@
     return BASE + url.replace(/^\//, "");
   }
 
+  function normalizeArticleId(raw) {
+    if (!raw) return "";
+    var id = String(raw).trim();
+    if (/^\d+$/.test(id) && parseInt(id, 10) > 0) return id;
+    return "";
+  }
+
   function getArticleId() {
-    if (cfg.articleId) return String(cfg.articleId);
+    if (cfg.articleId) return normalizeArticleId(cfg.articleId);
     var params = new URLSearchParams(window.location.search);
-    return params.get("id") || params.get("slug") || "";
+    return normalizeArticleId(params.get("id") || params.get("slug") || "");
   }
 
   function buildDataUrl(id) {

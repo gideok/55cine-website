@@ -19,6 +19,7 @@
     "db:migrate:special": "node scripts/migrate-special-program.mjs --execute",
     "db:backfill:special-info": "node scripts/migrate-special-program.mjs --backfill-info --execute",
     "db:sync:special": "node scripts/sync-special-from-55cine.mjs --sync-page --execute",
+    "db:remigrate:special": "node scripts/sync-special-from-55cine.mjs --sync-category --from-page=1 --to-page=35 --purge-exhibition --execute",
     "db:migrate:magazine": "node scripts/migrate-magazine.mjs --execute",
     "db:sync:magazine": "node scripts/sync-magazine-from-tistory.mjs --empty-only --execute",
     "db:import:magazine": "node scripts/sync-magazine-from-tistory.mjs --import-missing --execute",

@@ -1,11 +1,12 @@
 import sql from "mssql";
 import { getPool } from "../db/pool.js";
+import { decodePlainTextField, excerptFromBodyHtml } from "../utils/magazine-html.js";
 
 export type MagazineSection = "preview" | "serial" | "gv-moment";
 
 export type MagazineListItem = {
-  id: string;
-  publicId: string;
+  seq: number;
+  id: number;
   title: string;
   excerpt: string;
   thumbnail: string;
@@ -14,24 +15,26 @@ export type MagazineListItem = {
 };
 
 export type MagazineNeighbor = {
-  id: string;
+  seq: number;
+  id: number;
   title: string;
   thumbnail: string;
 };
 
 export type MagazineDetail = {
-  id: string;
-  slug: string;
+  seq: number;
+  id: number;
   title: string;
   movieTitle: string;
   subtitle: string;
   publishedLabel: string;
   publishedAt: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
   coverImage: string;
   thumbnail: string;
   bodyHtml: string;
   excerpt: string;
-  articleUrl: string;
   sourceUrl: string;
   section: MagazineSection;
   isPast: boolean;
@@ -51,7 +54,6 @@ export type MagazineListPage = {
 
 type MagazineRow = {
   seq: number;
-  public_id: string;
   section: string;
   is_past: boolean;
   title: string;
@@ -59,17 +61,22 @@ type MagazineRow = {
   subtitle: string | null;
   published_label: string | null;
   published_at: Date | null;
-  excerpt: string | null;
+  created_at: Date;
+  updated_at: Date;
   body_html: string | null;
   img_thumb: string | null;
   img_cover: string | null;
   source_url: string | null;
-  article_url: string | null;
-  list_order: number;
 };
 
-function detailPagePath(row: Pick<MagazineRow, "section" | "public_id" | "is_past">): string {
-  const id = encodeURIComponent(row.public_id);
+const MAGAZINE_SELECT = `
+  seq, section, is_past, title, movie_title, subtitle,
+  published_label, published_at, created_at, updated_at, body_html,
+  img_thumb, img_cover, source_url
+`;
+
+function detailPagePath(row: Pick<MagazineRow, "section" | "seq" | "is_past">): string {
+  const id = encodeURIComponent(String(row.seq));
   if (row.is_past) {
     return `magazine/past-articles/article-detail.html?id=${id}`;
   }
@@ -87,10 +94,10 @@ function mapListItem(row: MagazineRow): MagazineListItem {
   const thumb = row.img_thumb?.trim() || row.img_cover?.trim() || "";
   const date = row.published_label?.trim() || "";
   return {
-    id: row.public_id,
-    publicId: row.public_id,
-    title: row.title,
-    excerpt: row.excerpt?.trim() || "",
+    seq: row.seq,
+    id: row.seq,
+    title: decodePlainTextField(row.title),
+    excerpt: excerptFromBodyHtml(row.body_html),
     thumbnail: thumb,
     date,
     detailUrl: detailPagePath(row)
@@ -145,13 +152,10 @@ export async function getMagazineListPage(opts: {
   listReq.input("pageSize", sql.Int, pageSize);
 
   const listRes = await listReq.query<MagazineRow>(`
-    SELECT
-      seq, public_id, section, is_past, title, movie_title, subtitle,
-      published_label, published_at, excerpt, body_html,
-      img_thumb, img_cover, source_url, article_url, list_order
+    SELECT ${MAGAZINE_SELECT}
     FROM dbo.web_magazine
     WHERE ${where.sql}
-    ORDER BY list_order ASC, seq ASC
+    ORDER BY created_at DESC, seq DESC
     OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY
   `);
 
@@ -168,7 +172,7 @@ async function fetchNeighbor(
   pool: sql.ConnectionPool,
   whereSql: string,
   inputs: Array<{ name: string; type: sql.ISqlTypeFactoryWithNoParams; value: unknown }>,
-  listOrder: number,
+  createdAt: Date,
   seq: number,
   direction: "prev" | "next"
 ): Promise<MagazineNeighbor | null> {
@@ -176,21 +180,21 @@ async function fetchNeighbor(
   for (const inp of inputs) {
     req.input(inp.name, inp.type, inp.value);
   }
-  req.input("listOrder", sql.Int, listOrder);
+  req.input("createdAt", sql.DateTime2, createdAt);
   req.input("seq", sql.Int, seq);
 
+  // prev = 이전 글(더 오래됨), next = 다음 글(더 최근)
   const cmp =
     direction === "prev"
-      ? `(list_order < @listOrder OR (list_order = @listOrder AND seq < @seq))`
-      : `(list_order > @listOrder OR (list_order = @listOrder AND seq > @seq))`;
+      ? `(created_at < @createdAt OR (created_at = @createdAt AND seq < @seq))`
+      : `(created_at > @createdAt OR (created_at = @createdAt AND seq > @seq))`;
   const order =
     direction === "prev"
-      ? `list_order DESC, seq DESC`
-      : `list_order ASC, seq ASC`;
+      ? `created_at DESC, seq DESC`
+      : `created_at ASC, seq ASC`;
 
   const res = await req.query<MagazineRow>(`
-    SELECT TOP 1
-      public_id, title, img_thumb, img_cover, section, is_past
+    SELECT TOP 1 seq, title, img_thumb, img_cover
     FROM dbo.web_magazine
     WHERE ${whereSql} AND ${cmp}
     ORDER BY ${order}
@@ -199,24 +203,19 @@ async function fetchNeighbor(
   const row = res.recordset[0];
   if (!row) return null;
   return {
-    id: row.public_id,
-    title: row.title,
+    seq: row.seq,
+    id: row.seq,
+    title: decodePlainTextField(row.title),
     thumbnail: row.img_thumb?.trim() || row.img_cover?.trim() || ""
   };
 }
 
-export async function getMagazineDetail(publicId: string): Promise<MagazineDetail | null> {
+export async function getMagazineDetail(seq: number): Promise<MagazineDetail | null> {
   const pool = await getPool();
-  const main = await pool
-    .request()
-    .input("publicId", sql.NVarChar, publicId)
-    .query<MagazineRow>(`
-      SELECT
-        seq, public_id, section, is_past, title, movie_title, subtitle,
-        published_label, published_at, excerpt, body_html,
-        img_thumb, img_cover, source_url, article_url, list_order
+  const main = await pool.request().input("seq", sql.Int, seq).query<MagazineRow>(`
+      SELECT ${MAGAZINE_SELECT}
       FROM dbo.web_magazine
-      WHERE public_id = @publicId
+      WHERE seq = @seq
     `);
 
   const row = main.recordset[0];
@@ -227,26 +226,27 @@ export async function getMagazineDetail(publicId: string): Promise<MagazineDetai
     : listWhereClause({ section: row.section as MagazineSection, isPast: false });
 
   const [prev, next] = await Promise.all([
-    fetchNeighbor(pool, where.sql, where.inputs, row.list_order, row.seq, "prev"),
-    fetchNeighbor(pool, where.sql, where.inputs, row.list_order, row.seq, "next")
+    fetchNeighbor(pool, where.sql, where.inputs, row.created_at, row.seq, "prev"),
+    fetchNeighbor(pool, where.sql, where.inputs, row.created_at, row.seq, "next")
   ]);
 
   const cover = row.img_cover?.trim() || row.img_thumb?.trim() || "";
   const thumb = row.img_thumb?.trim() || cover;
 
   return {
-    id: row.public_id,
-    slug: row.public_id,
-    title: row.title,
-    movieTitle: row.movie_title?.trim() || "",
+    seq: row.seq,
+    id: row.seq,
+    title: decodePlainTextField(row.title),
+    movieTitle: decodePlainTextField(row.movie_title),
     subtitle: row.subtitle?.trim() || "",
     publishedLabel: row.published_label?.trim() || "",
     publishedAt: row.published_at ? row.published_at.toISOString() : null,
+    createdAt: row.created_at ? row.created_at.toISOString() : null,
+    updatedAt: row.updated_at ? row.updated_at.toISOString() : null,
     coverImage: cover,
     thumbnail: thumb,
     bodyHtml: row.body_html || "",
-    excerpt: row.excerpt?.trim() || "",
-    articleUrl: row.article_url?.trim() || "",
+    excerpt: excerptFromBodyHtml(row.body_html),
     sourceUrl: row.source_url?.trim() || "",
     section: row.section as MagazineSection,
     isPast: !!row.is_past,

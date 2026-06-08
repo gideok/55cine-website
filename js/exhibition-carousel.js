@@ -37,8 +37,11 @@
   var itemsPerPage = 8;
   var totalPages = 1;
   var activePage = 0;
+  var builtForDatasetLength = -1;
   var scrollEndTimer;
   var layoutTimer;
+  var loading = false;
+  var pendingUrlPage = null;
 
   function loadDataset() {
     if (window.TiApi && typeof window.TiApi.getSpecialList === "function") {
@@ -77,8 +80,27 @@
     return dataset.slice(start, start + itemsPerPage);
   }
 
-  function createCard(item) {
+  function readPageFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var page = parseInt(params.get("page"), 10);
+    if (isNaN(page) || page < 1) return null;
+    return page - 1;
+  }
+
+  function viewportHasLayoutSize() {
+    return viewport.clientWidth >= 40 && viewport.clientHeight >= 40;
+  }
+
+  function buildDetailHref(item, pageIndex) {
     var href = resolveAssetUrl(item.detailUrl || item.sourceUrl || "#");
+    if (!href || href === "#") return href;
+    var listPage = (typeof pageIndex === "number" ? pageIndex : activePage) + 1;
+    var sep = href.indexOf("?") >= 0 ? "&" : "?";
+    return href + sep + "listPage=" + encodeURIComponent(String(listPage));
+  }
+
+  function createCard(item, pageIndex) {
+    var href = buildDetailHref(item, pageIndex);
     var article = document.createElement("article");
     article.className = "se-card";
 
@@ -125,7 +147,7 @@
       grid.className = "se-grid";
 
       getPageItems(p).forEach(function (item) {
-        grid.appendChild(createCard(item));
+        grid.appendChild(createCard(item, p));
       });
 
       slide.appendChild(grid);
@@ -201,6 +223,7 @@
   }
 
   function syncActiveFromScroll() {
+    if (pendingUrlPage !== null) return;
     var next = readActivePageFromScroll();
     if (next !== activePage) {
       activePage = next;
@@ -217,22 +240,31 @@
   }
 
   function applyLayoutFromViewport() {
+    if (loading && dataset.length === 0) return;
+
     var cols = getGridColumns();
     var nextIpp = computeItemsPerPage();
     if (nextIpp < cols) nextIpp = cols;
 
     var prevIpp = itemsPerPage;
-    var itemOffset = activePage * prevIpp;
     var ippChanged = nextIpp !== prevIpp;
     itemsPerPage = nextIpp;
 
     var newTotal = Math.max(1, Math.ceil(dataset.length / itemsPerPage));
-    activePage = Math.floor(itemOffset / itemsPerPage);
-    if (activePage >= newTotal) activePage = newTotal - 1;
-    if (activePage < 0) activePage = 0;
+    if (pendingUrlPage !== null) {
+      activePage = Math.min(Math.max(0, pendingUrlPage), newTotal - 1);
+      if (viewportHasLayoutSize()) pendingUrlPage = null;
+    } else {
+      var itemOffset = activePage * prevIpp;
+      activePage = Math.floor(itemOffset / itemsPerPage);
+      if (activePage >= newTotal) activePage = newTotal - 1;
+      if (activePage < 0) activePage = 0;
+    }
 
-    if (ippChanged || track.childElementCount === 0) {
+    var dataChanged = builtForDatasetLength !== dataset.length;
+    if (ippChanged || track.childElementCount === 0 || dataChanged) {
       buildSlides();
+      builtForDatasetLength = dataset.length;
     }
 
     var w = viewport.clientWidth;
@@ -252,18 +284,23 @@
   }
 
   function boot() {
-    activePage = 0;
+    pendingUrlPage = readPageFromUrl();
+    activePage = pendingUrlPage !== null ? pendingUrlPage : 0;
     itemsPerPage = getGridColumns();
+    loading = true;
+    builtForDatasetLength = -1;
     if (pageCountEl) pageCountEl.textContent = "불러오는 중…";
 
     loadDataset()
       .then(function () {
+        loading = false;
         requestAnimationFrame(function () {
           requestAnimationFrame(applyLayoutFromViewport);
         });
       })
       .catch(function (err) {
         console.error(err);
+        loading = false;
         dataset = [];
         if (pageCountEl) pageCountEl.textContent = "목록을 불러오지 못했습니다.";
         applyLayoutFromViewport();

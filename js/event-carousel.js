@@ -36,8 +36,10 @@
   var itemsPerPage = 8;
   var totalPages = 1;
   var activePage = 0;
+  var builtForDatasetLength = -1;
   var scrollEndTimer;
   var layoutTimer;
+  var loading = false;
 
   function loadDataset() {
     if (window.TiApi && typeof window.TiApi.getSpecialList === "function") {
@@ -217,6 +219,8 @@
   }
 
   function applyLayoutFromViewport() {
+    if (loading && dataset.length === 0) return;
+
     var cols = getGridColumns();
     var nextIpp = computeItemsPerPage();
     if (nextIpp < cols) nextIpp = cols;
@@ -231,8 +235,10 @@
     if (activePage >= newTotal) activePage = newTotal - 1;
     if (activePage < 0) activePage = 0;
 
-    if (ippChanged || track.childElementCount === 0) {
+    var dataChanged = builtForDatasetLength !== dataset.length;
+    if (ippChanged || track.childElementCount === 0 || dataChanged) {
       buildSlides();
+      builtForDatasetLength = dataset.length;
     }
 
     var w = viewport.clientWidth;
@@ -265,13 +271,17 @@
 
   window.addEventListener("resize", scheduleLayout, { passive: true });
 
+  loading = true;
+  builtForDatasetLength = -1;
   if (pageCountEl) pageCountEl.textContent = "불러오는 중…";
   loadDataset()
     .then(function () {
+      loading = false;
       applyLayoutFromViewport();
     })
     .catch(function (err) {
       console.error(err);
+      loading = false;
       dataset = [];
       if (pageCountEl) pageCountEl.textContent = "목록을 불러오지 못했습니다.";
       applyLayoutFromViewport();

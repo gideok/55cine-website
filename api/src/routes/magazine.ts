@@ -50,16 +50,16 @@ export async function registerMagazineRoutes(app: FastifyInstance): Promise<void
     }
   });
 
-  app.get("/magazine/:publicId", async (request, reply) => {
-    const params = z.object({ publicId: z.string().min(1) }).safeParse(request.params);
+  app.get("/magazine/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
     if (!params.success) {
       return reply.code(400).send({
-        error: { code: "INVALID_PARAMS", message: "publicId 필요" }
+        error: { code: "INVALID_PARAMS", message: "seq(양의 정수) 필요" }
       });
     }
 
     try {
-      const detail = await getMagazineDetail(params.data.publicId);
+      const detail = await getMagazineDetail(params.data.seq);
       if (!detail) {
         return reply.code(404).send({
           error: { code: "NOT_FOUND", message: "기사를 찾을 수 없습니다." }

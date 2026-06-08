@@ -17,7 +17,7 @@ import {
 } from "../../services/admin/special-admin.service.js";
 import {
   getAdminMagazineList,
-  getAdminMagazineByPublicId,
+  getAdminMagazineBySeq,
   createAdminMagazine,
   updateAdminMagazine,
   deleteAdminMagazine,
@@ -27,6 +27,32 @@ import { resolveUploadPath, saveUploadedFile } from "../../services/admin/upload
 
 const kindSchema = z.enum(["exhibition", "event"]);
 const sectionSchema = z.enum(["preview", "serial", "gv-moment"]);
+
+const magazineWriteBodySchema = z.object({
+  title: z.string().min(1, "제목을 입력해 주세요.").max(500, "제목은 500자 이하여야 합니다."),
+  movieTitle: z.string().max(300, "영화 제목은 300자 이하여야 합니다.").nullable().optional(),
+  subtitle: z.string().max(300, "부제는 300자 이하여야 합니다.").nullable().optional(),
+  publishedLabel: z.string().max(120, "게시일 라벨은 120자 이하여야 합니다.").nullable().optional(),
+  publishedAt: z.string().nullable().optional(),
+  bodyHtml: z.string().nullable().optional(),
+  imgThumb: z.string().max(500, "썸네일 경로는 500자 이하여야 합니다.").nullable().optional(),
+  imgCover: z.string().max(500, "커버 이미지 경로는 500자 이하여야 합니다.").nullable().optional(),
+  sourceUrl: z.string().max(500, "원본 URL은 500자 이하여야 합니다.").nullable().optional(),
+  createdAt: z.string().nullable().optional(),
+  coverTempPath: z.string().max(500).nullable().optional(),
+  removeCover: z.boolean().optional()
+});
+
+const magazineUpdateBodySchema = magazineWriteBodySchema.partial().extend({
+  title: z.string().min(1, "제목을 입력해 주세요.").max(500, "제목은 500자 이하여야 합니다.").optional()
+});
+
+function zodBodyMessage(result: z.SafeParseError<unknown>): string {
+  const first = result.error.issues[0];
+  if (!first) return "요청 본문이 올바르지 않습니다.";
+  const path = first.path.length ? first.path.join(".") + ": " : "";
+  return path + first.message;
+}
 
 const filmItemSchema = z.object({
   itemSeq: z.number().int().optional(),
@@ -269,11 +295,11 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
-  app.get("/admin/magazine/:publicId", async (request, reply) => {
-    const params = z.object({ publicId: z.string().min(1) }).safeParse(request.params);
-    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "publicId 필요");
+  app.get("/admin/magazine/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
     try {
-      const detail = await getAdminMagazineByPublicId(params.data.publicId);
+      const detail = await getAdminMagazineBySeq(params.data.seq);
       if (!detail) return sendError(reply, 404, "NOT_FOUND", "기사를 찾을 수 없습니다.");
       return detail;
     } catch (err) {
@@ -284,24 +310,10 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
 
   app.post("/admin/magazine", async (request, reply) => {
     const body = z
-      .object({
-        publicId: z.string().min(1),
-        section: sectionSchema,
-        title: z.string().min(1),
-        movieTitle: z.string().nullable().optional(),
-        subtitle: z.string().nullable().optional(),
-        publishedLabel: z.string().nullable().optional(),
-        publishedAt: z.string().nullable().optional(),
-        excerpt: z.string().nullable().optional(),
-        bodyHtml: z.string().nullable().optional(),
-        imgThumb: z.string().nullable().optional(),
-        imgCover: z.string().nullable().optional(),
-        sourceUrl: z.string().nullable().optional(),
-        articleUrl: z.string().nullable().optional(),
-        listOrder: z.number().int().optional()
-      })
+      .object({ section: sectionSchema })
+      .merge(magazineWriteBodySchema)
       .safeParse(request.body);
-    if (!body.success) return sendError(reply, 400, "INVALID_BODY", "요청 본문이 올바르지 않습니다.");
+    if (!body.success) return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
     try {
       const created = await createAdminMagazine(body.data);
       reply.code(201);
@@ -313,42 +325,34 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
-  app.put("/admin/magazine/:publicId", async (request, reply) => {
-    const params = z.object({ publicId: z.string().min(1) }).safeParse(request.params);
-    const body = z
-      .object({
-        title: z.string().min(1).optional(),
-        movieTitle: z.string().nullable().optional(),
-        subtitle: z.string().nullable().optional(),
-        publishedLabel: z.string().nullable().optional(),
-        publishedAt: z.string().nullable().optional(),
-        excerpt: z.string().nullable().optional(),
-        bodyHtml: z.string().nullable().optional(),
-        imgThumb: z.string().nullable().optional(),
-        imgCover: z.string().nullable().optional(),
-        sourceUrl: z.string().nullable().optional(),
-        articleUrl: z.string().nullable().optional(),
-        listOrder: z.number().int().optional()
-      })
-      .safeParse(request.body);
-    if (!params.success || !body.success) {
-      return sendError(reply, 400, "INVALID_BODY", "요청 본문이 올바르지 않습니다.");
-    }
+  app.put("/admin/magazine/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    const body = magazineUpdateBodySchema.safeParse(request.body);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    if (!body.success) return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
     try {
-      const updated = await updateAdminMagazine(params.data.publicId, body.data);
+      const updated = await updateAdminMagazine(params.data.seq, body.data);
       if (!updated) return sendError(reply, 404, "NOT_FOUND", "기사를 찾을 수 없습니다.");
       return updated;
     } catch (err) {
       request.log.error(err);
-      return sendError(reply, 500, "MAGAZINE_UPDATE_FAILED", "매거진 수정 실패");
+      const raw = err instanceof Error ? err.message : "";
+      let msg = "매거진 수정 실패";
+      if (/truncat/i.test(raw)) {
+        msg = "입력값이 허용 길이를 초과했습니다. 제목은 500자 이하로 입력해 주세요.";
+      } else if (/임시 파일 없음/i.test(raw)) {
+        msg =
+          "본문 이미지 임시 파일을 찾을 수 없습니다. 이미지를 다시 업로드한 뒤 저장해 주세요.";
+      }
+      return sendError(reply, 500, "MAGAZINE_UPDATE_FAILED", msg);
     }
   });
 
-  app.delete("/admin/magazine/:publicId", async (request, reply) => {
-    const params = z.object({ publicId: z.string().min(1) }).safeParse(request.params);
-    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "publicId 필요");
+  app.delete("/admin/magazine/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
     try {
-      const ok = await deleteAdminMagazine(params.data.publicId);
+      const ok = await deleteAdminMagazine(params.data.seq);
       if (!ok) return sendError(reply, 404, "NOT_FOUND", "기사를 찾을 수 없습니다.");
       return { ok: true };
     } catch (err) {
@@ -357,11 +361,11 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
-  app.post("/admin/magazine/:publicId/mark-past", async (request, reply) => {
-    const params = z.object({ publicId: z.string().min(1) }).safeParse(request.params);
-    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "publicId 필요");
+  app.post("/admin/magazine/:seq/mark-past", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
     try {
-      const updated = await markMagazineAsPast(params.data.publicId);
+      const updated = await markMagazineAsPast(params.data.seq);
       if (!updated) return sendError(reply, 404, "NOT_FOUND", "기사를 찾을 수 없습니다.");
       return updated;
     } catch (err) {
@@ -372,37 +376,67 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
 
   app.post("/admin/upload", async (request, reply) => {
     try {
-      const data = await request.file();
-      if (!data) return sendError(reply, 400, "NO_FILE", "파일이 없습니다.");
-
       const fields: Record<string, string> = {};
-      if (data.fields) {
-        for (const [key, val] of Object.entries(data.fields)) {
-          const v = val as { value?: string };
-          if (v && typeof v.value === "string") fields[key] = v.value;
+      let uploadFilename: string | undefined;
+      let uploadBuffer: Buffer | null = null;
+
+      for await (const part of request.parts()) {
+        if (part.type === "file") {
+          if (part.fieldname === "file" && !uploadBuffer) {
+            uploadFilename = part.filename;
+            uploadBuffer = await part.toBuffer();
+          }
+          continue;
         }
+        fields[part.fieldname] = String(part.value);
       }
+
+      if (!uploadBuffer) return sendError(reply, 400, "NO_FILE", "파일이 없습니다.");
 
       const category = fields.category as
         | "special-main"
         | "special-item"
         | "magazine-body"
+        | "magazine-cover"
         | "magazine-thumb"
+        | "magazine-temp"
         | "program"
         | undefined;
       if (!category) return sendError(reply, 400, "INVALID_CATEGORY", "category 필드 필요");
 
-      const buffer = await data.toBuffer();
+      if (category === "magazine-temp") {
+        const { saveMagazineTempFile } = await import("../../services/admin/magazine-assets.service.js");
+        const saved = await saveMagazineTempFile(uploadBuffer, uploadFilename);
+        return saved;
+      }
+
+      if (category === "program") {
+        const programSeq = fields.programSeq ? Number(fields.programSeq) : undefined;
+        if (!programSeq) {
+          return sendError(reply, 400, "INVALID_FIELDS", "programSeq 필요");
+        }
+        const { finalizeProgramPosterUpload } = await import(
+          "../../services/admin/program-assets.service.js"
+        );
+        const saved = await finalizeProgramPosterUpload(
+          uploadBuffer,
+          programSeq,
+          uploadFilename
+        );
+        return saved;
+      }
+
       const relPath = resolveUploadPath(category, {
         specialSeq: fields.specialSeq ? Number(fields.specialSeq) : undefined,
         itemSeq: fields.itemSeq ? Number(fields.itemSeq) : undefined,
         magazineSeq: fields.magazineSeq ? Number(fields.magazineSeq) : undefined,
         imageIndex: fields.imageIndex ? Number(fields.imageIndex) : undefined,
+        tempId: fields.tempId || undefined,
         programSeq: fields.programSeq ? Number(fields.programSeq) : undefined,
-        originalFilename: data.filename
+        originalFilename: uploadFilename
       });
 
-      const saved = await saveUploadedFile(buffer, relPath);
+      const saved = await saveUploadedFile(uploadBuffer, relPath);
       return { path: saved.path };
     } catch (err) {
       request.log.error(err);

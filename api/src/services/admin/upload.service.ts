@@ -4,7 +4,14 @@ import { config } from "../../config.js";
 
 const ALLOWED_EXT = new Set([".jpg", ".jpeg", ".png", ".gif", ".webp"]);
 
-export type UploadCategory = "special-main" | "special-item" | "magazine-body" | "magazine-thumb" | "program";
+export type UploadCategory =
+  | "special-main"
+  | "special-item"
+  | "magazine-body"
+  | "magazine-cover"
+  | "magazine-thumb"
+  | "magazine-temp"
+  | "program";
 
 export function resolveUploadPath(
   category: UploadCategory,
@@ -13,6 +20,7 @@ export function resolveUploadPath(
     itemSeq?: number;
     magazineSeq?: number;
     imageIndex?: number;
+    tempId?: string;
     programSeq?: number;
     originalFilename?: string;
   }
@@ -28,9 +36,15 @@ export function resolveUploadPath(
     case "magazine-body":
       if (!opts.magazineSeq || opts.imageIndex == null) throw new Error("magazineSeq, imageIndex 필요");
       return `images/magazine/body/wm_${opts.magazineSeq}_${opts.imageIndex}${ext}`;
+    case "magazine-cover":
+      if (!opts.magazineSeq) throw new Error("magazineSeq 필요");
+      return `images/magazine/body/wm_${opts.magazineSeq}_cover${ext}`;
     case "magazine-thumb":
       if (!opts.magazineSeq) throw new Error("magazineSeq 필요");
       return `images/magazine/body/wm_${opts.magazineSeq}_thumb${ext}`;
+    case "magazine-temp":
+      if (!opts.tempId) throw new Error("tempId 필요");
+      return `images/magazine/_tmp/${opts.tempId}${ext}`;
     case "program":
       if (!opts.programSeq) throw new Error("programSeq 필요");
       return `images/movies/wp/wp_${opts.programSeq}_1${ext}`;
