@@ -13,7 +13,7 @@ echo SCHEDULE_USE_MOCK=true >> ../.env
 npm run dev
 ```
 
-- Health: `GET http://localhost:3000/api/v1/health`
+- Health: `GET http://127.0.0.1:3000/api/v1/health` (로컬 — `0.0.0.0:3000` 은 브라우저에서 접속 불가)
 - 주간 시간표: `GET http://localhost:3000/api/v1/schedule/week?anchor=2026-06-04`
 - 기획전·행사 목록: `GET http://localhost:3000/api/v1/special?kind=exhibition` · `kind=event`
 - 기획전·행사 상세: `GET http://localhost:3000/api/v1/special/e000001?kind=exhibition`
@@ -70,7 +70,13 @@ npm run db:generate:thumbs              # img1 원본 → img_thumb 40×40 생�
 정적 서버만 쓸 때는 API 를 별도로 띄우고 HTML 에 다음을 추가합니다 (스크립트는 `insert-week-schedule-api-client.py` 로 일괄 삽입 가능).
 
 ```html
-<script>window.TI_API_BASE = "http://localhost:3000/api/v1";</script>
+<script src="js/api/client.js"></script>
+```
+
+Base URL 을 직접 지정할 때 (`0.0.0.0` 대신 `127.0.0.1` 사용):
+
+```html
+<script>window.TI_API_BASE = "http://127.0.0.1:3000/api/v1";</script>
 <script src="js/api/client.js"></script>
 ```
 

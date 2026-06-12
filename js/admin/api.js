@@ -2,21 +2,15 @@
  * 관리자 API 클라이언트 — /api/v1/admin/*
  */
 (function (global) {
-  if (typeof global.TI_API_BASE !== "string" || !global.TI_API_BASE) {
-    var loc = global.location;
-    if (loc) {
-      var host = loc.hostname || "";
-      var port = loc.port || "";
-      var isLocal = host === "localhost" || host === "127.0.0.1";
-      if (isLocal && (port === "8080" || port === "5500" || port === "8888" || port === "")) {
-        global.TI_API_BASE = "http://localhost:3000/api/v1";
-      } else {
-        global.TI_API_BASE = "/api/v1";
-      }
-    }
+  var API_BASE =
+    (global.TiResolveApiBase && global.TiResolveApiBase()) ||
+    global.TI_API_BASE ||
+    "/api/v1";
+  if (global.TiNormalizeApiBase) {
+    API_BASE = global.TiNormalizeApiBase(API_BASE);
   }
-
-  var API_BASE = (global.TI_API_BASE || "/api/v1").replace(/\/$/, "");
+  global.TI_API_BASE = API_BASE;
+  API_BASE = API_BASE.replace(/\/$/, "");
 
   function adminHeaders(withJsonBody) {
     var headers = {

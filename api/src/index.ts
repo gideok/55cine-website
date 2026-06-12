@@ -46,7 +46,14 @@ process.on("SIGTERM", () => {
 
 try {
   await app.listen({ host: config.host, port: config.port });
-  app.log.info(`API listening on http://${config.host}:${config.port}${config.apiPrefix}`);
+  const prefix = config.apiPrefix;
+  if (config.host === "0.0.0.0" || config.host === "::") {
+    app.log.info(
+      `API listening (bind ${config.host}:${config.port}) — use http://127.0.0.1:${config.port}${prefix} in browser (not 0.0.0.0)`
+    );
+  } else {
+    app.log.info(`API listening on http://${config.host}:${config.port}${prefix}`);
+  }
 } catch (err) {
   app.log.error(err);
   process.exit(1);

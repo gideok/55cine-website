@@ -1,23 +1,58 @@
 /**
  * Phase 2 공통 API 클라이언트 (개발명세_Phase2.md §5.1)
- * 운영: Nginx /api/ → 백엔드. 로컬: window.TI_API_BASE = "http://localhost:3000/api/v1"
+ * 운영: Nginx /api/ → 백엔드. 로컬: http://127.0.0.1:3000/api/v1
  */
 (function (global) {
-  if (typeof global.TI_API_BASE !== "string" || !global.TI_API_BASE) {
-    var loc = global.location;
-    if (loc) {
-      var host = loc.hostname || "";
-      var port = loc.port || "";
-      var isLocal = host === "localhost" || host === "127.0.0.1";
-      if (isLocal && (port === "8080" || port === "5500" || port === "8888" || port === "")) {
-        global.TI_API_BASE = "http://localhost:3000/api/v1";
-      } else {
-        global.TI_API_BASE = "/api/v1";
-      }
-    }
+  var LOCAL_API_PORT = "3000";
+  var LOCAL_STATIC_PORTS = { "8080": 1, "5500": 1, "8888": 1, "": 1 };
+
+  function isPrivateLanHost(host) {
+    if (!host) return false;
+    if (/^192\.168\.\d{1,3}\.\d{1,3}$/.test(host)) return true;
+    if (/^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)) return true;
+    return /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(host);
   }
 
-  var API_BASE = global.TI_API_BASE || "/api/v1";
+  function isLocalDevPage(host, port) {
+    if (!host) return false;
+    if (host === "localhost" || host === "127.0.0.1" || host === "0.0.0.0") {
+      return !!LOCAL_STATIC_PORTS[port];
+    }
+    return isPrivateLanHost(host) && !!LOCAL_STATIC_PORTS[port];
+  }
+
+  function localApiHost(pageHost) {
+    if (!pageHost || pageHost === "0.0.0.0" || pageHost === "localhost") {
+      return "127.0.0.1";
+    }
+    if (isPrivateLanHost(pageHost)) return pageHost;
+    return "127.0.0.1";
+  }
+
+  function normalizeApiBase(url) {
+    if (typeof url !== "string" || !url) return url;
+    return url.replace(/^(https?:\/\/)0\.0\.0\.0(?=[:/]|$)/i, "$1127.0.0.1");
+  }
+
+  function resolveApiBase() {
+    if (typeof global.TI_API_BASE === "string" && global.TI_API_BASE) {
+      return normalizeApiBase(global.TI_API_BASE);
+    }
+    var loc = global.location;
+    if (!loc) return "/api/v1";
+    var host = loc.hostname || "";
+    var port = loc.port || "";
+    if (isLocalDevPage(host, port)) {
+      return "http://" + localApiHost(host) + ":" + LOCAL_API_PORT + "/api/v1";
+    }
+    return "/api/v1";
+  }
+
+  global.TiResolveApiBase = resolveApiBase;
+  global.TiNormalizeApiBase = normalizeApiBase;
+
+  var API_BASE = resolveApiBase();
+  global.TI_API_BASE = API_BASE;
 
   function apiGet(path) {
     var url = API_BASE + (path.charAt(0) === "/" ? path : "/" + path);
