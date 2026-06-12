@@ -37,6 +37,7 @@ desktop.ini
 npm-debug.log*
 dist/
 api/dist/
+release/
 .cache/
 api/.cache-nowshowing-urls.json
 api/.tmp-*.html

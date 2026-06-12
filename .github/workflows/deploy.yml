@@ -1,0 +1,68 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - name: Build API
+        run: npm ci && npm run build
+        working-directory: api
+
+      - name: Write production .env
+        run: |
+          cat > .env <<'EOF'
+          ${{ secrets.PROD_ENV_FILE }}
+          EOF
+
+      - name: Pack release tarball
+        run: |
+          python3 deploy/scripts/pack-release.py
+
+      - name: Upload tarball to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          source: release/55cine-deploy.tar.gz
+          target: /root
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script: |
+            set -euo pipefail
+            APP_ROOT=/var/www/55cine
+            mkdir -p "$APP_ROOT"
+            tar -xzf /root/release/55cine-deploy.tar.gz -C "$APP_ROOT"
+            rm -rf /root/release
+            chmod +x "$APP_ROOT/deploy/scripts/"*.sh
+            sed -i 's/\r$//' "$APP_ROOT/deploy/scripts/"*.sh
+            bash "$APP_ROOT/deploy/scripts/remote-setup.sh" "$APP_ROOT"
+            curl -fsS http://127.0.0.1/api/v1/health || curl -fsS http://127.0.0.1:3000/api/v1/health
