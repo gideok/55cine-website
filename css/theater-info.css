@@ -1,123 +1,427 @@
-/* test/theater-info.html — 우측 본문 (밝은 배경 #e8e8e8, 본문은 darkgray~black) */
+/* theater-info.html — Figma MO/오오극장/소개 (클래스명 유지, 스타일만 반영) */
 
-.ti .ti-theater-info p {
-  text-align: justify;
+.ti-right.ti-theater-info {
+  background: #ffffff;
+  color: #111111;
+  box-sizing: border-box;
+  /* Figma MO tit top 88px — 고정 헤더 아래 본문 시작 (MO·PC 공통) */
+  padding: 88px 0 0;
+  --ti-content-max: 640px;
+  --ti-text-strong: #111111;
+  --ti-text-secondary: #404040;
+  --ti-text-muted: #808080;
+  --ti-surface-alt: #f7f7f7;
+  --ti-border: #e2e2e2;
 }
 
-.ti-theater-page-title {
-  margin: 0 0 8px;
-  font-size: clamp(0.68rem, 1.4vw, 0.78rem);
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #555;
+.ti-right.ti-theater-info .ti-sub-scroll {
+  max-width: var(--ti-content-max);
+  padding: 0 20px 40px;
 }
 
-.ti-theater-h1 {
-  margin: 0 0 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #bdbdbd;
-  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
-  color: #0a0a0a;
+/* ── 페이지 헤더 (tit) ── */
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-head {
+  margin-bottom: 24px;
 }
 
-.ti-dg-photo {
-  margin: 0 0 24px;
-  border-radius: 0;
-  overflow: hidden;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
-  line-height: 0;
-  border: 1px solid var(--ti-border);
-  background: var(--ti-surface);
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
 }
 
-.ti-dg-photo img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.ti-theater-lead {
-  margin: 0 0 28px;
-  padding: 20px 18px;
-  border: 1px solid #bdbdbd;
-  border-top: 3px solid #9a7b1a;
-  background: linear-gradient(165deg, #f2f2f2 0%, #e8e8e8 100%);
-  text-align: center;
-}
-
-.ti-theater-lead__eq {
-  margin: 0 0 10px;
-  font-size: clamp(1.05rem, 3vw, 1.35rem);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
-  color: #5c4a0f;
-}
-
-.ti-theater-lead__tagline {
-  margin: 0 0 6px;
-  font-size: clamp(0.98rem, 2.4vw, 1.12rem);
-  font-weight: 800;
-  color: #111;
-  line-height: 1.35;
-}
-
-.ti-theater-lead__sub {
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__title {
   margin: 0;
-  font-size: 0.88rem;
+  padding: 0 0 16px;
+  font-size: 22px;
   font-weight: 700;
-  color: #444;
+  line-height: 1;
+  letter-spacing: 0;
+  color: #111111;
 }
 
-.ti-theater-features {
-  margin: 0;
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__sep,
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__parent,
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__child {
+  color: inherit;
+  font-weight: inherit;
 }
 
-.ti-theater-item {
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__rule {
+  display: none;
+}
+
+/* ── 하위 탭 (Tab 2) ── */
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 0;
+  width: 100%;
   margin: 0;
   padding: 0;
+  border-bottom: 1px solid #e2e2e2;
 }
 
-.ti-theater-item__head {
-  margin: 0 0 10px;
-  font-size: clamp(0.95rem, 2.1vw, 1.05rem);
-  font-weight: 800;
-  line-height: 1.4;
-  color: #0a0a0a;
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a {
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: center;
+  padding: 12px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  color: #808080;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
+  color: #111111;
+  background: transparent;
+  text-decoration: none;
+}
+
+.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a.is-current {
+  color: #111111;
+  font-weight: 700;
+  background: transparent;
+  border-color: transparent;
+  border-bottom-color: #111111;
+}
+
+/* ── 소개 리드 (page_description) ── */
+.ti-right.ti-theater-info .ti-theater-lead {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+  margin: 0 0 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+}
+
+.ti-right.ti-theater-info .ti-theater-lead__tagline {
+  order: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  color: #111111;
+}
+
+.ti-right.ti-theater-info .ti-theater-lead__tagline::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  background: url("../images/theater-info-dot.png") no-repeat center / contain;
+}
+
+.ti-right.ti-theater-info .ti-theater-lead__sub {
+  order: 2;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: #808080;
+}
+
+.ti-right.ti-theater-info .ti-theater-lead__eq {
+  order: 3;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  margin: 0;
+  padding: 16px;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  background: #f7f7f7;
+  border: none;
+}
+
+.ti-right.ti-theater-info .ti-theater-lead__eq-formula {
+  font-weight: 300;
+  color: #808080;
+}
+
+.ti-right.ti-theater-info .ti-theater-lead__eq-result {
+  font-weight: 700;
+  color: #111111;
+}
+
+/* ── 히어로 이미지 (r_img) ── */
+.ti-right.ti-theater-info .ti-dg-photo {
+  margin: 0 0 32px;
+  overflow: hidden;
+  line-height: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: #f7f7f7;
+}
+
+.ti-right.ti-theater-info .ti-dg-photo::after {
+  display: none;
+}
+
+.ti-right.ti-theater-info .ti-dg-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 320 / 220;
+  object-fit: cover;
+}
+
+/* ── 10가지 특별함 (llist) ── */
+.ti-right.ti-theater-info .ti-theater-features {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin: 0;
+}
+
+.ti-right.ti-theater-info .ti-theater-item {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 0;
+  padding: 0 0 32px;
+  border-bottom: 1px solid #595959;
+}
+
+.ti-right.ti-theater-info .ti-theater-item:last-of-type {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.ti-right.ti-theater-info .ti-theater-divider {
+  display: none;
+}
+
+.ti-right.ti-theater-info .ti-theater-item__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #111111;
   word-break: keep-all;
 }
 
-.ti-theater-item__body {
+.ti-right.ti-theater-info .ti-theater-item__num {
+  flex: none;
+  min-width: 20px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.ti-right.ti-theater-info .ti-theater-item__num-zero {
+  color: #b3b3b3;
+}
+
+.ti-right.ti-theater-info .ti-theater-item__num-em {
+  color: #111111;
+}
+
+.ti-right.ti-theater-info .ti-theater-item__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #111111;
+  font-weight: 700;
+}
+
+.ti-right.ti-theater-info .ti-theater-item:last-of-type .ti-theater-item__head {
+  align-items: flex-start;
+}
+
+.ti-right.ti-theater-info .ti-theater-item__body {
   margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.68;
-  color: #333;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: #404040;
 }
 
-.ti-theater-divider {
-  margin: 22px 0;
-  border: none;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    #c8c8c8 12%,
-    #a3a3a3 50%,
-    #c8c8c8 88%,
-    transparent 100%
-  );
+.ti-right.ti-theater-info p,
+.ti-right.ti-theater-info .ti-theater-item__body {
+  text-align: left;
 }
 
-.ti-theater-note a {
-  color: #5c4a0f;
+.ti-right.ti-theater-info .ti-theater-note a {
+  color: #404040;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.ti-theater-note a:hover {
-  color: #0a0a0a;
+.ti-right.ti-theater-info .ti-theater-note a:hover {
+  color: #111111;
+}
+
+/* ── 탭: 좁은 화면 ── */
+@media (max-width: 480px) {
+  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a {
+    padding: 12px 4px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 641px) {
+  .ti-right.ti-theater-info .ti-sub-scroll {
+    padding-inline: clamp(20px, 4vw, 32px);
+  }
+}
+
+/* ── PC (821px+, Figma PC 레퍼런스) ── */
+@media (min-width: 821px) {
+  .ti-right.ti-theater-info {
+    --ti-content-max: none;
+  }
+
+  .ti-right.ti-theater-info .ti-sub-scroll {
+    max-width: none;
+    padding: 0 clamp(14px, 2.4vw, 28px) 40px;
+  }
+
+  /* 제목 + 탭 한 줄 */
+  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head__row {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px 20px;
+    flex-wrap: wrap;
+  }
+
+  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head__title {
+    padding-bottom: 0;
+    font-size: clamp(1.35rem, 2.1vw, 1.5rem);
+    line-height: 1.28;
+  }
+
+  /* 탭: 활성 검정 pill, 비활성 테두리 */
+  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav {
+    flex: 0 1 auto;
+    width: auto;
+    margin-left: auto;
+    padding: 0;
+    border-bottom: none;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 8px;
+  }
+
+  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a {
+    flex: none;
+    padding: 7px 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #808080;
+    border: 1px solid #e2e2e2;
+    border-radius: 999px;
+    border-bottom: 1px solid #e2e2e2;
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a.is-current {
+    color: #ffffff;
+    background: #111111;
+    border-color: #111111;
+  }
+
+  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder) {
+    color: #111111;
+    border-color: #e2e2e2;
+  }
+
+  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head {
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e2e2;
+  }
+
+  /* 리드 */
+  .ti-right.ti-theater-info .ti-theater-lead {
+    margin-bottom: 32px;
+    gap: 16px;
+  }
+
+  .ti-right.ti-theater-info .ti-theater-lead__tagline {
+    font-size: 20px;
+  }
+
+  .ti-right.ti-theater-info .ti-theater-lead__sub {
+    font-size: 14px;
+  }
+
+  .ti-right.ti-theater-info .ti-theater-lead__eq {
+    max-width: 100%;
+    justify-content: flex-start;
+    font-size: 16px;
+  }
+
+  /* 본문: 목록(좌) + 세로 이미지(우) */
+  .ti-right.ti-theater-info .ti-theater-features {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(200px, 26vw, 300px);
+    column-gap: clamp(24px, 3vw, 48px);
+    row-gap: 32px;
+    align-items: start;
+  }
+
+  .ti-right.ti-theater-info .ti-dg-photo {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    margin: 0;
+    position: sticky;
+    top: clamp(12px, 2vw, 24px);
+    align-self: start;
+  }
+
+  .ti-right.ti-theater-info .ti-dg-photo img {
+    aspect-ratio: auto;
+    width: 100%;
+    max-height: min(85vh, 720px);
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .ti-right.ti-theater-info #theater-features-heading,
+  .ti-right.ti-theater-info .ti-theater-item {
+    grid-column: 1;
+  }
+
+  .ti-right.ti-theater-info .ti-theater-item__head {
+    font-size: 16px;
+  }
+
+  .ti-right.ti-theater-info .ti-theater-item__body {
+    font-size: 14px;
+    line-height: 1.5;
+  }
 }

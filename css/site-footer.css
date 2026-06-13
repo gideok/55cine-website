@@ -5,6 +5,7 @@
 .ti .ti-footer.ti-footer--slot-pc {
   flex: 0 0 auto;
   min-width: 0;
+  margin-top: auto;
 }
 
 @media (max-width: 820px) {
@@ -19,22 +20,31 @@
   }
 }
 
+/* figma/gnb.css SNB footer — white bg, 40×24 padding, column layout */
 .ti .ti-footer.site-footer {
-  padding: 28px 20px 32px;
-  background: color-mix(in srgb, #5c4a3a 8%, #ebebeb);
-  border-top: 1px solid #c8c8c8;
-  font-size: 0.85rem;
-  color: #555;
-  line-height: 1.7;
+  box-sizing: border-box;
+  padding: 40px 24px;
+  background: #ffffff;
+  border-top: 1px solid #e2e2e2;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  color: #595959;
+}
+
+@media (min-width: 821px) {
+  .ti .ti-footer.site-footer {
+    border-right: 1px solid #e2e2e2;
+  }
 }
 
 .ti .ti-footer.site-footer .biz {
-  max-width: 980px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: 18px;
+  align-items: flex-start;
+  gap: 24px;
 }
 
 .ti .ti-footer.site-footer .footer-logo-box {
@@ -42,95 +52,121 @@
   align-self: flex-start;
   display: block;
   box-sizing: border-box;
+  width: 88px;
+  height: 32px;
+  max-width: none;
+  aspect-ratio: auto;
   padding: 0;
   margin: 0;
   line-height: 0;
-  border-radius: 0;
   background: transparent;
   overflow: hidden;
-  width: 50%;
-  max-width: 50%;
-  height: auto;
-  aspect-ratio: 1536 / 1024;
 }
 
 .ti .ti-footer.site-footer .footer-logo-box img {
   display: block;
-  width: 100%;
-  height: auto;
+  width: 88px;
+  height: 32px;
   max-width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
   object-fit: contain;
+  object-position: left center;
 }
 
 .ti .ti-footer.site-footer .footer-text {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-.ti .ti-footer.site-footer .footer-text p {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+.ti .ti-footer.site-footer .footer-meta {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.ti .ti-footer.site-footer .footer-meta--org {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.ti .ti-footer.site-footer .footer-meta__sep {
+  color: #b3b3b3;
 }
 
 .ti .ti-footer.site-footer .footer-text .copyright {
-  margin-bottom: 0;
+  margin: 0;
+  color: #808080;
 }
 
 .ti .ti-footer.site-footer .footer-sns {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0 12px;
-  margin-top: 10px;
-  font-size: 0.92em;
-  line-height: 1.5;
-  color: #555;
+  gap: 24px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1;
+  color: #404040;
 }
 
 .ti .ti-footer.site-footer .footer-sns__link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: inherit;
+  gap: 7px;
+  color: #404040;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .ti .ti-footer.site-footer .footer-sns__link:hover,
 .ti .ti-footer.site-footer .footer-sns__link:focus-visible {
-  color: #5c4a3a;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: #111111;
+  text-decoration: none;
+}
+
+.ti .ti-footer.site-footer .footer-sns__link:hover .footer-sns__icon-wrap,
+.ti .ti-footer.site-footer .footer-sns__link:focus-visible .footer-sns__icon-wrap {
+  background: #d4d4d4;
+}
+
+.ti .ti-footer.site-footer .footer-sns__icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e2e2e2;
 }
 
 .ti .ti-footer.site-footer .footer-sns__icon {
   flex-shrink: 0;
   display: block;
+  width: 12px;
+  height: 12px;
+  color: #808080;
 }
 
 .ti .ti-footer.site-footer .footer-sns__handle {
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .ti .ti-footer.site-footer .footer-sns__sep {
-  flex-shrink: 0;
-  opacity: 0.45;
-  user-select: none;
-}
-
-@media (max-width: 520px) {
-  .ti .ti-footer.site-footer .footer-sns {
-    flex-wrap: wrap;
-    row-gap: 6px;
-  }
+  display: none;
 }
 
 @media (max-width: 820px) {
   .ti .ti-footer.site-footer {
-    border-top: 1px solid #bdbdbd;
+    border-top: 1px solid #e2e2e2;
   }
 }

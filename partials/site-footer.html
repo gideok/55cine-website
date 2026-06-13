@@ -1,14 +1,25 @@
 <!-- components/footer.html 의 .biz 블록과 동기화. TEST 페이지는 ti-footer--slot-pc / --slot-mobile 두 곳에 동일 내용이 주입됨. -->
 <div class="biz">
   <div class="footer-logo-box" aria-hidden="true">
-    <img src="__TI_ASSET_BASE__images/logo_footer_transparent.png" alt="" width="1536" height="1024" decoding="async" />
+    <img
+      src="__TI_ASSET_BASE__images/footer-logo.png"
+      alt=""
+      width="88"
+      height="32"
+      decoding="async"
+    />
   </div>
   <div class="footer-text">
-    <p>사업자등록번호 <strong>369-82-00211</strong></p>
-    <p>대구경북영화영상사회적협동조합</p>
-    <p>대표 <strong>손영득</strong></p>
-    <p>대구광역시 중구 국채보상로 537<br />(수동 1-6번지), 곽병원과 만경관 사이</p>
-    <p>T. <strong>053 425 3553</strong></p>
+    <p class="footer-meta footer-meta--org">
+      <span>대구경북영화영상사회적협동조합</span>
+      <span class="footer-meta__sep" aria-hidden="true">|</span>
+      <span>대표 : 손영득</span>
+    </p>
+    <p class="footer-meta">사업자등록번호 : 369-82-00211</p>
+    <p class="footer-meta">
+      대구광역시 중구 국채보상로 537 (수동 1-6번지), 곽병원과 만경관 사이
+    </p>
+    <p class="footer-meta">고객센터 : 053-425-3553</p>
     <p class="copyright">Copyright © All Rights Reserved 오오극장 2026</p>
     <nav class="footer-sns" aria-label="소셜 미디어">
       <a
@@ -17,38 +28,42 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <svg class="footer-sns__icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path
-            fill="currentColor"
-            d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5A1.25 1.25 0 0 1 18.5 6.75 1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75 1.25 1.25 0 0 1 17.25 5.5M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"
-          />
-        </svg>
-        <span> <span class="footer-sns__handle">@55cine</span></span>
+        <span class="footer-sns__icon-wrap" aria-hidden="true">
+          <svg class="footer-sns__icon" width="12" height="12" viewBox="0 0 24 24" focusable="false">
+            <path
+              fill="currentColor"
+              d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5A1.25 1.25 0 0 1 18.5 6.75 1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75 1.25 1.25 0 0 1 17.25 5.5M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"
+            />
+          </svg>
+        </span>
+        <span class="footer-sns__handle">@55cine</span>
       </a>
-      <span class="footer-sns__sep" aria-hidden="true">·</span>
       <a
         class="footer-sns__link"
         href="https://www.facebook.com/55cine"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <svg class="footer-sns__icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path
-            fill="currentColor"
-            d="M24 12.073C24 5.446 18.627 0 12 0S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-          />
-        </svg>
-        <span> <span class="footer-sns__handle">@55cine</span></span>
+        <span class="footer-sns__icon-wrap" aria-hidden="true">
+          <svg class="footer-sns__icon" width="12" height="12" viewBox="0 0 24 24" focusable="false">
+            <path
+              fill="currentColor"
+              d="M24 12.073C24 5.446 18.627 0 12 0S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+            />
+          </svg>
+        </span>
+        <span class="footer-sns__handle">@55cine</span>
       </a>
-      <span class="footer-sns__sep" aria-hidden="true">·</span>
       <a class="footer-sns__link" href="https://x.com/55cinema" target="_blank" rel="noopener noreferrer">
-        <svg class="footer-sns__icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path
-            fill="currentColor"
-            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-          />
-        </svg>
-        <span> <span class="footer-sns__handle">@55cinema</span></span>
+        <span class="footer-sns__icon-wrap" aria-hidden="true">
+          <svg class="footer-sns__icon" width="12" height="12" viewBox="0 0 24 24" focusable="false">
+            <path
+              fill="currentColor"
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+            />
+          </svg>
+        </span>
+        <span class="footer-sns__handle">@55cinema</span>
       </a>
     </nav>
   </div>

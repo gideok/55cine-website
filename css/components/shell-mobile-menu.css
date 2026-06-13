@@ -82,8 +82,8 @@
     padding: 10px max(14px, env(safe-area-inset-right, 0px)) 10px
       max(14px, env(safe-area-inset-left, 0px));
     padding-top: calc(10px + env(safe-area-inset-top, 0px));
-    border-bottom: 1px solid #c8c8c8;
-    background: #ebebeb;
+    border-bottom: 1px solid #e2e2e2;
+    background: #f7f7f7;
     position: fixed;
     top: 0;
     left: 0;
@@ -100,14 +100,14 @@
     width: 100%;
     z-index: 29;
     flex: none;
-    background: #f2f2f2;
+    background: #f7f7f7;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     max-height: calc(100dvh - var(--ti-mobile-menu-bar-offset));
     opacity: 1;
     pointer-events: auto;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid #e2e2e2;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     transition:
       max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
@@ -126,7 +126,7 @@
   /* 접힘: 패널이 flex-grow로 잔여 높이를 먹지 않도록 basis·grow 제거 (ti-left 빈 여백 방지) */
   .ti-shell.ti-menu-collapsed-mobile > .ti-left {
     min-height: 0 !important;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid #e2e2e2;
   }
 
   .ti-shell.ti-menu-collapsed-mobile .ti-left-panel {

@@ -108,7 +108,7 @@
       var mobileTemplate = results.length > 1 ? results[1] : null;
 
       if (mobileTemplate) {
-        injectMobileBar(mobileTemplate);
+        injectMobileBar(mobileTemplate.replace(/__TI_SITE_ROOT__/g, prefixes.siteRoot));
       }
 
       var html = gnbTemplate.replace(/__TI_SITE_ROOT__/g, prefixes.siteRoot);

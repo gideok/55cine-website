@@ -10,6 +10,7 @@ images/**/*.psd
 images/**/*.ai
 images/*.zip
 images/[붙임2]*/
+figma/
 
 # --- 로컬·스크래치 ---
 tmp/
