@@ -83,41 +83,45 @@ body.ti {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 18px 20px 24px;
+  padding: 0 24px 24px;
   overflow: hidden;
 }
 
 .ti-sched-title {
-  margin: 0 0 12px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #555;
+  margin: 0 0 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e2e2e2;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #808080;
 }
 
 .ti-day-tabs {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 16px;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* PC·모바일 공통 4열 — 셀 크기 동일, 그리드 오른쪽 끝 = 아래 예매 버튼 열 */
+/* PC·모바일 공통 4열 — figma date btn (76.5×37, 13px) */
 .ti-day-tab,
 .ti-week-nav-btn {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  padding: 6px 4px;
-  border: 1px solid #9a9a9a;
+  min-height: 37px;
+  padding: 12px 8px;
+  border: 1px solid #595959;
   background: #fff;
   font-family: inherit;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #333;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  color: #111111;
   cursor: pointer;
   border-radius: 0;
   text-align: center;
@@ -126,20 +130,21 @@ body.ti {
 }
 
 .ti-week-nav-btn {
-  background: #eef2f6;
+  background: #fff;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .ti-week-nav-btn:hover {
-  background: #e0e8ef;
-  border-color: #666;
+  background: #f7f7f7;
+  border-color: #111111;
 }
 
 .ti-day-tab[aria-selected="true"] {
-  background: #111;
-  color: #f2f2f2;
-  border-color: #111;
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+  font-weight: 700;
 }
 
 .ti-sched-scroll {

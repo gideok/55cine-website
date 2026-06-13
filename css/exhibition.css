@@ -1,14 +1,11 @@
-.ti-right.se-right {
+/* special-exhibition.html — 기획전 목록 (상영작 ti-np-list 톤) */
+
+.ti-right.se-right.ti-np-list {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
   min-height: 0;
   align-self: stretch;
-  padding: clamp(8px, 1.6vw, 18px) clamp(10px, 2vw, 22px);
-  background: #fafafa;
-  color: #1a1a1a;
 }
 
 .se-right-inner {
@@ -17,33 +14,19 @@
   flex-direction: column;
   min-height: 0;
   width: 100%;
+  max-width: var(--np-max, 1120px);
+  margin: 0 auto;
+  padding: 0 0 48px;
+  box-sizing: border-box;
 }
 
-.se-head {
+.ti .ti-np-list.se-right .se-head {
   flex: 0 0 auto;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 12px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #c8c8c8;
 }
 
-.se-title-page {
-  margin: 0;
-  font-size: clamp(0.95rem, 1.8vw, 1.25rem);
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #111;
-}
-
-.se-count {
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: #5a5a5a;
-  font-variant-numeric: tabular-nums;
+.ti .ti-np-list.se-right .se-title-page {
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .se-swipe-viewport {
@@ -70,72 +53,99 @@
   max-width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  padding: 2px 1px 0 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-.se-grid {
+/* card_list — 상영작 np-grid 톤 */
+.ti .ti-np-list.se-right .se-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  gap: 40px 24px;
   align-content: start;
+  align-items: stretch;
 }
 
-.se-card {
-  border: 1px solid #b0b0b0;
-  background: #fff;
+.ti .ti-np-list.se-right .se-card {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
   min-width: 0;
-  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transition: none;
 }
 
-.se-card:hover {
-  background: #fafafa;
-  border-color: #111;
+.ti .ti-np-list.se-right .se-card:hover,
+.ti .ti-np-list.se-right .se-card:focus-within {
+  background: transparent;
+  outline: none;
 }
 
-.se-thumb-link {
+.ti .ti-np-list.se-right .se-thumb-link {
   display: block;
+  width: 100%;
   line-height: 0;
-  border: 0;
+  border: none;
+  background: #f2f2f2;
 }
 
-.se-thumb {
+.ti .ti-np-list.se-right .se-thumb {
+  display: block;
   width: 100%;
   aspect-ratio: 510 / 740;
   object-fit: cover;
-  display: block;
+  border: none;
   border-radius: 0;
 }
 
-.se-title-wrap {
-  padding: 10px 10px 12px;
-  border-top: 1px solid #d4d4d4;
+.ti .ti-np-list.se-right .se-title-wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  margin: 0;
+  padding: 16px 0;
+  border-top: none;
+  border-right: none;
+  border-bottom: 1px solid #595959;
+  border-left: none;
+  background: transparent;
 }
 
-.se-item-title {
+.ti .ti-np-list.se-right .se-item-title {
   margin: 0;
-  font-size: 0.78rem;
-  font-weight: 600;
-  line-height: 1.38;
-  color: #2a2a2a;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0;
+  color: #111111;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: keep-all;
 }
 
-.se-title-link {
+.ti .ti-np-list.se-right .se-title-link {
   color: inherit;
   text-decoration: none;
 }
 
-.se-title-link:hover .se-item-title {
-  color: #000;
+.ti .ti-np-list.se-right .se-title-link:hover .se-item-title {
+  color: #111111;
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
+/* 모바일 캐러셀 푸터 */
 .se-foot {
   flex: 0 0 auto;
   display: flex;
@@ -145,7 +155,7 @@
   gap: 10px 14px;
   padding-top: 14px;
   margin-top: 10px;
-  border-top: 1px solid #c8c8c8;
+  border-top: 1px solid #e2e2e2;
 }
 
 .se-page-btn {
@@ -154,17 +164,17 @@
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  border: 1px solid #4a4a4a;
+  border: 1px solid #595959;
   background: #fff;
-  color: #333;
+  color: #111;
   cursor: pointer;
   border-radius: 0;
 }
 
 .se-page-btn:hover:not(:disabled) {
-  background: #f0f0f0;
+  background: #f7f7f7;
   border-color: #111;
-  color: #000;
+  color: #111;
 }
 
 .se-page-btn:disabled {
@@ -184,7 +194,7 @@
 .se-dot {
   width: 8px;
   height: 8px;
-  border: 1px solid #6a6a6a;
+  border: 1px solid #595959;
   background: transparent;
   padding: 0;
   cursor: pointer;
@@ -192,14 +202,14 @@
 }
 
 .se-dot.is-active {
-  background: #1a1a1a;
-  border-color: #1a1a1a;
+  background: #111111;
+  border-color: #111111;
 }
 
 .se-fraction {
   font-size: 0.72rem;
   font-weight: 600;
-  color: #4a4a4a;
+  color: #595959;
   font-variant-numeric: tabular-nums;
   min-width: 3.25rem;
   text-align: center;
@@ -207,22 +217,53 @@
 
 .se-hint {
   margin: 0 0 8px;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: #666;
-  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: #595959;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
-@media (max-width: 820px) {
-  .ti-right.se-right {
-    flex: 1 1 auto;
-    min-height: 0;
+@media (min-width: 900px) {
+  .ti .ti-np-list.se-right .se-hint {
+    display: none;
+  }
+}
+
+.ti .ti-np-list.se-right .se-grid .np-list-status {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.ti .ti-np-list.se-right .se-grid .np-list-status.is-loading,
+.ti .ti-np-list.se-right .se-grid .np-list-status.is-empty {
+  min-height: min(360px, 50vh);
+}
+
+@media (max-width: 899px) {
+  .ti-right.se-right.ti-np-list {
+    padding-top: clamp(24px, 6vw, 48px);
+    padding-inline: clamp(14px, 4vw, 24px);
   }
 
-  .se-grid {
+  .ti .ti-np-list.se-right .np-title,
+  .ti .ti-np-list.se-right .se-title-page {
+    font-size: clamp(22px, 5vw, 28px);
+  }
+
+  .ti .ti-np-list.se-right .se-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 32px 16px;
+  }
+
+  .ti .ti-np-list.se-right .se-item-title {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  .ti .ti-np-list.se-right .se-title-wrap {
+    padding: 12px 0;
   }
 }
 

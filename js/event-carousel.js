@@ -13,14 +13,16 @@
     return BASE + url;
   }
 
-  var GRID_GAP_PX = 10;
+  var GRID_GAP_COL_PX = 24;
+  var GRID_GAP_ROW_PX = 40;
   var POSTER_ASPECT = 740 / 510;
-  var TITLE_BLOCK_RESERVE_PX = 62;
+  var TITLE_BLOCK_RESERVE_PX = 56;
   var MAX_ROWS = 16;
-  var COL_BREAKPOINT = window.matchMedia("(max-width: 820px)");
+  var COL_BREAKPOINT = window.matchMedia("(max-width: 899px)");
 
   var viewport = document.getElementById("seSwipeViewport");
   var track = document.getElementById("seSwipeTrack");
+  var rightInner = document.getElementById("seRightInner");
   var Pager = window.TiPagePager;
   var pageCountEl = document.getElementById("tiPageCount");
   var pagePagerEl = document.getElementById("tiPagePager");
@@ -40,6 +42,9 @@
   var scrollEndTimer;
   var layoutTimer;
   var loading = false;
+  var pendingUrlPage = null;
+  var LOADING_MESSAGE = "행사 목록을 불러오는 중…";
+  var ERROR_MESSAGE = "목록을 불러오지 못했습니다.";
 
   function loadDataset() {
     if (window.TiApi && typeof window.TiApi.getSpecialList === "function") {
@@ -51,20 +56,30 @@
     return Promise.resolve();
   }
 
+  function getGridGapCol() {
+    return COL_BREAKPOINT.matches ? 16 : GRID_GAP_COL_PX;
+  }
+
+  function getGridGapRow() {
+    return COL_BREAKPOINT.matches ? 32 : GRID_GAP_ROW_PX;
+  }
+
   function getGridColumns() {
     return COL_BREAKPOINT.matches ? 2 : 4;
   }
 
   function computeItemsPerPage() {
     var cols = getGridColumns();
+    var gapCol = getGridGapCol();
+    var gapRow = getGridGapRow();
     var h = viewport.clientHeight;
     var w = viewport.clientWidth;
     if (w < 40 || h < 40) {
       return Math.max(cols * 2, cols);
     }
-    var cellW = (w - GRID_GAP_PX * Math.max(0, cols - 1)) / cols;
+    var cellW = (w - gapCol * Math.max(0, cols - 1)) / cols;
     var rowH = cellW * POSTER_ASPECT + TITLE_BLOCK_RESERVE_PX;
-    var rows = Math.floor((h + GRID_GAP_PX) / (rowH + GRID_GAP_PX));
+    var rows = Math.floor((h + gapRow) / (rowH + gapRow));
     rows = Math.max(1, Math.min(MAX_ROWS, rows));
     return rows * cols;
   }
@@ -78,8 +93,27 @@
     return dataset.slice(start, start + itemsPerPage);
   }
 
-  function createCard(item) {
+  function readPageFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var page = parseInt(params.get("page"), 10);
+    if (isNaN(page) || page < 1) return null;
+    return page - 1;
+  }
+
+  function viewportHasLayoutSize() {
+    return viewport.clientWidth >= 40 && viewport.clientHeight >= 40;
+  }
+
+  function buildDetailHref(item, pageIndex) {
     var href = resolveAssetUrl(item.detailUrl || item.sourceUrl || "#");
+    if (!href || href === "#") return href;
+    var listPage = (typeof pageIndex === "number" ? pageIndex : activePage) + 1;
+    var sep = href.indexOf("?") >= 0 ? "&" : "?";
+    return href + sep + "listPage=" + encodeURIComponent(String(listPage));
+  }
+
+  function createCard(item, pageIndex) {
+    var href = buildDetailHref(item, pageIndex);
     var article = document.createElement("article");
     article.className = "se-card";
 
@@ -113,6 +147,51 @@
     return article;
   }
 
+  function showListStatus(message, isError, isLoading) {
+    track.innerHTML = "";
+    totalPages = 1;
+    activePage = 0;
+
+    var slide = document.createElement("div");
+    slide.className = "se-slide";
+    slide.setAttribute("role", "group");
+    slide.setAttribute("aria-label", message || "상태");
+
+    var grid = document.createElement("div");
+    grid.className = "se-grid";
+
+    var wrap = document.createElement("div");
+    var statusClass = isError ? " is-error" : isLoading ? " is-loading" : " is-empty";
+    wrap.className = "np-list-status" + statusClass;
+    wrap.setAttribute("role", "status");
+
+    if (isLoading && !isError && window.TiLogoSpinner) {
+      wrap.appendChild(
+        window.TiLogoSpinner.create({
+          size: 72,
+          label: message || "로딩 중"
+        })
+      );
+    }
+
+    var text = document.createElement("p");
+    text.className = "np-list-status__text";
+    text.textContent = message;
+    wrap.appendChild(text);
+
+    grid.appendChild(wrap);
+    slide.appendChild(grid);
+    track.appendChild(slide);
+
+    if (pageCountEl) pageCountEl.innerHTML = "";
+    if (pagePagerEl && Pager) Pager.updateVisibility(pagePagerEl, 0);
+    if (hintEl) hintEl.hidden = true;
+    if (fractionEl) fractionEl.textContent = "0 / 0";
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
+    if (dotsEl) dotsEl.innerHTML = "";
+  }
+
   function buildSlides() {
     track.innerHTML = "";
     totalPages = getTotalPages();
@@ -126,7 +205,7 @@
       grid.className = "se-grid";
 
       getPageItems(p).forEach(function (item) {
-        grid.appendChild(createCard(item));
+        grid.appendChild(createCard(item, p));
       });
 
       slide.appendChild(grid);
@@ -162,30 +241,77 @@
     }
   }
 
-  function updateChrome() {
-    if (pageCountEl && Pager) {
-      pageCountEl.textContent = Pager.formatCount(
-        dataset.length,
-        activePage + 1,
-        totalPages,
-        "건"
-      );
-    }
+  function renderSeMeta(el, options) {
+    if (!el) return;
+    el.innerHTML = "";
+    options = options || {};
+    var inner = document.createElement("div");
+    inner.className = "np-meta__inner";
 
-    if (Pager && Pager.isDesktop()) {
-      Pager.render(pagePagerEl, {
-        page: activePage + 1,
-        totalPages: totalPages,
-        scrollRootSelector: ".se-right-inner",
-        alwaysVisible: true,
-        onChange: function (p) {
-          goToPage(p - 1);
-        }
-      });
+    if (options.mode === "mobile") {
+      inner.textContent = options.text || "";
+      el.appendChild(inner);
       return;
     }
 
-    if (Pager) Pager.updateVisibility(pagePagerEl, 0);
+    var total = document.createElement("span");
+    total.className = "np-meta__total";
+    total.textContent = "총 " + options.total + "건";
+    inner.appendChild(total);
+
+    if (options.totalPages > 1) {
+      var dot = document.createElement("span");
+      dot.className = "np-meta__dot";
+      dot.setAttribute("aria-hidden", "true");
+      inner.appendChild(dot);
+
+      var page = document.createElement("span");
+      page.className = "np-meta__page";
+      page.textContent = options.page + " / " + options.totalPages + " 페이지";
+      inner.appendChild(page);
+
+      el.setAttribute(
+        "aria-label",
+        "총 " + options.total + "건, " + options.page + " / " + options.totalPages + " 페이지"
+      );
+    } else {
+      el.setAttribute("aria-label", "총 " + options.total + "건");
+    }
+
+    el.appendChild(inner);
+  }
+
+  function updateChrome() {
+    if (Pager && Pager.isDesktop()) {
+      if (pageCountEl) {
+        renderSeMeta(pageCountEl, {
+          total: dataset.length,
+          page: activePage + 1,
+          totalPages: totalPages
+        });
+      }
+      if (pagePagerEl) {
+        Pager.render(pagePagerEl, {
+          page: activePage + 1,
+          totalPages: totalPages,
+          scrollRootSelector: ".se-right-inner",
+          onChange: function (p) {
+            goToPage(p - 1);
+          }
+        });
+      }
+      return;
+    }
+
+    if (pagePagerEl && Pager) Pager.updateVisibility(pagePagerEl, 0);
+
+    if (pageCountEl) {
+      var shown = Math.min((activePage + 1) * itemsPerPage, dataset.length);
+      renderSeMeta(pageCountEl, {
+        mode: "mobile",
+        text: "총 " + dataset.length + "건 · " + shown + "건 표시"
+      });
+    }
 
     if (fractionEl) {
       fractionEl.textContent = totalPages ? activePage + 1 + " / " + totalPages : "0 / 0";
@@ -203,6 +329,7 @@
   }
 
   function syncActiveFromScroll() {
+    if (pendingUrlPage !== null) return;
     var next = readActivePageFromScroll();
     if (next !== activePage) {
       activePage = next;
@@ -226,14 +353,19 @@
     if (nextIpp < cols) nextIpp = cols;
 
     var prevIpp = itemsPerPage;
-    var itemOffset = activePage * prevIpp;
     var ippChanged = nextIpp !== prevIpp;
     itemsPerPage = nextIpp;
 
     var newTotal = Math.max(1, Math.ceil(dataset.length / itemsPerPage));
-    activePage = Math.floor(itemOffset / itemsPerPage);
-    if (activePage >= newTotal) activePage = newTotal - 1;
-    if (activePage < 0) activePage = 0;
+    if (pendingUrlPage !== null) {
+      activePage = Math.min(Math.max(0, pendingUrlPage), newTotal - 1);
+      if (viewportHasLayoutSize()) pendingUrlPage = null;
+    } else {
+      var itemOffset = activePage * prevIpp;
+      activePage = Math.floor(itemOffset / itemsPerPage);
+      if (activePage >= newTotal) activePage = newTotal - 1;
+      if (activePage < 0) activePage = 0;
+    }
 
     var dataChanged = builtForDatasetLength !== dataset.length;
     if (ippChanged || track.childElementCount === 0 || dataChanged) {
@@ -253,38 +385,91 @@
   function scheduleLayout() {
     clearTimeout(layoutTimer);
     layoutTimer = setTimeout(function () {
-      applyLayoutFromViewport();
-    }, 50);
+      requestAnimationFrame(applyLayoutFromViewport);
+    }, 48);
   }
 
-  viewport.addEventListener(
-    "scroll",
+  function boot() {
+    pendingUrlPage = readPageFromUrl();
+    activePage = pendingUrlPage !== null ? pendingUrlPage : 0;
+    itemsPerPage = getGridColumns();
+    loading = true;
+    builtForDatasetLength = -1;
+    showListStatus(LOADING_MESSAGE, false, true);
+
+    loadDataset()
+      .then(function () {
+        loading = false;
+        requestAnimationFrame(function () {
+          requestAnimationFrame(applyLayoutFromViewport);
+        });
+      })
+      .catch(function (err) {
+        console.error(err);
+        loading = false;
+        dataset = [];
+        showListStatus(ERROR_MESSAGE, true, false);
+      });
+  }
+
+  viewport.addEventListener("scroll", function () {
+    clearTimeout(scrollEndTimer);
+    scrollEndTimer = setTimeout(syncActiveFromScroll, 120);
+  });
+
+  viewport.addEventListener("scrollend", syncActiveFromScroll);
+
+  btnPrev.addEventListener("click", function () {
+    goToPage(activePage - 1);
+  });
+  btnNext.addEventListener("click", function () {
+    goToPage(activePage + 1);
+  });
+
+  viewport.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      goToPage(activePage - 1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      goToPage(activePage + 1);
+    }
+  });
+
+  window.addEventListener(
+    "resize",
     function () {
-      clearTimeout(scrollEndTimer);
-      scrollEndTimer = setTimeout(syncActiveFromScroll, 120);
+      scheduleLayout();
     },
     { passive: true }
   );
 
-  if (btnPrev) btnPrev.addEventListener("click", function () { goToPage(activePage - 1); });
-  if (btnNext) btnNext.addEventListener("click", function () { goToPage(activePage + 1); });
-
-  window.addEventListener("resize", scheduleLayout, { passive: true });
-
-  loading = true;
-  builtForDatasetLength = -1;
-  if (pageCountEl) pageCountEl.textContent = "불러오는 중…";
-  loadDataset()
-    .then(function () {
-      loading = false;
-      applyLayoutFromViewport();
-    })
-    .catch(function (err) {
-      console.error(err);
-      loading = false;
-      dataset = [];
-      if (pageCountEl) pageCountEl.textContent = "목록을 불러오지 못했습니다.";
-      applyLayoutFromViewport();
+  if (rightInner && typeof ResizeObserver !== "undefined") {
+    var ro = new ResizeObserver(function () {
+      scheduleLayout();
     });
-})();
+    ro.observe(rightInner);
+  }
 
+  function onColBreakpointChange() {
+    scheduleLayout();
+  }
+
+  if (COL_BREAKPOINT.addEventListener) {
+    COL_BREAKPOINT.addEventListener("change", onColBreakpointChange);
+  } else if (COL_BREAKPOINT.addListener) {
+    COL_BREAKPOINT.addListener(onColBreakpointChange);
+  }
+
+  window.addEventListener("ti-shell:relayout", function () {
+    scheduleLayout();
+  });
+
+  if (Pager && Pager.mq) {
+    Pager.mq.addEventListener("change", function () {
+      updateChrome();
+    });
+  }
+
+  boot();
+})();

@@ -36,15 +36,19 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  align-self: stretch;
+  width: 100%;
 }
 
 .ti-home {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 4px;
   box-sizing: border-box;
+  align-self: stretch;
+  width: 100%;
   margin: 0;
   padding: 16px 0;
   border-bottom: 1px solid #e2e2e2;
@@ -81,6 +85,7 @@
   flex: 1 1 auto;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .ti-home:hover {
@@ -96,10 +101,13 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  align-self: stretch;
+  width: 100%;
 }
 
 .ti-gnb details {
   border: none;
+  width: 100%;
 }
 
 .ti-gnb details:first-of-type {
@@ -115,6 +123,7 @@
   justify-content: space-between;
   gap: 8px;
   box-sizing: border-box;
+  width: 100%;
   padding: 16px 0;
   min-height: 52px;
   font-size: 16px;
@@ -180,8 +189,18 @@
   border-left: 2px solid #111111;
 }
 
-.ti-left-bottom {
-  padding-inline: 24px;
+/* site-common · movie-detail-layout 등 전역 a/summary 규칙과 분리 */
+.ti-left .ti-home,
+.ti-left .ti-gnb a {
+  text-decoration: none;
+}
+
+.ti-left .ti-gnb summary {
+  list-style: none;
+}
+
+.ti-left .ti-gnb summary::-webkit-details-marker {
+  display: none;
 }
 
 /* 모바일 상단 바 로고 — 햄버거 왼쪽, 로고 오른쪽 */
@@ -218,5 +237,14 @@
 
   .ti-mobile-menu-label {
     display: none;
+  }
+
+  /* GNB 펼침: 상단 바(.ti-mobile-menu-logo)와 중복 — 패널 내 SNB 로고 숨김 */
+  .ti-left-top .ti-snb-logo {
+    display: none;
+  }
+
+  .ti-left-top {
+    padding-top: 0;
   }
 }
