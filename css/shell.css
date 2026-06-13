@@ -29,6 +29,8 @@ body.ti {
   align-items: stretch;
   min-height: 100vh;
   min-height: 100dvh;
+  /* GNB HOME 하단 구분선 Y — 우측 패널 헤더 구분선과 맞춤 (24+40+24+16+14+16) */
+  --ti-snb-home-rule-y: calc(24px + 40px + 24px + 16px + 14px + 16px);
 }
 
 /* PC: 좌·우 2열만 (사이트 푸터는 ti-left 안 ti-footer--slot-pc 에서 표시, shell 직계 푸터는 hidden) */

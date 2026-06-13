@@ -1,12 +1,12 @@
-/* 상영작 목록 — 그리드·카드 */
+/* 상영작 목록 — 그리드·카드 (레거시 패널; Figma 목록은 .ti-np-list → now-playing.css) */
 
-.ti .ti-np-root .np-grid {
+.ti .ti-np-root:not(.ti-np-list) .np-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
-.ti .ti-np-root .np-list-status {
+.ti .ti-np-root:not(.ti-np-list) .np-list-status {
   grid-column: 1 / -1;
   margin: 0;
   padding: 20px 16px;
@@ -17,30 +17,30 @@
   text-align: center;
 }
 
-.ti .ti-np-root .np-list-status.is-error {
+.ti .ti-np-root:not(.ti-np-list) .np-list-status.is-error {
   color: #8b1a1a;
   border-color: #c8a0a0;
 }
 
 @media (max-width: 899px) {
-  .ti .ti-np-root .np-grid {
+  .ti .ti-np-root:not(.ti-np-list) .np-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .ti .ti-np-root .np-card-body {
+  .ti .ti-np-root:not(.ti-np-list) .np-card-body {
     padding: 8px 8px 10px;
   }
 
-  .ti .ti-np-root .np-card-title {
+  .ti .ti-np-root:not(.ti-np-list) .np-card-title {
     font-size: 0.82rem;
   }
 
-  .ti .ti-np-root .np-card-en {
+  .ti .ti-np-root:not(.ti-np-list) .np-card-en {
     font-size: 0.68rem;
   }
 }
 
-.ti .ti-np-root .np-card {
+.ti .ti-np-root:not(.ti-np-list) .np-card {
   display: flex;
   flex-direction: column;
   border: 1px solid #b0b0b0;
@@ -52,35 +52,35 @@
   text-align: left;
 }
 
-.ti .ti-np-root .np-card:hover {
+.ti .ti-np-root:not(.ti-np-list) .np-card:hover {
   background: #fafafa;
   border-color: #111;
 }
 
-.ti .ti-np-root .np-card:focus-within {
+.ti .ti-np-root:not(.ti-np-list) .np-card:focus-within {
   outline: 2px solid #333;
   outline-offset: 0;
 }
 
-.ti .ti-np-root .np-card-media {
+.ti .ti-np-root:not(.ti-np-list) .np-card-media {
   position: relative;
   aspect-ratio: 2 / 3;
   background: #e8e8e8;
 }
 
-.ti .ti-np-root .np-card-media img {
+.ti .ti-np-root:not(.ti-np-list) .np-card-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.ti .ti-np-root .np-card-body {
+.ti .ti-np-root:not(.ti-np-list) .np-card-body {
   padding: 7px 7px 8px;
   border-top: 1px solid #d4d4d4;
 }
 
-.ti .ti-np-root .np-card-title {
+.ti .ti-np-root:not(.ti-np-list) .np-card-title {
   margin: 0;
   font-size: 1rem;
   font-weight: 800;
@@ -90,7 +90,7 @@
   word-break: keep-all;
 }
 
-.ti .ti-np-root .np-card-en {
+.ti .ti-np-root:not(.ti-np-list) .np-card-en {
   margin: 4px 0 0;
   font-size: 0.78rem;
   font-weight: 600;
@@ -98,13 +98,13 @@
   letter-spacing: 0.01em;
 }
 
-.ti .ti-np-root .np-stretch-link::after {
+.ti .ti-np-root:not(.ti-np-list) .np-stretch-link::after {
   content: "";
   position: absolute;
   inset: 0;
 }
 
-.ti .ti-np-root .np-mobile-hint {
+.ti .ti-np-root:not(.ti-np-list) .np-mobile-hint {
   margin: 10px 0 0;
   font-size: 0.82rem;
   color: var(--muted);
@@ -112,17 +112,17 @@
 }
 
 @media (min-width: 900px) {
-  .ti .ti-np-root .np-mobile-hint {
+  .ti .ti-np-root:not(.ti-np-list) .np-mobile-hint {
     display: none;
   }
 }
 
-.ti .ti-np-root .np-sentinel {
+.ti .ti-np-root:not(.ti-np-list) .np-sentinel {
   height: 1px;
   margin-top: 24px;
 }
 
-.ti .ti-np-root .np-end {
+.ti .ti-np-root:not(.ti-np-list) .np-end {
   text-align: center;
   font-size: 0.85rem;
   color: var(--muted);
@@ -130,6 +130,6 @@
   display: none;
 }
 
-.ti .ti-np-root .np-end.is-visible {
+.ti .ti-np-root:not(.ti-np-list) .np-end.is-visible {
   display: block;
 }

@@ -76,8 +76,9 @@
   background: #fff;
 }
 
-.ti .ti-md-theme .movie-detail-poster {
+.ti .ti-md-theme .movie-detail-poster.md-poster {
   max-width: 100%;
+  max-height: none;
   border-radius: 0;
 }
 

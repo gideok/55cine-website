@@ -140,25 +140,53 @@
     return (movie.titleKo || "영화 상세") + " — 테스트 UI · 55CINE";
   }
 
+  function createSectionDot() {
+    var dot = document.createElement("span");
+    dot.className = "md-section-dot";
+    dot.setAttribute("aria-hidden", "true");
+    return dot;
+  }
+
+  function createSectionHead(text) {
+    var head = document.createElement("h2");
+    head.className = "md-section-head";
+    head.appendChild(createSectionDot());
+    var label = document.createElement("span");
+    label.className = "md-section-head__text";
+    label.textContent = text;
+    head.appendChild(label);
+    return head;
+  }
+
+  function createMetaDot() {
+    var dot = document.createElement("span");
+    dot.className = "md-meta-dot";
+    dot.setAttribute("aria-hidden", "true");
+    return dot;
+  }
+
   function createMetaRow(label, valueNode) {
     var row = document.createElement("div");
-    row.className = "meta-row";
-    var dt = document.createElement("dt");
-    dt.textContent = label;
-    var dd = document.createElement("dd");
+    row.className = "md-meta-row";
+    var labelEl = document.createElement("span");
+    labelEl.className = "md-meta-label";
+    labelEl.textContent = label;
+    var valueEl = document.createElement("span");
+    valueEl.className = "md-meta-value";
     if (typeof valueNode === "string") {
-      dd.textContent = valueNode;
+      valueEl.textContent = valueNode;
     } else {
-      dd.appendChild(valueNode);
+      valueEl.appendChild(valueNode);
     }
-    row.appendChild(dt);
-    row.appendChild(dd);
+    row.appendChild(labelEl);
+    row.appendChild(valueEl);
     return row;
   }
 
-  function createInfoDd(movie) {
-    var dd = document.createElement("dd");
-    dd.className = "movie-detail-info";
+  function createOverviewValue(movie) {
+    var wrap = document.createElement("span");
+    wrap.className = "md-meta-value md-meta-value--inline";
+
     var parts = [];
     if (movie.info) {
       var infoText = String(movie.info).replace(/\s*·\s*$/g, "").trim();
@@ -166,41 +194,62 @@
     }
     var mins = movie.runningMinutes != null ? Number(movie.runningMinutes) : 0;
     if (mins > 0) parts.push(mins + "분");
-    if (parts.length) {
-      dd.appendChild(document.createTextNode(parts.join(" · ") + " · "));
-    }
+
+    parts.forEach(function (part, index) {
+      if (index > 0) wrap.appendChild(createMetaDot());
+      var span = document.createElement("span");
+      span.textContent = part;
+      wrap.appendChild(span);
+    });
+
     if (movie.ratingImage) {
+      if (wrap.childNodes.length) wrap.appendChild(createMetaDot());
       var rating = document.createElement("img");
-      rating.className = "movie-rating-pictogram";
+      rating.className = "md-rating-icon";
       rating.src = resolveAssetUrl(movie.ratingImage);
-      rating.width = 24;
-      rating.height = 24;
+      rating.width = 16;
+      rating.height = 16;
       rating.alt = movie.ratingAlt || "";
       rating.decoding = "async";
-      dd.appendChild(rating);
+      wrap.appendChild(rating);
     }
-    return dd;
+
+    return wrap;
   }
 
-  function createScreeningBadge(screening, bookingUrl, movieTitle) {
+  function formatScreeningDateLabel(raw) {
+    var s = String(raw || "").trim();
+    var dotted = s.match(/^(\d{1,2})\.(\d{1,2})\.\(([^)]+)\)$/);
+    if (dotted) {
+      return parseInt(dotted[1], 10) + "/" + parseInt(dotted[2], 10) + " (" + dotted[3] + ")";
+    }
+    var slashed = s.match(/^(\d{1,2})\/(\d{1,2})\(([^)]+)\)$/);
+    if (slashed) {
+      return slashed[1] + "/" + slashed[2] + " (" + slashed[3] + ")";
+    }
+    return s;
+  }
+
+  function createScreeningSlot(screening, bookingUrl, movieTitle) {
     var dateLabel = screening.dateLabel || "";
     var timeLabel = screening.timeLabel || "";
     var href = screening.bookingUrl || bookingUrl;
-    var aria = movieTitle + " " + dateLabel + " " + timeLabel + " 예매";
+    var displayDate = formatScreeningDateLabel(dateLabel);
+    var aria = movieTitle + " " + displayDate + " " + timeLabel + " 예매";
 
     var link = document.createElement("a");
-    link.className = "movie-detail-time-badge";
+    link.className = "md-schedule-slot";
     link.href = href;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     link.setAttribute("aria-label", aria);
 
     var dateSpan = document.createElement("span");
-    dateSpan.className = "badge-date";
-    dateSpan.textContent = dateLabel;
+    dateSpan.className = "md-schedule-slot__date";
+    dateSpan.textContent = displayDate;
 
     var timeSpan = document.createElement("span");
-    timeSpan.className = "badge-time";
+    timeSpan.className = "md-schedule-slot__time";
     timeSpan.textContent = timeLabel;
 
     link.appendChild(dateSpan);
@@ -208,111 +257,123 @@
     return link;
   }
 
+  function createBookingButton(movie, bookingUrl, extraClass) {
+    var bookBtn = document.createElement("a");
+    bookBtn.className = "md-booking-btn" + (extraClass ? " " + extraClass : "");
+    bookBtn.href = bookingUrl;
+    bookBtn.target = "_blank";
+    bookBtn.rel = "noopener noreferrer";
+    bookBtn.setAttribute("aria-label", (movie.titleKo || "") + " 예매하기");
+    bookBtn.textContent = "예매하기";
+    return bookBtn;
+  }
+
   function bindMovieDetailTabs(slug) {
     var tabSynopsis = document.getElementById("movie-tab-synopsis-" + slug);
     var tabTrailer = document.getElementById("movie-tab-trailer-" + slug);
     var panelSynopsis = document.getElementById("movie-tabpanel-synopsis-" + slug);
     var panelTrailer = document.getElementById("movie-tabpanel-trailer-" + slug);
-    if (!tabSynopsis || !tabTrailer || !panelSynopsis || !panelTrailer) return;
+    if (!tabSynopsis || !panelSynopsis) return;
 
     function activate(which) {
       var isSynopsis = which === "synopsis";
       tabSynopsis.setAttribute("aria-selected", isSynopsis ? "true" : "false");
-      tabTrailer.setAttribute("aria-selected", !isSynopsis ? "true" : "false");
-      tabSynopsis.tabIndex = isSynopsis ? 0 : -1;
-      tabTrailer.tabIndex = !isSynopsis ? 0 : -1;
+      tabSynopsis.classList.toggle("is-active", isSynopsis);
       panelSynopsis.hidden = !isSynopsis;
-      panelTrailer.hidden = isSynopsis;
+      if (tabTrailer && panelTrailer) {
+        tabTrailer.setAttribute("aria-selected", !isSynopsis ? "true" : "false");
+        tabTrailer.classList.toggle("is-active", !isSynopsis);
+        tabTrailer.tabIndex = !isSynopsis ? 0 : -1;
+        panelTrailer.hidden = isSynopsis;
+      }
+      tabSynopsis.tabIndex = isSynopsis ? 0 : -1;
     }
 
     tabSynopsis.addEventListener("click", function () {
       activate("synopsis");
     });
-    tabTrailer.addEventListener("click", function () {
-      activate("trailer");
-    });
+    if (tabTrailer) {
+      tabTrailer.addEventListener("click", function () {
+        activate("trailer");
+      });
+    }
+  }
+
+  function removeMobileBookingButton() {
+    var existing = document.getElementById("mdBookingMobile");
+    if (existing) existing.remove();
   }
 
   function renderMovieDetail(movie) {
     var slug = movie.slug;
     var bookingUrl = movie.bookingUrl || BOOKING_URL;
+    var showBooking = getCatalogSection() !== "past";
 
     document.title = buildDocumentTitle(movie);
     if (titleEl) titleEl.textContent = movie.titleKo || "";
 
     root.innerHTML = "";
+    removeMobileBookingButton();
 
-    var grid = document.createElement("div");
-    grid.className = "movie-detail-grid";
+    var body = document.createElement("div");
+    body.className = "md-body";
 
-    var c1 = document.createElement("div");
-    c1.className = "movie-detail-c1 movie-detail-box";
-    var c1Inner = document.createElement("div");
-    c1Inner.className = "movie-detail-box-inner";
+    var hero = document.createElement("div");
+    hero.className = "md-hero";
+
+    var posterWrap = document.createElement("div");
+    posterWrap.className = "md-poster-wrap";
     if (movie.poster) {
       var poster = document.createElement("img");
-      poster.className = "movie-detail-poster";
+      poster.className = "md-poster movie-detail-poster";
       poster.src = resolveAssetUrl(movie.poster);
-      poster.width = 260;
-      poster.height = 368;
+      poster.width = 567;
+      poster.removeAttribute("height");
       poster.alt = (movie.titleKo || "") + " 포스터";
       poster.decoding = "async";
-      c1Inner.appendChild(poster);
+      posterWrap.appendChild(poster);
     }
-    c1.appendChild(c1Inner);
-    grid.appendChild(c1);
+    hero.appendChild(posterWrap);
 
-    var c2 = document.createElement("div");
-    c2.className = "movie-detail-c2 movie-detail-box";
-    var c2Inner = document.createElement("div");
-    c2Inner.className = "movie-detail-box-inner";
-    var meta = document.createElement("dl");
-    meta.className = "movie-detail-meta";
-    if (movie.director) meta.appendChild(createMetaRow("감독", movie.director));
-    if (movie.cast) meta.appendChild(createMetaRow("출연", movie.cast));
-    meta.appendChild(createMetaRow("정보", createInfoDd(movie)));
-    if (movie.releaseDate) meta.appendChild(createMetaRow("개봉", movie.releaseDate));
-    c2Inner.appendChild(meta);
+    var infoCol = document.createElement("div");
+    infoCol.className = "md-info-col";
 
-    if (getCatalogSection() !== "past") {
-      var bookBtn = document.createElement("a");
-      bookBtn.className = "md2-booking-btn";
-      bookBtn.href = bookingUrl;
-      bookBtn.target = "_blank";
-      bookBtn.rel = "noopener noreferrer";
-      bookBtn.setAttribute("aria-label", (movie.titleKo || "") + " 예매하기");
-      bookBtn.textContent = "예매하기";
-      c2Inner.appendChild(bookBtn);
-    }
-    c2.appendChild(c2Inner);
-    grid.appendChild(c2);
+    var infoBlock = document.createElement("div");
+    infoBlock.className = "md-info-block";
+    infoBlock.appendChild(createSectionHead("정보"));
 
-    var c3 = document.createElement("div");
-    c3.className = "movie-detail-c3 movie-detail-box";
-    var c3Inner = document.createElement("div");
-    c3Inner.className = "movie-detail-box-inner";
+    var metaList = document.createElement("div");
+    metaList.className = "md-meta-list";
+    if (movie.director) metaList.appendChild(createMetaRow("감독", movie.director));
+    if (movie.cast) metaList.appendChild(createMetaRow("출연", movie.cast));
+    metaList.appendChild(createMetaRow("개요", createOverviewValue(movie)));
+    if (movie.releaseDate) metaList.appendChild(createMetaRow("개봉", movie.releaseDate));
+    infoBlock.appendChild(metaList);
+    infoCol.appendChild(infoBlock);
+
+    var tabsBlock = document.createElement("div");
+    tabsBlock.className = "md-tabs-block";
 
     var hasTrailer = !!movie.trailerYoutubeId;
     var tabs = document.createElement("div");
-    tabs.className = "movie-detail-tabs";
+    tabs.className = "md-tabs movie-detail-tabs";
     tabs.setAttribute("role", "tablist");
     tabs.setAttribute("aria-label", "영화 정보 탭");
 
     var tabSynopsis = document.createElement("button");
     tabSynopsis.type = "button";
-    tabSynopsis.className = "movie-detail-tab";
+    tabSynopsis.className = "md-tab movie-detail-tab is-active";
     tabSynopsis.setAttribute("role", "tab");
     tabSynopsis.id = "movie-tab-synopsis-" + slug;
     tabSynopsis.setAttribute("aria-controls", "movie-tabpanel-synopsis-" + slug);
     tabSynopsis.setAttribute("aria-selected", "true");
     tabSynopsis.textContent = "줄거리";
-
     tabs.appendChild(tabSynopsis);
 
     if (hasTrailer) {
       var tabTrailer = document.createElement("button");
       tabTrailer.type = "button";
-      tabTrailer.className = "movie-detail-tab";
+      tabTrailer.className = "md-tab movie-detail-tab";
       tabTrailer.setAttribute("role", "tab");
       tabTrailer.id = "movie-tab-trailer-" + slug;
       tabTrailer.setAttribute("aria-controls", "movie-tabpanel-trailer-" + slug);
@@ -322,29 +383,29 @@
       tabs.appendChild(tabTrailer);
     }
 
-    c3Inner.appendChild(tabs);
+    tabsBlock.appendChild(tabs);
 
     var panelSynopsis = document.createElement("div");
     panelSynopsis.id = "movie-tabpanel-synopsis-" + slug;
-    panelSynopsis.className = "movie-detail-tabpanel";
+    panelSynopsis.className = "md-tabpanel movie-detail-tabpanel";
     panelSynopsis.setAttribute("role", "tabpanel");
     panelSynopsis.setAttribute("aria-labelledby", "movie-tab-synopsis-" + slug);
     var synopsis = document.createElement("p");
-    synopsis.className = "movie-detail-synopsis";
+    synopsis.className = "md-synopsis movie-detail-synopsis";
     synopsis.textContent = movie.synopsis || "";
     panelSynopsis.appendChild(synopsis);
-    c3Inner.appendChild(panelSynopsis);
+    tabsBlock.appendChild(panelSynopsis);
 
     if (hasTrailer) {
       var panelTrailer = document.createElement("div");
       panelTrailer.id = "movie-tabpanel-trailer-" + slug;
-      panelTrailer.className = "movie-detail-tabpanel";
+      panelTrailer.className = "md-tabpanel movie-detail-tabpanel";
       panelTrailer.setAttribute("role", "tabpanel");
       panelTrailer.setAttribute("aria-labelledby", "movie-tab-trailer-" + slug);
       panelTrailer.hidden = true;
 
       var frame = document.createElement("div");
-      frame.className = "movie-detail-trailer-frame";
+      frame.className = "md-trailer-frame movie-detail-trailer-frame";
       var iframe = document.createElement("iframe");
       iframe.src = "https://www.youtube.com/embed/" + movie.trailerYoutubeId;
       iframe.title = "「" + (movie.titleKo || "") + "」 예고편";
@@ -356,41 +417,55 @@
       iframe.loading = "lazy";
       frame.appendChild(iframe);
       panelTrailer.appendChild(frame);
-      c3Inner.appendChild(panelTrailer);
+      tabsBlock.appendChild(panelTrailer);
     }
 
-    c3.appendChild(c3Inner);
-    grid.appendChild(c3);
+    infoCol.appendChild(tabsBlock);
+
+    if (showBooking) {
+      infoCol.appendChild(createBookingButton(movie, bookingUrl, "md-booking-btn--inline"));
+    }
+
+    hero.appendChild(infoCol);
+    body.appendChild(hero);
 
     var screenings = Array.isArray(movie.screenings) ? movie.screenings : [];
+    var schedule = null;
     if (screenings.length) {
-      var c4 = document.createElement("div");
-      c4.className = "movie-detail-c4 movie-detail-box";
-      var c4Inner = document.createElement("div");
-      c4Inner.className = "movie-detail-box-inner";
+      schedule = document.createElement("section");
+      schedule.className = "md-schedule";
 
-      var schedTitle = document.createElement("h3");
-      schedTitle.className = "movie-detail-schedule-title";
-      schedTitle.textContent = "상영시간표";
-      c4Inner.appendChild(schedTitle);
+      var scheduleHead = document.createElement("div");
+      scheduleHead.className = "md-schedule-head";
+      scheduleHead.appendChild(createSectionHead("상영시간표"));
 
       var note = document.createElement("p");
-      note.className = "ref-note";
-      note.style.margin = "-6px 0 12px";
+      note.className = "md-schedule-note ref-note";
       note.textContent = "오오극장 공식 사이트 기준 · 변경될 수 있습니다.";
-      c4Inner.appendChild(note);
+      scheduleHead.appendChild(note);
+      schedule.appendChild(scheduleHead);
 
-      var badgeGrid = document.createElement("div");
-      badgeGrid.className = "movie-detail-badge-grid";
+      var scheduleGrid = document.createElement("div");
+      scheduleGrid.className = "md-schedule-grid movie-detail-badge-grid";
       screenings.forEach(function (s) {
-        badgeGrid.appendChild(createScreeningBadge(s, bookingUrl, movie.titleKo || ""));
+        scheduleGrid.appendChild(createScreeningSlot(s, bookingUrl, movie.titleKo || ""));
       });
-      c4Inner.appendChild(badgeGrid);
-      c4.appendChild(c4Inner);
-      grid.appendChild(c4);
+      schedule.appendChild(scheduleGrid);
+      body.appendChild(schedule);
     }
 
-    root.appendChild(grid);
+    if (showBooking) {
+      var mobileBtn = createBookingButton(movie, bookingUrl, "md-booking-btn--mobile");
+      mobileBtn.id = "mdBookingMobile";
+      if (schedule) {
+        schedule.appendChild(mobileBtn);
+      } else {
+        body.appendChild(mobileBtn);
+      }
+    }
+
+    root.appendChild(body);
+
     bindMovieDetailTabs(slug);
     setStatus("");
   }
@@ -409,7 +484,7 @@
   }
 
   function applyListBackLink() {
-    var back = document.querySelector(".np-back a");
+    var back = document.getElementById("mdBackLink");
     if (!back) return;
     var section = getCatalogSection();
     var listPath = LIST_PAGE_PATHS[section] || LIST_PAGE_PATHS["now-playing"];
@@ -425,7 +500,11 @@
     var retStr = returnQs.toString();
     if (retStr) href += "?" + retStr;
     back.href = resolveAssetUrl(href);
-    back.textContent = LIST_LABELS[section] || LIST_LABELS["now-playing"];
+    var textEl = back.querySelector(".md-back__text");
+    if (textEl) {
+      textEl.textContent = "목록으로";
+    }
+    back.setAttribute("aria-label", (LIST_LABELS[section] || LIST_LABELS["now-playing"]) + "으로 돌아가기");
   }
 
   function boot() {
@@ -457,6 +536,7 @@
       })
       .catch(function (err) {
         root.innerHTML = "";
+        removeMobileBookingButton();
         setStatus((err && err.message) || "영화 정보를 표시할 수 없습니다.", true);
       });
   }

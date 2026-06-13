@@ -1,20 +1,647 @@
-/* movies/now-playing/*.html — 현재 상영작 상세 본문 (일괄 관리) */
+/* movies/movie-detail.html — Figma 상세 (PC·모바일) */
 
-.ti .ti-md-theme .movie-detail-synopsis {
-  text-align: justify;
+.ti .ti-right.ti-md-panel {
+  padding: 0;
+  background: #ffffff;
+  color: #111111;
+}
+
+.ti .ti-md-scroll {
+  max-width: none;
+  padding-bottom: 0;
+}
+
+.ti .ti-md-theme {
+  --md-ink: #111111;
+  --md-body: #404040;
+  --md-muted: #808080;
+  --md-line: #595959;
+  --md-divider: #e2e2e2;
+  --md-bg: #ffffff;
+  color: var(--md-ink);
+  background: var(--md-bg);
+  font-family: "Spoqa Han Sans Neo", sans-serif;
+}
+
+.ti .ti-md-theme .section-movie-detail,
+.ti .ti-md-theme .md-page {
+  box-sizing: border-box;
+  max-width: 1416px;
+  margin: 0 auto;
+  padding: 24px clamp(16px, 3vw, 48px) 48px;
+}
+
+/* btn_back */
+.ti .ti-md-theme .md-back {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 24px;
+  padding: 8px 0;
+  width: fit-content;
+  color: var(--md-line);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.ti .ti-md-theme .md-back__icon {
+  display: inline-flex;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: var(--md-line);
+}
+
+.ti .ti-md-theme .md-back__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ti .ti-md-theme .md-back:hover {
+  color: var(--md-ink);
+}
+
+.ti .ti-md-theme .md-back:hover .md-back__icon {
+  color: var(--md-ink);
+}
+
+@media (min-width: 900px) {
+  .ti .ti-md-theme .md-page {
+    padding-top: 24px;
+  }
+
+  .ti .ti-md-theme .md-back {
+    display: inline-flex;
+  }
+
+  .ti .ti-md-theme .md-head {
+    margin-top: 24px;
+  }
+}
+
+/* tit */
+.ti .ti-md-theme .md-head {
+  margin: 0;
+  padding: 0 0 20px;
+  border-bottom: 1px solid var(--md-line);
+}
+
+.ti .ti-md-theme .md-title,
+.ti .ti-md-theme .section-title {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--md-ink);
+}
+
+.ti .ti-md-theme .md-title::after,
+.ti .ti-md-theme .section-title::after {
+  display: none;
+  content: none;
 }
 
 .ti .ti-md-theme .movie-detail-status {
-  margin: 0 0 16px;
-  padding: 14px 16px;
-  border: 1px solid #c8c8c8;
-  background: #fff;
-  font-size: 0.9rem;
-  color: #5a5a5a;
+  margin: 16px 0 0;
+  padding: 20px 16px;
+  border: 1px solid var(--md-line);
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--md-muted);
   text-align: center;
 }
 
 .ti .ti-md-theme .movie-detail-status.is-error {
   color: #8b1a1a;
-  border-color: #c8a0a0;
+}
+
+/* hero: poster + info */
+.ti .ti-md-theme .md-body {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding-top: 24px;
+}
+
+.ti .ti-md-theme .md-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 32px;
+}
+
+.ti .ti-md-theme .md-poster-wrap {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--md-line);
+  background: #f2f2f2;
+}
+
+.ti .ti-md-theme .md-poster,
+.ti .ti-md-theme .movie-detail-poster.md-poster {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center top;
+  border: none;
+  border-radius: 0;
+}
+
+.ti .ti-md-theme .md-info-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  min-width: 0;
+}
+
+/* s_tit */
+.ti .ti-md-theme .md-section-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--md-ink);
+}
+
+.ti .ti-md-theme .md-section-dot {
+  display: block;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  background: url("../images/theater-info-dot.png") no-repeat center / contain;
+}
+
+.ti .ti-md-theme .md-info-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+/* meta list */
+.ti .ti-md-theme .md-meta-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.ti .ti-md-theme .md-meta-row {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--md-divider);
+}
+
+.ti .ti-md-theme .md-meta-row:last-child {
+  border-bottom: none;
+}
+
+.ti .ti-md-theme .md-meta-label {
+  flex: none;
+  width: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--md-muted);
+  word-break: keep-all;
+}
+
+.ti .ti-md-theme .md-meta-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--md-ink);
+  word-break: keep-all;
+}
+
+.ti .ti-md-theme .md-meta-value--inline {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.ti .ti-md-theme .md-meta-dot {
+  flex: none;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--md-muted);
+}
+
+.ti .ti-md-theme .md-rating-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* tabs */
+.ti .ti-md-theme .md-tabs-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  width: 100%;
+}
+
+.ti .ti-md-theme .md-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  padding: 0;
+  border-bottom: 1px solid var(--md-divider);
+  gap: 0;
+}
+
+.ti .ti-md-theme .md-tab {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 12px 16px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--md-muted);
+  cursor: pointer;
+}
+
+.ti .ti-md-theme .md-tab.is-active,
+.ti .ti-md-theme .md-tab[aria-selected="true"] {
+  border-bottom-color: var(--md-ink);
+  font-weight: 700;
+  color: var(--md-ink);
+}
+
+.ti .ti-md-theme .md-tab:hover {
+  color: var(--md-ink);
+}
+
+.ti .ti-md-theme .md-tab:focus-visible {
+  outline: 2px solid var(--md-ink);
+  outline-offset: 2px;
+}
+
+.ti .ti-md-theme .md-tabpanel {
+  width: 100%;
+  padding: 0;
+}
+
+.ti .ti-md-theme .md-tabpanel[hidden] {
+  display: none;
+}
+
+.ti .ti-md-theme .md-synopsis {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--md-body);
+  text-align: left;
+  white-space: pre-line;
+}
+
+.ti .ti-md-theme .md-trailer-frame {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border: 1px solid var(--md-line);
+  background: #111111;
+}
+
+.ti .ti-md-theme .md-trailer-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* booking btn */
+.ti .ti-md-theme .md-booking-btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 0;
+  background: var(--md-ink);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ti .ti-md-theme .md-booking-btn:hover {
+  background: #333333;
+  color: #ffffff;
+}
+
+.ti .ti-md-theme .md-booking-btn:focus-visible {
+  outline: 2px solid var(--md-ink);
+  outline-offset: 2px;
+}
+
+.ti .ti-md-theme .md-booking-btn--inline {
+  width: 200px;
+  max-width: 100%;
+}
+
+.ti .ti-md-theme .md-booking-btn--mobile {
+  display: none;
+}
+
+/* schedule */
+.ti .ti-md-theme .md-schedule {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.ti .ti-md-theme .md-schedule-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.ti .ti-md-theme .md-schedule-note {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--md-muted);
+}
+
+.ti .ti-md-theme .md-schedule-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding-top: 24px;
+}
+
+.ti .ti-md-theme .md-schedule-slot {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  min-height: 68px;
+  padding: 16px 20px;
+  border: 1px solid var(--md-line);
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+}
+
+.ti .ti-md-theme .md-schedule-slot__date {
+  display: block;
+  color: var(--md-ink);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.ti .ti-md-theme .md-schedule-slot__time {
+  display: block;
+  color: var(--md-line);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.ti .ti-md-theme .md-schedule-slot:hover {
+  background: #f7f7f7;
+}
+
+.ti .ti-md-theme .md-schedule-slot:hover .md-schedule-slot__date,
+.ti .ti-md-theme .md-schedule-slot:hover .md-schedule-slot__time {
+  color: var(--md-ink);
+}
+
+.ti .ti-md-theme .md-schedule-slot:focus-visible {
+  outline: 2px solid var(--md-ink);
+  outline-offset: 2px;
+}
+
+/* ── PC ── */
+@media (min-width: 900px) {
+  .ti .ti-md-theme .md-page {
+    padding-top: 24px;
+    padding-bottom: 64px;
+  }
+
+  .ti .ti-md-theme .md-head {
+    margin-top: 0;
+  }
+
+  .ti .ti-md-theme .md-body {
+    gap: 50px;
+    padding-top: 24px;
+  }
+
+  .ti .ti-md-theme .md-hero {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .ti .ti-md-theme .md-poster-wrap {
+    flex: 0 0 567px;
+    width: 567px;
+    max-width: 567px;
+    min-width: 567px;
+  }
+
+  .ti .ti-md-theme .md-poster,
+  .ti .ti-md-theme .movie-detail-poster.md-poster {
+    width: 567px;
+    max-width: 567px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .ti .ti-md-theme .md-info-col {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 24px 24px 0;
+    gap: 80px;
+  }
+
+  .ti .ti-md-theme .md-info-block {
+    gap: 16px;
+  }
+
+  .ti .ti-md-theme .md-tabs-block {
+    gap: 24px;
+  }
+
+  .ti .ti-md-theme .md-schedule-slot {
+    width: 180px;
+  }
+
+  .ti .ti-md-theme .md-booking-btn--mobile {
+    display: none !important;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 899px) {
+  .ti .ti-md-theme .md-page {
+    padding: 32px clamp(14px, 4vw, 20px) 48px;
+  }
+
+  .ti .ti-md-theme .md-head {
+    margin-top: 0;
+    padding: 0 0 16px;
+    border-bottom: none;
+  }
+
+  .ti .ti-md-theme .md-title,
+  .ti .ti-md-theme .section-title {
+    font-size: 22px;
+  }
+
+  .ti .ti-md-theme .md-body {
+    gap: 40px;
+    padding-top: 8px;
+    width: 100%;
+  }
+
+  .ti .ti-md-theme .md-hero {
+    gap: 32px;
+    width: 100%;
+  }
+
+  .ti .ti-md-theme .md-poster-wrap {
+    width: 100%;
+    max-width: 100%;
+    align-self: stretch;
+  }
+
+  .ti .ti-md-theme .md-poster,
+  .ti .ti-md-theme .movie-detail-poster.md-poster {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center top;
+  }
+
+  .ti .ti-md-theme .md-info-col {
+    gap: 24px;
+    width: 100%;
+  }
+
+  .ti .ti-md-theme .md-section-head {
+    font-size: 18px;
+  }
+
+  .ti .ti-md-theme .md-meta-row {
+    padding: 20px 0;
+  }
+
+  .ti .ti-md-theme .md-tabs {
+    width: 100%;
+  }
+
+  .ti .ti-md-theme .md-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 16px;
+  }
+
+  .ti .ti-md-theme .md-synopsis {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .ti .ti-md-theme .md-booking-btn--inline {
+    display: none;
+  }
+
+  .ti .ti-md-theme .md-booking-btn--mobile {
+    display: inline-flex;
+    width: 100%;
+    max-width: 100%;
+    height: 48px;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .ti .ti-md-theme .md-schedule {
+    gap: 24px;
+    width: 100%;
+  }
+
+  .ti .ti-md-theme .md-schedule .md-booking-btn--mobile {
+    margin-top: 0;
+  }
+
+  .ti .ti-md-theme .md-body > .md-booking-btn--mobile {
+    margin-top: 8px;
+  }
+
+  .ti .ti-md-theme .md-schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding-top: 0;
+    width: 100%;
+  }
+
+  .ti .ti-md-theme .md-schedule-slot {
+    width: 100%;
+    min-height: 68px;
+  }
 }

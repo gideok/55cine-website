@@ -15,9 +15,10 @@
   <link rel="stylesheet" href="css/components/shell-scroll-top.css" />
   <link rel="stylesheet" href="css/site-footer.css" />
   <link rel="stylesheet" href="css/page-pager.css" />
-  <link rel="stylesheet" href="css/now-playing.css" />
   <link rel="stylesheet" href="css/components/np-movie-grid.css" />
+  <link rel="stylesheet" href="css/now-playing.css" />
   <link rel="stylesheet" href="css/components/np-search-toolbar.css" />
+  <link rel="stylesheet" href="css/logo-spinner.css" />
 </head>
 <body class="ti">
   <div class="ti-shell" id="tiShell">
@@ -33,21 +34,18 @@
         aria-label="사이트 정보"
       ></footer>
     </div>
-    <aside class="ti-right ti-np-root" aria-label="현재 상영작 본문">
+    <aside class="ti-right ti-np-root ti-np-list" aria-label="현재 상영작 본문">
       <div class="ti-np-scroll">
         <div class="np-page">
           <header class="np-head">
-            <p class="np-kicker">상영작</p>
             <h1 class="np-title" id="np-page-title">현재 상영작</h1>
           </header>
-          <div class="ti-page-toolbar">
-            <p class="ti-page-count" id="npCount" aria-live="polite"></p>
-            <nav class="ti-page-pager" id="npPager" aria-label="페이지"></nav>
-          </div>
+          <div class="np-meta" id="npCount" aria-live="polite"></div>
           <div class="np-grid" id="npGrid"></div>
           <p class="np-mobile-hint" id="npMobileHint">스크롤하면 다음 작품이 자동으로 불러와집니다.</p>
           <div class="np-sentinel" id="npSentinel" aria-hidden="true"></div>
           <p class="np-end" id="npEnd">모든 상영작을 불러왔습니다.</p>
+          <nav class="ti-page-pager ti-page-pager--bottom" id="npPager" aria-label="페이지"></nav>
         </div>
       </div>
     </aside>
@@ -77,6 +75,7 @@
   <script src="js/scroll-top.js"></script>
   <script src="js/week-schedule.js"></script>
   <script src="js/page-pager.js"></script>
+  <script src="js/logo-spinner.js"></script>
   <script src="js/movie-list-page.js"></script>
 </body>
 </html>

@@ -95,13 +95,25 @@ function sectionWhereClause(section: MovieSection): string {
   }
 }
 
+function titleEnFromSlug(slug: string): string {
+  return String(slug || "").trim().replace(/-/g, " ");
+}
+
+function resolveListTitleEn(slug: string): string {
+  return titleEnFromSlug(slug);
+}
+
+function resolveDetailTitleEn(row: ProgRow): string {
+  return String(row.name2 || "").trim() || titleEnFromSlug(String(row.slug || ""));
+}
+
 function mapListItem(row: ProgRow, section: MovieSection): MovieListItem {
   const slug = String(row.slug || "").trim();
   return {
     slug,
     poster: row.img1?.trim() || "images/schedule-poster-placeholder.svg",
     titleKo: String(row.name || "").trim(),
-    titleEn: String(row.name2 || "").trim(),
+    titleEn: resolveListTitleEn(slug),
     director: row.director?.trim() || undefined,
     detailUrl: `movies/movie-detail.html?slug=${encodeURIComponent(slug)}&from=${section}`
   };
@@ -165,7 +177,7 @@ function mapDetail(row: ProgRow, screenings: MovieDetailRecord["screenings"] = [
     slug,
     poster: row.img1?.trim() || "images/schedule-poster-placeholder.svg",
     titleKo: String(row.name || "").trim(),
-    titleEn: String(row.name2 || "").trim(),
+    titleEn: resolveDetailTitleEn(row),
     director: row.director?.trim() || "",
     cast: row.cast_names?.trim() || "",
     info: infoText,

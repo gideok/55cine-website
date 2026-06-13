@@ -15,8 +15,8 @@
   <link rel="stylesheet" href="css/components/shell-scroll-top.css" />
   <link rel="stylesheet" href="css/site-footer.css" />
   <link rel="stylesheet" href="css/page-pager.css" />
-  <link rel="stylesheet" href="css/now-playing.css" />
   <link rel="stylesheet" href="css/components/np-movie-grid.css" />
+  <link rel="stylesheet" href="css/now-playing.css" />
   <link rel="stylesheet" href="css/components/np-search-toolbar.css" />
   <link rel="stylesheet" href="css/logo-spinner.css" />
 </head>
@@ -34,59 +34,56 @@
         aria-label="사이트 정보"
       ></footer>
     </div>
-    <aside class="ti-right ti-np-root" aria-label="지난 상영작 본문">
+    <aside class="ti-right ti-np-root ti-np-list" aria-label="지난 상영작 본문">
       <div class="ti-np-scroll">
         <div class="np-page">
           <header class="np-head">
-            <p class="np-kicker">상영작</p>
             <h1 class="np-title" id="np-page-title">지난 상영작</h1>
           </header>
-          <div class="ti-page-toolbar ti-page-toolbar--with-search">
-            <div class="ti-page-toolbar__meta">
-              <p class="ti-page-count" id="npCount" aria-live="polite"></p>
-              <div class="np-search" id="npSearch">
-                <button
-                  type="button"
-                  class="np-search-toggle"
-                  id="npSearchToggle"
-                  aria-expanded="false"
-                  aria-controls="npSearchPanel"
-                  aria-label="검색 열기"
-                >
-                  <span class="np-search-toggle__icon" aria-hidden="true">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div class="np-meta-row np-meta-row--with-search">
+            <div class="np-meta" id="npCount" aria-live="polite"></div>
+            <div class="np-search" id="npSearch">
+              <button
+                type="button"
+                class="np-search-toggle"
+                id="npSearchToggle"
+                aria-expanded="false"
+                aria-controls="npSearchPanel"
+                aria-label="검색 열기"
+              >
+                <span class="np-search-toggle__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.75"/>
+                    <path d="M16 16L20.5 20.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="np-search-panel" id="npSearchPanel">
+                <label class="np-search-field" for="npSearchInput">
+                  <span class="np-search-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.75"/>
                       <path d="M16 16L20.5 20.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/>
                     </svg>
                   </span>
-                </button>
-                <div class="np-search-panel" id="npSearchPanel">
-                  <label class="np-search-field" for="npSearchInput">
-                    <span class="np-search-icon" aria-hidden="true">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.75"/>
-                        <path d="M16 16L20.5 20.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/>
-                      </svg>
-                    </span>
-                    <input
-                      type="search"
-                      id="npSearchInput"
-                      class="np-search-input"
-                      placeholder="감독, 제목, 영어제목"
-                      autocomplete="off"
-                      aria-label="감독, 제목, 영어제목으로 검색"
-                    />
-                  </label>
-                </div>
+                  <input
+                    type="search"
+                    id="npSearchInput"
+                    class="np-search-input"
+                    placeholder="감독, 제목, 영어제목"
+                    autocomplete="off"
+                    aria-label="감독, 제목, 영어제목으로 검색"
+                  />
+                </label>
               </div>
             </div>
-            <nav class="ti-page-pager" id="npPager" aria-label="페이지"></nav>
           </div>
           <div class="np-grid" id="npGrid"></div>
           <div class="np-load-more" id="npLoadMore" hidden aria-live="polite" aria-busy="false"></div>
           <p class="np-mobile-hint" id="npMobileHint">스크롤하면 다음 작품이 자동으로 불러와집니다.</p>
           <div class="np-sentinel" id="npSentinel" aria-hidden="true"></div>
           <p class="np-end" id="npEnd">모든 지난 상영작을 불러왔습니다.</p>
+          <nav class="ti-page-pager ti-page-pager--bottom" id="npPager" aria-label="페이지"></nav>
         </div>
       </div>
     </aside>

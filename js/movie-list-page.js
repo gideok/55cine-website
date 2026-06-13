@@ -189,6 +189,63 @@
     });
   }
 
+  function titleEnFromSlug(slug) {
+    return String(slug || "").trim().replace(/-/g, " ");
+  }
+
+  function renderNpCount(el, options) {
+    if (!el) return;
+    el.innerHTML = "";
+    options = options || {};
+    var inner = document.createElement("div");
+    inner.className = "np-meta__inner";
+
+    if (options.mode === "search-empty") {
+      inner.textContent = "검색 결과 0편";
+      el.appendChild(inner);
+      return;
+    }
+
+    if (options.mode === "search") {
+      inner.textContent =
+        "검색 " + options.total + "편 · " + options.page + " / " + options.totalPages + " 페이지";
+      el.appendChild(inner);
+      return;
+    }
+
+    if (options.mode === "mobile") {
+      inner.textContent = options.text || "";
+      el.appendChild(inner);
+      return;
+    }
+
+    var total = document.createElement("span");
+    total.className = "np-meta__total";
+    total.textContent = "총 " + options.total + "편";
+    inner.appendChild(total);
+
+    if (options.totalPages > 1) {
+      var dot = document.createElement("span");
+      dot.className = "np-meta__dot";
+      dot.setAttribute("aria-hidden", "true");
+      inner.appendChild(dot);
+
+      var page = document.createElement("span");
+      page.className = "np-meta__page";
+      page.textContent = options.page + " / " + options.totalPages + " 페이지";
+      inner.appendChild(page);
+
+      el.setAttribute(
+        "aria-label",
+        "총 " + options.total + "편, " + options.page + " / " + options.totalPages + " 페이지"
+      );
+    } else {
+      el.setAttribute("aria-label", "총 " + options.total + "편");
+    }
+
+    el.appendChild(inner);
+  }
+
   function normalizeListPayload(payload) {
     var raw = Array.isArray(payload) ? payload : payload && payload.movies;
     if (!Array.isArray(raw)) return [];
@@ -198,7 +255,7 @@
         slug: slug,
         poster: item.poster || "",
         titleKo: item.titleKo || item.title || "",
-        titleEn: item.titleEn || "",
+        titleEn: titleEnFromSlug(slug),
         director: item.director || "",
         detailUrl: item.detailUrl || (slug ? buildDetailUrl(slug) : "")
       };
@@ -315,12 +372,10 @@
     tlink.textContent = m.titleKo;
     h2.appendChild(tlink);
     body.appendChild(h2);
-    if (m.titleEn) {
-      var en = document.createElement("p");
-      en.className = "np-card-en";
-      en.textContent = m.titleEn;
-      body.appendChild(en);
-    }
+    var en = document.createElement("p");
+    en.className = "np-card-en";
+    en.textContent = titleEnFromSlug(m.slug || "");
+    body.appendChild(en);
     article.appendChild(media);
     article.appendChild(body);
     return article;
@@ -348,7 +403,7 @@
     wrap.appendChild(text);
 
     grid.appendChild(wrap);
-    if (countEl) countEl.textContent = "";
+    if (countEl) countEl.innerHTML = "";
     if (Pager) Pager.updateVisibility(pager, 0);
     if (endEl) endEl.classList.remove("is-visible");
   }
@@ -412,7 +467,7 @@
       var msg = searchStatusMessage() || EMPTY_MESSAGE;
       showListMessage(msg, false, false);
       if (countEl && hasActiveSearch()) {
-        countEl.textContent = "검색 결과 0편";
+        renderNpCount(countEl, { mode: "search-empty" });
       }
       return;
     }
@@ -426,11 +481,20 @@
       var tp = USE_PAGED_API ? Math.max(1, state.apiTotalPages) : totalPages(list.length);
       var countTotal = USE_PAGED_API ? state.apiTotal : list.length;
       if (countEl) {
-        var countText = formatDesktopCountText(countTotal, tp);
-        if (!USE_PAGED_API && hasActiveSearch() && movieList.length !== list.length) {
-          countText += " · 전체 " + movieList.length + "편 중";
+        if (USE_PAGED_API && hasActiveSearch()) {
+          renderNpCount(countEl, {
+            mode: "search",
+            total: countTotal,
+            page: state.page,
+            totalPages: tp
+          });
+        } else {
+          renderNpCount(countEl, {
+            total: countTotal,
+            page: state.page,
+            totalPages: tp
+          });
         }
-        countEl.textContent = countText;
       }
       if (Pager) {
         Pager.render(pager, {
@@ -455,7 +519,7 @@
         if (!USE_PAGED_API && hasActiveSearch() && movieList.length !== list.length) {
           mobileCount += " (전체 " + movieList.length + "편)";
         }
-        countEl.textContent = mobileCount;
+        renderNpCount(countEl, { mode: "mobile", text: mobileCount });
       }
       if (endEl) {
         var allLoaded =
@@ -835,6 +899,9 @@
   }
 
   function normalizeSearchToolbarLayout() {
+    var row = document.querySelector(".ti-np-root .np-meta-row--with-search");
+    if (row) return;
+
     var toolbar = document.querySelector(".ti-np-root .ti-page-toolbar");
     if (!toolbar) return;
     var legacy = toolbar.querySelector(".ti-page-toolbar__trailing");
@@ -855,6 +922,9 @@
   }
 
   function ensureSearchMetaRow() {
+    var row = document.querySelector(".ti-np-root .np-meta-row--with-search");
+    if (row) return row;
+
     var toolbar = document.querySelector(".ti-np-root .ti-page-toolbar");
     if (!toolbar) return null;
     normalizeSearchToolbarLayout();
