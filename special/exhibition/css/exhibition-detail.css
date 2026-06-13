@@ -1,123 +1,44 @@
-/* special/exhibition/exhibition_detail.html — 기획전 상세 */
+/* special/exhibition/exhibition_detail.html — 본문 그리드·필름·라이트박스 (상단 md-page는 now-playing-movie-detail.css) */
 
-.ti .ti-right.ti-ex-detail-panel {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  min-width: 0;
-  padding: clamp(12px, 2vw, 22px) clamp(14px, 2.4vw, 28px);
-  background: #fafafa;
-  color: #1a1a1a;
-  -webkit-font-smoothing: antialiased;
-}
-
-.ti .ti-ex-detail-scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+.ti .ti-md-theme .exhibition-detail-root {
   width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding-bottom: 24px;
-}
-
-.ti .ti-ex-detail-wrap {
-  --site-font-family: "Spoqa Han Sans Neo", sans-serif;
-  --brand-bronze: #5a5a5a;
-  --brand-ink: #111;
-  --brand-walnut: #2a2a2a;
-  --bg: #fafafa;
-  --bg-elevated: #ffffff;
-  --text: #1a1a1a;
-  --muted: #5a5a5a;
-  --line: #c8c8c8;
-  --accent: #333;
-  --shadow: rgba(0, 0, 0, 0.08);
-  --radius-sm: 0;
-  color: var(--text);
-  background: var(--bg-elevated);
-  font-family: var(--site-font-family);
-  line-height: 1.5;
-}
-
-.ti .ti-ex-detail-wrap a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.ti .ti-ex-detail-wrap .section-exhibition-detail {
-  padding: 8px 8px 32px;
-  max-width: 1040px;
-  margin: 0 auto;
-}
-
-.ti .ti-ex-detail-wrap .np-back {
-  margin: 0 0 10px;
-  font-size: 0.88rem;
-  font-weight: 600;
-}
-
-.ti .ti-ex-detail-wrap .np-back a {
-  color: #333;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.ti .ti-ex-detail-wrap .np-back a:hover {
-  color: #000;
-}
-
-.ti .ti-ex-detail-wrap .section-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin: 0 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text);
-}
-
-.ti .ti-ex-detail-wrap .section-title::after {
-  content: "›";
-  font-weight: 400;
-  color: var(--muted);
+  padding-top: 24px;
 }
 
 .ti .exhibition-detail-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 20px;
+  gap: 32px 40px;
   align-items: stretch;
 }
 
-.ti .exhibition-detail-section {
+.ti .exhibition-detail-section,
+.ti .exhibition-detail-film {
   min-width: 0;
-  border: 1px solid #b0b0b0;
+  border: none;
   border-radius: 0;
-  background: #fff;
+  background: transparent;
   box-sizing: border-box;
 }
 
 .ti .exhibition-detail-section__inner {
-  padding: 18px 20px 22px;
+  padding: 0;
   height: 100%;
   box-sizing: border-box;
 }
 
 .ti .exhibition-detail-section--hero .exhibition-detail-section__inner {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 16px;
-  min-height: 280px;
+  padding: 0;
+  min-height: 0;
 }
 
 .ti .exhibition-detail-poster-btn {
   display: block;
   width: 100%;
-  max-width: 360px;
+  max-width: 567px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -230,9 +151,9 @@ body.exhibition-poster-lightbox-open {
   margin: 0;
   flex: 1 1 auto;
   min-height: 0;
-  font-size: 0.86rem;
+  font-size: 14px;
   line-height: 1.65;
-  color: var(--text);
+  color: #404040;
   white-space: pre-line;
   text-align: justify;
 }
@@ -240,46 +161,11 @@ body.exhibition-poster-lightbox-open {
 .ti .exhibition-detail-section--info .exhibition-detail-section__inner {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  min-height: 280px;
+  gap: 24px;
+  min-height: 0;
 }
 
-/* riddle-of-fire.html (.ti-md-theme) 과 동일한 예매하기 버튼 */
-.ti .ti-ex-detail-wrap .md2-booking-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  margin-top: 16px;
-  padding: 12px 14px;
-  border-radius: 0;
-  border: 1px solid #4a4a4a;
-  background: #fff;
-  color: #111;
-  font-family: inherit;
-  font-size: 0.92rem;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-}
-
-.ti .ti-ex-detail-wrap .md2-booking-btn:hover {
-  background: #f0f0f0;
-  border-color: #111;
-  color: #000;
-  box-shadow: none;
-  transform: none;
-}
-
-.ti .ti-ex-detail-wrap .md2-booking-btn:focus-visible {
-  outline: 2px solid #333;
-  outline-offset: 2px;
-}
-
-.ti .exhibition-detail-section--info .md2-booking-btn {
+.ti .exhibition-detail-section--info .md-booking-btn--inline {
   margin-top: 0;
   flex: 0 0 auto;
 }
@@ -288,8 +174,10 @@ body.exhibition-poster-lightbox-open {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 20px;
+  gap: 32px 40px;
   align-items: stretch;
+  padding-top: 8px;
+  border-top: 1px solid #e2e2e2;
 }
 
 .ti .exhibition-detail-film {
@@ -299,19 +187,19 @@ body.exhibition-poster-lightbox-open {
 .ti .exhibition-detail-film .exhibition-detail-section__inner {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   height: 100%;
 }
 
 .ti .exhibition-detail-film.exhibition-film-empty .exhibition-detail-section__inner--empty-film {
-  min-height: 140px;
+  min-height: 0;
 }
 
 .ti .exhibition-film-head {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 8px;
   margin: 0;
   box-sizing: border-box;
   width: 100%;
@@ -321,28 +209,27 @@ body.exhibition-poster-lightbox-open {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
 }
 
-/* 아래 항목이 있을 때만 구분선 */
 .ti .exhibition-detail-film .exhibition-detail-section__inner > *:not(:last-child) {
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e2e2;
   box-sizing: border-box;
 }
 
-/* 포스터는 상하 여백·구분선 제거 */
 .ti .exhibition-detail-film .exhibition-detail-section__inner > .exhibition-film-poster {
   padding-bottom: 0;
+  border-bottom: none;
 }
 
 .ti .exhibition-film-title {
   margin: 0;
   width: 100%;
-  font-size: 1.15rem;
+  font-size: 18px;
   font-weight: 700;
-  color: var(--brand-ink);
+  color: #111111;
   line-height: 1.35;
 }
 
@@ -373,9 +260,9 @@ body.exhibition-poster-lightbox-open {
   min-width: 0;
   min-height: 0;
   height: auto;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  color: #808080;
   line-height: 1.4;
 }
 
@@ -387,16 +274,18 @@ body.exhibition-poster-lightbox-open {
   padding-bottom: 0;
   aspect-ratio: 390 / 220;
   object-fit: contain;
-  object-position: center;
-  border: 1px solid #8a8a8a;
-  background: #f0f0f0;
+  object-position: left center;
+  border: none;
+  background: transparent;
   box-sizing: border-box;
+  align-self: flex-start;
 }
 
 .ti .exhibition-film-meta {
   margin: 0;
-  font-size: 0.84rem;
+  font-size: 14px;
   line-height: 1.55;
+  color: #404040;
   box-sizing: border-box;
 }
 
@@ -404,7 +293,7 @@ body.exhibition-poster-lightbox-open {
   display: inline;
   margin: 0;
   font-weight: 700;
-  color: var(--muted);
+  color: #808080;
 }
 
 .ti .exhibition-film-meta dt::after {
@@ -414,7 +303,7 @@ body.exhibition-poster-lightbox-open {
 .ti .exhibition-film-meta dd {
   display: inline;
   margin: 0;
-  font-weight: 500;
+  font-weight: 400;
   overflow-wrap: break-word;
   word-break: keep-all;
 }
@@ -429,18 +318,18 @@ body.exhibition-poster-lightbox-open {
 
 .ti .exhibition-film-description {
   margin: 0;
-  font-size: 0.86rem;
+  font-size: 14px;
   line-height: 1.65;
-  color: var(--text);
-  text-align: justify;
+  color: #404040;
   box-sizing: border-box;
+  text-align: justify;
 }
 
 .ti .exhibition-film-schedule-title {
-  margin: 2px 0 0;
-  font-size: 0.8rem;
+  margin: 0;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--brand-ink);
+  color: #111111;
   box-sizing: border-box;
 }
 
@@ -464,26 +353,22 @@ body.exhibition-poster-lightbox-open {
   text-align: center;
   padding: 12px 10px;
   border-radius: 0;
-  border: 1px solid #b0b0b0;
-  background: #fafafa;
-  font-size: 0.78rem;
-  font-weight: 600;
+  border: 1px solid #595959;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
   line-height: 1.4;
-  color: var(--text);
+  color: #111111;
   text-decoration: none;
   box-sizing: border-box;
   transition:
     border-color 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+    background 0.15s ease;
 }
 
 .ti a.exhibition-detail-time-badge:hover {
-  border-color: #111;
-  background: #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transform: translateY(-1px);
+  border-color: #111111;
+  background: #f7f7f7;
 }
 
 .ti a.exhibition-detail-time-badge:focus-visible {
@@ -502,7 +387,7 @@ body.exhibition-poster-lightbox-open {
 
 .ti .exhibition-detail-time-badge .badge-date {
   font-weight: 700;
-  color: #111;
+  color: #111111;
 }
 
 .ti .exhibition-detail-time-badge .badge-gv {
@@ -512,54 +397,40 @@ body.exhibition-poster-lightbox-open {
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #fff;
-  background: #1a1a1a;
-  border: 1px solid #1a1a1a;
+  background: #111111;
+  border: 1px solid #111111;
   line-height: 1.35;
 }
 
 .ti .exhibition-detail-time-badge .badge-time {
   font-variant-numeric: tabular-nums;
-  color: var(--muted);
-  font-weight: 600;
+  color: #808080;
+  font-weight: 400;
 }
 
-.ti .exhibition-detail-status {
-  margin: 24px 0;
-  padding: 16px;
-  border: 1px solid #c8c8c8;
-  background: #fff;
-  font-size: 0.9rem;
-  color: #5a5a5a;
-  text-align: center;
-}
+@media (min-width: 900px) {
+  .ti .ti-md-theme .exhibition-detail-grid {
+    gap: 40px;
+  }
 
-.ti .exhibition-detail-status.is-error {
-  color: #8b1a1a;
-  border-color: #c8a0a0;
-}
-
-@media (min-width: 901px) {
-  .ti .exhibition-detail-section--hero,
-  .ti .exhibition-detail-section--info {
-    min-height: 400px;
+  .ti .exhibition-detail-poster {
+    max-width: 567px;
   }
 }
 
 @media (max-width: 900px) {
+  .ti .ti-md-theme .exhibition-detail-root {
+    padding-top: 8px;
+  }
+
   .ti .exhibition-detail-grid {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
 
   .ti .exhibition-detail-films {
     grid-template-columns: 1fr;
-  }
-
-  .ti .exhibition-detail-section--hero .exhibition-detail-section__inner {
-    min-height: 220px;
-  }
-
-  .ti .exhibition-detail-section--info .exhibition-detail-section__inner {
-    min-height: 0;
+    gap: 32px;
   }
 
   .ti .exhibition-film-info {
@@ -570,11 +441,4 @@ body.exhibition-poster-lightbox-open {
   .ti .exhibition-detail-film.exhibition-film-empty {
     display: none;
   }
-}
-
-/* 이전·다음 네비 — 썸네일·2열 레이아웃은 sd-prev-next-magazine.css 와 동일 */
-.ti .ti-ex-detail-panel .sd-inner--ex-nav {
-  margin-top: 24px;
-  padding-left: 8px;
-  padding-right: 8px;
 }

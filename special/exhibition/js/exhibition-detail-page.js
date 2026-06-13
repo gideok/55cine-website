@@ -107,9 +107,10 @@
   }
 
   function applyListBackLink() {
-    var href = getListReturnUrl();
-    var back = document.querySelector(".np-back a");
-    if (back) back.href = href;
+    var back = document.getElementById("mdBackLink");
+    if (!back) return;
+    back.href = getListReturnUrl();
+    back.setAttribute("aria-label", "기획전 목록으로 돌아가기");
   }
 
   function detailHref(publicId) {
@@ -149,77 +150,25 @@
   }
 
   function renderPrevNext(neighbors) {
-    var nav = document.createElement("nav");
-    nav.className = "sd-nav";
-    nav.setAttribute("aria-label", "기획전 이동");
-
-    var back = document.createElement("a");
-    back.className = "sd-back";
-    back.href = getListReturnUrl();
-    back.textContent = "← 기획전 목록";
-    nav.appendChild(back);
-
-    var cols = document.createElement("div");
-    cols.className = "sd-pn-cols";
-    cols.setAttribute("aria-label", "이전·다음 기획전");
-
-    function buildCol(dir, item) {
-      var col = document.createElement("div");
-      col.className = "sd-pn-col sd-pn-col--" + dir;
-      var label = document.createElement("p");
-      label.className = "sd-pn-dir";
-      label.textContent = dir === "prev" ? "이전" : "다음";
-      col.appendChild(label);
-
-      if (!item) {
-        var empty = document.createElement("div");
-        empty.className = "sd-pn-body sd-pn-body--empty";
-        var thumbEmpty = document.createElement("div");
-        thumbEmpty.className = "sd-pn-thumb-wrap sd-pn-thumb-wrap--empty";
-        thumbEmpty.setAttribute("aria-hidden", "true");
-        empty.appendChild(thumbEmpty);
-        var note = document.createElement("p");
-        note.className = "sd-pn-empty-note";
-        note.textContent = "—";
-        empty.appendChild(note);
-        col.appendChild(empty);
-        return col;
-      }
-
-      var card = document.createElement("a");
-      card.className = "sd-pn-card";
-      card.href = detailHref(item.publicId);
-      card.setAttribute("aria-label", (dir === "prev" ? "이전: " : "다음: ") + item.title);
-
-      var thumbWrap = document.createElement("div");
-      thumbWrap.className = "sd-pn-thumb-wrap";
-      if (item.thumbnail) {
-        var thumb = document.createElement("img");
-        thumb.className = "sd-pn-thumb";
-        thumb.src = resolveAssetUrl(item.thumbnail);
-        thumb.alt = "";
-        thumb.loading = "lazy";
-        thumbWrap.appendChild(thumb);
-      }
-      card.appendChild(thumbWrap);
-
-      var title = document.createElement("p");
-      title.className = "sd-pn-item-title";
-      title.textContent = item.title;
-      card.appendChild(title);
-      col.appendChild(card);
-      return col;
-    }
-
     neighbors = neighbors || { prev: null, next: null };
-    cols.appendChild(buildCol("prev", normalizeNeighbor(neighbors.prev)));
-    cols.appendChild(buildCol("next", normalizeNeighbor(neighbors.next)));
-    nav.appendChild(cols);
-
-    var wrap = document.createElement("div");
-    wrap.className = "sd-inner sd-inner--ex-nav";
-    wrap.appendChild(nav);
-    return wrap;
+    return window.TiSdPrevNext.render({
+      wrapClass: "sd-inner sd-inner--ex-nav",
+      navLabel: "기획전 이동",
+      colsLabel: "이전·다음 기획전",
+      listUrl: getListReturnUrl(),
+      listText: "목록으로",
+      listAriaLabel: "기획전 목록으로",
+      neighbors: {
+        prev: normalizeNeighbor(neighbors.prev),
+        next: normalizeNeighbor(neighbors.next)
+      },
+      hrefFor: function (item) {
+        return detailHref(item.publicId);
+      },
+      titleFor: function (item) {
+        return item.title || "";
+      }
+    });
   }
 
   function fetchExhibitionDetail(id) {
@@ -551,7 +500,7 @@
     }
 
     var bookBtn = document.createElement("a");
-    bookBtn.className = "md2-booking-btn";
+    bookBtn.className = "md-booking-btn md-booking-btn--inline";
     bookBtn.href = bookingUrl;
     bookBtn.target = "_blank";
     bookBtn.rel = "noopener noreferrer";

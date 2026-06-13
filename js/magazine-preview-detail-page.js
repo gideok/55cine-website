@@ -106,68 +106,21 @@
   }
 
   function renderPrevNext(neighbors) {
-    var nav = document.createElement("nav");
-    nav.className = "sd-nav";
-    nav.setAttribute("aria-label", "프리뷰 이동");
-
-    var back = document.createElement("a");
-    back.className = "sd-back";
-    back.href = LIST_URL;
-    back.textContent = "← 프리뷰 목록";
-    nav.appendChild(back);
-
-    var cols = document.createElement("div");
-    cols.className = "sd-pn-cols";
-    cols.setAttribute("aria-label", "이전·다음 프리뷰");
-
-    function buildCol(dir, item) {
-      var col = document.createElement("div");
-      col.className = "sd-pn-col sd-pn-col--" + dir;
-      var label = document.createElement("p");
-      label.className = "sd-pn-dir";
-      label.textContent = dir === "prev" ? "이전" : "다음";
-      col.appendChild(label);
-      if (!item) {
-        var empty = document.createElement("div");
-        empty.className = "sd-pn-body sd-pn-body--empty";
-        var thumbEmpty = document.createElement("div");
-        thumbEmpty.className = "sd-pn-thumb-wrap sd-pn-thumb-wrap--empty";
-        thumbEmpty.setAttribute("aria-hidden", "true");
-        empty.appendChild(thumbEmpty);
-        var note = document.createElement("p");
-        note.className = "sd-pn-empty-note";
-        note.textContent = "—";
-        empty.appendChild(note);
-        col.appendChild(empty);
-        return col;
+    return window.TiSdPrevNext.render({
+      returnNavOnly: true,
+      navLabel: "프리뷰 이동",
+      colsLabel: "이전·다음 프리뷰",
+      listUrl: LIST_URL,
+      listText: "목록으로",
+      listAriaLabel: "프리뷰 목록으로",
+      neighbors: neighbors || { prev: null, next: null },
+      hrefFor: function (item) {
+        return detailHref(item.id);
+      },
+      titleFor: function (item) {
+        return item.title || "";
       }
-      var card = document.createElement("a");
-      card.className = "sd-pn-card";
-      card.href = detailHref(item.id);
-      card.setAttribute("aria-label", (dir === "prev" ? "이전: " : "다음: ") + item.title);
-      var thumbWrap = document.createElement("div");
-      thumbWrap.className = "sd-pn-thumb-wrap";
-      if (item.thumbnail) {
-        var thumb = document.createElement("img");
-        thumb.className = "sd-pn-thumb";
-        thumb.src = resolveAssetUrl(item.thumbnail);
-        thumb.alt = "";
-        thumb.loading = "lazy";
-        thumbWrap.appendChild(thumb);
-      }
-      card.appendChild(thumbWrap);
-      var t = document.createElement("p");
-      t.className = "sd-pn-item-title";
-      t.textContent = item.title;
-      card.appendChild(t);
-      col.appendChild(card);
-      return col;
-    }
-
-    cols.appendChild(buildCol("prev", neighbors.prev));
-    cols.appendChild(buildCol("next", neighbors.next));
-    nav.appendChild(cols);
-    return nav;
+    });
   }
 
   function renderArticle(article) {

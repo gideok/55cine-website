@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../../css/components/shell-scroll-top.css" />
   <link rel="stylesheet" href="../../css/site-footer.css" />
   <link rel="stylesheet" href="../../components/movie-detail-layout.css" />
+  <link rel="stylesheet" href="../../css/components/movie-detail-panel.css" />
+  <link rel="stylesheet" href="../../css/components/movie-detail-theme.css" />
+  <link rel="stylesheet" href="../../css/now-playing-movie-detail.css" />
   <link rel="stylesheet" href="../../css/detail.css" />
   <link rel="stylesheet" href="../../css/components/sd-prev-next-magazine.css" />
   <link rel="stylesheet" href="css/exhibition-detail.css" />
@@ -34,16 +37,23 @@
         aria-label="사이트 정보"
       ></footer>
     </div>
-    <aside class="ti-right ti-ex-detail-panel" aria-label="기획전 상세 본문">
-      <div class="ti-ex-detail-scroll">
-        <div class="ti-ex-detail-wrap">
-          <section class="section-exhibition-detail" aria-labelledby="exhibition-detail-page-title">
-            <p class="np-back"><a href="../../special-exhibition.html">기획전 목록</a></p>
-            <h2 class="section-title" id="exhibitionDetailPageTitle">기획전 상세</h2>
-            <p id="exhibitionDetailStatus" class="exhibition-detail-status" hidden aria-live="polite"></p>
-            <div id="exhibitionDetailRoot" class="exhibition-detail-root"></div>
-          </section>
-        </div>
+    <aside class="ti-right ti-md-panel" aria-label="기획전 상세 본문">
+      <div class="ti-md-scroll ti-md-theme">
+        <section class="md-page section-exhibition-detail" aria-labelledby="exhibitionDetailPageTitle">
+          <a class="md-back np-back" id="mdBackLink" href="../../special-exhibition.html">
+            <span class="md-back__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 6L8 12L14 18" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter"/>
+              </svg>
+            </span>
+            <span class="md-back__text">목록으로</span>
+          </a>
+          <header class="md-head">
+            <h1 class="md-title section-title" id="exhibitionDetailPageTitle">기획전 상세</h1>
+          </header>
+          <p id="exhibitionDetailStatus" class="movie-detail-status" hidden aria-live="polite"></p>
+          <div id="exhibitionDetailRoot" class="exhibition-detail-root md-root"></div>
+        </section>
       </div>
     </aside>
     <footer
@@ -65,12 +75,13 @@
         "https://www.dtryx.com/cinema/main.do?cgid=FE8EF4D2-F22D-4802-A39A-D58F23A29C1E&BrandCd=indieart&CinemaCd=000059"
     };
   </script>
-    <script src="../../js/api/client.js"></script>
-<script src="../../data/week-schedule-data.js"></script>
+  <script src="../../js/api/client.js"></script>
+  <script src="../../data/week-schedule-data.js"></script>
   <script src="../../js/left-gnb-include.js"></script>
   <script src="../../js/mobile-menu.js"></script>
   <script src="../../js/scroll-top.js"></script>
   <script src="../../js/week-schedule.js"></script>
+  <script src="../../js/sd-prev-next-render.js"></script>
   <script src="js/exhibition-detail-page.js"></script>
 </body>
 </html>
