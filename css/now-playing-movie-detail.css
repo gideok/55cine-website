@@ -329,7 +329,7 @@
   font-weight: 400;
   line-height: 1.5;
   color: var(--md-body);
-  text-align: left;
+  text-align: justify;
   white-space: pre-line;
 }
 
