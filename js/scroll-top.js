@@ -14,6 +14,20 @@
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  function scrollTopIconUrl() {
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.relativePrefix === "function") {
+      return window.TiSiteRoot.relativePrefix() + "images/scroll-top.png";
+    }
+    var path = (location.pathname || "").replace(/\\/g, "/");
+    var segments = path.split("/").filter(Boolean);
+    var depth = segments.length;
+    if (depth && /\.html?$/i.test(segments[depth - 1])) {
+      depth = Math.max(0, depth - 1);
+    }
+    var prefix = depth > 0 ? new Array(depth).fill("..").join("/") + "/" : "";
+    return prefix + "images/scroll-top.png";
+  }
+
   function scrollYOf(root) {
     if (root === window) {
       return window.scrollY || document.documentElement.scrollTop || 0;
@@ -106,10 +120,16 @@
     btn.id = "tiScrollTopBtn";
     btn.type = "button";
     btn.className = "ti-scroll-top";
-    btn.textContent = "TOP";
     btn.setAttribute("aria-label", "맨 위로");
     btn.setAttribute("aria-hidden", "true");
     btn.tabIndex = -1;
+    var icon = document.createElement("img");
+    icon.src = scrollTopIconUrl();
+    icon.alt = "";
+    icon.width = 56;
+    icon.height = 56;
+    icon.decoding = "async";
+    btn.appendChild(icon);
     btn.addEventListener("click", function () {
       scrollAllToTop();
       btn.focus({ preventScroll: true });

@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="css/base/utilities.css" />
   <link rel="stylesheet" href="css/page-shell.css" />
   <link rel="stylesheet" href="css/daegwan.css" />
+  <link rel="stylesheet" href="css/components/theater-page-head.css" />
+  <link rel="stylesheet" href="css/components/theater-page-body.css" />
 </head>
 <body class="ti">
   <div class="ti-shell" id="tiShell">
@@ -37,20 +39,18 @@
     <aside class="ti-right ti-sub-page" aria-label="대관 안내 본문">
       <div class="ti-sub-scroll">
         <header class="section-page-head">
-          <div class="section-page-head__row">
-            <h1 id="daegwan-title" class="section-page-head__title">
-              <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">대관</span>
-            </h1>
-            <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
-              <a href="theater-info.html">소개</a>
-              <a href="viewing-guide.html">관람 안내</a>
-              <a href="membership.html">멤버십</a>
-              <a href="seat-sponsor.html">좌석후원</a>
-              <a href="daegwan.html" class="is-current" aria-current="page">대관</a>
-              <a href="osinneun-gil.html">오시는 길</a>
-            </nav>
-          </div>
+          <h1 id="daegwan-title" class="section-page-head__title">
+            <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">대관</span>
+          </h1>
           <div class="section-page-head__rule" role="presentation"></div>
+          <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+            <a href="theater-info.html">소개</a>
+            <a href="viewing-guide.html">관람 안내</a>
+            <a href="membership.html">멤버십</a>
+            <a href="seat-sponsor.html">좌석후원</a>
+            <a href="daegwan.html" class="is-current" aria-current="page">대관</a>
+            <a href="osinneun-gil.html">오시는 길</a>
+          </nav>
         </header>
 
         <article id="daegwan" aria-labelledby="daegwan-title">
@@ -107,61 +107,67 @@
             </ol>
           </section>
 
-          <h2 class="ti-dg-subheading">대관료</h2>
-          <table class="ti-dg-fee-table">
-            <caption class="visually-hidden">대관료</caption>
-            <tbody>
-              <tr>
-                <td class="ti-dg-fee-table__period">평일 (월~금) 1시간</td>
-                <td class="ti-dg-fee-table__price">165,000원</td>
-                <td class="ti-dg-fee-table__note">*부가세 포함</td>
-              </tr>
-              <tr>
-                <td class="ti-dg-fee-table__period">주말 (토, 일) 1시간</td>
-                <td class="ti-dg-fee-table__price">220,000원</td>
-                <td class="ti-dg-fee-table__note">*부가세 포함</td>
-              </tr>
-            </tbody>
-          </table>
+          <section class="ti-dg-fee-group" aria-labelledby="daegwan-fee-title">
+            <h2 class="ti-dg-subheading" id="daegwan-fee-title">대관료</h2>
+            <table class="ti-dg-fee-table">
+              <caption class="visually-hidden">대관료</caption>
+              <tbody>
+                <tr>
+                  <td class="ti-dg-fee-table__period">평일 (월~금) 1시간</td>
+                  <td class="ti-dg-fee-table__price">165,000원</td>
+                  <td class="ti-dg-fee-table__note">*부가세 포함</td>
+                </tr>
+                <tr>
+                  <td class="ti-dg-fee-table__period">주말 (토, 일) 1시간</td>
+                  <td class="ti-dg-fee-table__price">220,000원</td>
+                  <td class="ti-dg-fee-table__note">*부가세 포함</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
 
-          <h2 class="ti-dg-subheading">시설 및 장비 안내</h2>
-          <ul class="ti-dg-facility-list">
-            <li>
-              좌석 총 55석
-              <ul class="ti-dg-facility-list__sub">
-                <li>일반 좌석 51석 + 휠체어 좌석 4석</li>
-              </ul>
-            </li>
-            <li>
-              영상 및 음향 장비
-              <ul class="ti-dg-facility-list__sub">
-                <li>각종 영상 파일 상영이 가능한 영사 시스템</li>
-                <li>음향 장비 : 무선 마이크 2개, 행사용 스피커 2조</li>
-              </ul>
-            </li>
-            <li>
-              비품
-              <ul class="ti-dg-facility-list__sub">
-                <li>간이 테이블 3개, 의자 5개</li>
-              </ul>
-            </li>
-            <li>
-              발표 장비
-              <ul class="ti-dg-facility-list__sub">
-                <li>PPT 무선 포인터</li>
-              </ul>
-            </li>
-          </ul>
+          <section class="ti-dg-facility-group" aria-labelledby="daegwan-facility-title">
+            <h2 class="ti-dg-subheading" id="daegwan-facility-title">시설 및 장비 안내</h2>
+            <ul class="ti-dg-facility-list">
+              <li>
+                좌석 총 55석
+                <ul class="ti-dg-facility-list__sub">
+                  <li>일반 좌석 51석 + 휠체어 좌석 4석</li>
+                </ul>
+              </li>
+              <li>
+                영상 및 음향 장비
+                <ul class="ti-dg-facility-list__sub">
+                  <li>각종 영상 파일 상영이 가능한 영사 시스템</li>
+                  <li>음향 장비 : 무선 마이크 2개, 행사용 스피커 2조</li>
+                </ul>
+              </li>
+              <li>
+                비품
+                <ul class="ti-dg-facility-list__sub">
+                  <li>간이 테이블 3개, 의자 5개</li>
+                </ul>
+              </li>
+              <li>
+                발표 장비
+                <ul class="ti-dg-facility-list__sub">
+                  <li>PPT 무선 포인터</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
 
-          <h2 class="ti-dg-subheading">시설 및 장비 안내</h2>
-          <ul class="ti-dg-facility-list">
-            <li>대관 신청 전, 전화로 일정 및 대관 가능 여부를 먼저 확인해주시기 바랍니다.</li>
-            <li>대관 시간에는 준비 및 퇴장 시간이 포함되어 있습니다.</li>
-            <li>상영관 내에는 물과 음료를 제외한 음식물의 반입을 금지합니다.</li>
-            <li>대관료 결제는 계좌이체만 가능합니다.</li>
-            <li>사전 협의 및 허가되지 않은 시설 사용은 불가합니다.</li>
-            <li>공간 내 장비 및 시설물 파손 시 이에 대한 배상 책임이 있습니다.</li>
-          </ul>
+          <section class="ti-dg-facility-group" aria-labelledby="daegwan-notice-title">
+            <h2 class="ti-dg-subheading" id="daegwan-notice-title">시설 및 장비 안내</h2>
+            <ul class="ti-dg-facility-list">
+              <li>대관 신청 전, 전화로 일정 및 대관 가능 여부를 먼저 확인해주시기 바랍니다.</li>
+              <li>대관 시간에는 준비 및 퇴장 시간이 포함되어 있습니다.</li>
+              <li>상영관 내에는 물과 음료를 제외한 음식물의 반입을 금지합니다.</li>
+              <li>대관료 결제는 계좌이체만 가능합니다.</li>
+              <li>사전 협의 및 허가되지 않은 시설 사용은 불가합니다.</li>
+              <li>공간 내 장비 및 시설물 파손 시 이에 대한 배상 책임이 있습니다.</li>
+            </ul>
+          </section>
 
           <p class="ti-dg-contact">
             문의 :

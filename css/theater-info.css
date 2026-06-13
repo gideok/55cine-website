@@ -1,11 +1,7 @@
 /* theater-info.html — Figma MO/오오극장/소개 (클래스명 유지, 스타일만 반영) */
 
 .ti-right.ti-theater-info {
-  background: #ffffff;
-  color: #111111;
   box-sizing: border-box;
-  /* Figma MO tit top 88px — 고정 헤더 아래 본문 시작 (MO·PC 공통) */
-  padding: 88px 0 0;
   --ti-content-max: 640px;
   --ti-text-strong: #111111;
   --ti-text-secondary: #404040;
@@ -16,89 +12,13 @@
 
 .ti-right.ti-theater-info .ti-sub-scroll {
   max-width: var(--ti-content-max);
-  padding: 0 20px 40px;
-}
-
-/* ── 페이지 헤더 (tit) ── */
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head {
-  margin-bottom: 24px;
-}
-
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__row {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0;
-}
-
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__title {
-  margin: 0;
-  padding: 0 0 16px;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0;
-  color: #111111;
-}
-
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__sep,
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__parent,
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__child {
-  color: inherit;
-  font-weight: inherit;
-}
-
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__rule {
-  display: none;
-}
-
-/* ── 하위 탭 (Tab 2) ── */
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  justify-content: stretch;
-  gap: 0;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border-bottom: 1px solid #e2e2e2;
-}
-
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a {
-  flex: 1 1 0;
-  min-width: 0;
-  justify-content: center;
-  padding: 12px 8px;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-  color: #808080;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
-  color: #111111;
-  background: transparent;
-  text-decoration: none;
-}
-
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a.is-current {
-  color: #111111;
-  font-weight: 700;
-  background: transparent;
-  border-color: transparent;
-  border-bottom-color: #111111;
 }
 
 /* ── 소개 리드 (page_description) ── */
+.ti-right.ti-theater-info .ti-theater-main {
+  display: block;
+}
+
 .ti-right.ti-theater-info .ti-theater-lead {
   display: flex;
   flex-direction: column;
@@ -112,7 +32,6 @@
 }
 
 .ti-right.ti-theater-info .ti-theater-lead__tagline {
-  order: 1;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -132,7 +51,6 @@
 }
 
 .ti-right.ti-theater-info .ti-theater-lead__sub {
-  order: 2;
   margin: 0;
   font-size: 14px;
   font-weight: 400;
@@ -141,7 +59,6 @@
 }
 
 .ti-right.ti-theater-info .ti-theater-lead__eq {
-  order: 3;
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
@@ -189,6 +106,7 @@
   height: auto;
   aspect-ratio: 320 / 220;
   object-fit: cover;
+  object-position: 48% 22%;
 }
 
 /* ── 10가지 특별함 (llist) ── */
@@ -282,93 +200,52 @@
   color: #111111;
 }
 
-/* ── 탭: 좁은 화면 ── */
-@media (max-width: 480px) {
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a {
-    padding: 12px 4px;
-    font-size: 12px;
-  }
-}
-
-@media (min-width: 641px) {
-  .ti-right.ti-theater-info .ti-sub-scroll {
-    padding-inline: clamp(20px, 4vw, 32px);
-  }
-}
-
-/* ── PC (821px+, Figma PC 레퍼런스) ── */
+/* ── PC (821px+) ── */
 @media (min-width: 821px) {
   .ti-right.ti-theater-info {
     --ti-content-max: none;
   }
 
-  .ti-right.ti-theater-info .ti-sub-scroll {
-    max-width: none;
-    padding: 0 clamp(14px, 2.4vw, 28px) 40px;
+  /* 본문: 좌측은 리드→목록 자연 흐름, 우측 이미지는 absolute로 겹침 (빈 공간 방지) */
+  .ti-right.ti-theater-info .ti-theater-main {
+    position: relative;
+    display: block;
+    padding-right: var(--ti-theater-content-aside);
   }
 
-  /* 제목 + 탭 한 줄 */
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head__row {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px 20px;
-    flex-wrap: wrap;
-  }
-
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head__title {
-    padding-bottom: 0;
-    font-size: clamp(1.35rem, 2.1vw, 1.5rem);
-    line-height: 1.28;
-  }
-
-  /* 탭: 활성 검정 pill, 비활성 테두리 */
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav {
-    flex: 0 1 auto;
-    width: auto;
-    margin-left: auto;
-    padding: 0;
-    border-bottom: none;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 6px 8px;
-  }
-
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a {
-    flex: none;
-    padding: 7px 12px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: #808080;
-    border: 1px solid #e2e2e2;
-    border-radius: 999px;
-    border-bottom: 1px solid #e2e2e2;
-    margin-bottom: 0;
-    white-space: nowrap;
-  }
-
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a.is-current {
-    color: #ffffff;
-    background: #111111;
-    border-color: #111111;
-  }
-
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder) {
-    color: #111111;
-    border-color: #e2e2e2;
-  }
-
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head {
-    margin-bottom: 28px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e2e2e2;
-  }
-
-  /* 리드 */
   .ti-right.ti-theater-info .ti-theater-lead {
-    margin-bottom: 32px;
+    margin: 0 0 32px;
     gap: 16px;
+  }
+
+  .ti-right.ti-theater-info .ti-dg-photo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: var(--ti-theater-image-col);
+    /* 슬로건~04·05 중간 높이 */
+    height: clamp(420px, 52vh, 540px);
+    margin: 0;
+    overflow: hidden;
+    line-height: 0;
+    background: #f7f7f7;
+  }
+
+  .ti-right.ti-theater-info .ti-dg-photo img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    min-height: 0;
+    max-height: none;
+    object-fit: cover;
+    object-position: 48% 22%;
+  }
+
+  .ti-right.ti-theater-info .ti-theater-features {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin: 0;
   }
 
   .ti-right.ti-theater-info .ti-theater-lead__tagline {
@@ -383,37 +260,6 @@
     max-width: 100%;
     justify-content: flex-start;
     font-size: 16px;
-  }
-
-  /* 본문: 목록(좌) + 세로 이미지(우) */
-  .ti-right.ti-theater-info .ti-theater-features {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(200px, 26vw, 300px);
-    column-gap: clamp(24px, 3vw, 48px);
-    row-gap: 32px;
-    align-items: start;
-  }
-
-  .ti-right.ti-theater-info .ti-dg-photo {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    margin: 0;
-    position: sticky;
-    top: clamp(12px, 2vw, 24px);
-    align-self: start;
-  }
-
-  .ti-right.ti-theater-info .ti-dg-photo img {
-    aspect-ratio: auto;
-    width: 100%;
-    max-height: min(85vh, 720px);
-    object-fit: cover;
-    object-position: center top;
-  }
-
-  .ti-right.ti-theater-info #theater-features-heading,
-  .ti-right.ti-theater-info .ti-theater-item {
-    grid-column: 1;
   }
 
   .ti-right.ti-theater-info .ti-theater-item__head {

@@ -22,7 +22,20 @@
     return false;
   }
 
+  function scrollTopIconUrl() {
+    var cs = document.currentScript;
+    if (cs && cs.src) {
+      try {
+        return new URL("../images/scroll-top.png", cs.src).href;
+      } catch (e) {
+        /* ignore */
+      }
+    }
+    return "images/scroll-top.png";
+  }
+
   var movieDetail = isMovieDetailPage();
+  var scrollTopIcon = scrollTopIconUrl();
 
   var style = document.createElement("style");
   style.textContent =
@@ -36,23 +49,26 @@
     "display:flex;" +
     "align-items:center;" +
     "justify-content:center;" +
-    "min-width:52px;" +
-    "min-height:52px;" +
-    "padding:0 14px;" +
+    "width:56px;" +
+    "height:56px;" +
+    "padding:0;" +
     "border:none;" +
-    "border-radius:999px;" +
-    "font-family:inherit;" +
-    "font-size:0.72rem;" +
-    "font-weight:800;" +
-    "letter-spacing:0.06em;" +
-    "color:var(--brand-ink,#1c1610);" +
-    "background:linear-gradient(145deg,var(--brand-gold,#f0ab2a) 0%,var(--brand-gold-mid,#ca9128) 100%);" +
-    "box-shadow:0 6px 22px rgba(28,22,16,.28);" +
+    "border-radius:50%;" +
+    "background:transparent;" +
     "cursor:pointer;" +
     "opacity:0;" +
     "visibility:hidden;" +
     "transform:translateY(12px);" +
     "transition:opacity .22s ease,visibility .22s ease,transform .22s ease;" +
+    "}" +
+    "#" +
+    BTN_ID +
+    " img{" +
+    "display:block;" +
+    "width:56px;" +
+    "height:56px;" +
+    "object-fit:contain;" +
+    "pointer-events:none;" +
     "}" +
     "#" +
     BTN_ID +
@@ -64,7 +80,7 @@
     "#" +
     BTN_ID +
     ":hover{" +
-    "filter:brightness(1.05);" +
+    "transform:translateY(0) scale(1.04);" +
     "}" +
     "#" +
     BTN_ID +
@@ -150,7 +166,13 @@
   btn.id = BTN_ID;
   btn.type = "button";
   btn.setAttribute("aria-label", "맨 위로 이동");
-  btn.textContent = "TOP";
+  var btnIcon = document.createElement("img");
+  btnIcon.src = scrollTopIcon;
+  btnIcon.alt = "";
+  btnIcon.width = 56;
+  btnIcon.height = 56;
+  btnIcon.decoding = "async";
+  btn.appendChild(btnIcon);
 
   var targetEl;
 

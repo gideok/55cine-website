@@ -10,9 +10,7 @@
   min-height: 100vh;
   min-height: 100dvh;
   min-width: 0;
-  padding: clamp(12px, 2vw, 22px) clamp(14px, 2.4vw, 28px);
-  background: #f9f9f9;
-  color: #1a1a1a;
+  /* padding·배경·전경: css/components/theater-page-head.css */
   -webkit-font-smoothing: antialiased;
   /* 섹션 공통 팔레트 (밝은 배경 · 어두운 전경, WCAG AA 대비) */
   --ti-content-max: 640px;

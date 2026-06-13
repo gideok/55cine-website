@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="css/base/utilities.css" />
   <link rel="stylesheet" href="css/page-shell.css" />
   <link rel="stylesheet" href="css/theater-info.css" />
+  <link rel="stylesheet" href="css/components/theater-page-head.css" />
 </head>
 <body class="ti">
   <div class="ti-shell" id="tiShell">
@@ -37,32 +38,30 @@
     <aside class="ti-right ti-theater-info" aria-label="소개 본문">
       <div class="ti-sub-scroll">
         <header class="section-page-head">
-          <div class="section-page-head__row">
-            <h1 id="theater-info-title" class="section-page-head__title">
-              <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">소개</span>
-            </h1>
-            <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
-              <a href="theater-info.html" class="is-current" aria-current="page">소개</a>
-              <a href="viewing-guide.html">관람 안내</a>
-              <a href="membership.html">멤버십</a>
-              <a href="seat-sponsor.html">좌석후원</a>
-              <a href="daegwan.html">대관</a>
-              <a href="osinneun-gil.html">오시는 길</a>
-            </nav>
-          </div>
+          <h1 id="theater-info-title" class="section-page-head__title">
+            <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">소개</span>
+          </h1>
           <div class="section-page-head__rule" role="presentation"></div>
+          <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+            <a href="theater-info.html" class="is-current" aria-current="page">소개</a>
+            <a href="viewing-guide.html">관람 안내</a>
+            <a href="membership.html">멤버십</a>
+            <a href="seat-sponsor.html">좌석후원</a>
+            <a href="daegwan.html">대관</a>
+            <a href="osinneun-gil.html">오시는 길</a>
+          </nav>
         </header>
 
-        <aside class="ti-theater-lead" aria-label="오오극장 슬로건">
-          <p class="ti-theater-lead__eq">
-            <span class="ti-theater-lead__eq-formula">1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 =</span>
-            <span class="ti-theater-lead__eq-result">55</span>
-          </p>
-          <p class="ti-theater-lead__tagline">하나부터 열까지 다 좋은 영화관!</p>
-          <p class="ti-theater-lead__sub">독립영화전용관 오오극장의 10가지 특별함</p>
-        </aside>
+        <div class="ti-theater-main">
+          <aside class="ti-theater-lead" aria-label="오오극장 슬로건">
+            <p class="ti-theater-lead__tagline">하나부터 열까지 다 좋은 영화관!</p>
+            <p class="ti-theater-lead__sub">독립영화전용관 오오극장의 10가지 특별함</p>
+            <p class="ti-theater-lead__eq">
+              <span class="ti-theater-lead__eq-formula">1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 =</span>
+              <span class="ti-theater-lead__eq-result">55</span>
+            </p>
+          </aside>
 
-        <article class="ti-theater-features" aria-labelledby="theater-features-heading">
           <figure class="ti-dg-photo">
             <img
               src="images/theater-info.jpg"
@@ -73,7 +72,9 @@
               onerror="this.onerror=null;this.src='images/movie003.jpg';this.alt='오오극장 소개';"
             />
           </figure>
-          <h2 id="theater-features-heading" class="visually-hidden">10가지 특별함</h2>
+
+          <article class="ti-theater-features" aria-labelledby="theater-features-heading">
+            <h2 id="theater-features-heading" class="visually-hidden">10가지 특별함</h2>
 
           <section class="ti-theater-item" aria-labelledby="tf-1">
             <h3 class="ti-theater-item__head" id="tf-1">
@@ -184,6 +185,7 @@
             </p>
           </section>
         </article>
+        </div>
       </div>
     </aside>
     <footer

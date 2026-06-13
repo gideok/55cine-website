@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="css/base/utilities.css" />
   <link rel="stylesheet" href="css/page-shell.css" />
   <link rel="stylesheet" href="css/osinneun-gil.css" />
+  <link rel="stylesheet" href="css/components/theater-page-head.css" />
+  <link rel="stylesheet" href="css/components/theater-page-body.css" />
 </head>
 <body class="ti">
   <div class="ti-shell" id="tiShell">
@@ -37,20 +39,18 @@
     <aside class="ti-right ti-sub-page" aria-label="오시는 길 본문">
       <div class="ti-sub-scroll">
         <header class="section-page-head">
-          <div class="section-page-head__row">
-            <h1 id="direction-title" class="section-page-head__title">
-              <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">오시는 길</span>
-            </h1>
-            <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
-              <a href="theater-info.html">소개</a>
-              <a href="viewing-guide.html">관람 안내</a>
-              <a href="membership.html">멤버십</a>
-              <a href="seat-sponsor.html">좌석후원</a>
-              <a href="daegwan.html">대관</a>
-              <a href="osinneun-gil.html" class="is-current" aria-current="page">오시는 길</a>
-            </nav>
-          </div>
+          <h1 id="direction-title" class="section-page-head__title">
+            <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">오시는 길</span>
+          </h1>
           <div class="section-page-head__rule" role="presentation"></div>
+          <nav class="section-page-subnav" aria-label="오오극장 하위 메뉴">
+            <a href="theater-info.html">소개</a>
+            <a href="viewing-guide.html">관람 안내</a>
+            <a href="membership.html">멤버십</a>
+            <a href="seat-sponsor.html">좌석후원</a>
+            <a href="daegwan.html">대관</a>
+            <a href="osinneun-gil.html" class="is-current" aria-current="page">오시는 길</a>
+          </nav>
         </header>
 
         <article id="osinneun-gil" aria-labelledby="direction-title">
@@ -169,11 +169,13 @@
             <a class="ti-dir-map-cta" href="https://naver.me/G4W5AtEn" target="_blank" rel="noopener noreferrer">네이버 지도에서 위치 보기</a>
           </section> -->
 
-          <p class="ti-dir-address">대구광역시 중구 국채보상로 537, 한양학원 1층</p>
-          <p class="ti-dir-phone">T. <a href="tel:0534253553">053 425 3553</a></p>
+          <section class="ti-dir-meta" aria-label="오오극장 연락처">
+            <p class="ti-dir-address">대구광역시 중구 국채보상로 537, 한양학원 1층</p>
+            <p class="ti-dir-phone">T. <a href="tel:0534253553">053 425 3553</a></p>
+          </section>
 
           <section class="ti-dir-transport" aria-labelledby="transport-title">
-            <h2 class="ti-dir-transport-heading" id="transport-title">■ 대중교통 안내</h2>
+            <h2 class="ti-dir-transport-heading" id="transport-title">대중교통 안내</h2>
 
             <div class="ti-dir-transport-block">
               <h3>버스</h3>
