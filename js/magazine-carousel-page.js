@@ -1,12 +1,17 @@
 /**
- * 매거진 목록 페이지 공통 — 썸네일형(스크롤 스냅 캐러셀) / 목록형(12건·페이지)
+ * 매거진 목록 페이지 공통 — 썸네일형(스크롤 스냅 캐러셀) / 목록형(N건·페이지)
  * window.TI_MAGAZINE_CAROUSEL_CONFIG 로 페이지별 설정
+ * 목록형 N — js/magazine-list-config.js (TI_MAGAZINE_LIST_ITEMS_PER_PAGE)
  */
 (function () {
   var cfg = window.TI_MAGAZINE_CAROUSEL_CONFIG;
   if (!cfg || (!cfg.dataKey && !cfg.usePaginatedApi)) return;
 
-  var ITEMS_PER_PAGE_LIST = 12;
+  var ITEMS_PER_PAGE_LIST =
+    typeof window.TI_MAGAZINE_LIST_ITEMS_PER_PAGE === "number" &&
+    window.TI_MAGAZINE_LIST_ITEMS_PER_PAGE > 0
+      ? Math.floor(window.TI_MAGAZINE_LIST_ITEMS_PER_PAGE)
+      : 6;
   var SITE_ROOT_PREFIX = cfg.siteRootPrefix || "../";
   var currentPage = 1;
   var currentView = "thumb";
@@ -777,9 +782,20 @@
       });
   }
 
+  function resetPaginatedCache() {
+    pageCache = {};
+    pageFetchPromises = {};
+    thumbLayoutKey = "";
+  }
+
   function fetchListPageItems(page) {
     if (!paginatedMode) return Promise.resolve(getListPageItems(page));
-    if (pageCache[page]) return Promise.resolve(pageCache[page]);
+    var cached = pageCache[page];
+    if (cached && cached.length <= ITEMS_PER_PAGE_LIST) {
+      return Promise.resolve(cached);
+    }
+    delete pageCache[page];
+    delete pageFetchPromises[page];
     return fetchMagazinePageApi(page, ITEMS_PER_PAGE_LIST).then(function (res) {
       pageCache[page] = res.items || [];
       apiTotal = res.total;
@@ -844,14 +860,12 @@
 
   function onSearchQueryChange(value) {
     searchQuery = value;
-    pageCache = {};
-    pageFetchPromises = {};
+    resetPaginatedCache();
     listItemsAccum = [];
     listLoadedPages = 0;
     listHasMore = true;
     thumbActivePage = 0;
     currentPage = 1;
-    thumbLayoutKey = "";
     purgeThumbCarousel();
 
     if (paginatedMode) {
@@ -923,6 +937,7 @@
   function applyCurrentView() {
     setViewShell();
     renderCount();
+    if (paginatedMode) resetPaginatedCache();
     if (currentView === "thumb") {
       thumbActivePage = 0;
       thumbItemsPerPage = getGridColumns();
