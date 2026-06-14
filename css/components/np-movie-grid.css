@@ -105,16 +105,7 @@
 }
 
 .ti .np-root:not(.np-list) .np-mobile-hint {
-  margin: 10px 0 0;
-  font-size: 0.82rem;
-  color: var(--muted);
-  display: block;
-}
-
-@media (min-width: 900px) {
-  .ti .np-root:not(.np-list) .np-mobile-hint {
-    display: none;
-  }
+  display: none;
 }
 
 .ti .np-root:not(.np-list) .np-sentinel {

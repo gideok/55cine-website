@@ -357,17 +357,7 @@
 }
 
 .ti .np-list .np-mobile-hint {
-  margin: 10px 0 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
-  color: #595959;
-}
-
-@media (min-width: 900px) {
-  .ti .np-list .np-mobile-hint {
-    display: none;
-  }
+  display: none;
 }
 
 .ti .np-list .np-sentinel {
