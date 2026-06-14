@@ -439,6 +439,8 @@
 
     var titleWrap = document.createElement("span");
     titleWrap.className = "ti-title";
+    var titleMain = document.createElement("span");
+    titleMain.className = "ti-title-main";
     var titleText = document.createElement("span");
     titleText.className = "ti-title-text";
     if (detailUrl) {
@@ -450,13 +452,19 @@
     } else {
       titleText.textContent = scheduleEntry.title;
     }
-    titleWrap.appendChild(titleText);
-    scheduleEntry.badges.forEach(function (badgeInfo) {
-      var badge = document.createElement("span");
-      badge.className = "ti-badge" + (badgeInfo.tiClass ? " " + badgeInfo.tiClass : "");
-      badge.textContent = badgeInfo.label;
-      titleWrap.appendChild(badge);
-    });
+    titleMain.appendChild(titleText);
+    if (scheduleEntry.badges.length) {
+      var badgesWrap = document.createElement("span");
+      badgesWrap.className = "ti-badges";
+      scheduleEntry.badges.forEach(function (badgeInfo) {
+        var badge = document.createElement("span");
+        badge.className = "ti-badge" + (badgeInfo.tiClass ? " " + badgeInfo.tiClass : "");
+        badge.textContent = badgeInfo.label;
+        badgesWrap.appendChild(badge);
+      });
+      titleMain.appendChild(badgesWrap);
+    }
+    titleWrap.appendChild(titleMain);
 
     var timeEl = document.createElement("span");
     timeEl.className = "ti-time";
