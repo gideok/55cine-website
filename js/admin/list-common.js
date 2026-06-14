@@ -27,7 +27,7 @@
         var val = params.get(field);
         if (field === "page" || field === "pageSize") {
           state[field] = Math.max(1, Number(val) || 1);
-        } else if (field === "isPast") {
+        } else if (field === "isPast" || field === "desktopOnly") {
           state[field] = val === "1" || val === "true";
         } else {
           state[field] = val || "";
@@ -56,8 +56,8 @@
         if (val && val !== 20) params.set("pageSize", String(val));
         return;
       }
-      if (field === "isPast") {
-        if (val) params.set("isPast", "1");
+      if (field === "isPast" || field === "desktopOnly") {
+        if (val) params.set(field, "1");
         return;
       }
       if (val !== undefined && val !== null && val !== "") {

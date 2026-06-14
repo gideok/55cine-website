@@ -299,6 +299,10 @@ journalctl -u 55cine-api -n 50
 |------|------|
 | `deploy/scripts/deploy-from-local.py` | 로컬 → 서버 배포 메인 스크립트 |
 | `deploy/scripts/pack-release.py` | 압축만 만들 때 |
+| `deploy/scripts/rsync-images.py` | images/ 만 SFTP 업로드 (Windows) |
+| `deploy/scripts/rsync-images.sh` | images/ 만 rsync (Git Bash) |
+| `docs/IMAGES-DEPLOY.md` | images 부분 배포 · CD 보호 |
+| `docs/DEPLOY-WITHOUT-IMAGES.md` | images 제외 빠른 수동 배포 |
 | `deploy/scripts/remote-setup.sh` | 서버에서 npm·systemd·nginx 처리 |
 | `deploy/scripts/server-bootstrap.sh` | 서버 최초 Node+Nginx 설치 |
 | `deploy/nginx/55cine.conf` | Nginx 설정 |

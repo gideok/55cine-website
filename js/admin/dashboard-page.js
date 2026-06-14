@@ -10,6 +10,11 @@
     .then(function (stats) {
       var cards = [
         { label: "웹 상영작 (web_program)", value: stats.programs.total },
+        {
+          label: "2026년~ 데스크톱만",
+          value: stats.programs.desktopOnlyFrom2026,
+          href: "programs.html?desktopOnly=1"
+        },
         { label: "현재 상영", value: stats.movies.nowPlaying },
         { label: "상영 예정", value: stats.movies.upcoming },
         { label: "지난 상영", value: stats.movies.past },
@@ -26,13 +31,22 @@
         '<div class="admin-cards">' +
         cards
           .map(function (c) {
-            return (
-              '<div class="admin-card"><div class="admin-card__label">' +
+            var inner =
+              '<div class="admin-card__label">' +
               c.label +
               '</div><div class="admin-card__value">' +
               c.value +
-              "</div></div>"
-            );
+              "</div>";
+            if (c.href) {
+              return (
+                '<a class="admin-card admin-card--link" href="' +
+                c.href +
+                '">' +
+                inner +
+                "</a>"
+              );
+            }
+            return '<div class="admin-card">' + inner + "</div>";
           })
           .join("") +
         "</div>" +

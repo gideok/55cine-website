@@ -1,7 +1,8 @@
 # 55cine Continuous Deployment (CD) — 요약
 
 > **비전문가용 상세 매뉴얼:** [AUTO-DEPLOY.md](./AUTO-DEPLOY.md)  
-> **수동 배포:** [MANUAL-DEPLOY.md](./MANUAL-DEPLOY.md)
+> **수동 배포:** [MANUAL-DEPLOY.md](./MANUAL-DEPLOY.md)  
+> **images 부분 배포·CD 보호:** [IMAGES-DEPLOY.md](./IMAGES-DEPLOY.md)
 
 `main` 브랜치 push 시 GitHub Actions가 운영 서버에 자동 배포합니다.
 ## 워크플로
@@ -11,7 +12,7 @@
 1. `api` TypeScript 빌드 (`npm ci && npm run build`)
 2. `deploy/scripts/pack-release.py` 로 tarball 생성
 3. SCP로 서버 `/root` 업로드
-4. SSH로 압축 해제 + `remote-setup.sh` (의존성 설치, API 재시작, Nginx reload)
+4. SSH: **images stash** → 압축 해제 → **images merge** → `remote-setup.sh`
 5. 헬스 체크 (`/api/v1/health`)
 
 ## GitHub Secrets 설정

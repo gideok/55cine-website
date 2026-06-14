@@ -1,6 +1,8 @@
 # 55cine 운영 서버 배포 가이드 (요약)
 
-> **비전문가용 상세 매뉴얼:** [MANUAL-DEPLOY.md](./MANUAL-DEPLOY.md) (수동) · [AUTO-DEPLOY.md](./AUTO-DEPLOY.md) (자동/CD)
+> **비전문가용 상세 매뉴얼:** [MANUAL-DEPLOY.md](./MANUAL-DEPLOY.md) (수동) · [AUTO-DEPLOY.md](./AUTO-DEPLOY.md) (자동/CD)  
+> **images만 부분 배포 · CD 업로드 보호:** [IMAGES-DEPLOY.md](./IMAGES-DEPLOY.md)  
+> **images 제외 빠른 배포:** [DEPLOY-WITHOUT-IMAGES.md](./DEPLOY-WITHOUT-IMAGES.md)
 
 운영 서버에 정적 프론트엔드 + Node.js API + Nginx 리버스 프록시를 구성하는 절차입니다.
 ## 아키텍처
@@ -110,8 +112,9 @@ python deploy/scripts/deploy-from-local.py
 
 1. 프로젝트 tarball 생성 (`.git`, `node_modules` 제외)
 2. SFTP 업로드 → `/var/www/55cine` 압축 해제
-3. `.env` 업로드
-4. `remote-setup.sh` 실행 (npm ci, systemd, nginx reload)
+3. **서버 images stash → merge** (관리자 업로드 보호, [IMAGES-DEPLOY.md](./IMAGES-DEPLOY.md))
+4. `.env` 업로드
+5. `remote-setup.sh` 실행 (npm ci, systemd, nginx reload)
 
 ### 4-3. 서버에서 앱만 재설정
 
@@ -157,6 +160,8 @@ curl -I http://127.0.0.1/
 | 502 Bad Gateway | `systemctl status 55cine-api`, 포트 3000 리슨 여부 |
 | DB 연결 실패 | `.env` RDS 값, 보안 그룹(서버 IP → 1433 허용) |
 | 이미지 업로드 실패 | Nginx `client_max_body_size`, `images/` 디렉터리 권한 |
+| images만 빠르게 반영 | [IMAGES-DEPLOY.md](./IMAGES-DEPLOY.md) — `rsync-images.sh` / `rsync-images.py` |
+| CD 후 서버 업로드 이미지 덮어씀 | `server-images-guard.sh` stash/merge — [IMAGES-DEPLOY.md](./IMAGES-DEPLOY.md) |
 | API CORS | 운영은 same-origin `/api/v1` 사용 — 별도 CORS 불필요 |
 
 권한:

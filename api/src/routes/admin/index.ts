@@ -6,7 +6,9 @@ import { getAdminDashboardStats } from "../../services/admin/dashboard.service.j
 import {
   getAdminProgramList,
   getAdminProgramBySeq,
-  updateAdminProgram
+  getAdminProgramByProgId,
+  updateAdminProgram,
+  upsertAdminProgramByProgId
 } from "../../services/admin/web-program-admin.service.js";
 import {
   getAdminSpecialList,
@@ -129,21 +131,72 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       .object({
         q: z.string().optional(),
         page: z.coerce.number().int().min(1).optional(),
-        pageSize: z.coerce.number().int().min(1).max(100).optional()
+        pageSize: z.coerce.number().int().min(1).max(100).optional(),
+        desktopOnly: z
+          .union([z.literal("true"), z.literal("1"), z.literal("false"), z.literal("0")])
+          .optional()
       })
       .safeParse(request.query);
     if (!parsed.success) {
       return sendError(reply, 400, "INVALID_QUERY", "쿼리 파라미터가 올바르지 않습니다.");
     }
     try {
+      const desktopOnly =
+        parsed.data.desktopOnly === "true" || parsed.data.desktopOnly === "1";
       return await getAdminProgramList({
         q: parsed.data.q,
         page: parsed.data.page ?? 1,
-        pageSize: parsed.data.pageSize ?? 20
+        pageSize: parsed.data.pageSize ?? 20,
+        desktopOnly
       });
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "PROGRAM_LIST_FAILED", "상영작 목록 조회 실패");
+    }
+  });
+
+  app.get("/admin/programs/by-prog/:progId", async (request, reply) => {
+    const params = z.object({ progId: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "progId 필요");
+    try {
+      const detail = await getAdminProgramByProgId(params.data.progId);
+      if (!detail) return sendError(reply, 404, "NOT_FOUND", "상영작을 찾을 수 없습니다.");
+      return detail;
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "PROGRAM_DETAIL_FAILED", "상영작 상세 조회 실패");
+    }
+  });
+
+  app.put("/admin/programs/by-prog/:progId", async (request, reply) => {
+    const params = z.object({ progId: z.coerce.number().int().positive() }).safeParse(request.params);
+    const body = z
+      .object({
+        slug: z.string().nullable().optional(),
+        detailUrl: z.string().nullable().optional(),
+        imgThumb: z.string().nullable().optional(),
+        img1: z.string().nullable().optional(),
+        img2: z.string().nullable().optional(),
+        img3: z.string().nullable().optional(),
+        img4: z.string().nullable().optional(),
+        img5: z.string().nullable().optional(),
+        director: z.string().nullable().optional(),
+        castNames: z.string().nullable().optional(),
+        info: z.string().nullable().optional(),
+        synopsis: z.string().nullable().optional(),
+        trailerUrl: z.string().nullable().optional()
+      })
+      .safeParse(request.body);
+    if (!params.success || !body.success) {
+      return sendError(reply, 400, "INVALID_BODY", "요청 본문이 올바르지 않습니다.");
+    }
+    try {
+      const updated = await upsertAdminProgramByProgId(params.data.progId, body.data);
+      if (!updated) return sendError(reply, 404, "NOT_FOUND", "상영작을 찾을 수 없습니다.");
+      return updated;
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "PROGRAM_UPDATE_FAILED", "상영작 저장 실패");
     }
   });
 

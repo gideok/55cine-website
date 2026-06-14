@@ -3,7 +3,7 @@
 
   var PROGRAM_POSTER_PLACEHOLDER = "images/schedule-poster-placeholder.svg";
 
-  var PROGRAM_LIST_FIELDS = ["q", "page", "pageSize"];
+  var PROGRAM_LIST_FIELDS = ["q", "page", "pageSize", "desktopOnly"];
 
   function programsListUrl() {
     return TiAdminList.listUrl("programs.html", "programs", null, PROGRAM_LIST_FIELDS);
@@ -11,12 +11,19 @@
 
   var params = new URLSearchParams(window.location.search);
   var seq = Number(params.get("seq"));
-  if (!seq || Number.isNaN(seq)) {
+  var progId = Number(params.get("progId"));
+  var useProgId = false;
+
+  if (seq > 0 && !Number.isNaN(seq)) {
+    useProgId = false;
+  } else if (progId > 0 && !Number.isNaN(progId)) {
+    useProgId = true;
+  } else {
     window.location.href = programsListUrl();
     return;
   }
 
-  TiAdminLayout.mount("programs", "상영작 수정");
+  TiAdminLayout.mount("programs", useProgId ? "상영작 추가정보 입력" : "상영작 수정");
   var el = TiAdminLayout.contentEl();
   var detailRef = null;
 
@@ -161,18 +168,27 @@
     updatePosterPreview();
   }
 
+  function currentProgramSeq() {
+    return detailRef && detailRef.seq ? detailRef.seq : seq;
+  }
+
   function bindPosterUpload() {
     var fileInput = document.getElementById("posterUpload");
     var deleteBtn = document.getElementById("posterDeleteBtn");
     if (!fileInput) return;
 
     fileInput.addEventListener("change", function () {
+      var uploadSeq = currentProgramSeq();
+      if (!uploadSeq) {
+        alert("웹 등록 저장 후 포스터를 업로드할 수 있습니다.");
+        return;
+      }
       var file = fileInput.files && fileInput.files[0];
       fileInput.value = "";
       if (!file) return;
 
       setPosterUploading(true);
-      TiAdminApi.uploadProgramPoster(file, seq)
+      TiAdminApi.uploadProgramPoster(file, uploadSeq)
         .then(function (res) {
           if (!res || !res.path) {
             throw new Error("서버 업로드 경로를 받지 못했습니다.");
@@ -204,6 +220,8 @@
 
   function renderForm(detail) {
     detailRef = detail;
+    if (detail.seq) seq = detail.seq;
+    var isNewWeb = !detail.hasWebProgram;
     posterState = {
       img1Path: detail.img1 || null,
       imgThumbPath: detail.imgThumb || null,
@@ -216,12 +234,15 @@
       '<p class="admin-back"><a href="' + esc(programsListUrl()) + '">← 상영작 목록</a></p>' +
       '<form class="admin-form" id="progForm">' +
       '<div class="admin-meta-badges">' +
-      '<span class="admin-badge admin-badge--seq">seq ' +
-      esc(String(detail.seq)) +
-      "</span>" +
+      (detail.seq
+        ? '<span class="admin-badge admin-badge--seq">seq ' + esc(String(detail.seq)) + "</span>"
+        : '<span class="admin-badge admin-badge--warn">웹 미등록</span>') +
       '<span class="admin-badge admin-badge--prog">prog_id ' +
       esc(String(detail.progId)) +
       "</span></div>" +
+      (isNewWeb
+        ? '<p class="admin-msg admin-msg--info">데스크톱(<code>prog_base</code>)에만 등록된 상영작입니다. slug·상세 정보를 입력하고 저장하면 웹 목록에 노출할 수 있습니다.</p>'
+        : "") +
       '<p><strong>' +
       esc(detail.titleKo) +
       "</strong>" +
@@ -237,9 +258,13 @@
       '<div class="field"><label>포스터 이미지</label>' +
       '<input type="file" id="posterUpload" class="admin-sr-only-file" accept="image/*">' +
       '<label for="posterUpload" class="admin-btn admin-btn--upload admin-file-label" id="posterPickLabel">이미지 선택</label>' +
-      '<p class="field-hint">저장 시 wp_' +
-      esc(String(detail.seq)) +
-      '_1 로 업로드되고, 40×40 썸네일(thumb_wp_)이 자동 생성됩니다. 시간표는 썸네일, 목록·상세는 원본을 사용합니다.</p>' +
+      '<p class="field-hint">' +
+      (detail.seq
+        ? "저장 시 wp_" +
+          esc(String(detail.seq)) +
+          "_1 로 업로드되고, 40×40 썸네일(thumb_wp_)이 자동 생성됩니다."
+        : "웹 등록 저장 후 포스터를 업로드할 수 있습니다.") +
+      " 시간표는 썸네일, 목록·상세는 원본을 사용합니다.</p>" +
       '<div class="admin-cover-preview" id="posterPreview">' +
       '<img id="posterPreviewImg" alt="포스터 미리보기">' +
       '<div class="admin-cover-preview__spinner" id="posterPreviewSpinner">' +
@@ -274,7 +299,7 @@
       var img1 = posterState.removed ? null : posterState.img1Path;
       var imgThumb = posterState.removed ? null : posterState.imgThumbPath;
 
-      TiAdminApi.updateProgram(seq, {
+      var payload = {
         slug: f.slug.value,
         detailUrl: f.detailUrl.value || null,
         imgThumb: imgThumb,
@@ -284,9 +309,21 @@
         info: f.info.value || null,
         synopsis: f.synopsis.value || null,
         trailerUrl: normalizeTrailerUrl(f.trailerUrl.value)
-      })
-        .then(function () {
+      };
+
+      var savePromise =
+        !detail.hasWebProgram && detail.progId
+          ? TiAdminApi.upsertProgramByProgId(detail.progId, payload)
+          : TiAdminApi.updateProgram(detail.seq || seq, payload);
+
+      savePromise
+        .then(function (saved) {
           alert("저장되었습니다.");
+          if (saved && saved.seq && !detail.hasWebProgram) {
+            window.location.href =
+              "program-edit.html?seq=" + encodeURIComponent(String(saved.seq));
+            return;
+          }
           window.location.href = programsListUrl();
         })
         .catch(function (err) {
@@ -296,7 +333,11 @@
   }
 
   el.innerHTML = "<p>불러오는 중…</p>";
-  TiAdminApi.getProgram(seq)
+  var loadPromise = useProgId
+    ? TiAdminApi.getProgramByProgId(progId)
+    : TiAdminApi.getProgram(seq);
+
+  loadPromise
     .then(renderForm)
     .catch(function (err) {
       el.innerHTML =

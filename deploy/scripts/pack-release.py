@@ -2,44 +2,31 @@
 """CI·로컬 공용 릴리스 tarball 생성."""
 from __future__ import annotations
 
-import tarfile
+import argparse
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = ROOT / "release"
-OUT_FILE = OUT_DIR / "55cine-deploy.tar.gz"
 
-EXCLUDE_DIRS = {".git", "node_modules", "documents", "tmp", ".claude", "release"}
-EXCLUDE_FILES = {".env", ".env.local"}
-
-
-def should_skip(rel: str) -> bool:
-    parts = Path(rel).parts
-    if parts and parts[0] in EXCLUDE_DIRS:
-        return True
-    if "node_modules" in parts:
-        return True
-    if rel in EXCLUDE_FILES:
-        return True
-    if rel.endswith(".log"):
-        return True
-    if "/.cache" in rel or rel.startswith("api/.tmp"):
-        return True
-    return False
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from pack_lib import build_tarball  # noqa: E402
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="55cine 릴리스 tarball 생성")
+    parser.add_argument(
+        "--no-images",
+        action="store_true",
+        help="images/ 폴더 제외 (HTML/CSS/JS/API만)",
+    )
+    args = parser.parse_args()
+
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    with tarfile.open(OUT_FILE, "w:gz") as tf:
-        for path in ROOT.rglob("*"):
-            if not path.is_file():
-                continue
-            rel = path.relative_to(ROOT).as_posix()
-            if should_skip(rel):
-                continue
-            tf.add(path, arcname=rel)
-    mb = OUT_FILE.stat().st_size / (1024 * 1024)
-    print(f"created {OUT_FILE} ({mb:.1f} MB)")
+    out_name = "55cine-deploy-no-images.tar.gz" if args.no_images else "55cine-deploy.tar.gz"
+    out_file = OUT_DIR / out_name
+    build_tarball(ROOT, out_file, exclude_images=args.no_images)
+    print(f"created {out_file}")
 
 
 if __name__ == "__main__":

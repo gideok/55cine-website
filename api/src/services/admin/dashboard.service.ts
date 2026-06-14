@@ -3,7 +3,11 @@ import { getPool } from "../../db/pool.js";
 import { getServerToday } from "../schedule-flags.js";
 
 export type AdminDashboardStats = {
-  programs: { total: number };
+  programs: {
+    total: number;
+    /** prog_base만 있고 web_program 없음, date_open >= 2026-01-01 */
+    desktopOnlyFrom2026: number;
+  };
   movies: {
     nowPlaying: number;
     upcoming: number;
@@ -27,8 +31,15 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
   const pool = await getPool();
   const today = getServerToday();
 
-  const [progRes, nowRes, upRes, pastRes, spRes, mzRes] = await Promise.all([
+  const [progRes, desktopOnly2026Res, nowRes, upRes, pastRes, spRes, mzRes] = await Promise.all([
     pool.request().query<{ total: number }>(`SELECT COUNT(*) AS total FROM dbo.web_program`),
+    pool.request().input("yearStart", sql.Date, "2026-01-01").query<{ total: number }>(`
+      SELECT COUNT(*) AS total
+      FROM dbo.prog_base pb
+      LEFT JOIN dbo.web_program wp ON wp.prog_id = pb.prog_id
+      WHERE wp.seq IS NULL
+        AND TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open))) >= @yearStart
+    `),
     pool.request().input("today", sql.Date, today).query<{ total: number }>(`
       SELECT COUNT(*) AS total
       FROM dbo.web_program wp
@@ -82,7 +93,10 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
   }
 
   return {
-    programs: { total: progRes.recordset[0]?.total ?? 0 },
+    programs: {
+      total: progRes.recordset[0]?.total ?? 0,
+      desktopOnlyFrom2026: desktopOnly2026Res.recordset[0]?.total ?? 0
+    },
     movies: {
       nowPlaying: nowRes.recordset[0]?.total ?? 0,
       upcoming: upRes.recordset[0]?.total ?? 0,

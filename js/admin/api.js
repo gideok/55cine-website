@@ -80,20 +80,34 @@
     getDashboard: function () {
       return apiJson("GET", "/admin/dashboard");
     },
-    getPrograms: function (q, page, pageSize) {
+    getPrograms: function (q, page, pageSize, desktopOnly) {
       var path =
         "/admin/programs?page=" +
         encodeURIComponent(String(page || 1)) +
         "&pageSize=" +
         encodeURIComponent(String(pageSize || 20));
       if (q) path += "&q=" + encodeURIComponent(q);
+      if (desktopOnly) path += "&desktopOnly=1";
       return apiJson("GET", path);
     },
     getProgram: function (seq) {
       return apiJson("GET", "/admin/programs/" + encodeURIComponent(String(seq)));
     },
+    getProgramByProgId: function (progId) {
+      return apiJson(
+        "GET",
+        "/admin/programs/by-prog/" + encodeURIComponent(String(progId))
+      );
+    },
     updateProgram: function (seq, body) {
       return apiJson("PUT", "/admin/programs/" + encodeURIComponent(String(seq)), body);
+    },
+    upsertProgramByProgId: function (progId, body) {
+      return apiJson(
+        "PUT",
+        "/admin/programs/by-prog/" + encodeURIComponent(String(progId)),
+        body
+      );
     },
     getSpecialList: function (kind, q, page, pageSize) {
       var path =

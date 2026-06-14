@@ -1,0 +1,10 @@
+# images/ 부분 배포(rsync) 시 제외 — deploy/config/images-rsync-exclude.txt
+# rsync --exclude-from 또는 rsync-images.py 가 참조
+
+*.psd
+*.ai
+*.zip
+**/Thumbs.db
+**/.DS_Store
+시간표.png
+[붙임2]*/

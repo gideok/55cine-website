@@ -64,7 +64,8 @@
 | 평소 코드 반영 | **자동 배포** (main push) |
 | Secrets·서버 최초 설정 | 수동 1회 + 이 문서 3~4장 |
 | GitHub Actions 장애 | [MANUAL-DEPLOY.md](./MANUAL-DEPLOY.md) 로 긴급 배포 |
-| 대용량 이미지만 서버에 직접 올림 | 수동 또는 서버에서 rsync |
+| **코드만 빠르게 반영 (images 제외)** | [DEPLOY-WITHOUT-IMAGES.md](./DEPLOY-WITHOUT-IMAGES.md) |
+| 대용량 images만 서버에 직접 올림 | [IMAGES-DEPLOY.md](./IMAGES-DEPLOY.md) — `rsync-images` |
 
 ---
 
@@ -390,6 +391,9 @@ Secret 수정 후 **Run workflow** 로 한 번 배포해 반영 여부를 확인
 | `.github/workflows/deploy.yml` | 자동 배포 워크플로 정의 |
 | `deploy/scripts/pack-release.py` | Actions에서 사용하는 압축 스크립트 |
 | `deploy/scripts/remote-setup.sh` | 서버에서 npm·systemd·nginx 처리 |
+| `deploy/scripts/rsync-images.sh` | images/ 부분 배포 (rsync) |
+| `deploy/scripts/server-images-guard.sh` | CD·수동 배포 시 서버 images 보호 |
+| `docs/IMAGES-DEPLOY.md` | images 배포·보호 상세 |
 | `docs/MANUAL-DEPLOY.md` | 수동 배포 상세 매뉴얼 |
 
 ---
@@ -403,7 +407,7 @@ A. 기본은 **`main`만**입니다. 변경하려면 `deploy.yml`의 `branches: 
 A. API 재시작(`systemctl restart`) 시 **수 초** 502가 날 수 있습니다. Nginx는 유지됩니다.
 
 **Q. 이미지(3GB)도 매번 전부 올라가나요?**  
-A. 네. 현재는 **전체 tarball** 방식입니다. push마다 업로드 시간이 길 수 있습니다.
+A. CD tarball에는 Git에 있는 images가 포함됩니다. **images만** 올릴 때는 [IMAGES-DEPLOY.md](./IMAGES-DEPLOY.md)의 부분 배포를 쓰세요. CD는 서버 업로드 보호를 위해 **stash/merge**를 실행합니다.
 
 **Q. GitHub Actions 무료 한도는?**  
 A. Public repo는 일반적으로 넉넉합니다. Private repo는 월 사용량 제한 확인.

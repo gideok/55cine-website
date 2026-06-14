@@ -2,8 +2,9 @@ import sql from "mssql";
 import { getPool } from "../../db/pool.js";
 
 export type AdminProgramListItem = {
-  seq: number;
+  seq: number | null;
   progId: number;
+  hasWebProgram: boolean;
   slug: string;
   titleKo: string;
   titleEn: string;
@@ -29,7 +30,7 @@ export type AdminProgramDetail = AdminProgramListItem & {
 };
 
 type ProgramRow = {
-  seq: number;
+  seq: number | null;
   prog_id: number;
   slug: string | null;
   detail_url: string | null;
@@ -60,9 +61,11 @@ function formatDate(val: unknown): string | null {
 }
 
 function mapListItem(row: ProgramRow): AdminProgramListItem {
+  const seq = row.seq != null ? Number(row.seq) : null;
   return {
-    seq: row.seq,
+    seq,
     progId: row.prog_id,
+    hasWebProgram: seq != null && seq > 0,
     slug: String(row.slug || "").trim(),
     titleKo: String(row.name || "").trim(),
     titleEn: String(row.name2 || "").trim(),
@@ -91,22 +94,40 @@ function mapDetail(row: ProgramRow): AdminProgramDetail {
   };
 }
 
-const PROGRAM_JOIN = `
-  FROM dbo.web_program wp
-  INNER JOIN dbo.prog_base pb ON pb.prog_id = wp.prog_id
+/** prog_base(데스크톱 등록) 기준 — web_program 없으면 LEFT JOIN null */
+const PROGRAM_FROM = `
+  FROM dbo.prog_base pb
+  LEFT JOIN dbo.web_program wp ON wp.prog_id = pb.prog_id
 `;
 
 const PROGRAM_SELECT = `
-  wp.seq, wp.prog_id, wp.slug, wp.detail_url,
+  wp.seq, pb.prog_id, wp.slug, wp.detail_url,
   wp.img_thumb, wp.img1, wp.img2, wp.img3, wp.img4, wp.img5,
   wp.director, wp.cast_names, wp.info, wp.synopsis, wp.trailer_url,
   pb.name, pb.name2, pb.date_open, pb.date_close, pb.grade, pb.runningtime
 `;
 
+function buildSearchWhere(q: string): string {
+  if (!q) return "1=1";
+  return `(
+    pb.name LIKE @q OR pb.name2 LIKE @q OR ISNULL(wp.slug, '') LIKE @q
+    OR CAST(pb.prog_id AS NVARCHAR(20)) LIKE @q
+  )`;
+}
+
+function buildListWhere(q: string, desktopOnly: boolean): string {
+  const parts: string[] = [buildSearchWhere(q)];
+  if (desktopOnly) {
+    parts.push("wp.seq IS NULL");
+  }
+  return parts.join(" AND ");
+}
+
 export async function getAdminProgramList(opts: {
   q?: string;
   page: number;
   pageSize: number;
+  desktopOnly?: boolean;
 }): Promise<{
   items: AdminProgramListItem[];
   page: number;
@@ -119,19 +140,13 @@ export async function getAdminProgramList(opts: {
   const pageSize = Math.min(100, Math.max(1, opts.pageSize));
   const offset = (page - 1) * pageSize;
   const q = opts.q?.trim() || "";
-
-  let where = "1=1";
-  if (q) {
-    where = `(
-      pb.name LIKE @q OR pb.name2 LIKE @q OR wp.slug LIKE @q
-      OR CAST(wp.prog_id AS NVARCHAR(20)) LIKE @q
-    )`;
-  }
+  const desktopOnly = !!opts.desktopOnly;
+  const where = buildListWhere(q, desktopOnly);
 
   const countReq = pool.request();
   if (q) countReq.input("q", sql.NVarChar, `%${q}%`);
   const countRes = await countReq.query<{ total: number }>(`
-    SELECT COUNT(*) AS total ${PROGRAM_JOIN} WHERE ${where}
+    SELECT COUNT(*) AS total ${PROGRAM_FROM} WHERE ${where}
   `);
   const total = countRes.recordset[0]?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -143,11 +158,11 @@ export async function getAdminProgramList(opts: {
 
   const listRes = await listReq.query<ProgramRow>(`
     SELECT ${PROGRAM_SELECT}
-    ${PROGRAM_JOIN}
+    ${PROGRAM_FROM}
     WHERE ${where}
     ORDER BY
       TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open))) DESC,
-      wp.seq DESC
+      pb.prog_id DESC
     OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY
   `);
 
@@ -160,14 +175,33 @@ export async function getAdminProgramList(opts: {
   };
 }
 
-export async function getAdminProgramBySeq(seq: number): Promise<AdminProgramDetail | null> {
+async function fetchProgramRowBySeq(seq: number): Promise<ProgramRow | null> {
   const pool = await getPool();
   const res = await pool.request().input("seq", sql.Int, seq).query<ProgramRow>(`
     SELECT ${PROGRAM_SELECT}
-    ${PROGRAM_JOIN}
+    ${PROGRAM_FROM}
     WHERE wp.seq = @seq
   `);
-  const row = res.recordset[0];
+  return res.recordset[0] ?? null;
+}
+
+async function fetchProgramRowByProgId(progId: number): Promise<ProgramRow | null> {
+  const pool = await getPool();
+  const res = await pool.request().input("progId", sql.Int, progId).query<ProgramRow>(`
+    SELECT ${PROGRAM_SELECT}
+    ${PROGRAM_FROM}
+    WHERE pb.prog_id = @progId
+  `);
+  return res.recordset[0] ?? null;
+}
+
+export async function getAdminProgramBySeq(seq: number): Promise<AdminProgramDetail | null> {
+  const row = await fetchProgramRowBySeq(seq);
+  return row ? mapDetail(row) : null;
+}
+
+export async function getAdminProgramByProgId(progId: number): Promise<AdminProgramDetail | null> {
+  const row = await fetchProgramRowByProgId(progId);
   return row ? mapDetail(row) : null;
 }
 
@@ -187,7 +221,7 @@ export type UpdateProgramInput = {
   trailerUrl?: string | null;
 };
 
-export async function updateAdminProgram(
+async function applyWebProgramUpdate(
   seq: number,
   input: UpdateProgramInput
 ): Promise<AdminProgramDetail | null> {
@@ -215,8 +249,49 @@ export async function updateAdminProgram(
   set("synopsis", "synopsis", input.synopsis ?? null);
   set("trailer_url", "trailerUrl", input.trailerUrl ?? null);
 
-  if (!fields.length) return getAdminProgramBySeq(seq);
-
-  await req.query(`UPDATE dbo.web_program SET ${fields.join(", ")} WHERE seq = @seq`);
+  if (fields.length) {
+    await req.query(`UPDATE dbo.web_program SET ${fields.join(", ")} WHERE seq = @seq`);
+  }
   return getAdminProgramBySeq(seq);
+}
+
+export async function updateAdminProgram(
+  seq: number,
+  input: UpdateProgramInput
+): Promise<AdminProgramDetail | null> {
+  return applyWebProgramUpdate(seq, input);
+}
+
+/** 데스크톱 prog_base 만 있는 상영작 — web_program 생성 후 추가정보 저장 */
+export async function upsertAdminProgramByProgId(
+  progId: number,
+  input: UpdateProgramInput
+): Promise<AdminProgramDetail | null> {
+  const pool = await getPool();
+  const existing = await fetchProgramRowByProgId(progId);
+  if (!existing) return null;
+
+  if (existing.seq != null && existing.seq > 0) {
+    return applyWebProgramUpdate(existing.seq, input);
+  }
+
+  const slug =
+    input.slug !== undefined && input.slug !== null
+      ? String(input.slug).trim() || null
+      : null;
+
+  const insert = await pool
+    .request()
+    .input("progId", sql.Int, progId)
+    .input("slug", sql.NVarChar, slug)
+    .query<{ seq: number }>(`
+      INSERT INTO dbo.web_program (prog_id, slug, detail_url, img_thumb, img1, img2, img3, img4, img5)
+      OUTPUT INSERTED.seq
+      VALUES (@progId, @slug, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+    `);
+
+  const seq = insert.recordset[0]?.seq;
+  if (!seq) return null;
+
+  return applyWebProgramUpdate(seq, input);
 }

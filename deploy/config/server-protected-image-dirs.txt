@@ -1,0 +1,12 @@
+# CD·수동 전체 배포 시 서버 쪽을 우선 보호할 images 하위 경로
+# (관리자 업로드·마이그레이션 산출물 — APP_ROOT 기준 상대 경로, # 로 주석)
+#
+# tarball에 구버전이 포함돼도 stash → merge 로 서버의 더 새 파일을 유지합니다.
+# images/ 만 rsync 부분 배포 시에는 이 목록과 무관하게 로컬 → 서버 동기화를 사용하세요.
+
+images/special/sp
+images/special/_tmp
+images/magazine/body
+images/magazine/_tmp
+images/magazine/past-articles
+images/movies/wp
