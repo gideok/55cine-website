@@ -11,6 +11,13 @@
   var currentPage = 1;
   var currentView = "thumb";
 
+  var searchCfg = cfg.search || {};
+  var SEARCH_ENABLED = searchCfg.enabled !== false;
+  var SEARCH_PLACEHOLDER = searchCfg.placeholder || "제목·부제 검색";
+  var SEARCH_NO_RESULTS = searchCfg.noResultsMessage || "검색 결과가 없습니다.";
+  var SEARCH_FIELDS = searchCfg.fields || ["title", "subtitle", "excerpt"];
+  var searchQuery = "";
+
   var paginatedMode = !!(cfg.usePaginatedApi && window.TiApi && window.TiApi.getMagazineListPage);
   var apiTotal = 0;
   var apiTotalPages = 1;
@@ -70,15 +77,34 @@
     dataset = Array.isArray(raw) ? raw.slice() : [];
   }
 
+  function getSearchQueryNormalized() {
+    return window.TiListSearch ? window.TiListSearch.normalize(searchQuery) : "";
+  }
+
+  function isSearchActive() {
+    return !!getSearchQueryNormalized();
+  }
+
+  function getFilteredLocalDataset() {
+    if (!window.TiListSearch) return dataset;
+    var q = getSearchQueryNormalized();
+    if (!q) return dataset;
+    return dataset.filter(function (item) {
+      return window.TiListSearch.matches(item, q, SEARCH_FIELDS);
+    });
+  }
+
   function fetchMagazinePageApi(pageNum, pageSize) {
+    var q = getSearchQueryNormalized();
     if (typeof cfg.fetchPage === "function") {
-      return Promise.resolve(cfg.fetchPage(pageNum, pageSize));
+      return Promise.resolve(cfg.fetchPage(pageNum, pageSize, q || undefined));
     }
     return window.TiApi.getMagazineListPage({
       section: cfg.apiSection,
       isPast: !!cfg.apiIsPast,
       page: pageNum,
-      pageSize: pageSize
+      pageSize: pageSize,
+      q: q || undefined
     });
   }
 
@@ -174,15 +200,16 @@
 
   function getListTotalPages() {
     if (paginatedMode) return apiTotalPages || 1;
-    return Math.max(1, Math.ceil(dataset.length / ITEMS_PER_PAGE_LIST));
+    return Math.max(1, Math.ceil(getFilteredLocalDataset().length / ITEMS_PER_PAGE_LIST));
   }
 
   function getListPageItems(page) {
     if (paginatedMode) {
       return pageCache[page] || listItemsAccum;
     }
+    var list = getFilteredLocalDataset();
     var start = (page - 1) * ITEMS_PER_PAGE_LIST;
-    return dataset.slice(start, start + ITEMS_PER_PAGE_LIST);
+    return list.slice(start, start + ITEMS_PER_PAGE_LIST);
   }
 
   function gridGapPx() {
@@ -225,12 +252,28 @@
 
   function getThumbTotalPages() {
     if (paginatedMode) return Math.max(1, apiTotalPages);
-    return Math.max(1, Math.ceil(dataset.length / thumbItemsPerPage));
+    var list = getFilteredLocalDataset();
+    return Math.max(1, Math.ceil(list.length / thumbItemsPerPage));
   }
 
   function getThumbPageItems(pageIndex) {
-    var start = pageIndex * thumbItemsPerPage;
-    return dataset.slice(start, start + thumbItemsPerPage);
+    if (paginatedMode) {
+      return pageCache[pageIndex + 1] || [];
+    }
+    var list = getFilteredLocalDataset();
+    var offset = pageIndex * thumbItemsPerPage;
+    return list.slice(offset, offset + thumbItemsPerPage);
+  }
+
+  function appendListEmptyMessage(parent) {
+    if (!parent) return;
+    var msg = document.createElement("p");
+    msg.className = "mz-list-empty";
+    msg.setAttribute("role", "status");
+    msg.textContent = isSearchActive()
+      ? SEARCH_NO_RESULTS
+      : cfg.emptyMessage || "표시할 항목이 없습니다.";
+    parent.appendChild(msg);
   }
 
   function getListPrimaryTitle(item) {
@@ -405,6 +448,15 @@
         items.forEach(function (item) {
           grid.appendChild(createItemElement(item, false));
         });
+      } else if (paginatedMode && pageFetchPromises[p + 1]) {
+        var loading = document.createElement("p");
+        loading.className = "se-loading-hint";
+        loading.textContent = "불러오는 중…";
+        grid.appendChild(loading);
+      } else if (paginatedMode && p === 0 && getDisplayTotalCount() === 0) {
+        appendListEmptyMessage(grid);
+      } else if (!paginatedMode && p === 0 && getFilteredLocalDataset().length === 0) {
+        appendListEmptyMessage(grid);
       } else if (paginatedMode) {
         var loading = document.createElement("p");
         loading.className = "se-loading-hint";
@@ -495,7 +547,7 @@
 
   function getDisplayTotalCount() {
     if (paginatedMode) return apiTotal;
-    return dataset.length;
+    return getFilteredLocalDataset().length;
   }
 
   function updatePagerChrome() {
@@ -766,14 +818,72 @@
     listEl.innerHTML = "";
     if (paginatedMode) {
       fetchListPageItems(currentPage).then(function (items) {
+        if (!items.length) {
+          appendListEmptyMessage(listEl);
+          updatePagerChrome();
+          return;
+        }
         items.forEach(function (item) {
           listEl.appendChild(createItemElement(item, !!cfg.showExcerptInList));
         });
+        updatePagerChrome();
       });
       return;
     }
-    getListPageItems(currentPage).forEach(function (item) {
+    var pageItems = getListPageItems(currentPage);
+    if (!pageItems.length) {
+      appendListEmptyMessage(listEl);
+      updatePagerChrome();
+      return;
+    }
+    pageItems.forEach(function (item) {
       listEl.appendChild(createItemElement(item, !!cfg.showExcerptInList));
+    });
+    updatePagerChrome();
+  }
+
+  function onSearchQueryChange(value) {
+    searchQuery = value;
+    pageCache = {};
+    pageFetchPromises = {};
+    listItemsAccum = [];
+    listLoadedPages = 0;
+    listHasMore = true;
+    thumbActivePage = 0;
+    currentPage = 1;
+    thumbLayoutKey = "";
+    purgeThumbCarousel();
+
+    if (paginatedMode) {
+      var pageSize =
+        currentView === "list" ? ITEMS_PER_PAGE_LIST : thumbItemsPerPage || 8;
+      fetchMagazinePageApi(1, pageSize)
+        .then(function (res) {
+          apiTotal = res.total;
+          apiTotalPages = res.totalPages;
+          thumbTotalPages = apiTotalPages;
+          pageCache[1] = res.items || [];
+          dataset = res.items || [];
+          applyCurrentView();
+        })
+        .catch(function () {
+          apiTotal = 0;
+          apiTotalPages = 1;
+          applyCurrentView();
+        });
+      return;
+    }
+    applyCurrentView();
+  }
+
+  function setupListSearch() {
+    if (!SEARCH_ENABLED || !window.TiListSearch) return;
+    window.TiListSearch.setup({
+      mountEl: document.getElementById("mzSearch"),
+      inputId: "mzSearchInput",
+      placeholder: SEARCH_PLACEHOLDER,
+      debounceMs: searchCfg.debounceMs != null ? searchCfg.debounceMs : 350,
+      onQueryChange: onSearchQueryChange
     });
   }
 
@@ -929,6 +1039,7 @@
   }
 
   function boot() {
+    setupListSearch();
     bindEvents();
     loadDataset()
       .then(function () {

@@ -34,6 +34,10 @@
   if (!viewport || !track) return;
 
   var dataset = [];
+  var fullDataset = [];
+  var searchQuery = "";
+  var SEARCH_PLACEHOLDER = "제목 검색";
+  var SEARCH_NO_RESULTS = "검색 결과가 없습니다.";
   var itemsPerPage = 8;
   var totalPages = 1;
   var activePage = 0;
@@ -43,16 +47,60 @@
   var loading = false;
   var pendingUrlPage = null;
   var LOADING_MESSAGE = "기획전 목록을 불러오는 중…";
+  var EMPTY_MESSAGE = "표시할 기획전이 없습니다.";
   var ERROR_MESSAGE = "목록을 불러오지 못했습니다.";
 
   function loadDataset() {
     if (window.TiApi && typeof window.TiApi.getSpecialList === "function") {
       return window.TiApi.getSpecialList("exhibition").then(function (items) {
-        dataset = Array.isArray(items) ? items.slice() : [];
+        fullDataset = Array.isArray(items) ? items.slice() : [];
+        applyDatasetFilter();
       });
     }
-    dataset = Array.isArray(window.SPECIAL_PROGRAM_DATA) ? window.SPECIAL_PROGRAM_DATA.slice() : [];
+    fullDataset = Array.isArray(window.SPECIAL_PROGRAM_DATA)
+      ? window.SPECIAL_PROGRAM_DATA.slice()
+      : [];
+    applyDatasetFilter();
     return Promise.resolve();
+  }
+
+  function applyDatasetFilter() {
+    var q = window.TiListSearch ? window.TiListSearch.normalize(searchQuery) : "";
+    if (!q) {
+      dataset = fullDataset.slice();
+      return;
+    }
+    dataset = fullDataset.filter(function (item) {
+      return window.TiListSearch.matches(item, q, ["title"]);
+    });
+  }
+
+  function isSearchActive() {
+    return !!(window.TiListSearch && window.TiListSearch.normalize(searchQuery));
+  }
+
+  function onSearchQueryChange(value) {
+    searchQuery = value;
+    activePage = 0;
+    builtForDatasetLength = -1;
+    applyDatasetFilter();
+    if (loading) return;
+    if (!dataset.length) {
+      showListStatus(isSearchActive() ? SEARCH_NO_RESULTS : ERROR_MESSAGE, !isSearchActive(), false);
+      return;
+    }
+    applyLayoutFromViewport();
+  }
+
+  function setupListSearch() {
+    if (!window.TiListSearch) return;
+    window.TiListSearch.setup({
+      mountEl: document.getElementById("seSearch"),
+      inputId: "seSearchInput",
+      placeholder: SEARCH_PLACEHOLDER,
+      debounceMs: 350,
+      onQueryChange: onSearchQueryChange
+    });
   }
 
   function getGridGapCol() {
@@ -394,6 +442,7 @@
   }
 
   function boot() {
+    setupListSearch();
     pendingUrlPage = readPageFromUrl();
     activePage = pendingUrlPage !== null ? pendingUrlPage : 0;
     itemsPerPage = getGridColumns();
@@ -404,6 +453,10 @@
     loadDataset()
       .then(function () {
         loading = false;
+        if (!dataset.length) {
+          showListStatus(isSearchActive() ? SEARCH_NO_RESULTS : EMPTY_MESSAGE, false, false);
+          return;
+        }
         requestAnimationFrame(function () {
           requestAnimationFrame(applyLayoutFromViewport);
         });

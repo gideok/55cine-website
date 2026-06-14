@@ -122,30 +122,46 @@ function listWhereClause(opts: {
   return { sql: parts.length ? parts.join(" AND ") : "1=1", inputs };
 }
 
+function listSearchClause(search?: string): {
+  sql: string;
+  inputs: Array<{ name: string; type: sql.ISqlTypeFactoryWithNoParams; value: unknown }>;
+} {
+  const q = String(search || "").trim();
+  if (!q) return { sql: "", inputs: [] };
+  return {
+    sql: ` AND (title LIKE @search OR ISNULL(subtitle, '') LIKE @search OR body_html LIKE @search)`,
+    inputs: [{ name: "search", type: sql.NVarChar, value: `%${q}%` }]
+  };
+}
+
 export async function getMagazineListPage(opts: {
   section?: MagazineSection;
   isPast?: boolean;
   page: number;
   pageSize: number;
+  search?: string;
 }): Promise<MagazineListPage> {
   const pool = await getPool();
   const page = Math.max(1, opts.page);
   const pageSize = Math.min(50, Math.max(1, opts.pageSize));
   const offset = (page - 1) * pageSize;
   const where = listWhereClause(opts);
+  const searchPart = listSearchClause(opts.search);
+  const whereSql = where.sql + searchPart.sql;
+  const allInputs = where.inputs.concat(searchPart.inputs);
 
   const countReq = pool.request();
-  for (const inp of where.inputs) {
+  for (const inp of allInputs) {
     countReq.input(inp.name, inp.type, inp.value);
   }
   const countRes = await countReq.query<{ total: number }>(`
-    SELECT COUNT(*) AS total FROM dbo.web_magazine WHERE ${where.sql}
+    SELECT COUNT(*) AS total FROM dbo.web_magazine WHERE ${whereSql}
   `);
   const total = countRes.recordset[0]?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   const listReq = pool.request();
-  for (const inp of where.inputs) {
+  for (const inp of allInputs) {
     listReq.input(inp.name, inp.type, inp.value);
   }
   listReq.input("offset", sql.Int, offset);
@@ -154,7 +170,7 @@ export async function getMagazineListPage(opts: {
   const listRes = await listReq.query<MagazineRow>(`
     SELECT ${MAGAZINE_SELECT}
     FROM dbo.web_magazine
-    WHERE ${where.sql}
+    WHERE ${whereSql}
     ORDER BY created_at DESC, seq DESC
     OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY
   `);

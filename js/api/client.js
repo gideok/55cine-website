@@ -161,6 +161,7 @@
     else if (opts.section) parts.push("section=" + encodeURIComponent(opts.section));
     if (opts.page != null) parts.push("page=" + encodeURIComponent(String(opts.page)));
     if (opts.pageSize != null) parts.push("pageSize=" + encodeURIComponent(String(opts.pageSize)));
+    if (opts.q) parts.push("q=" + encodeURIComponent(String(opts.q)));
     return apiGet(path + parts.join("&"));
   }
 

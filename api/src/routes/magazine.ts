@@ -13,7 +13,8 @@ export async function registerMagazineRoutes(app: FastifyInstance): Promise<void
           .union([z.literal("true"), z.literal("false"), z.literal("1"), z.literal("0")])
           .optional(),
         page: z.coerce.number().int().min(1).optional(),
-        pageSize: z.coerce.number().int().min(1).max(50).optional()
+        pageSize: z.coerce.number().int().min(1).max(50).optional(),
+        q: z.string().max(200).optional()
       })
       .safeParse(request.query);
 
@@ -38,7 +39,8 @@ export async function registerMagazineRoutes(app: FastifyInstance): Promise<void
         section: parsed.data.section,
         isPast,
         page: parsed.data.page ?? 1,
-        pageSize: parsed.data.pageSize ?? 12
+        pageSize: parsed.data.pageSize ?? 12,
+        search: parsed.data.q
       });
       reply.header("Cache-Control", "public, max-age=120");
       return data;

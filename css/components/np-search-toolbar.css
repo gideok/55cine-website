@@ -1,5 +1,160 @@
 /* 상영작 목록 — 검색·모바일 툴바 */
 
+/* 기획전·매거진 — ti-np-root 없이 동일 검색 UI */
+.ti .ti-np-list .np-search,
+.ti .ti-mz-panel .np-search {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.ti .ti-np-list .np-search[hidden],
+.ti .ti-mz-panel .np-search[hidden] {
+  display: none;
+}
+
+.ti .ti-np-list .np-search-toggle,
+.ti .ti-mz-panel .np-search-toggle {
+  display: none;
+}
+
+.ti .ti-np-list .np-search-panel,
+.ti .ti-mz-panel .np-search-panel {
+  display: block;
+  min-width: 0;
+}
+
+.ti .ti-np-list .np-search-field,
+.ti .ti-mz-panel .np-search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 44px;
+  height: auto;
+  padding: 8px 12px 8px 10px;
+  border: 1px solid #595959;
+  border-radius: 0;
+  background: #fff;
+  cursor: text;
+}
+
+.ti .ti-np-list .np-search-icon,
+.ti .ti-mz-panel .np-search-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: #595959;
+  pointer-events: none;
+}
+
+.ti .ti-np-list .np-search-input,
+.ti .ti-mz-panel .np-search-input {
+  flex: 1 1 auto;
+  min-width: 8.5rem;
+  width: clamp(8.5rem, 18vw, 14rem);
+  min-height: 1.25rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  font-size: max(16px, 0.85rem);
+  font-weight: 400;
+  line-height: 1.4;
+  color: #111111;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ti .ti-np-list .np-search-input::placeholder,
+.ti .ti-mz-panel .np-search-input::placeholder {
+  color: #595959;
+  font-weight: 400;
+}
+
+.ti .ti-np-list .np-search-field:focus-within,
+.ti .ti-mz-panel .np-search-field:focus-within {
+  outline: none;
+  box-shadow: none;
+}
+
+.ti .ti-np-list .np-search-input:focus,
+.ti .ti-np-list .np-search-input:focus-visible,
+.ti .ti-mz-panel .np-search-input:focus,
+.ti .ti-mz-panel .np-search-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+@media (min-width: 900px) {
+  .ti .ti-np-list .np-search-field,
+  .ti .ti-mz-panel .np-search-field {
+    height: 38px;
+    min-height: 38px;
+    padding: 0 10px 0 8px;
+  }
+
+  .ti .ti-np-list .np-search-input,
+  .ti .ti-mz-panel .np-search-input {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 899px) {
+  .ti .ti-np-list .np-search-toggle,
+  .ti .ti-mz-panel .np-search-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #595959;
+    border-radius: 0;
+    background: #fff;
+    color: #595959;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  .ti .ti-np-list .np-search:not(.is-open) .np-search-panel,
+  .ti .ti-mz-panel .np-search:not(.is-open) .np-search-panel {
+    display: none;
+  }
+
+  .ti .ti-np-list .np-search.is-open .np-search-panel,
+  .ti .ti-mz-panel .np-search.is-open .np-search-panel {
+    display: block;
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .ti .ti-np-list .np-search.is-open .np-search-field,
+  .ti .ti-mz-panel .np-search.is-open .np-search-field {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px 10px 10px;
+  }
+
+  .ti .ti-np-list .np-search.is-open .np-search-input,
+  .ti .ti-mz-panel .np-search.is-open .np-search-input {
+    width: 100%;
+    min-width: 0;
+    min-height: 1.5rem;
+    font-size: 16px;
+  }
+}
+
 /* 지난 상영작: 건수·검색 1행, 페이지네이션 2행 (페이지 수와 무관) */
 .ti .ti-np-root .ti-page-toolbar--with-search {
   display: flex;
@@ -239,6 +394,8 @@
 .ti .ti-np-list .np-search-field:focus-within {
   border-color: #595959;
   background: #ffffff;
+  outline: none;
+  box-shadow: none;
 }
 
 .ti .ti-np-list .np-search-icon {
@@ -282,5 +439,95 @@
     flex: 1 1 100%;
     width: 100%;
     margin-left: 0;
+  }
+}
+
+/* 기획전 — 지난 상영작과 동일 검색 UI */
+.ti .ti-np-list.se-right .np-meta-row--with-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 0;
+}
+
+.ti .ti-np-list.se-right .np-meta-row--with-search .np-meta {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 0;
+}
+
+.ti .ti-np-list.se-right .np-meta-row--with-search .np-search {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+/* 매거진 삼삼오오 — 건수·검색·보기 토글 */
+.ti .ti-mz-panel .ti-page-toolbar--with-search .np-search-field {
+  border-color: #595959;
+  background: #ffffff;
+}
+
+.ti .ti-mz-panel .ti-page-toolbar--with-search .np-search-icon {
+  color: #595959;
+}
+
+.ti .ti-mz-panel .ti-page-toolbar--with-search .np-search-input {
+  font-weight: 400;
+  color: #111111;
+}
+
+.ti .ti-mz-panel .ti-page-toolbar--with-search .np-search-input::placeholder {
+  color: #595959;
+  font-weight: 400;
+}
+
+.ti .ti-mz-panel .ti-page-toolbar--with-search .np-search-toggle {
+  border-color: #595959;
+  color: #595959;
+  background: #ffffff;
+}
+
+.ti .ti-mz-panel .ti-page-toolbar--with-search .np-search-toggle:hover {
+  border-color: #111111;
+  color: #111111;
+  background: #f7f7f7;
+}
+
+@media (max-width: 899px) {
+  .ti .ti-np-list.se-right .np-meta-row--with-search {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+  }
+
+  .ti .ti-np-list.se-right .np-meta-row--with-search .np-search {
+    margin-left: auto;
+  }
+
+  .ti .ti-np-list.se-right .np-meta-row--with-search .np-search.is-open {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .ti .ti-mz-panel .ti-page-toolbar--with-search .ti-page-toolbar__meta {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+  }
+
+  .ti .ti-mz-panel .ti-page-toolbar--with-search .ti-page-toolbar__meta .np-search {
+    margin-left: auto;
+  }
+
+  .ti .ti-mz-panel .ti-page-toolbar--with-search .np-search.is-open {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .ti .ti-mz-panel .ti-page-toolbar--with-search .view-mode {
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 }
