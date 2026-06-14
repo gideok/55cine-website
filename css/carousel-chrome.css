@@ -60,10 +60,10 @@
     height: 7px;
   }
 
-  /* 매거진 썸네일형 — 모바일 2열×2행(4건/페이지) */
+  /* 매거진 썸네일형 — 모바일 2열, 행 수는 --mz-thumb-rows */
   .ti .ti-mz-panel .mz-thumb-stack .se-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(2, auto);
+    grid-template-rows: repeat(var(--mz-thumb-rows, 1), minmax(0, auto));
     gap: 8px;
   }
 }

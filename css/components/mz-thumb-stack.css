@@ -3,7 +3,7 @@
 /* 썸네일형: special-exhibition-test 와 동일한 가로 스크롤 스냅 캐러셀 */
 .ti .ti-mz-panel .mz-thumb-stack {
   --mz-thumb-cols: 4;
-  --mz-thumb-rows: 2;
+  --mz-thumb-rows: 1;
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
