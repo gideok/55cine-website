@@ -213,19 +213,28 @@
 
   function computeThumbItemsPerPage() {
     var cols = getGridColumns();
+    if (window.TiThumbGridLayout) {
+      return window.TiThumbGridLayout.computeItemsPerPage({
+        cols: cols,
+        isMobile: isMobileThumbViewport(),
+        viewportHeight: mzSwipeViewport ? mzSwipeViewport.clientHeight : 0,
+        refViewportHeight: cfg.thumbRefViewportHeight,
+        refRows: cfg.thumbRefRows,
+        maxRows: cfg.thumbMaxRows,
+        mobileRows: MOBILE_THUMB_ROWS
+      });
+    }
     if (isMobileThumbViewport()) {
       return cols * MOBILE_THUMB_ROWS;
     }
     if (!mzSwipeViewport) return Math.max(4, cols * 2);
-    var h = mzSwipeViewport.clientHeight;
-    var w = mzSwipeViewport.clientWidth;
-    var gap = gridGapPx();
-    if (w < 40 || h < 40) return Math.max(cols * 2, cols);
-    var cellW = (w - gap * Math.max(0, cols - 1)) / cols;
-    var rowH = cellW * THUMB_IMG_H_PER_W + TITLE_BLOCK_RESERVE_PX;
-    var rows = Math.floor((h + gap) / (rowH + gap));
-    rows = Math.max(1, Math.min(16, rows));
-    return rows * cols;
+    return cols * 2;
+  }
+
+  function syncThumbGridRows(cols, itemsPerPage) {
+    if (!mzThumbStack) return;
+    var rows = Math.max(1, Math.ceil(itemsPerPage / Math.max(1, cols)));
+    mzThumbStack.style.setProperty("--mz-thumb-rows", String(rows));
   }
 
   function getThumbTotalPages() {
@@ -615,6 +624,7 @@
     var itemOffset = thumbActivePage * prevIpp;
     var ippChanged = nextIpp !== prevIpp;
     thumbItemsPerPage = nextIpp;
+    syncThumbGridRows(cols, thumbItemsPerPage);
 
     if (paginatedMode && ippChanged) {
       pageCache = {};

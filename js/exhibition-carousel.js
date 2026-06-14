@@ -17,7 +17,6 @@
   var GRID_GAP_ROW_PX = 40;
   var POSTER_ASPECT = 740 / 510;
   var TITLE_BLOCK_RESERVE_PX = 56;
-  var MAX_ROWS = 16;
   var COL_BREAKPOINT = window.matchMedia("(max-width: 899px)");
 
   var viewport = document.getElementById("seSwipeViewport");
@@ -70,18 +69,22 @@
 
   function computeItemsPerPage() {
     var cols = getGridColumns();
-    var gapCol = getGridGapCol();
-    var gapRow = getGridGapRow();
-    var h = viewport.clientHeight;
-    var w = viewport.clientWidth;
-    if (w < 40 || h < 40) {
-      return Math.max(cols * 2, cols);
+    if (window.TiThumbGridLayout) {
+      return window.TiThumbGridLayout.computeItemsPerPage({
+        cols: cols,
+        isMobile: COL_BREAKPOINT.matches,
+        viewportHeight: viewport.clientHeight,
+        mobileRows: 2
+      });
     }
-    var cellW = (w - gapCol * Math.max(0, cols - 1)) / cols;
-    var rowH = cellW * POSTER_ASPECT + TITLE_BLOCK_RESERVE_PX;
-    var rows = Math.floor((h + gapRow) / (rowH + gapRow));
-    rows = Math.max(1, Math.min(MAX_ROWS, rows));
-    return rows * cols;
+    return cols * 2;
+  }
+
+  function syncExhibitionGridRows(cols, pageSize) {
+    var host = rightInner || viewport;
+    if (!host) return;
+    var rows = Math.max(1, Math.ceil(pageSize / Math.max(1, cols)));
+    host.style.setProperty("--se-thumb-rows", String(rows));
   }
 
   function getTotalPages() {
@@ -355,6 +358,7 @@
     var prevIpp = itemsPerPage;
     var ippChanged = nextIpp !== prevIpp;
     itemsPerPage = nextIpp;
+    syncExhibitionGridRows(cols, itemsPerPage);
 
     var newTotal = Math.max(1, Math.ceil(dataset.length / itemsPerPage));
     if (pendingUrlPage !== null) {

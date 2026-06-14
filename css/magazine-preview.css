@@ -88,6 +88,7 @@
 .ti .ti-mz-panel .preview-page .preview-list,
 .ti .ti-mz-panel .preview-page > .ti-page-pager--bottom,
 .ti .ti-mz-panel .preview-page > .se-foot {
+  flex: 0 0 auto;
   width: 100%;
   max-width: 100%;
   margin-left: 0;
