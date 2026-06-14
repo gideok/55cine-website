@@ -95,6 +95,24 @@
   pointer-events: none;
 }
 
+/* 페이지네이션 버튼 간격 — 사이트 공통 */
+.ti .ti-page-pager--bottom,
+.ti .ti-np-list .ti-page-pager--bottom,
+.ti .ti-mz-panel .ti-page-pager--bottom,
+.ti .ti-mz-panel .pagination,
+.ti .se-foot,
+.ti .ti-mz-panel .se-foot,
+.se-foot,
+.admin-list-foot {
+  gap: 6px;
+}
+
+.ti .se-page-dots,
+.ti .ti-mz-panel .se-page-dots,
+.se-page-dots {
+  gap: 6px;
+}
+
 /* PC: 상단 번호 페이지네이션만, 스와이프 힌트·하단 컨트롤 숨김 */
 @media (min-width: 900px) {
   .ti .se-hint {
