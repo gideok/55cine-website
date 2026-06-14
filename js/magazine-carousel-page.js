@@ -13,8 +13,37 @@
       ? Math.floor(window.TI_MAGAZINE_LIST_ITEMS_PER_PAGE)
       : 6;
   var SITE_ROOT_PREFIX = cfg.siteRootPrefix || "../";
+  var VIEW_MODE_STORAGE_KEY = "ti-mz-view-mode";
   var currentPage = 1;
-  var currentView = "thumb";
+
+  function readStoredViewMode() {
+    try {
+      var stored = window.localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+      if (stored === "thumb" || stored === "list") return stored;
+    } catch (e) {
+      /* localStorage 미지원·비활성 환경 */
+    }
+    return "thumb";
+  }
+
+  function persistViewMode(view) {
+    if (view !== "thumb" && view !== "list") return;
+    try {
+      window.localStorage.setItem(VIEW_MODE_STORAGE_KEY, view);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function syncViewModeButtons(view) {
+    document.querySelectorAll(".mode-btn").forEach(function (btn) {
+      var active = btn.getAttribute("data-view") === view;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-selected", active ? "true" : "false");
+    });
+  }
+
+  var currentView = readStoredViewMode();
 
   var searchCfg = cfg.search || {};
   var SEARCH_ENABLED = searchCfg.enabled !== false;
@@ -1050,11 +1079,8 @@
         var nextView = button.getAttribute("data-view");
         if (!nextView || nextView === currentView) return;
         currentView = nextView;
-        document.querySelectorAll(".mode-btn").forEach(function (btn) {
-          var active = btn === button;
-          btn.classList.toggle("is-active", active);
-          btn.setAttribute("aria-selected", active ? "true" : "false");
-        });
+        persistViewMode(currentView);
+        syncViewModeButtons(currentView);
         applyCurrentView();
       });
     });
@@ -1097,6 +1123,8 @@
   }
 
   function boot() {
+    syncViewModeButtons(currentView);
+    setViewShell();
     setupListSearch();
     bindEvents();
     loadDataset()
