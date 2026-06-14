@@ -15,52 +15,59 @@
   box-sizing: border-box;
 }
 
-.ti .mz-panel .page-toolbar__leading {
-  display: contents;
-}
-
 .ti .mz-panel .page-toolbar--with-search {
   flex-wrap: wrap;
   align-items: center;
   gap: 12px 16px;
 }
 
-/* meta를 펼쳐 건수·검색·토글이 한 flex 줄에서 정렬되게 */
-.ti .mz-panel .page-toolbar--with-search .page-toolbar__meta {
-  display: contents;
-}
+/* PC(≥900px) — meta 펼침: 건수 좌 / 검색·토글 우 */
+@media (min-width: 900px) {
+  .ti .mz-panel .page-toolbar__leading {
+    display: contents;
+  }
 
-.ti .mz-panel .page-toolbar--with-search .page-count {
-  flex: 0 0 auto;
-  order: 1;
-  margin: 0;
-}
+  .ti .mz-panel .page-toolbar--with-search .page-toolbar__meta {
+    display: contents;
+  }
 
-.ti .mz-panel .page-toolbar--with-search .np-search {
-  flex: 0 0 auto;
-  order: 2;
-  margin-left: auto;
-}
+  .ti .mz-panel .page-toolbar--with-search .page-count {
+    flex: 0 0 auto;
+    order: 1;
+    margin: 0;
+  }
 
-.ti .mz-panel .page-toolbar--with-search .view-mode {
-  order: 3;
-  flex: 0 0 auto;
-  margin-left: 0;
-}
+  .ti .mz-panel .page-toolbar--with-search .np-search {
+    flex: 0 0 auto;
+    order: 2;
+    margin-left: auto;
+  }
 
-.ti .mz-panel .page-toolbar__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex: 1 1 auto;
-  min-width: 0;
-  order: 1;
-}
+  .ti .mz-panel .page-toolbar--with-search .view-mode {
+    order: 3;
+    flex: 0 0 auto;
+    margin-left: 0;
+  }
 
-.ti .mz-panel .page-toolbar__meta .np-search {
-  flex: 0 0 auto;
-  margin-left: auto;
+  .ti .mz-panel .page-toolbar__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex: 1 1 auto;
+    min-width: 0;
+    order: 1;
+  }
+
+  .ti .mz-panel .page-toolbar__meta .np-search {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .ti .mz-panel .view-mode {
+    order: 2;
+    margin-left: auto;
+  }
 }
 
 .ti .mz-panel .page-count {
@@ -93,8 +100,6 @@
 }
 
 .ti .mz-panel .view-mode {
-  order: 2;
-  margin-left: auto;
   display: inline-flex;
   gap: 6px;
   border: none;

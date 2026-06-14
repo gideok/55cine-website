@@ -70,6 +70,24 @@
 
   function computeItemsPerPage() {
     var cols = getGridColumns();
+    if (window.TiThumbGridLayout) {
+      return window.TiThumbGridLayout.computeItemsPerPage({
+        cols: cols,
+        isMobile: COL_BREAKPOINT.matches,
+        viewportEl: viewport,
+        hostEl: rightInner,
+        viewportWidth: viewport.clientWidth,
+        gapCol: getGridGapCol(),
+        gapRow: getGridGapRow(),
+        aspectRatio: POSTER_ASPECT,
+        titleReserve: TITLE_BLOCK_RESERVE_PX,
+        maxRows: MAX_ROWS,
+        useCellFit: true,
+        mobileRows: 2,
+        refViewportHeight: 680,
+        refRows: 2
+      });
+    }
     var gapCol = getGridGapCol();
     var gapRow = getGridGapRow();
     var h = viewport.clientHeight;
@@ -82,6 +100,41 @@
     var rows = Math.floor((h + gapRow) / (rowH + gapRow));
     rows = Math.max(1, Math.min(MAX_ROWS, rows));
     return rows * cols;
+  }
+
+  function syncEventGridRows(cols) {
+    var host = rightInner || viewport;
+    if (!host) return;
+    var rows = 2;
+    if (window.TiThumbGridLayout) {
+      rows = window.TiThumbGridLayout.computeRows({
+        cols: cols,
+        isMobile: COL_BREAKPOINT.matches,
+        viewportEl: viewport,
+        hostEl: rightInner,
+        viewportWidth: viewport.clientWidth,
+        viewportHeight: window.TiThumbGridLayout.measureSlotHeight({
+          viewportEl: viewport,
+          hostEl: rightInner
+        }),
+        gapCol: getGridGapCol(),
+        gapRow: getGridGapRow(),
+        aspectRatio: POSTER_ASPECT,
+        titleReserve: TITLE_BLOCK_RESERVE_PX,
+        maxRows: MAX_ROWS,
+        useCellFit: true,
+        mobileRows: 2,
+        refViewportHeight: 680,
+        refRows: 2
+      });
+    }
+    host.style.setProperty("--se-thumb-rows", String(rows));
+  }
+
+  function syncSlideWidths() {
+    if (window.TiThumbGridLayout) {
+      window.TiThumbGridLayout.syncSlideWidths(viewport, track);
+    }
   }
 
   function getTotalPages() {
@@ -211,6 +264,7 @@
       slide.appendChild(grid);
       track.appendChild(slide);
     }
+    syncSlideWidths();
   }
 
   function updateDots() {
@@ -355,6 +409,7 @@
     var prevIpp = itemsPerPage;
     var ippChanged = nextIpp !== prevIpp;
     itemsPerPage = nextIpp;
+    syncEventGridRows(cols);
 
     var newTotal = Math.max(1, Math.ceil(dataset.length / itemsPerPage));
     if (pendingUrlPage !== null) {
@@ -371,6 +426,8 @@
     if (ippChanged || track.childElementCount === 0 || dataChanged) {
       buildSlides();
       builtForDatasetLength = dataset.length;
+    } else {
+      syncSlideWidths();
     }
 
     var w = viewport.clientWidth;
@@ -449,6 +506,7 @@
       scheduleLayout();
     });
     ro.observe(rightInner);
+    ro.observe(viewport);
   }
 
   function onColBreakpointChange() {

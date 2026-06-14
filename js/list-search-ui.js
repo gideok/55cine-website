@@ -162,12 +162,23 @@
 
     if (!document.documentElement.dataset.tiListSearchDismissBound) {
       document.documentElement.dataset.tiListSearchDismissBound = "1";
-      document.addEventListener("click", function (e) {
+      function dismissOpenSearches(target) {
         document.querySelectorAll(".np-search.is-open").forEach(function (openWrap) {
-          if (openWrap.contains(e.target)) return;
+          if (openWrap.contains(target)) return;
           closeMobileSearch(openWrap, openWrap.querySelector(".np-search-toggle"));
         });
+      }
+      document.addEventListener("click", function (e) {
+        dismissOpenSearches(e.target);
       });
+      document.addEventListener(
+        "touchstart",
+        function (e) {
+          if (!e.target) return;
+          dismissOpenSearches(e.target);
+        },
+        { passive: true }
+      );
       document.addEventListener("keydown", function (e) {
         if (e.key !== "Escape") return;
         document.querySelectorAll(".np-search.is-open").forEach(function (openWrap) {

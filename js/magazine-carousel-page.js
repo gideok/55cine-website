@@ -250,8 +250,46 @@
     return Math.min(4, rows);
   }
 
+  function syncThumbRowsVariable(rows) {
+    if (mzThumbStack) {
+      mzThumbStack.style.setProperty("--mz-thumb-rows", String(Math.max(1, rows)));
+    }
+  }
+
   function computeThumbItemsPerPage() {
     var cols = getGridColumns();
+    var gap = gridGapPx();
+
+    if (isMobileThumbViewport()) {
+      var mobileRows = getThumbRowsFromCss();
+      syncThumbRowsVariable(mobileRows);
+      return cols * mobileRows;
+    }
+
+    if (window.TiThumbGridLayout && mzSwipeViewport) {
+      var rows = window.TiThumbGridLayout.computeRows({
+        cols: cols,
+        isMobile: false,
+        viewportEl: mzSwipeViewport,
+        hostEl: document.querySelector(".preview-page"),
+        viewportWidth: mzSwipeViewport.clientWidth,
+        viewportHeight: window.TiThumbGridLayout.measureSlotHeight({
+          viewportEl: mzSwipeViewport,
+          hostEl: document.querySelector(".preview-page")
+        }),
+        gapCol: gap,
+        gapRow: gap,
+        aspectRatio: THUMB_IMG_H_PER_W,
+        titleReserve: TITLE_BLOCK_RESERVE_PX,
+        maxRows: 4,
+        useCellFit: true,
+        refViewportHeight: 680,
+        refRows: 2
+      });
+      syncThumbRowsVariable(rows);
+      return cols * rows;
+    }
+
     return cols * getThumbRowsFromCss();
   }
 
@@ -475,8 +513,12 @@
     syncThumbSlideWidths();
   }
 
-  /** 슬라이드 너비 = 뷰포트(clientWidth). flex 100%는 트랙 기준이라 다음 페이지가 살짝 보일 수 있음 */
+  /** 슬라이드 너비 = 뷰포트(clientWidth). flex 100%는 트랙 기준이라 스와이프가 동작하지 않을 수 있음 */
   function syncThumbSlideWidths() {
+    if (window.TiThumbGridLayout) {
+      window.TiThumbGridLayout.syncSlideWidths(mzSwipeViewport, mzSwipeTrack);
+      return;
+    }
     if (!mzSwipeViewport || !mzSwipeTrack) return;
     var w = mzSwipeViewport.clientWidth;
     if (w <= 0) return;
@@ -998,6 +1040,7 @@
         if (currentView === "thumb") scheduleThumbLayout();
       });
       thumbResizeObserver.observe(mzThumbStack);
+      if (mzSwipeViewport) thumbResizeObserver.observe(mzSwipeViewport);
     }
   }
 

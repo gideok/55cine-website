@@ -121,8 +121,18 @@
       return window.TiThumbGridLayout.computeItemsPerPage({
         cols: cols,
         isMobile: COL_BREAKPOINT.matches,
-        viewportHeight: viewport.clientHeight,
-        mobileRows: 2
+        viewportEl: viewport,
+        hostEl: rightInner,
+        viewportWidth: viewport.clientWidth,
+        gapCol: getGridGapCol(),
+        gapRow: getGridGapRow(),
+        aspectRatio: 740 / 510,
+        titleReserve: TITLE_BLOCK_RESERVE_PX,
+        maxRows: 16,
+        useCellFit: true,
+        mobileRows: 2,
+        refViewportHeight: 680,
+        refRows: 2
       });
     }
     return cols * 2;
@@ -132,7 +142,35 @@
     var host = rightInner || viewport;
     if (!host) return;
     var rows = Math.max(1, Math.ceil(pageSize / Math.max(1, cols)));
+    if (window.TiThumbGridLayout) {
+      rows = window.TiThumbGridLayout.computeRows({
+        cols: cols,
+        isMobile: COL_BREAKPOINT.matches,
+        viewportEl: viewport,
+        hostEl: rightInner,
+        viewportWidth: viewport.clientWidth,
+        viewportHeight: window.TiThumbGridLayout.measureSlotHeight({
+          viewportEl: viewport,
+          hostEl: rightInner
+        }),
+        gapCol: getGridGapCol(),
+        gapRow: getGridGapRow(),
+        aspectRatio: 740 / 510,
+        titleReserve: TITLE_BLOCK_RESERVE_PX,
+        maxRows: 16,
+        useCellFit: true,
+        mobileRows: 2,
+        refViewportHeight: 680,
+        refRows: 2
+      });
+    }
     host.style.setProperty("--se-thumb-rows", String(rows));
+  }
+
+  function syncSlideWidths() {
+    if (window.TiThumbGridLayout) {
+      window.TiThumbGridLayout.syncSlideWidths(viewport, track);
+    }
   }
 
   function getTotalPages() {
@@ -262,6 +300,7 @@
       slide.appendChild(grid);
       track.appendChild(slide);
     }
+    syncSlideWidths();
   }
 
   function updateDots() {
@@ -423,6 +462,8 @@
     if (ippChanged || track.childElementCount === 0 || dataChanged) {
       buildSlides();
       builtForDatasetLength = dataset.length;
+    } else {
+      syncSlideWidths();
     }
 
     var w = viewport.clientWidth;
@@ -506,6 +547,7 @@
       scheduleLayout();
     });
     ro.observe(rightInner);
+    ro.observe(viewport);
   }
 
   function onColBreakpointChange() {

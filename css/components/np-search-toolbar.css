@@ -113,10 +113,10 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    min-height: 38px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
     margin: 0;
     padding: 0;
     border: 1px solid #595959;
@@ -137,6 +137,11 @@
     display: block;
     flex: 1 1 100%;
     width: 100%;
+  }
+
+  .ti .np-list .np-search.is-open .np-search-toggle,
+  .ti .mz-panel .np-search.is-open .np-search-toggle {
+    display: none;
   }
 
   .ti .np-list .np-search.is-open .np-search-field,
@@ -353,6 +358,10 @@
     display: none;
   }
 
+  .ti .np-root .np-search.is-open .np-search-toggle {
+    display: none;
+  }
+
   .ti .np-root .page-toolbar--with-search .np-search.is-open {
     display: flex;
     flex-wrap: wrap;
@@ -496,35 +505,62 @@
 }
 
 @media (max-width: 899px) {
-  .ti .mz-panel .page-toolbar--with-search .page-toolbar__meta {
+  /*
+   * 매거진 삼삼오오 모바일 툴바 (고정 레이아웃 — 수정 시 이 블록만 변경)
+   * 일반: 좌 총 N건 | 우 [검색] [썸네일·목록 토글]
+   * 검색 열림: 입력란 전체폭 (건수·토글·검색버튼 숨김)
+   */
+  .ti .mz-panel .page-toolbar--with-search {
     display: flex;
-    flex: 1 1 auto;
-    min-width: 0;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px 12px;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .ti .mz-panel .page-toolbar--with-search .page-toolbar__meta {
+    display: contents;
   }
 
   .ti .mz-panel .page-toolbar--with-search .page-count {
     order: 1;
+    flex: 0 0 auto;
+    margin: 0;
+    margin-right: auto;
   }
 
   .ti .mz-panel .page-toolbar--with-search .np-search {
     order: 2;
-    margin-left: auto;
-  }
-
-  .ti .mz-panel .page-toolbar--with-search .np-search.is-open {
-    flex: 1 1 100%;
-    width: 100%;
+    flex: 0 0 auto;
     margin-left: 0;
   }
 
   .ti .mz-panel .page-toolbar--with-search .view-mode {
     order: 3;
     flex: 0 0 auto;
-    margin-left: auto;
+    margin-left: 0;
+  }
+
+  .ti .mz-panel .page-toolbar--with-search:has(.np-search.is-open) .page-count,
+  .ti .mz-panel .page-toolbar--with-search:has(.np-search.is-open) .view-mode {
+    display: none;
+  }
+
+  .ti .mz-panel .page-toolbar--with-search .np-search.is-open {
+    order: 1;
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .ti .mz-panel .page-toolbar--with-search .np-search.is-open .np-search-panel {
+    width: 100%;
+  }
+
+  .ti .mz-panel .page-toolbar--with-search .np-search.is-open .np-search-field {
+    width: 100%;
   }
 
   .ti .np-list.se-right .np-meta-row--with-search {
