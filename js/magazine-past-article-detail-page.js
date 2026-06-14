@@ -11,10 +11,17 @@
 
   var root = document.getElementById("pastArticleRoot");
   var statusEl = document.getElementById("pastArticleStatus");
-  var pageTitleEl = document.getElementById("pastArticlePageTitle");
+  var titleEl = document.getElementById("pastArticlePageTitle");
+  var backLink = document.getElementById("mdBackLink");
   var indexItems = [];
 
   if (!root) return;
+
+  function applyBackLink() {
+    if (!backLink) return;
+    backLink.href = LIST_URL;
+    backLink.setAttribute("aria-label", "지난 기사 목록으로 돌아가기");
+  }
 
   function cleanStyleValue(styleContent) {
     return styleContent
@@ -80,9 +87,7 @@
 
   function normalizeArticleId(raw) {
     if (!raw) return "";
-    var id = String(raw).trim();
-    if (/^\d+$/.test(id) && parseInt(id, 10) > 0) return id;
-    return "";
+    return String(raw).trim();
   }
 
   function getArticleId() {
@@ -144,18 +149,18 @@
     var list = article.attachments;
     if (!Array.isArray(list) || list.length < 2) return null;
     var section = document.createElement("section");
-    section.className = "sd-attachments";
+    section.className = "mz-detail-attachments";
     section.setAttribute("aria-label", "첨부 이미지");
     var h2 = document.createElement("h2");
-    h2.className = "sd-subhead";
+    h2.className = "mz-detail-attachments__title";
     h2.textContent = "첨부 이미지";
     section.appendChild(h2);
     var grid = document.createElement("div");
-    grid.className = "sd-attachments-grid";
+    grid.className = "mz-detail-attachments-grid";
     list.forEach(function (att, i) {
       if (att.path === article.coverImage && i === 0 && list.length > 1) return;
       var fig = document.createElement("figure");
-      fig.className = "sd-attachments-item";
+      fig.className = "mz-detail-attachments-item";
       var img = document.createElement("img");
       img.src = resolveAssetUrl(att.path);
       img.alt = att.alt || article.title || "";
@@ -189,59 +194,45 @@
 
   function renderArticle(article) {
     var neighbors = article.neighbors || findNeighbors(article.id);
+    var pageTitle = article.title || "";
+    if (titleEl) titleEl.textContent = pageTitle;
     root.innerHTML = "";
     if (statusEl) statusEl.hidden = true;
 
-    var articleEl = document.createElement("article");
-
-    var kicker = document.createElement("p");
-    kicker.className = "sd-kicker";
-    kicker.textContent = "매거진 삼삼오오 · 지난 기사";
-    articleEl.appendChild(kicker);
-
-    var head = document.createElement("header");
-    head.className = "sd-head";
-    var h1 = document.createElement("h1");
-    h1.className = "sd-title";
-    h1.id = "article-title";
-    h1.textContent = article.title || "";
-    head.appendChild(h1);
-    articleEl.appendChild(head);
-
     if (article.publishedLabel) {
       var meta = document.createElement("p");
-      meta.className = "sd-meta";
+      meta.className = "mz-detail-meta";
       meta.textContent = article.publishedLabel;
-      articleEl.appendChild(meta);
+      root.appendChild(meta);
     }
 
-    var body = document.createElement("section");
-    body.className = "sd-body";
-    body.setAttribute("aria-labelledby", "article-title");
+    var body = document.createElement("div");
+    body.className = "mz-detail-body";
+    body.setAttribute("aria-labelledby", "pastArticlePageTitle");
     body.innerHTML = prepareBodyHtml(article.bodyHtml || "");
     hydrateBodyImages(body, article.attachments, article.coverImage);
-    articleEl.appendChild(body);
+    root.appendChild(body);
 
     var attachments = renderAttachments(article);
-    if (attachments) articleEl.appendChild(attachments);
+    if (attachments) root.appendChild(attachments);
 
-    articleEl.appendChild(renderPrevNext(article, neighbors));
-    root.appendChild(articleEl);
+    root.appendChild(renderPrevNext(article, neighbors));
 
-    if (pageTitleEl) pageTitleEl.textContent = article.title || "지난 기사";
-    document.title = (article.title || "지난 기사") + " — 55CINE";
+    document.title = (pageTitle || "지난 기사") + " — 55CINE";
   }
 
   function showError(message) {
     root.innerHTML = "";
+    if (titleEl) titleEl.textContent = "지난 기사";
     if (statusEl) {
       statusEl.hidden = false;
       statusEl.textContent = message;
     }
-    if (pageTitleEl) pageTitleEl.textContent = "지난 기사";
+    document.title = "지난 기사 — 55CINE";
   }
 
   function boot() {
+    applyBackLink();
     var id = getArticleId();
     if (!id) {
       showError("기사 ID가 없습니다.");

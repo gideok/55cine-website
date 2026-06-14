@@ -8,15 +8,21 @@
   <title>GV 모먼트 — 55CINE</title>
   <link rel="icon" href="../../favicon.ico" sizes="48x48 32x32 16x16" />
   <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../../components/site-common.css" />
   <link rel="stylesheet" href="../../css/fonts.css" />
   <link rel="stylesheet" href="../../css/fonts-display.css" />
   <link rel="stylesheet" href="../../css/shell.css" />
   <link rel="stylesheet" href="../../css/components/shell-mobile-menu.css" />
   <link rel="stylesheet" href="../../css/components/shell-scroll-top.css" />
   <link rel="stylesheet" href="../../css/site-footer.css" />
+  <link rel="stylesheet" href="../../components/movie-detail-layout.css" />
+  <link rel="stylesheet" href="../../css/components/movie-detail-panel.css" />
+  <link rel="stylesheet" href="../../css/components/movie-detail-theme.css" />
+  <link rel="stylesheet" href="../../css/now-playing-movie-detail.css" />
   <link rel="stylesheet" href="../../css/detail.css" />
   <link rel="stylesheet" href="../../css/components/sd-prev-next-magazine.css" />
-  <link rel="stylesheet" href="../../css/magazine-gv-moment-detail.css" />
+  <link rel="stylesheet" href="../../css/components/magazine-detail-shell.css" />
+  <link rel="stylesheet" href="../../css/magazine-detail.css" />
 </head>
 <body class="ti">
   <div class="ti-shell" id="tiShell">
@@ -32,10 +38,23 @@
         aria-label="사이트 정보"
       ></footer>
     </div>
-    <aside class="ti-right sd-right sd-right--gv-moment" aria-label="GV 모먼트 상세">
-      <div class="sd-inner">
-        <p class="gv-moment-detail-status" id="gvMomentDetailStatus" hidden aria-live="polite"></p>
-        <div id="gvMomentDetailRoot"></div>
+    <aside class="ti-right ti-md-panel" aria-label="GV 모먼트 상세">
+      <div class="ti-md-scroll ti-md-theme">
+        <section class="md-page section-magazine-detail section-magazine-detail--gv" aria-labelledby="gvMomentDetailPageTitle">
+          <a class="md-back np-back" id="mdBackLink" href="../../gv-moment.html">
+            <span class="md-back__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 6L8 12L14 18" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter"/>
+              </svg>
+            </span>
+            <span class="md-back__text">목록으로</span>
+          </a>
+          <header class="md-head">
+            <h1 class="md-title section-title" id="gvMomentDetailPageTitle">GV 모먼트</h1>
+          </header>
+          <p class="movie-detail-status magazine-detail-status" id="gvMomentDetailStatus" hidden aria-live="polite"></p>
+          <div id="gvMomentDetailRoot" class="mz-detail-root md-root"></div>
+        </section>
       </div>
     </aside>
     <footer
@@ -47,30 +66,16 @@
   </div>
   <script src="../../js/site-footer-include.js"></script>
   <script>
-    /* TI_ASSET_BASE: site-root.js */
     window.TI_MAGAZINE_GV_MOMENT_DETAIL_CONFIG = {
       dataBase: "data/",
       listPageUrl: "../../gv-moment.html",
       indexUrl: "data/index.json",
       detailPageUrl: "article-detail.html"
-      /* API 연동 예시:
-      fetchArticle: function (id) {
-        return fetch("/api/magazine/gv-moment/" + encodeURIComponent(id)).then(function (r) {
-          if (!r.ok) throw new Error("GV 모먼트를 불러오지 못했습니다.");
-          return r.json();
-        });
-      },
-      fetchIndex: function () {
-        return fetch("/api/magazine/gv-moment?fields=id,title,thumbnail,date").then(function (r) {
-          return r.json().then(function (d) { return d.items; });
-        });
-      }
-      */
     };
   </script>
-    <script src="../../js/api/client.js"></script>
+  <script src="../../js/api/client.js"></script>
   <script src="../../js/magazine-asset-url.js"></script>
-<script src="../../data/week-schedule-data.js"></script>
+  <script src="../../data/week-schedule-data.js"></script>
   <script src="../../js/left-gnb-include.js"></script>
   <script src="../../js/mobile-menu.js"></script>
   <script src="../../js/scroll-top.js"></script>

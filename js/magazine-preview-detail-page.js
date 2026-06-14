@@ -11,10 +11,18 @@
 
   var root = document.getElementById("previewDetailRoot");
   var statusEl = document.getElementById("previewDetailStatus");
+  var titleEl = document.getElementById("previewDetailPageTitle");
+  var backLink = document.getElementById("mdBackLink");
   var indexItems = [];
   var imageCacheKey = "";
 
   if (!root) return;
+
+  function applyBackLink() {
+    if (!backLink) return;
+    backLink.href = LIST_URL;
+    backLink.setAttribute("aria-label", "프리뷰 목록으로 돌아가기");
+  }
 
   function decodeHtmlEntities(text) {
     if (!text) return "";
@@ -45,9 +53,7 @@
 
   function normalizeArticleId(raw) {
     if (!raw) return "";
-    var id = String(raw).trim();
-    if (/^\d+$/.test(id) && parseInt(id, 10) > 0) return id;
-    return "";
+    return String(raw).trim();
   }
 
   function getArticleId() {
@@ -130,72 +136,55 @@
         : String(Date.now());
 
     var neighbors = article.neighbors || findNeighbors(article.id);
+    var pageTitle = article.movieTitle || article.title || "";
+    if (titleEl) titleEl.textContent = pageTitle;
     root.innerHTML = "";
     if (statusEl) statusEl.hidden = true;
 
-    var articleEl = document.createElement("article");
-
-    var kicker = document.createElement("p");
-    kicker.className = "sd-kicker";
-    kicker.textContent = "매거진 삼삼오오 · 프리뷰";
-    articleEl.appendChild(kicker);
-
-    var head = document.createElement("header");
-    head.className = "sd-head";
-    var h1 = document.createElement("h1");
-    h1.className = "sd-title";
-    h1.id = "article-title";
-    h1.textContent = article.movieTitle || article.title || "";
-    head.appendChild(h1);
-    articleEl.appendChild(head);
-
     if (article.subtitle) {
       var sub = document.createElement("p");
-      sub.className = "sd-preview-subtitle";
+      sub.className = "mz-detail-subtitle";
       sub.textContent = article.subtitle;
-      articleEl.appendChild(sub);
+      root.appendChild(sub);
     }
 
     if (article.publishedLabel) {
       var meta = document.createElement("p");
-      meta.className = "sd-meta";
+      meta.className = "mz-detail-meta";
       meta.textContent = article.publishedLabel;
-      articleEl.appendChild(meta);
+      root.appendChild(meta);
     }
 
     if (article.coverImage) {
-      var coverWrap = document.createElement("figure");
-      coverWrap.className = "sd-cover-wrap sd-cover--preview";
       var coverFig = document.createElement("figure");
-      coverFig.className = "sd-cover";
+      coverFig.className = "mz-detail-cover";
       var coverImg = document.createElement("img");
       coverImg.src = resolveAssetUrl(article.coverImage);
-      coverImg.alt = (article.title || "") + " 썸네일";
+      coverImg.alt = (article.title || pageTitle) + " 썸네일";
       coverImg.loading = "eager";
       coverImg.decoding = "async";
       coverFig.appendChild(coverImg);
-      coverWrap.appendChild(coverFig);
-      articleEl.appendChild(coverWrap);
+      root.appendChild(coverFig);
     }
 
-    var body = document.createElement("section");
-    body.className = "sd-body";
-    body.setAttribute("aria-labelledby", "article-title");
+    var body = document.createElement("div");
+    body.className = "mz-detail-body";
+    body.setAttribute("aria-labelledby", "previewDetailPageTitle");
     body.innerHTML = prepareBodyHtml(article.bodyHtml || "");
     body.querySelectorAll("img").forEach(function (img) {
       var src = img.getAttribute("src") || "";
       if (src) img.src = resolveAssetUrl(src);
     });
-    articleEl.appendChild(body);
+    root.appendChild(body);
 
-    articleEl.appendChild(renderPrevNext(neighbors));
-    root.appendChild(articleEl);
+    root.appendChild(renderPrevNext(neighbors));
 
-    document.title = (article.title || article.movieTitle || "프리뷰") + " — 55CINE";
+    document.title = (article.title || pageTitle || "프리뷰") + " — 55CINE";
   }
 
   function showError(message) {
     root.innerHTML = "";
+    if (titleEl) titleEl.textContent = "프리뷰";
     if (statusEl) {
       statusEl.hidden = false;
       statusEl.textContent = message;
@@ -204,6 +193,7 @@
   }
 
   function boot() {
+    applyBackLink();
     var id = getArticleId();
     if (!id) {
       showError("프리뷰 ID가 없습니다.");

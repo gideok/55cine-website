@@ -11,10 +11,18 @@
 
   var root = document.getElementById("gvMomentDetailRoot");
   var statusEl = document.getElementById("gvMomentDetailStatus");
+  var titleEl = document.getElementById("gvMomentDetailPageTitle");
+  var backLink = document.getElementById("mdBackLink");
   var indexItems = [];
   var imageCacheKey = "";
 
   if (!root) return;
+
+  function applyBackLink() {
+    if (!backLink) return;
+    backLink.href = LIST_URL;
+    backLink.setAttribute("aria-label", "GV 모먼트 목록으로 돌아가기");
+  }
 
   function decodeHtmlEntities(text) {
     if (!text) return "";
@@ -48,9 +56,7 @@
 
   function normalizeArticleId(raw) {
     if (!raw) return "";
-    var id = String(raw).trim();
-    if (/^\d+$/.test(id) && parseInt(id, 10) > 0) return id;
-    return "";
+    return String(raw).trim();
   }
 
   function getArticleId() {
@@ -151,47 +157,33 @@
         : String(Date.now());
 
     var neighbors = article.neighbors || findNeighbors(article.id);
+    var pageTitle = article.title || "";
+    if (titleEl) titleEl.textContent = pageTitle;
     root.innerHTML = "";
     if (statusEl) statusEl.hidden = true;
 
-    var articleEl = document.createElement("article");
-
-    var kicker = document.createElement("p");
-    kicker.className = "sd-kicker";
-    kicker.textContent = "매거진 삼삼오오 · GV 모먼트";
-    articleEl.appendChild(kicker);
-
-    var head = document.createElement("header");
-    head.className = "sd-head";
-    var h1 = document.createElement("h1");
-    h1.className = "sd-title";
-    h1.id = "article-title";
-    h1.textContent = article.title || "";
-    head.appendChild(h1);
-    articleEl.appendChild(head);
-
     if (article.publishedLabel || article.date) {
       var meta = document.createElement("p");
-      meta.className = "sd-meta";
+      meta.className = "mz-detail-meta";
       meta.textContent = article.publishedLabel || article.date;
-      articleEl.appendChild(meta);
+      root.appendChild(meta);
     }
 
-    var body = document.createElement("section");
-    body.className = "sd-body";
-    body.setAttribute("aria-labelledby", "article-title");
+    var body = document.createElement("div");
+    body.className = "mz-detail-body";
+    body.setAttribute("aria-labelledby", "gvMomentDetailPageTitle");
     body.innerHTML = prepareBodyHtml(article.bodyHtml || "");
     hydrateBodyImages(body);
-    articleEl.appendChild(body);
+    root.appendChild(body);
 
-    articleEl.appendChild(renderPrevNext(neighbors));
-    root.appendChild(articleEl);
+    root.appendChild(renderPrevNext(neighbors));
 
-    document.title = (article.title || "GV 모먼트") + " — 55CINE";
+    document.title = (pageTitle || "GV 모먼트") + " — 55CINE";
   }
 
   function showError(message) {
     root.innerHTML = "";
+    if (titleEl) titleEl.textContent = "GV 모먼트";
     if (statusEl) {
       statusEl.hidden = false;
       statusEl.textContent = message;
@@ -200,6 +192,7 @@
   }
 
   function boot() {
+    applyBackLink();
     var id = getArticleId();
     if (!id) {
       showError("GV 모먼트 ID가 없습니다.");

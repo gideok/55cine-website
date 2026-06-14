@@ -1,0 +1,5 @@
+/* 매거진 상세 HTML 셸 — article-detail.html 공통 마크업용 */
+
+.ti .ti-md-theme .magazine-detail-status[hidden] {
+  display: none !important;
+}

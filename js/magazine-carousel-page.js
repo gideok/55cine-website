@@ -238,39 +238,101 @@
     return dataset.slice(start, start + thumbItemsPerPage);
   }
 
+  function getListPrimaryTitle(item) {
+    if (typeof cfg.getListTitle === "function") {
+      return displayText(cfg.getListTitle(item));
+    }
+    if (item.movieTitle) return displayText(item.movieTitle);
+    return displayText(item.title);
+  }
+
+  function getListSubtitleText(item) {
+    if (typeof cfg.getListSubtitle === "function") {
+      var custom = cfg.getListSubtitle(item);
+      return custom ? displayText(custom) : "";
+    }
+    if (cfg.showDate && item.date) return item.date;
+    var subtitle = item.subtitle ? displayText(item.subtitle) : "";
+    if (subtitle && cfg.listSubtitlePrefix) {
+      return cfg.listSubtitlePrefix + " - " + subtitle;
+    }
+    return subtitle;
+  }
+
+  function appendListHead(parent, href, primaryTitle, subtitleText, titleLinkClass, useHeading) {
+    var head = document.createElement("div");
+    head.className = "magazine-list-head";
+
+    var titleLink = document.createElement("a");
+    titleLink.className = titleLinkClass;
+    titleLink.href = href;
+    if (useHeading) {
+      var heading = document.createElement("h2");
+      heading.className = cfg.titleClass || "";
+      heading.textContent = primaryTitle;
+      titleLink.appendChild(heading);
+    } else {
+      titleLink.textContent = primaryTitle;
+    }
+    head.appendChild(titleLink);
+
+    if (subtitleText) {
+      var subtitleEl = document.createElement("p");
+      subtitleEl.className = "magazine-list-subtitle";
+      subtitleEl.textContent = subtitleText;
+      head.appendChild(subtitleEl);
+    }
+
+    parent.appendChild(head);
+  }
+
   function createItemElement(item, withExcerpt) {
     var href = resolveHref(item);
     var article = document.createElement("article");
     article.className = cfg.itemClass;
+    var listLayout = currentView === "list";
+    var primaryTitle = getListPrimaryTitle(item);
+    var subtitleText = getListSubtitleText(item);
 
     var thumbLink = document.createElement("a");
     thumbLink.className = cfg.thumbLinkClass;
     thumbLink.href = href;
-    thumbLink.setAttribute("aria-label", displayText(item.title));
+    thumbLink.setAttribute("aria-label", primaryTitle || displayText(item.title));
 
     var image = document.createElement("img");
     image.className = cfg.thumbClass;
     image.src = thumbSrc(item.thumbnail || "");
-    image.alt = displayText(item.title) + " 썸네일";
+    image.alt = (primaryTitle || displayText(item.title)) + " 썸네일";
     image.loading = "lazy";
     thumbLink.appendChild(image);
 
     if (cfg.useTitleWrap) {
       var titleWrap = document.createElement("div");
       titleWrap.className = cfg.titleWrapClass;
-      var titleLink = document.createElement("a");
-      titleLink.className = cfg.titleLinkClass;
-      titleLink.href = href;
-      var title = document.createElement("h2");
-      title.className = cfg.titleClass;
-      title.textContent = displayText(item.title);
-      titleLink.appendChild(title);
-      titleWrap.appendChild(titleLink);
-      if (cfg.showDate && item.date && cfg.dateClass) {
-        var dateEl = document.createElement("p");
-        dateEl.className = cfg.dateClass;
-        dateEl.textContent = item.date;
-        titleWrap.appendChild(dateEl);
+      if (listLayout) {
+        appendListHead(
+          titleWrap,
+          href,
+          displayText(item.title),
+          subtitleText,
+          cfg.titleLinkClass,
+          true
+        );
+      } else {
+        var titleLink = document.createElement("a");
+        titleLink.className = cfg.titleLinkClass;
+        titleLink.href = href;
+        var title = document.createElement("h2");
+        title.className = cfg.titleClass;
+        title.textContent = displayText(item.title);
+        titleLink.appendChild(title);
+        titleWrap.appendChild(titleLink);
+        if (cfg.showDate && item.date && cfg.dateClass) {
+          var dateEl = document.createElement("p");
+          dateEl.className = cfg.dateClass;
+          dateEl.textContent = item.date;
+          titleWrap.appendChild(dateEl);
+        }
       }
       article.appendChild(thumbLink);
       article.appendChild(titleWrap);
@@ -280,11 +342,15 @@
     var body = document.createElement("div");
     body.className = cfg.bodyClass;
 
-    var titleLink = document.createElement("a");
-    titleLink.className = cfg.titleLinkClass;
-    titleLink.href = href;
-    titleLink.textContent = displayText(item.title);
-    body.appendChild(titleLink);
+    if (listLayout) {
+      appendListHead(body, href, primaryTitle, subtitleText, cfg.titleLinkClass, false);
+    } else {
+      var flatTitleLink = document.createElement("a");
+      flatTitleLink.className = cfg.titleLinkClass;
+      flatTitleLink.href = href;
+      flatTitleLink.textContent = displayText(item.title);
+      body.appendChild(flatTitleLink);
+    }
 
     if (withExcerpt && cfg.excerptLinkClass && item.excerpt) {
       var excerptLink = document.createElement("a");
@@ -414,12 +480,22 @@
     var st = getPagerState();
 
     if (pagerCountEl && Pager) {
-      pagerCountEl.textContent = Pager.formatCount(
-        getDisplayTotalCount(),
-        st.page,
-        st.totalPages,
-        "건"
-      );
+      var totalCount = getDisplayTotalCount();
+      pagerCountEl.textContent = "";
+      var totalSpan = document.createElement("span");
+      totalSpan.className = "ti-page-count__total";
+      totalSpan.textContent = "총 " + totalCount + "건";
+      pagerCountEl.appendChild(totalSpan);
+      if (Pager.isDesktop() && st.totalPages > 1) {
+        var dot = document.createElement("span");
+        dot.className = "ti-page-count__dot";
+        dot.setAttribute("aria-hidden", "true");
+        pagerCountEl.appendChild(dot);
+        var pageSpan = document.createElement("span");
+        pageSpan.className = "ti-page-count__page";
+        pageSpan.textContent = st.page + " / " + st.totalPages + " 페이지";
+        pagerCountEl.appendChild(pageSpan);
+      }
     }
 
     if (Pager && Pager.isDesktop()) {

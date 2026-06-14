@@ -139,9 +139,7 @@
 
 @media (max-width: 425px) {
   .ti .ti-mz-panel .mz-thumb-stack .se-slide .serial-title-wrap,
-  .ti .ti-mz-panel .mz-thumb-stack .se-slide .gv-title-wrap,
-  .ti .ti-mz-panel .preview-list.is-list .serial-title-wrap,
-  .ti .ti-mz-panel .preview-list.is-list .gv-title-wrap {
+  .ti .ti-mz-panel .mz-thumb-stack .se-slide .gv-title-wrap {
     padding: 10px 8px 12px;
     min-height: 0;
   }
@@ -152,7 +150,8 @@
   }
 
   .ti .ti-mz-panel .serial-date,
-  .ti .ti-mz-panel .gv-date {
+  .ti .ti-mz-panel .gv-date,
+  .ti .ti-mz-panel .magazine-list-subtitle {
     font-size: 0.7rem;
   }
 }

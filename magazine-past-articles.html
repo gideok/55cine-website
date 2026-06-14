@@ -60,10 +60,12 @@
               <p class="ti-page-count" id="pagerCount" aria-live="polite"></p>
               <div class="view-mode" role="tablist" aria-label="목록 보기 방식">
                 <button type="button" class="mode-btn is-active" data-view="thumb" role="tab" aria-selected="true" aria-label="썸네일형">
-                  <img src="images/ui/icon-view-thumb.svg" alt="" class="mode-btn__icon" width="18" height="18" decoding="async" />
+                  <img src="images/ui/icon-view-thumb.svg" alt="" class="mode-btn__icon mode-btn__icon--default" width="18" height="18" decoding="async" />
+                  <img src="images/ui/icon-view-thumb-active.svg" alt="" class="mode-btn__icon mode-btn__icon--active" width="18" height="18" decoding="async" />
                 </button>
                 <button type="button" class="mode-btn" data-view="list" role="tab" aria-selected="false" aria-label="목록형">
-                  <img src="images/ui/icon-view-list.svg" alt="" class="mode-btn__icon" width="18" height="18" decoding="async" />
+                  <img src="images/ui/icon-view-list.svg" alt="" class="mode-btn__icon mode-btn__icon--default" width="18" height="18" decoding="async" />
+                  <img src="images/ui/icon-view-list-active.svg" alt="" class="mode-btn__icon mode-btn__icon--active" width="18" height="18" decoding="async" />
                 </button>
               </div>
             </div>
@@ -126,6 +128,17 @@
       excerptLinkClass: "preview-excerpt-link",
       showExcerptInList: true,
       useTitleWrap: false,
+      getListTitle: function (item) {
+        var title = item && item.title ? String(item.title) : "";
+        var dash = title.indexOf(" - ");
+        return dash >= 0 ? title.slice(0, dash).trim() : title;
+      },
+      getListSubtitle: function (item) {
+        if (item && item.subtitle) return item.subtitle;
+        var title = item && item.title ? String(item.title) : "";
+        var dash = title.indexOf(" - ");
+        return dash >= 0 ? title.slice(dash + 3).trim() : "";
+      },
       thumbImgRatio: 9 / 16,
       resolveHref: function (item) {
         if (item && item.detailUrl) return item.detailUrl;
