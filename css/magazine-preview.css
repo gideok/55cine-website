@@ -61,6 +61,7 @@
 .ti .ti-mz-panel .preview-page .page-sub,
 .ti .ti-mz-panel .preview-page .mz-thumb-stack,
 .ti .ti-mz-panel .preview-page .preview-list,
+.ti .ti-mz-panel .preview-page > .ti-page-pager--bottom,
 .ti .ti-mz-panel .preview-page > .se-foot {
   width: 100%;
   max-width: 100%;

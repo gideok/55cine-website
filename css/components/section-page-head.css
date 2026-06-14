@@ -31,6 +31,29 @@
   border-top-color: #c8c8c8;
 }
 
+.ti .ti-mz-panel .section-page-head__row {
+  display: block;
+}
+
+.ti .ti-mz-panel .section-page-head__rule {
+  margin: 12px 0 0;
+  border-top-color: #e2e2e2;
+}
+
+.ti .ti-mz-panel .section-page-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: flex-start;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 12px;
+  margin-left: 0;
+  margin-right: auto;
+  text-align: left;
+}
+
 .ti .ti-sub-scroll .section-page-head {
   margin-bottom: 20px;
 }

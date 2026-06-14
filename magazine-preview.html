@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="css/components/mz-thumb-stack.css" />
   <link rel="stylesheet" href="css/components/preview-list.css" />
   <link rel="stylesheet" href="css/carousel-chrome.css" />
+  <link rel="stylesheet" href="css/components/magazine-mz-pc-layout.css" />
 </head>
 <body class="ti">
   <div class="ti-shell" id="tiShell">
@@ -44,18 +45,19 @@
               <h1 id="preview-page-title" class="section-page-head__title">
                 <span class="section-page-head__parent">매거진 삼삼오오</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">프리뷰</span>
               </h1>
-              <nav class="section-page-subnav" aria-label="매거진 삼삼오오 하위 메뉴">
+            </div>
+            <div class="section-page-head__rule" role="presentation"></div>
+            <nav class="section-page-subnav" aria-label="매거진 삼삼오오 하위 메뉴">
                 <a href="magazine-preview.html" class="is-current" aria-current="page">프리뷰</a>
                 <a href="magazine-serial.html">연재</a>
                 <a href="gv-moment.html">GV 모먼트</a>
                 <a href="magazine-past-articles.html">지난 기사</a>
               </nav>
-            </div>
-            <div class="section-page-head__rule" role="presentation"></div>
           </header>
 
           <div class="ti-page-toolbar">
             <div class="ti-page-toolbar__leading">
+              <p class="ti-page-count" id="pagerCount" aria-live="polite"></p>
               <div class="view-mode" role="tablist" aria-label="목록 보기 방식">
                 <button type="button" class="mode-btn is-active" data-view="thumb" role="tab" aria-selected="true" aria-label="썸네일형">
                   <img src="images/ui/icon-view-thumb.svg" alt="" class="mode-btn__icon" width="18" height="18" decoding="async" />
@@ -64,9 +66,7 @@
                   <img src="images/ui/icon-view-list.svg" alt="" class="mode-btn__icon" width="18" height="18" decoding="async" />
                 </button>
               </div>
-              <p class="ti-page-count" id="pagerCount" aria-live="polite"></p>
             </div>
-            <nav class="ti-page-pager" id="tiPagePager" aria-label="페이지"></nav>
           </div>
 
           <div id="mzThumbStack" class="mz-thumb-stack">
@@ -83,6 +83,7 @@
             </div>
           </div>
           <div id="previewList" class="preview-list is-list" aria-live="polite" hidden></div>
+          <nav class="ti-page-pager ti-page-pager--bottom" id="tiPagePager" aria-label="페이지"></nav>
           <footer class="se-foot mz-pager ti-pager-foot--mobile-only" aria-label="프리뷰 페이지네이션">
             <button type="button" class="se-page-btn" id="mzPagerPrev" aria-label="이전 페이지">이전</button>
             <span class="se-fraction" id="mzPagerFraction" aria-live="polite">1 / 1</span>
