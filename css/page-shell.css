@@ -1,9 +1,9 @@
 /* 오오극장 하위 페이지 공통 우측 패널 (theater-info.html 기준 밝은 톤) */
 
 /* 오오극장 정보 5페이지 우측 패널 공통 */
-.ti-right.ti-sub-page,
-.ti-right.ti-theater-info,
-.ti-right.ti-viewing-guide {
+.right.sub-page,
+.right.theater-info,
+.right.viewing-guide {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -26,9 +26,9 @@
 }
 
 /* 본문 스크롤 — max-width·margin 5페이지 동일 (theater-info 기준 640px) */
-.ti-sub-scroll,
-.ti-theater-scroll,
-.ti-viewing-scroll {
+.sub-scroll,
+.theater-scroll,
+.viewing-scroll {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -42,13 +42,13 @@
 }
 
 /* figure 상단 이미지 — 좌석후원(ti-seat-photo)과 동일한 안쪽 테두리 */
-.ti-dg-photo,
-.ti-seat-photo {
+.dg-photo,
+.seat-photo {
   position: relative;
 }
 
-.ti-dg-photo::after,
-.ti-seat-photo::after {
+.dg-photo::after,
+.seat-photo::after {
   content: "";
   position: absolute;
   inset: 10px;

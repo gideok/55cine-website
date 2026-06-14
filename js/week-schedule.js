@@ -271,8 +271,8 @@
 
     if (!scheduleDom.dayTabs || !scheduleDom.panelsWrap) return;
 
-    var tabs = scheduleDom.dayTabs.querySelectorAll(".ti-day-tab");
-    var panels = scheduleDom.panelsWrap.querySelectorAll(".ti-panel");
+    var tabs = scheduleDom.dayTabs.querySelectorAll(".day-tab");
+    var panels = scheduleDom.panelsWrap.querySelectorAll(".panel");
 
     tabs.forEach(function (tab, i) {
       var selected = i === nextIndex;
@@ -316,7 +316,7 @@
 
   function updateSwipeLayout() {
     if (!scheduleDom.panelsWrap) return;
-    scheduleDom.panelsWrap.classList.toggle("ti-sched-scroll--swipe", isMobileSwipeMode());
+    scheduleDom.panelsWrap.classList.toggle("sched-scroll--swipe", isMobileSwipeMode());
     setActiveIndex(scheduleState.activeIndex, { scrollPanel: false });
   }
 
@@ -348,7 +348,7 @@
       "scroll",
       function () {
         if (!isMobileSwipeMode() || weekTransitionLock) return;
-        var panels = scheduleDom.panelsWrap.querySelectorAll(".ti-panel");
+        var panels = scheduleDom.panelsWrap.querySelectorAll(".panel");
         if (!panels.length) return;
 
         var wrapRect = scheduleDom.panelsWrap.getBoundingClientRect();
@@ -368,7 +368,7 @@
 
         if (nearest !== scheduleState.activeIndex) {
           scheduleState.activeIndex = nearest;
-          scheduleDom.dayTabs.querySelectorAll(".ti-day-tab").forEach(function (tab, i) {
+          scheduleDom.dayTabs.querySelectorAll(".day-tab").forEach(function (tab, i) {
             tab.setAttribute("aria-selected", i === nearest ? "true" : "false");
             if (i === nearest) {
               tab.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
@@ -387,7 +387,7 @@
   function createWeekNavButton(label, action) {
     var btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "ti-week-nav-btn";
+    btn.className = "week-nav-btn";
     btn.textContent = label;
     btn.addEventListener("click", function () {
       if (action === "following") {
@@ -421,15 +421,15 @@
     );
 
     var row = document.createElement("div");
-    row.className = "ti-row";
+    row.className = "row";
 
     var slot = document.createElement("span");
-    slot.className = "ti-slot";
+    slot.className = "slot";
     slot.setAttribute("aria-label", entryIndex + 1 + "회차");
     slot.textContent = String(entryIndex + 1);
 
     var img = document.createElement("img");
-    img.className = "ti-poster" + (!hasPoster || isPlaceholderPoster(poster) ? " ti-poster--placeholder" : "");
+    img.className = "poster" + (!hasPoster || isPlaceholderPoster(poster) ? " poster--placeholder" : "");
     img.src = poster;
     img.alt = scheduleEntry.title + (hasPoster ? " 포스터" : " (상영작 정보 없음)");
     img.width = 40;
@@ -438,11 +438,11 @@
     img.decoding = "async";
 
     var titleWrap = document.createElement("span");
-    titleWrap.className = "ti-title";
+    titleWrap.className = "title";
     var titleMain = document.createElement("span");
-    titleMain.className = "ti-title-main";
+    titleMain.className = "title-main";
     var titleText = document.createElement("span");
-    titleText.className = "ti-title-text";
+    titleText.className = "title-text";
     if (detailUrl) {
       var la = document.createElement("a");
       la.href = detailUrl;
@@ -455,10 +455,10 @@
     titleMain.appendChild(titleText);
     if (scheduleEntry.badges.length) {
       var badgesWrap = document.createElement("span");
-      badgesWrap.className = "ti-badges";
+      badgesWrap.className = "badges";
       scheduleEntry.badges.forEach(function (badgeInfo) {
         var badge = document.createElement("span");
-        badge.className = "ti-badge" + (badgeInfo.tiClass ? " " + badgeInfo.tiClass : "");
+        badge.className = "badge" + (badgeInfo.tiClass ? " " + badgeInfo.tiClass : "");
         badge.textContent = badgeInfo.label;
         badgesWrap.appendChild(badge);
       });
@@ -467,11 +467,11 @@
     titleWrap.appendChild(titleMain);
 
     var timeEl = document.createElement("span");
-    timeEl.className = "ti-time";
+    timeEl.className = "time";
     timeEl.textContent = scheduleEntry.time;
 
     var book = document.createElement("a");
-    book.className = "ti-book";
+    book.className = "book";
     book.href = BOOK_URL;
     book.target = "_blank";
     book.rel = "noopener noreferrer";
@@ -504,7 +504,7 @@
 
     if (!days.length) {
       var empty = document.createElement("p");
-      empty.className = "ti-sched-empty";
+      empty.className = "sched-empty";
       empty.textContent = "표시할 시간표가 없습니다.";
       panelsWrap.appendChild(empty);
       return;
@@ -519,7 +519,7 @@
 
       var tab = document.createElement("button");
       tab.type = "button";
-      tab.className = "ti-day-tab";
+      tab.className = "day-tab";
       tab.setAttribute("role", "tab");
       tab.id = "ti-tab-day-" + globalIndex;
       tab.setAttribute("aria-controls", "ti-panel-day-" + globalIndex);
@@ -539,7 +539,7 @@
       }
 
       var panel = document.createElement("div");
-      panel.className = "ti-panel" + (i === scheduleState.activeIndex ? " is-active" : "");
+      panel.className = "panel" + (i === scheduleState.activeIndex ? " is-active" : "");
       panel.id = "ti-panel-day-" + globalIndex;
       panel.setAttribute("role", "tabpanel");
       panel.setAttribute("aria-labelledby", "ti-tab-day-" + globalIndex);
@@ -609,7 +609,7 @@
   function initTiWeekSchedule() {
     scheduleDom.dayTabs = document.getElementById("tiDayTabs");
     scheduleDom.panelsWrap = document.getElementById("tiSchedulePanels");
-    scheduleDom.schedTitle = document.querySelector(".ti-sched-title");
+    scheduleDom.schedTitle = document.querySelector(".sched-title");
     if (!scheduleDom.dayTabs || !scheduleDom.panelsWrap) return;
     if (!canInitSchedule()) return;
     if (scheduleDom.dayTabs.dataset.scheduleReady === "1") return;

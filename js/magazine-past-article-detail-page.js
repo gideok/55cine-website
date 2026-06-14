@@ -177,6 +177,8 @@
   function renderPrevNext(article, neighbors) {
     return window.TiSdPrevNext.render({
       returnNavOnly: true,
+      panelNav: true,
+      mountContextEl: root,
       navLabel: "기사 이동",
       colsLabel: "이전·다음 기사",
       listUrl: LIST_URL,
@@ -216,7 +218,7 @@
     var attachments = renderAttachments(article);
     if (attachments) root.appendChild(attachments);
 
-    root.appendChild(renderPrevNext(article, neighbors));
+    renderPrevNext(article, neighbors);
 
     document.title = (pageTitle || "지난 기사") + " — 55CINE";
   }

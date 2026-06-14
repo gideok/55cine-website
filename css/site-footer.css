@@ -2,26 +2,26 @@
 /* 마크업은 ti-footer--slot-pc(좌측 시간표 아래, PC만) + ti-footer--slot-mobile(본문 아래, 모바일만) 이중 슬롯.
    내용은 partials/site-footer.html 한 파일만 수정하면 됨(data-ti-site-footer 로 동시 주입). */
 
-.ti .ti-footer.ti-footer--slot-pc {
+.ti .footer.footer--slot-pc {
   flex: 0 0 auto;
   min-width: 0;
   margin-top: auto;
 }
 
 @media (max-width: 820px) {
-  .ti .ti-footer.ti-footer--slot-pc {
+  .ti .footer.footer--slot-pc {
     display: none !important;
   }
 }
 
 @media (min-width: 821px) {
-  .ti .ti-footer.ti-footer--slot-mobile {
+  .ti .footer.footer--slot-mobile {
     display: none !important;
   }
 }
 
 /* figma/gnb.css SNB footer — white bg, 40×24 padding, column layout */
-.ti .ti-footer.site-footer {
+.ti .footer.site-footer {
   box-sizing: border-box;
   padding: 40px 24px;
   background: #ffffff;
@@ -33,12 +33,12 @@
 }
 
 @media (min-width: 821px) {
-  .ti .ti-footer.site-footer {
+  .ti .footer.site-footer {
     border-right: 1px solid #e2e2e2;
   }
 }
 
-.ti .ti-footer.site-footer .biz {
+.ti .footer.site-footer .biz {
   max-width: none;
   margin: 0;
   display: flex;
@@ -47,7 +47,7 @@
   gap: 24px;
 }
 
-.ti .ti-footer.site-footer .footer-logo-box {
+.ti .footer.site-footer .footer-logo-box {
   flex-shrink: 0;
   align-self: flex-start;
   display: block;
@@ -63,7 +63,7 @@
   overflow: hidden;
 }
 
-.ti .ti-footer.site-footer .footer-logo-box img {
+.ti .footer.site-footer .footer-logo-box img {
   display: block;
   width: 88px;
   height: 32px;
@@ -75,7 +75,7 @@
   object-position: left center;
 }
 
-.ti .ti-footer.site-footer .footer-text {
+.ti .footer.site-footer .footer-text {
   flex: 1 1 auto;
   min-width: 0;
   width: 100%;
@@ -85,28 +85,28 @@
   gap: 16px;
 }
 
-.ti .ti-footer.site-footer .footer-meta {
+.ti .footer.site-footer .footer-meta {
   margin: 0;
   line-height: 1.35;
 }
 
-.ti .ti-footer.site-footer .footer-meta--org {
+.ti .footer.site-footer .footer-meta--org {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
 
-.ti .ti-footer.site-footer .footer-meta__sep {
+.ti .footer.site-footer .footer-meta__sep {
   color: #b3b3b3;
 }
 
-.ti .ti-footer.site-footer .footer-text .copyright {
+.ti .footer.site-footer .footer-text .copyright {
   margin: 0;
   color: #808080;
 }
 
-.ti .ti-footer.site-footer .footer-sns {
+.ti .footer.site-footer .footer-sns {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -117,7 +117,7 @@
   color: #404040;
 }
 
-.ti .ti-footer.site-footer .footer-sns__link {
+.ti .footer.site-footer .footer-sns__link {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -126,18 +126,18 @@
   white-space: nowrap;
 }
 
-.ti .ti-footer.site-footer .footer-sns__link:hover,
-.ti .ti-footer.site-footer .footer-sns__link:focus-visible {
+.ti .footer.site-footer .footer-sns__link:hover,
+.ti .footer.site-footer .footer-sns__link:focus-visible {
   color: #111111;
   text-decoration: none;
 }
 
-.ti .ti-footer.site-footer .footer-sns__link:hover .footer-sns__icon-wrap,
-.ti .ti-footer.site-footer .footer-sns__link:focus-visible .footer-sns__icon-wrap {
+.ti .footer.site-footer .footer-sns__link:hover .footer-sns__icon-wrap,
+.ti .footer.site-footer .footer-sns__link:focus-visible .footer-sns__icon-wrap {
   background: #d4d4d4;
 }
 
-.ti .ti-footer.site-footer .footer-sns__icon-wrap {
+.ti .footer.site-footer .footer-sns__icon-wrap {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -148,7 +148,7 @@
   background: #e2e2e2;
 }
 
-.ti .ti-footer.site-footer .footer-sns__icon {
+.ti .footer.site-footer .footer-sns__icon {
   flex-shrink: 0;
   display: block;
   width: 12px;
@@ -156,17 +156,17 @@
   color: #808080;
 }
 
-.ti .ti-footer.site-footer .footer-sns__handle {
+.ti .footer.site-footer .footer-sns__handle {
   font-weight: 400;
   letter-spacing: 0;
 }
 
-.ti .ti-footer.site-footer .footer-sns__sep {
+.ti .footer.site-footer .footer-sns__sep {
   display: none;
 }
 
 @media (max-width: 820px) {
-  .ti .ti-footer.site-footer {
+  .ti .footer.site-footer {
     border-top: 1px solid #e2e2e2;
   }
 }

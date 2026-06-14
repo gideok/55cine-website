@@ -1,6 +1,6 @@
 /* 공용 PC 페이지네이션 — now-playing-test .np-toolbar / .np-pager 기준 */
 
-.ti .ti-page-toolbar {
+.ti .page-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -9,7 +9,7 @@
   margin-bottom: 18px;
 }
 
-.ti .ti-page-toolbar__leading {
+.ti .page-toolbar__leading {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -17,7 +17,7 @@
   min-width: 0;
 }
 
-.ti .ti-page-toolbar__trailing {
+.ti .page-toolbar__trailing {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -26,29 +26,29 @@
   margin-left: auto;
 }
 
-.ti .ti-page-toolbar .toolbar {
+.ti .page-toolbar .toolbar {
   margin-bottom: 0;
 }
 
-.ti .ti-page-count {
+.ti .page-count {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--muted, #5a5a5a);
 }
 
-.ti .ti-page-pager {
+.ti .page-pager {
   display: none;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-.ti .ti-page-pager.is-visible {
+.ti .page-pager.is-visible {
   display: flex;
 }
 
-.ti .ti-page-pager button {
+.ti .page-pager button {
   min-width: 38px;
   height: 38px;
   padding: 0 10px;
@@ -63,24 +63,24 @@
   cursor: pointer;
 }
 
-.ti .ti-page-pager button:hover:not(:disabled) {
+.ti .page-pager button:hover:not(:disabled) {
   background: #f0f0f0;
   border-color: #111;
   color: #000;
 }
 
-.ti .ti-page-pager button:disabled {
+.ti .page-pager button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-.ti .ti-page-pager button[aria-current="page"] {
+.ti .page-pager button[aria-current="page"] {
   background: #1a1a1a;
   color: #fff;
   border-color: #1a1a1a;
 }
 
-.ti .ti-page-pager__ellipsis {
+.ti .page-pager__ellipsis {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -96,19 +96,19 @@
 }
 
 /* 페이지네이션 버튼 간격 — 사이트 공통 */
-.ti .ti-page-pager--bottom,
-.ti .ti-np-list .ti-page-pager--bottom,
-.ti .ti-mz-panel .ti-page-pager--bottom,
-.ti .ti-mz-panel .pagination,
+.ti .page-pager--bottom,
+.ti .np-list .page-pager--bottom,
+.ti .mz-panel .page-pager--bottom,
+.ti .mz-panel .pagination,
 .ti .se-foot,
-.ti .ti-mz-panel .se-foot,
+.ti .mz-panel .se-foot,
 .se-foot,
 .admin-list-foot {
   gap: 6px;
 }
 
 .ti .se-page-dots,
-.ti .ti-mz-panel .se-page-dots,
+.ti .mz-panel .se-page-dots,
 .se-page-dots {
   gap: 6px;
 }
@@ -119,7 +119,7 @@
     display: none;
   }
 
-  .ti .ti-pager-foot--mobile-only {
+  .ti .pager-foot--mobile-only {
     display: none !important;
   }
 }

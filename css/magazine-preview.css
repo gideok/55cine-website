@@ -1,6 +1,6 @@
 /* magazine-preview.html — mono 우측 패널 + 목록 (기획전 se-* 톤 참고) */
 
-.ti .ti-right.ti-mz-panel {
+.ti .right.mz-panel {
   --brand-ink: #111;
   --brand-bronze: #5a5a5a;
   --brand-gold: #666;
@@ -22,7 +22,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.ti .ti-mz-scroll {
+.ti .mz-scroll {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -35,7 +35,7 @@
   flex-direction: column;
 }
 
-.ti .ti-mz-panel .preview-page {
+.ti .mz-panel .preview-page {
   width: 100%;
   max-width: 1120px;
   margin-left: auto;
@@ -52,42 +52,42 @@
 
 /* PC — GNB HOME 하단 구분선과 타이틀 구분선 Y 정렬 (상영작 ti-np-list 동일) */
 @media (min-width: 900px) {
-  .ti .ti-right.ti-mz-panel {
+  .ti .right.mz-panel {
     padding: 88px clamp(16px, 3vw, 48px) 40px;
     background: #ffffff;
     color: #111111;
   }
 
-  .ti .ti-mz-scroll {
+  .ti .mz-scroll {
     max-width: none;
     width: 100%;
   }
 
-  .ti .ti-mz-panel .preview-page {
+  .ti .mz-panel .preview-page {
     max-width: none;
     padding: 0 0 48px;
   }
 }
 
 @media (max-width: 899px) {
-  .ti .ti-right.ti-mz-panel {
+  .ti .right.mz-panel {
     padding-top: clamp(24px, 6vw, 48px);
   }
 }
 
 /* [hidden] 은 display: none (UA) 인데 .preview-list 등이 display 를 덮어쓰면 목록이 겹쳐 보임 */
-.ti .ti-mz-panel .preview-list[hidden],
-.ti .ti-mz-panel .mz-thumb-stack[hidden] {
+.ti .mz-panel .preview-list[hidden],
+.ti .mz-panel .mz-thumb-stack[hidden] {
   display: none !important;
 }
 
 /* 썸네일/목록 토글 시 preview-page 좌우 정렬·너비 (본문 영역 공통) */
-.ti .ti-mz-panel .preview-page .ti-page-toolbar,
-.ti .ti-mz-panel .preview-page .page-sub,
-.ti .ti-mz-panel .preview-page .mz-thumb-stack,
-.ti .ti-mz-panel .preview-page .preview-list,
-.ti .ti-mz-panel .preview-page > .ti-page-pager--bottom,
-.ti .ti-mz-panel .preview-page > .se-foot {
+.ti .mz-panel .preview-page .page-toolbar,
+.ti .mz-panel .preview-page .page-sub,
+.ti .mz-panel .preview-page .mz-thumb-stack,
+.ti .mz-panel .preview-page .preview-list,
+.ti .mz-panel .preview-page > .page-pager--bottom,
+.ti .mz-panel .preview-page > .se-foot {
   flex: 0 0 auto;
   width: 100%;
   max-width: 100%;
@@ -96,7 +96,7 @@
   box-sizing: border-box;
 }
 
-.ti .ti-mz-panel .view-mode {
+.ti .mz-panel .view-mode {
   display: inline-flex;
   gap: 6px;
   border: none;
@@ -105,7 +105,7 @@
   background: transparent;
 }
 
-.ti .ti-mz-panel .mode-btn {
+.ti .mz-panel .mode-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -121,7 +121,7 @@
   transition: background 0.15s;
 }
 
-.ti .ti-mz-panel .mode-btn__icon {
+.ti .mz-panel .mode-btn__icon {
   display: block;
   width: 18px;
   height: 18px;
@@ -129,26 +129,26 @@
   pointer-events: none;
 }
 
-.ti .ti-mz-panel .mode-btn__icon--active {
+.ti .mz-panel .mode-btn__icon--active {
   display: none;
 }
 
-.ti .ti-mz-panel .mode-btn.is-active {
+.ti .mz-panel .mode-btn.is-active {
   background: #111111;
   border-color: #111111;
   color: #fff;
 }
 
-.ti .ti-mz-panel .mode-btn.is-active .mode-btn__icon--default {
+.ti .mz-panel .mode-btn.is-active .mode-btn__icon--default {
   display: none;
 }
 
-.ti .ti-mz-panel .mode-btn.is-active .mode-btn__icon--active {
+.ti .mz-panel .mode-btn.is-active .mode-btn__icon--active {
   display: block;
 }
 
 /* special-exhibition.html .se-foot 패턴 (동일 비주얼) */
-.ti .ti-mz-panel .se-foot {
+.ti .mz-panel .se-foot {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
@@ -160,7 +160,7 @@
   border-top: 1px solid #c8c8c8;
 }
 
-.ti .ti-mz-panel .se-page-btn {
+.ti .mz-panel .se-page-btn {
   padding: 7px 14px;
   font-family: inherit;
   font-size: 0.72rem;
@@ -173,18 +173,18 @@
   border-radius: 0;
 }
 
-.ti .ti-mz-panel .se-page-btn:hover:not(:disabled) {
+.ti .mz-panel .se-page-btn:hover:not(:disabled) {
   background: #f0f0f0;
   border-color: #111;
   color: #000;
 }
 
-.ti .ti-mz-panel .se-page-btn:disabled {
+.ti .mz-panel .se-page-btn:disabled {
   opacity: 0.35;
   cursor: default;
 }
 
-.ti .ti-mz-panel .se-page-dots {
+.ti .mz-panel .se-page-dots {
   display: flex;
   gap: 6px;
   align-items: center;
@@ -193,7 +193,7 @@
   max-width: min(100%, 280px);
 }
 
-.ti .ti-mz-panel .se-dot {
+.ti .mz-panel .se-dot {
   width: 8px;
   height: 8px;
   border: 1px solid #6a6a6a;
@@ -203,12 +203,12 @@
   border-radius: 0;
 }
 
-.ti .ti-mz-panel .se-dot.is-active {
+.ti .mz-panel .se-dot.is-active {
   background: #1a1a1a;
   border-color: #1a1a1a;
 }
 
-.ti .ti-mz-panel .se-fraction {
+.ti .mz-panel .se-fraction {
   font-size: 0.72rem;
   font-weight: 600;
   color: #4a4a4a;

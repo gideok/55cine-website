@@ -165,7 +165,7 @@
         Pager.render(pager, {
           page: state.page,
           totalPages: tp,
-          scrollRootSelector: ".ti-np-scroll",
+          scrollRootSelector: ".np-scroll",
           onChange: function (p) {
             state.page = p;
             render();

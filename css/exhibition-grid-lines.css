@@ -3,19 +3,19 @@
  * (레거시 그리드라인 오버라이드 무력화)
  */
 
-.ti .ti-np-list.se-right .se-grid {
+.ti .np-list.se-right .se-grid {
   gap: 40px 24px;
 }
 
-.ti .ti-np-list.se-right .se-card {
+.ti .np-list.se-right .se-card {
   border: none;
 }
 
-.ti .ti-np-list.se-right .se-card:hover {
+.ti .np-list.se-right .se-card:hover {
   border-color: transparent;
 }
 
-.ti .ti-np-list.se-right .se-title-wrap {
+.ti .np-list.se-right .se-title-wrap {
   border-top: none;
   border-right: none;
   border-left: none;
@@ -23,7 +23,7 @@
 }
 
 @media (max-width: 899px) {
-  .ti .ti-np-list.se-right .se-grid {
+  .ti .np-list.se-right .se-grid {
     gap: 32px 16px;
   }
 }

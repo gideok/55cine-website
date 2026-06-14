@@ -48,10 +48,10 @@
   };
 
   var SCHEDULE_BADGE_DEFS = [
-    { key: "opening", label: "개봉", tiClass: "ti-badge--open", indexClass: "movie-status-badge--open" },
-    { key: "closing", label: "종영", tiClass: "ti-badge--end", indexClass: "movie-status-badge--end" },
-    { key: "gv", label: "GV", tiClass: "ti-badge--gv", indexClass: "movie-status-badge--gv" },
-    { key: "ct", label: "CT", tiClass: "ti-badge--ct", indexClass: "movie-status-badge--ct" }
+    { key: "opening", label: "개봉", tiClass: "badge--open", indexClass: "movie-status-badge--open" },
+    { key: "closing", label: "종영", tiClass: "badge--end", indexClass: "movie-status-badge--end" },
+    { key: "gv", label: "GV", tiClass: "badge--gv", indexClass: "movie-status-badge--gv" },
+    { key: "ct", label: "CT", tiClass: "badge--ct", indexClass: "movie-status-badge--ct" }
   ];
 
   /**

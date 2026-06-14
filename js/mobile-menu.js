@@ -16,7 +16,7 @@
 
     function clearCollapsedOnDesktop() {
       if (!mq.matches) {
-        shell.classList.remove("ti-menu-collapsed-mobile");
+        shell.classList.remove("menu-collapsed-mobile");
         btn.setAttribute("aria-expanded", "true");
         btn.setAttribute("aria-label", "메뉴·시간표 접기");
       }
@@ -24,7 +24,7 @@
 
     function applyMobileDefaultCollapsed() {
       if (!mq.matches) return;
-      shell.classList.add("ti-menu-collapsed-mobile");
+      shell.classList.add("menu-collapsed-mobile");
       btn.setAttribute("aria-expanded", "false");
       btn.setAttribute("aria-label", "메뉴·시간표 펼치기");
       window.requestAnimationFrame(requestRelayout);
@@ -41,7 +41,7 @@
 
     btn.addEventListener("click", function () {
       if (!mq.matches) return;
-      var nowCollapsed = shell.classList.toggle("ti-menu-collapsed-mobile");
+      var nowCollapsed = shell.classList.toggle("menu-collapsed-mobile");
       btn.setAttribute("aria-expanded", nowCollapsed ? "false" : "true");
       btn.setAttribute(
         "aria-label",
@@ -90,7 +90,7 @@
     if (!shell || !btn) return;
     var mq = window.matchMedia("(max-width: 820px)");
     if (!mq.matches) return;
-    shell.classList.add("ti-menu-collapsed-mobile");
+    shell.classList.add("menu-collapsed-mobile");
     btn.setAttribute("aria-expanded", "false");
     btn.setAttribute("aria-label", "메뉴·시간표 펼치기");
     window.dispatchEvent(new CustomEvent("ti-shell:relayout"));

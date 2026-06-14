@@ -1,10 +1,10 @@
 /* test/osinneun-gil.html — 섹션 밝은 배경 · 어두운 전경 (가시성 우선) */
 
-.ti-right.ti-sub-page #osinneun-gil {
+.right.sub-page #osinneun-gil {
   color: var(--ti-text);
 }
 
-.ti-dir-kakao-map {
+.dir-kakao-map {
   position: relative;
   width: 100%;
   max-width: 100%;
@@ -16,7 +16,7 @@
   border: 1px solid var(--ti-border);
 }
 
-.ti-dir-map-block {
+.dir-map-block {
   margin: 0 0 22px;
   padding: 20px;
   text-align: center;
@@ -26,7 +26,7 @@
   color: var(--ti-text);
 }
 
-.ti-dir-map-cta {
+.dir-map-cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -43,19 +43,19 @@
   transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
-.ti-dir-map-cta:hover {
+.dir-map-cta:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
   background: var(--ti-accent-hover);
   color: #ffffff;
 }
 
-.ti-dir-map-cta:focus-visible {
+.dir-map-cta:focus-visible {
   outline: 2px solid var(--ti-accent);
   outline-offset: 3px;
 }
 
-.ti-dir-address {
+.dir-address {
   margin: 0 0 10px;
   padding: 14px 16px;
   font-size: 0.95rem;
@@ -66,25 +66,25 @@
   border: 1px solid var(--ti-border);
 }
 
-.ti-dir-phone {
+.dir-phone {
   margin: 0 0 28px;
   padding: 0 16px 14px;
   font-size: 0.95rem;
   color: var(--ti-text);
 }
 
-.ti-dir-phone a {
+.dir-phone a {
   color: var(--ti-accent);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.ti-dir-phone a:hover {
+.dir-phone a:hover {
   color: var(--ti-accent-hover);
 }
 
-.ti-dir-transport {
+.dir-transport {
   margin: 0;
   padding: 20px 18px;
   background: var(--ti-surface);
@@ -94,32 +94,32 @@
   color: var(--ti-text);
 }
 
-.ti-dir-transport-heading {
+.dir-transport-heading {
   margin: 0 0 16px;
   font-size: 1.05rem;
   font-weight: 800;
   color: var(--ti-text-strong);
 }
 
-.ti-dir-transport-block {
+.dir-transport-block {
   margin: 0 0 18px;
   padding: 14px 14px 12px;
   background: var(--ti-surface-alt);
   border: 1px solid #d8d8d8;
 }
 
-.ti-dir-transport-block:last-of-type {
+.dir-transport-block:last-of-type {
   margin-bottom: 0;
 }
 
-.ti-dir-transport-block h3 {
+.dir-transport-block h3 {
   margin: 0 0 10px;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--ti-text-strong);
 }
 
-.ti-dir-transport-block h3::after {
+.dir-transport-block h3::after {
   content: "";
   display: block;
   width: 100%;
@@ -137,7 +137,7 @@
   );
 }
 
-.ti-dir-transport-block p {
+.dir-transport-block p {
   margin: 0 0 8px;
   padding-left: 0.8rem;
   font-size: 0.88rem;
@@ -145,35 +145,35 @@
   color: var(--ti-text);
 }
 
-.ti-dir-transport-block p:last-child {
+.dir-transport-block p:last-child {
   margin-bottom: 0;
 }
 
-.ti-dir-transport-block strong {
+.dir-transport-block strong {
   color: var(--ti-text-strong);
   font-weight: 700;
 }
 
 /* 버스 안내: 정류장명/노선 2컬럼 정렬 */
-.ti-dir-transport-block:first-of-type p {
+.dir-transport-block:first-of-type p {
   display: grid;
   grid-template-columns: 9.2rem minmax(0, 1fr);
   column-gap: 10px;
   align-items: start;
 }
 
-.ti-dir-transport-block:first-of-type p strong {
+.dir-transport-block:first-of-type p strong {
   display: block;
 }
 
 @media (max-width: 520px) {
-  .ti-dir-transport-block:first-of-type p {
+  .dir-transport-block:first-of-type p {
     grid-template-columns: 7.4rem minmax(0, 1fr);
     column-gap: 8px;
   }
 }
 
-.ti-dir-parking-note {
+.dir-parking-note {
   margin: 18px 0 0;
   padding: 12px 14px;
   font-size: 0.86rem;

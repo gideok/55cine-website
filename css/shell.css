@@ -22,7 +22,7 @@ body.ti {
 }
 
 /* flex 대신 grid 기본: PC에서 grid 미적용 시 푸터가 flex-shrink로 좁아지는 문제 방지 */
-.ti-shell {
+.shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-auto-rows: auto;
@@ -35,13 +35,13 @@ body.ti {
 
 /* PC: 좌·우 2열만 (사이트 푸터는 ti-left 안 ti-footer--slot-pc 에서 표시, shell 직계 푸터는 hidden) */
 @media (min-width: 821px) {
-  .ti-shell {
+  .shell {
     grid-template-columns: clamp(300px, 38vw, 384px) minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
     grid-template-areas: "ti-s-left ti-s-right";
   }
 
-  .ti-shell > .ti-left {
+  .shell > .left {
     grid-area: ti-s-left;
     flex: unset;
     width: auto;
@@ -51,7 +51,7 @@ body.ti {
     align-self: stretch;
   }
 
-  .ti-shell > .ti-right {
+  .shell > .right {
     grid-area: ti-s-right;
     align-self: stretch;
     min-width: 0;
@@ -59,7 +59,7 @@ body.ti {
   }
 }
 
-.ti-left {
+.left {
   flex: 0 0 clamp(300px, 38vw, 384px);
   display: flex;
   flex-direction: column;
@@ -68,7 +68,7 @@ body.ti {
 }
 
 /* data-ti-left-gnb 마운트: display:contents 는 일부 브라우저·플렉스 조합에서 ti-left-bottom 높이가 0에 가까워질 수 있어 래퍼로 둠 */
-.ti-left-gnb-mount {
+.left-gnb-mount {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -78,7 +78,7 @@ body.ti {
   width: 100%;
 }
 
-.ti-left-bottom {
+.left-bottom {
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
@@ -87,7 +87,7 @@ body.ti {
   overflow: hidden;
 }
 
-.ti-sched-title {
+.sched-title {
   margin: 0 0 16px;
   padding: 16px 0;
   border-bottom: 1px solid #e2e2e2;
@@ -98,7 +98,7 @@ body.ti {
   color: #808080;
 }
 
-.ti-day-tabs {
+.day-tabs {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
@@ -108,8 +108,8 @@ body.ti {
 }
 
 /* PC·모바일 공통 4열 — figma date btn (76.5×37, 13px) */
-.ti-day-tab,
-.ti-week-nav-btn {
+.day-tab,
+.week-nav-btn {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
@@ -129,25 +129,25 @@ body.ti {
   font-variant-numeric: tabular-nums;
 }
 
-.ti-week-nav-btn {
+.week-nav-btn {
   background: #fff;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.ti-week-nav-btn:hover {
+.week-nav-btn:hover {
   background: #f7f7f7;
   border-color: #111111;
 }
 
-.ti-day-tab[aria-selected="true"] {
+.day-tab[aria-selected="true"] {
   background: #111111;
   color: #ffffff;
   border-color: #111111;
   font-weight: 700;
 }
 
-.ti-sched-scroll {
+.sched-scroll {
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -155,15 +155,15 @@ body.ti {
   box-sizing: border-box;
 }
 
-.ti-panel {
+.panel {
   display: none;
 }
 
-.ti-panel.is-active {
+.panel.is-active {
   display: block;
 }
 
-.ti-row {
+.row {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -172,11 +172,11 @@ body.ti {
   font-size: 0.78rem;
 }
 
-.ti-row:last-child {
+.row:last-child {
   border-bottom: none;
 }
 
-.ti-slot {
+.slot {
   flex: 0 0 1.5rem;
   text-align: center;
   font-size: 0.68rem;
@@ -185,7 +185,7 @@ body.ti {
   font-variant-numeric: tabular-nums;
 }
 
-.ti-poster {
+.poster {
   flex-shrink: 0;
   width: 40px;
   height: 40px;
@@ -195,19 +195,19 @@ body.ti {
   /* filter: grayscale(1); */
 }
 
-.ti-poster--placeholder {
+.poster--placeholder {
   object-fit: cover;
   background: #e6e6e6;
 }
 
-.ti-sched-empty {
+.sched-empty {
   margin: 0;
   padding: 12px 0;
   font-size: 0.78rem;
   color: #666;
 }
 
-.ti-title {
+.title {
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
@@ -215,7 +215,7 @@ body.ti {
   color: #222;
 }
 
-.ti-title-main {
+.title-main {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
@@ -226,7 +226,7 @@ body.ti {
   vertical-align: middle;
 }
 
-.ti-title-text {
+.title-text {
   flex: 0 1 auto;
   min-width: 0;
   max-width: 100%;
@@ -235,7 +235,7 @@ body.ti {
   white-space: nowrap;
 }
 
-.ti-badges {
+.badges {
   display: inline-flex;
   flex-direction: row;
   flex-shrink: 0;
@@ -243,7 +243,7 @@ body.ti {
   gap: 4px;
 }
 
-.ti-title a {
+.title a {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -253,11 +253,11 @@ body.ti {
   border-bottom: 1px solid transparent;
 }
 
-.ti-title a:hover {
+.title a:hover {
   border-bottom-color: #111;
 }
 
-.ti-badge {
+.badge {
   box-sizing: border-box;
   display: inline-flex;
   flex-direction: row;
@@ -276,27 +276,27 @@ body.ti {
   text-align: center;
 }
 
-.ti-badge--open {
+.badge--open {
   background: #d9f6e3;
   color: #00c049;
 }
 
-.ti-badge--end {
+.badge--end {
   background: #e2e2e2;
   color: #808080;
 }
 
-.ti-badge--gv {
+.badge--gv {
   background: #d8edff;
   color: #0978ff;
 }
 
-.ti-badge--ct {
+.badge--ct {
   background: #ffe8e2;
   color: #ff7328;
 }
 
-.ti-time {
+.time {
   flex-shrink: 0;
   font-size: 0.72rem;
   font-weight: 700;
@@ -304,7 +304,7 @@ body.ti {
   color: #333;
 }
 
-.ti-book {
+.book {
   flex-shrink: 0;
   padding: 4px 8px;
   font-family: inherit;
@@ -317,12 +317,12 @@ body.ti {
   border-radius: 0;
 }
 
-.ti-book:hover {
+.book:hover {
   background: #111;
   color: #f2f2f2;
 }
 
-a.ti-book {
+a.book {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -338,16 +338,16 @@ a.ti-book {
     );
   }
 
-  .ti-shell {
+  .shell {
     grid-template-columns: minmax(0, 1fr);
     grid-auto-rows: auto;
   }
 
-  .ti-left {
+  .left {
     min-height: 0;
   }
 
-  .ti-shell > .ti-left {
+  .shell > .left {
     grid-column: 1;
     grid-row: auto;
     flex: 0 0 auto;
@@ -359,7 +359,7 @@ a.ti-book {
     border-bottom: 1px solid #bdbdbd;
   }
 
-  .ti-shell > .ti-right {
+  .shell > .right {
     grid-column: 1;
     grid-row: auto;
     flex: 1 1 auto;
@@ -369,7 +369,7 @@ a.ti-book {
     border-bottom: 1px solid #bdbdbd;
   }
 
-  .ti-shell > .ti-footer.ti-footer--slot-mobile {
+  .shell > .footer.footer--slot-mobile {
     grid-column: 1;
     grid-row: auto;
     flex: 0 0 auto;
@@ -377,20 +377,20 @@ a.ti-book {
     min-width: 0;
   }
 
-  .ti-left-bottom {
+  .left-bottom {
     max-height: none;
     flex: 0 0 auto;
     overflow: visible;
   }
 
-  .ti-sched-scroll {
+  .sched-scroll {
     flex: 0 0 auto;
     overflow-y: visible;
     max-height: none;
     -webkit-overflow-scrolling: auto;
   }
 
-  .ti-sched-scroll.ti-sched-scroll--swipe {
+  .sched-scroll.sched-scroll--swipe {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -403,11 +403,11 @@ a.ti-book {
     padding-right: 0;
   }
 
-  .ti-sched-scroll.ti-sched-scroll--swipe::-webkit-scrollbar {
+  .sched-scroll.sched-scroll--swipe::-webkit-scrollbar {
     display: none;
   }
 
-  .ti-sched-scroll.ti-sched-scroll--swipe .ti-panel {
+  .sched-scroll.sched-scroll--swipe .panel {
     display: block;
     flex: 0 0 100%;
     width: 100%;
@@ -418,7 +418,7 @@ a.ti-book {
     padding-right: 4px;
   }
 
-  .ti-sched-scroll.ti-sched-scroll--swipe .ti-panel[hidden] {
+  .sched-scroll.sched-scroll--swipe .panel[hidden] {
     display: block;
   }
 }

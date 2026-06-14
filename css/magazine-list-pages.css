@@ -1,7 +1,7 @@
 /* magazine-serial.html, gv-moment.html — 연재·GV 카드 (목록 컨테이너는 .preview-list 공유) */
 
-.ti .ti-mz-panel .serial-item,
-.ti .ti-mz-panel .gv-item {
+.ti .mz-panel .serial-item,
+.ti .mz-panel .gv-item {
   border: 1px solid #8a8a8a;
   border-radius: 0;
   overflow: hidden;
@@ -11,8 +11,8 @@
   flex-direction: column;
 }
 
-.ti .ti-mz-panel .serial-thumb-link,
-.ti .ti-mz-panel .gv-thumb-link {
+.ti .mz-panel .serial-thumb-link,
+.ti .mz-panel .gv-thumb-link {
   display: block;
   line-height: 0;
   background: #f0f0f0;
@@ -20,15 +20,15 @@
   text-decoration: none;
 }
 
-.ti .ti-mz-panel .serial-thumb-link:hover,
-.ti .ti-mz-panel .serial-thumb-link:focus-visible,
-.ti .ti-mz-panel .gv-thumb-link:hover,
-.ti .ti-mz-panel .gv-thumb-link:focus-visible {
+.ti .mz-panel .serial-thumb-link:hover,
+.ti .mz-panel .serial-thumb-link:focus-visible,
+.ti .mz-panel .gv-thumb-link:hover,
+.ti .mz-panel .gv-thumb-link:focus-visible {
   text-decoration: none;
 }
 
-.ti .ti-mz-panel .serial-thumb,
-.ti .ti-mz-panel .gv-thumb {
+.ti .mz-panel .serial-thumb,
+.ti .mz-panel .gv-thumb {
   width: 100%;
   aspect-ratio: 264 / 200;
   object-fit: cover;
@@ -36,8 +36,8 @@
   border-radius: 0;
 }
 
-.ti .ti-mz-panel .serial-title-wrap,
-.ti .ti-mz-panel .gv-title-wrap {
+.ti .mz-panel .serial-title-wrap,
+.ti .mz-panel .gv-title-wrap {
   padding: 14px 14px 16px;
   min-height: 72px;
   display: flex;
@@ -47,8 +47,8 @@
   box-sizing: border-box;
 }
 
-.ti .ti-mz-panel .serial-title,
-.ti .ti-mz-panel .gv-title {
+.ti .mz-panel .serial-title,
+.ti .mz-panel .gv-title {
   margin: 0;
   font-size: 0.78rem;
   font-weight: 600;
@@ -60,37 +60,37 @@
   overflow: hidden;
 }
 
-.ti .ti-mz-panel .serial-title-link,
-.ti .ti-mz-panel .gv-title-link {
+.ti .mz-panel .serial-title-link,
+.ti .mz-panel .gv-title-link {
   text-decoration: none;
   color: inherit;
 }
 
-.ti .ti-mz-panel .serial-title-link:hover .serial-title,
-.ti .ti-mz-panel .serial-title-link:focus-visible .serial-title,
-.ti .ti-mz-panel .gv-title-link:hover .gv-title,
-.ti .ti-mz-panel .gv-title-link:focus-visible .gv-title {
+.ti .mz-panel .serial-title-link:hover .serial-title,
+.ti .mz-panel .serial-title-link:focus-visible .serial-title,
+.ti .mz-panel .gv-title-link:hover .gv-title,
+.ti .mz-panel .gv-title-link:focus-visible .gv-title {
   color: #000;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.ti .ti-mz-panel .serial-date,
-.ti .ti-mz-panel .gv-date {
+.ti .mz-panel .serial-date,
+.ti .mz-panel .gv-date {
   margin: 0;
   font-size: 0.72rem;
   color: var(--muted);
   font-weight: 500;
 }
 
-.ti .ti-mz-panel .page-sub {
+.ti .mz-panel .page-sub {
   margin: 0 0 16px;
   font-size: 0.88rem;
   color: var(--muted);
   font-weight: 500;
 }
 
-.ti .ti-mz-panel .pagination {
+.ti .mz-panel .pagination {
   margin-top: 20px;
   display: flex;
   justify-content: center;
@@ -100,7 +100,7 @@
   border-top: 1px solid #c8c8c8;
 }
 
-.ti .ti-mz-panel .page-btn {
+.ti .mz-panel .page-btn {
   min-width: 34px;
   height: auto;
   padding: 7px 12px;
@@ -115,43 +115,43 @@
   cursor: pointer;
 }
 
-.ti .ti-mz-panel .page-btn:hover:not(:disabled) {
+.ti .mz-panel .page-btn:hover:not(:disabled) {
   background: #f0f0f0;
   border-color: #111;
   color: #000;
 }
 
-.ti .ti-mz-panel .page-btn.is-active {
+.ti .mz-panel .page-btn.is-active {
   background: #1a1a1a;
   border-color: #1a1a1a;
   color: #fff;
 }
 
-.ti .ti-mz-panel .page-btn:disabled {
+.ti .mz-panel .page-btn:disabled {
   opacity: 0.35;
   cursor: default;
 }
 
-.ti .ti-mz-panel .load-sentinel {
+.ti .mz-panel .load-sentinel {
   height: 1px;
   visibility: hidden;
 }
 
 @media (max-width: 425px) {
-  .ti .ti-mz-panel .mz-thumb-stack .se-slide .serial-title-wrap,
-  .ti .ti-mz-panel .mz-thumb-stack .se-slide .gv-title-wrap {
+  .ti .mz-panel .mz-thumb-stack .se-slide .serial-title-wrap,
+  .ti .mz-panel .mz-thumb-stack .se-slide .gv-title-wrap {
     padding: 10px 8px 12px;
     min-height: 0;
   }
 
-  .ti .ti-mz-panel .serial-title,
-  .ti .ti-mz-panel .gv-title {
+  .ti .mz-panel .serial-title,
+  .ti .mz-panel .gv-title {
     font-size: 0.82rem;
   }
 
-  .ti .ti-mz-panel .serial-date,
-  .ti .ti-mz-panel .gv-date,
-  .ti .ti-mz-panel .magazine-list-subtitle {
+  .ti .mz-panel .serial-date,
+  .ti .mz-panel .gv-date,
+  .ti .mz-panel .magazine-list-subtitle {
     font-size: 0.7rem;
   }
 }

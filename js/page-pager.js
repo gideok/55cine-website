@@ -1,6 +1,6 @@
 /**
  * 공용 PC 페이지네이션 (now-playing-test 기준)
- * 상단 .ti-page-toolbar + .ti-page-pager (이전 · 페이지 번호 · 다음)
+ * 상단 .page-toolbar + .page-pager (이전 · 페이지 번호 · 다음)
  */
 (function (global) {
   "use strict";
@@ -14,7 +14,7 @@
   function scrollToTop(scrollRootSelector) {
     var scrollEl = scrollRootSelector
       ? document.querySelector(scrollRootSelector)
-      : document.querySelector(".ti-np-scroll, .ti-mz-scroll, .se-right-inner");
+      : document.querySelector(".np-scroll, .mz-scroll, .se-right-inner");
     if (scrollEl) {
       scrollEl.scrollTo({ top: 0, behavior: "smooth" });
     } else {
@@ -104,7 +104,7 @@
     pageItems.forEach(function (item) {
       if (item.type === "ellipsis") {
         var gap = document.createElement("span");
-        gap.className = "ti-page-pager__ellipsis";
+        gap.className = "page-pager__ellipsis";
         gap.setAttribute("aria-hidden", "true");
         gap.textContent = "…";
         navEl.appendChild(gap);

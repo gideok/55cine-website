@@ -114,6 +114,8 @@
   function renderPrevNext(neighbors) {
     return window.TiSdPrevNext.render({
       returnNavOnly: true,
+      panelNav: true,
+      mountContextEl: root,
       navLabel: "프리뷰 이동",
       colsLabel: "이전·다음 프리뷰",
       listUrl: LIST_URL,
@@ -177,7 +179,7 @@
     });
     root.appendChild(body);
 
-    root.appendChild(renderPrevNext(neighbors));
+    renderPrevNext(neighbors);
 
     document.title = (article.title || pageTitle || "프리뷰") + " — 55CINE";
   }

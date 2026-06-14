@@ -1,7 +1,7 @@
 <!-- 공통 GNB: 링크·구조는 이 파일만 수정. head 에 <meta name="ti-nav-current" content="파일명.html" /> -->
 <!-- 모바일 상단 바: partials/mobile-menu-bar.html — js/left-gnb-include.js 가 함께 주입 -->
-<div class="ti-left-top">
-  <a class="ti-snb-logo" href="__TI_SITE_ROOT__index.html">
+<div class="left-top">
+  <a class="snb-logo" href="__TI_SITE_ROOT__index.html">
     <img
       src="__TI_SITE_ROOT__images/gnb-logo.png"
       width="25"
@@ -9,12 +9,12 @@
       alt="오오극장 독립영화전용관"
     />
   </a>
-  <div class="ti-snb-menu">
-    <a class="ti-home" href="__TI_SITE_ROOT__index.html">
-      <span class="ti-home__ico" aria-hidden="true"></span>
-      <span class="ti-home__label">HOME</span>
+  <div class="snb-menu">
+    <a class="home" href="__TI_SITE_ROOT__index.html">
+      <span class="home__ico" aria-hidden="true"></span>
+      <span class="home__label">HOME</span>
     </a>
-    <nav class="ti-gnb" aria-label="사이트 메뉴 (아코디언)">
+    <nav class="side-gnb" aria-label="사이트 메뉴 (아코디언)">
     <details>
       <summary>오오극장</summary>
       <ul>
@@ -75,8 +75,8 @@
   </nav>
   </div>
 </div>
-<div class="ti-left-bottom">
-  <h2 class="ti-sched-title">이번주 시간표</h2>
-  <div class="ti-day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
-  <div class="ti-sched-scroll" id="tiSchedulePanels"></div>
+<div class="left-bottom">
+  <h2 class="sched-title">이번주 시간표</h2>
+  <div class="day-tabs" id="tiDayTabs" role="tablist" aria-label="요일 선택"></div>
+  <div class="sched-scroll" id="tiSchedulePanels"></div>
 </div>

@@ -1,7 +1,7 @@
 /* 오오극장 하위 페이지 본문 — 소개(ti-theater-item) 타이포·구분선·목록 통일 */
 
-.ti-right.ti-viewing-guide,
-.ti-right.ti-sub-page {
+.right.viewing-guide,
+.right.sub-page {
   --ti-theater-text-strong: #111111;
   --ti-theater-text-secondary: #404040;
   --ti-theater-text-muted: #808080;
@@ -13,25 +13,25 @@
   --ti-theater-body-lh: 1.7;
 }
 
-.ti-right.ti-viewing-guide article,
-.ti-right.ti-sub-page article,
-.ti-right.ti-sub-page .ti-mbr-stack {
+.right.viewing-guide article,
+.right.sub-page article,
+.right.sub-page .mbr-stack {
   display: flex;
   flex-direction: column;
   gap: var(--ti-theater-section-gap);
   color: var(--ti-theater-text-secondary);
 }
 
-/* ── 섹션 제목 (소개 .ti-theater-item__head) ── */
-.ti-right.ti-viewing-guide .ti-viewing-section__title,
-.ti-right.ti-sub-page .ti-mbr-static__head,
-.ti-right.ti-sub-page .ti-seat-intro__title,
-.ti-right.ti-sub-page .ti-seat-card__heading,
-.ti-right.ti-sub-page #seat-link-heading,
-.ti-right.ti-sub-page .ti-dg-steps strong,
-.ti-right.ti-sub-page .ti-dg-subheading,
-.ti-right.ti-sub-page .ti-dir-transport-heading,
-.ti-right.ti-sub-page .ti-dir-transport-block h3 {
+/* ── 섹션 제목 (소개 .theater-item__head) ── */
+.right.viewing-guide .viewing-section__title,
+.right.sub-page .mbr-static__head,
+.right.sub-page .seat-intro__title,
+.right.sub-page .seat-card__heading,
+.right.sub-page #seat-link-heading,
+.right.sub-page .dg-steps strong,
+.right.sub-page .dg-subheading,
+.right.sub-page .dir-transport-heading,
+.right.sub-page .dir-transport-block h3 {
   margin: 0;
   padding: 0;
   border: none;
@@ -43,26 +43,26 @@
   word-break: keep-all;
 }
 
-.ti-right.ti-sub-page .ti-seat-intro__title::after,
-.ti-right.ti-sub-page .ti-seat-card__heading::after,
-.ti-right.ti-sub-page .ti-dir-transport-block h3::after,
-.ti-right.ti-sub-page .ti-mbr-acc__subhead--report::after {
+.right.sub-page .seat-intro__title::after,
+.right.sub-page .seat-card__heading::after,
+.right.sub-page .dir-transport-block h3::after,
+.right.sub-page .mbr-acc__subhead--report::after {
   display: none;
 }
 
 /* ── 섹션 블록 + 구분선 (#595959) ── */
-.ti-right.ti-viewing-guide .ti-viewing-section,
-.ti-right.ti-sub-page .ti-mbr-static,
-.ti-right.ti-sub-page .ti-seat-intro,
-.ti-right.ti-sub-page .ti-seat-card,
-.ti-right.ti-sub-page .ti-seat-link-wrap,
-.ti-right.ti-sub-page .ti-dg-form-wrap,
-.ti-right.ti-sub-page .ti-dg-steps,
-.ti-right.ti-sub-page .ti-dir-transport,
-.ti-right.ti-sub-page .ti-dir-map-block,
-.ti-right.ti-sub-page .ti-dir-meta,
-.ti-right.ti-sub-page .ti-dg-fee-group,
-.ti-right.ti-sub-page .ti-dg-facility-group {
+.right.viewing-guide .viewing-section,
+.right.sub-page .mbr-static,
+.right.sub-page .seat-intro,
+.right.sub-page .seat-card,
+.right.sub-page .seat-link-wrap,
+.right.sub-page .dg-form-wrap,
+.right.sub-page .dg-steps,
+.right.sub-page .dir-transport,
+.right.sub-page .dir-map-block,
+.right.sub-page .dir-meta,
+.right.sub-page .dg-fee-group,
+.right.sub-page .dg-facility-group {
   display: flex;
   flex-direction: column;
   gap: var(--ti-theater-block-gap);
@@ -76,40 +76,40 @@
   color: inherit;
 }
 
-.ti-right.ti-viewing-guide .ti-viewing-section:last-child,
-.ti-right.ti-sub-page .ti-mbr-static:last-child,
-.ti-right.ti-sub-page .ti-seat-intro:last-child,
-.ti-right.ti-sub-page .ti-seat-card:last-child,
-.ti-right.ti-sub-page .ti-seat-link-wrap:last-child,
-.ti-right.ti-sub-page .ti-dg-form-wrap:last-child,
-.ti-right.ti-sub-page .ti-dg-steps:last-child,
-.ti-right.ti-sub-page .ti-dir-transport:last-child,
-.ti-right.ti-sub-page .ti-dir-map-block:last-child,
-.ti-right.ti-sub-page .ti-dir-meta:last-child,
-.ti-right.ti-sub-page .ti-dg-fee-group:last-child,
-.ti-right.ti-sub-page .ti-dg-facility-group:last-child,
-.ti-right.ti-sub-page article > .ti-dg-contact:last-child {
+.right.viewing-guide .viewing-section:last-child,
+.right.sub-page .mbr-static:last-child,
+.right.sub-page .seat-intro:last-child,
+.right.sub-page .seat-card:last-child,
+.right.sub-page .seat-link-wrap:last-child,
+.right.sub-page .dg-form-wrap:last-child,
+.right.sub-page .dg-steps:last-child,
+.right.sub-page .dir-transport:last-child,
+.right.sub-page .dir-map-block:last-child,
+.right.sub-page .dir-meta:last-child,
+.right.sub-page .dg-fee-group:last-child,
+.right.sub-page .dg-facility-group:last-child,
+.right.sub-page article > .dg-contact:last-child {
   padding-bottom: 0;
   border-bottom: none;
 }
 
-.ti-right.ti-sub-page .ti-mbr-static {
+.right.sub-page .mbr-static {
   overflow: visible;
 }
 
-.ti-right.ti-sub-page .ti-mbr-static__head {
+.right.sub-page .mbr-static__head {
   padding: 0;
   background: transparent;
   border-bottom: none;
 }
 
-.ti-right.ti-sub-page .ti-mbr-acc__panel {
+.right.sub-page .mbr-acc__panel {
   padding: 0;
   border: none;
   background: transparent;
 }
 
-.ti-right.ti-sub-page .ti-mbr-acc__panel-inner {
+.right.sub-page .mbr-acc__panel-inner {
   display: flex;
   flex-direction: column;
   gap: var(--ti-theater-block-gap);
@@ -119,7 +119,7 @@
   color: var(--ti-theater-text-secondary);
 }
 
-.ti-right.ti-sub-page .ti-mbr-acc__subhead {
+.right.sub-page .mbr-acc__subhead {
   margin: 0;
   font-size: var(--ti-theater-head-size);
   font-weight: 700;
@@ -127,26 +127,26 @@
   color: var(--ti-theater-text-strong);
 }
 
-.ti-right.ti-sub-page .ti-mbr-acc__subhead:first-child {
+.right.sub-page .mbr-acc__subhead:first-child {
   margin-top: 0;
 }
 
-/* ── 본문 텍스트 (소개 .ti-theater-item__body) ── */
-.ti-right.ti-viewing-guide article p,
-.ti-right.ti-sub-page article p,
-.ti-right.ti-sub-page .ti-mbr-acc__panel-inner p,
-.ti-right.ti-sub-page .ti-mbr-acc__paragraph,
-.ti-right.ti-sub-page .ti-seat-intro__lead,
-.ti-right.ti-sub-page .ti-seat-intro__text,
-.ti-right.ti-sub-page .ti-seat-intro__cta,
-.ti-right.ti-sub-page .ti-dg-form-note,
-.ti-right.ti-sub-page .ti-dg-steps-intro,
-.ti-right.ti-sub-page .ti-dir-address,
-.ti-right.ti-sub-page .ti-dir-phone,
-.ti-right.ti-sub-page .ti-dir-transport-block p,
-.ti-right.ti-sub-page .ti-dir-parking-note,
-.ti-right.ti-sub-page .ti-seat-callout__body,
-.ti-right.ti-sub-page .ti-dg-contact {
+/* ── 본문 텍스트 (소개 .theater-item__body) ── */
+.right.viewing-guide article p,
+.right.sub-page article p,
+.right.sub-page .mbr-acc__panel-inner p,
+.right.sub-page .mbr-acc__paragraph,
+.right.sub-page .seat-intro__lead,
+.right.sub-page .seat-intro__text,
+.right.sub-page .seat-intro__cta,
+.right.sub-page .dg-form-note,
+.right.sub-page .dg-steps-intro,
+.right.sub-page .dir-address,
+.right.sub-page .dir-phone,
+.right.sub-page .dir-transport-block p,
+.right.sub-page .dir-parking-note,
+.right.sub-page .seat-callout__body,
+.right.sub-page .dg-contact {
   margin: 0;
   font-size: var(--ti-theater-body-size);
   font-weight: 400;
@@ -155,39 +155,39 @@
   text-align: left;
 }
 
-.ti-right.ti-sub-page .ti-seat-intro__lead,
-.ti-right.ti-sub-page .ti-seat-intro__cta,
-.ti-right.ti-sub-page .ti-dir-transport-block strong,
-.ti-right.ti-sub-page .ti-dg-contact a {
+.right.sub-page .seat-intro__lead,
+.right.sub-page .seat-intro__cta,
+.right.sub-page .dir-transport-block strong,
+.right.sub-page .dg-contact a {
   color: var(--ti-theater-text-strong);
   font-weight: 700;
 }
 
-.ti-right.ti-sub-page .ti-dg-contact a {
+.right.sub-page .dg-contact a {
   font-weight: 400;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.ti-right.ti-sub-page .ti-dg-contact a:hover,
-.ti-right.ti-sub-page .ti-dir-phone a:hover {
+.right.sub-page .dg-contact a:hover,
+.right.sub-page .dir-phone a:hover {
   color: var(--ti-theater-text-strong);
 }
 
-.ti-right.ti-sub-page .ti-dir-phone a {
+.right.sub-page .dir-phone a {
   color: var(--ti-theater-text-secondary);
   font-weight: 400;
 }
 
 /* ── 목록: 소개와 같이 본문 톤, 장식 불릿 제거 ── */
-.ti-right.ti-viewing-guide .ti-viewing-list,
-.ti-right.ti-viewing-guide .ti-viewing-notes,
-.ti-right.ti-sub-page .ti-mbr-acc__list,
-.ti-right.ti-sub-page .ti-mbr-acc__dash-list,
-.ti-right.ti-sub-page .ti-mbr-acc__callout-list,
-.ti-right.ti-sub-page .ti-seat-list,
-.ti-right.ti-sub-page .ti-dg-facility-list,
-.ti-right.ti-sub-page .ti-dg-facility-list__sub {
+.right.viewing-guide .viewing-list,
+.right.viewing-guide .viewing-notes,
+.right.sub-page .mbr-acc__list,
+.right.sub-page .mbr-acc__dash-list,
+.right.sub-page .mbr-acc__callout-list,
+.right.sub-page .seat-list,
+.right.sub-page .dg-facility-list,
+.right.sub-page .dg-facility-list__sub {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -196,14 +196,14 @@
   list-style: none;
 }
 
-.ti-right.ti-viewing-guide .ti-viewing-list li,
-.ti-right.ti-viewing-guide .ti-viewing-notes li,
-.ti-right.ti-sub-page .ti-mbr-acc__list > li,
-.ti-right.ti-sub-page .ti-mbr-acc__dash-list li,
-.ti-right.ti-sub-page .ti-mbr-acc__callout-list li,
-.ti-right.ti-sub-page .ti-seat-list li,
-.ti-right.ti-sub-page .ti-dg-facility-list > li,
-.ti-right.ti-sub-page .ti-dg-facility-list__sub li {
+.right.viewing-guide .viewing-list li,
+.right.viewing-guide .viewing-notes li,
+.right.sub-page .mbr-acc__list > li,
+.right.sub-page .mbr-acc__dash-list li,
+.right.sub-page .mbr-acc__callout-list li,
+.right.sub-page .seat-list li,
+.right.sub-page .dg-facility-list > li,
+.right.sub-page .dg-facility-list__sub li {
   position: static;
   margin: 0;
   padding: 0;
@@ -213,109 +213,109 @@
   color: var(--ti-theater-text-secondary);
 }
 
-.ti-right.ti-viewing-guide .ti-viewing-list li::before,
-.ti-right.ti-viewing-guide .ti-viewing-notes li::before,
-.ti-right.ti-sub-page .ti-mbr-acc__list > li::before,
-.ti-right.ti-sub-page .ti-mbr-acc__dash-list li::before,
-.ti-right.ti-sub-page .ti-dg-facility-list > li::before,
-.ti-right.ti-sub-page .ti-dg-facility-list__sub li::before {
+.right.viewing-guide .viewing-list li::before,
+.right.viewing-guide .viewing-notes li::before,
+.right.sub-page .mbr-acc__list > li::before,
+.right.sub-page .mbr-acc__dash-list li::before,
+.right.sub-page .dg-facility-list > li::before,
+.right.sub-page .dg-facility-list__sub li::before {
   display: none;
   content: none;
 }
 
-.ti-right.ti-sub-page .ti-mbr-acc__callout-list {
+.right.sub-page .mbr-acc__callout-list {
   padding: 0;
   list-style: none;
 }
 
-.ti-right.ti-sub-page .ti-mbr-acc__callout {
+.right.sub-page .mbr-acc__callout {
   margin: 0;
   padding: 16px;
   border: none;
   background: #f7f7f7;
 }
 
-.ti-right.ti-sub-page .ti-mbr-acc__callout-note,
-.ti-right.ti-sub-page .ti-seat-callout__head {
+.right.sub-page .mbr-acc__callout-note,
+.right.sub-page .seat-callout__head {
   margin: 0 0 8px;
   font-size: var(--ti-theater-body-size);
   font-weight: 700;
   color: var(--ti-theater-text-strong);
 }
 
-.ti-right.ti-sub-page .ti-seat-callout {
+.right.sub-page .seat-callout {
   margin: 0;
   border: none;
   background: #f7f7f7;
 }
 
-.ti-right.ti-sub-page .ti-seat-callout__rule {
+.right.sub-page .seat-callout__rule {
   display: none;
 }
 
-.ti-right.ti-sub-page .ti-dir-transport {
+.right.sub-page .dir-transport {
   border-left: none;
   padding-left: 0;
 }
 
-.ti-right.ti-sub-page .ti-dir-transport-block {
+.right.sub-page .dir-transport-block {
   margin: 0;
   padding: 0;
   border: none;
   background: transparent;
 }
 
-.ti-right.ti-sub-page .ti-dir-kakao-map {
+.right.sub-page .dir-kakao-map {
   margin: 0;
   border: none;
 }
 
-.ti-right.ti-sub-page .ti-dg-facility-list > li {
+.right.sub-page .dg-facility-list > li {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.ti-right.ti-sub-page .ti-dg-facility-list__sub {
+.right.sub-page .dg-facility-list__sub {
   margin: 0;
   padding: 0;
 }
 
-.ti-right.ti-sub-page .ti-dir-transport-block + .ti-dir-transport-block,
-.ti-right.ti-sub-page .ti-dir-transport-block + .ti-dir-parking-note {
+.right.sub-page .dir-transport-block + .dir-transport-block,
+.right.sub-page .dir-transport-block + .dir-parking-note {
   margin-top: 0;
 }
 
-.ti-right.ti-sub-page .ti-dir-meta {
+.right.sub-page .dir-meta {
   gap: 8px;
 }
 
-.ti-right.ti-sub-page article > .ti-dg-photo,
-.ti-right.ti-sub-page article > .ti-seat-photo {
+.right.sub-page article > .dg-photo,
+.right.sub-page article > .seat-photo {
   margin: 0;
   border: none;
   box-shadow: none;
 }
 
 /* 대관: 요금·시설 그룹 */
-.ti-right.ti-sub-page .ti-dg-fee-group,
-.ti-right.ti-sub-page .ti-dg-facility-group {
+.right.sub-page .dg-fee-group,
+.right.sub-page .dg-facility-group {
   display: flex;
   flex-direction: column;
   gap: var(--ti-theater-block-gap);
 }
 
 @media (min-width: 821px) {
-  .ti-right.ti-viewing-guide article p,
-  .ti-right.ti-sub-page article p,
-  .ti-right.ti-sub-page .ti-mbr-acc__panel-inner,
-  .ti-right.ti-viewing-guide .ti-viewing-list li,
-  .ti-right.ti-viewing-guide .ti-viewing-notes li,
-  .ti-right.ti-sub-page .ti-mbr-acc__list > li,
-  .ti-right.ti-sub-page .ti-mbr-acc__dash-list li,
-  .ti-right.ti-sub-page .ti-seat-list li,
-  .ti-right.ti-sub-page .ti-dg-facility-list > li,
-  .ti-right.ti-sub-page .ti-dg-facility-list__sub li {
+  .right.viewing-guide article p,
+  .right.sub-page article p,
+  .right.sub-page .mbr-acc__panel-inner,
+  .right.viewing-guide .viewing-list li,
+  .right.viewing-guide .viewing-notes li,
+  .right.sub-page .mbr-acc__list > li,
+  .right.sub-page .mbr-acc__dash-list li,
+  .right.sub-page .seat-list li,
+  .right.sub-page .dg-facility-list > li,
+  .right.sub-page .dg-facility-list__sub li {
     line-height: 1.5;
   }
 }

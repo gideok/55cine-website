@@ -25,21 +25,21 @@
   <link rel="stylesheet" href="css/components/np-search-toolbar.css" />
 </head>
 <body class="ti">
-  <div class="ti-shell" id="tiShell">
-    <div class="ti-left">
+  <div class="shell" id="tiShell">
+    <div class="left">
       <div data-ti-mobile-menu-bar></div>
-      <div class="ti-left-panel" id="tiLeftPanel">
-        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
+      <div class="left-panel" id="tiLeftPanel">
+        <div class="left-gnb-mount" data-ti-left-gnb></div>
       </div>
       <footer
-        class="ti-footer ti-footer--slot-pc site-footer"
+        class="footer footer--slot-pc site-footer"
         data-ti-site-footer
         data-ti-asset-base=""
         aria-label="사이트 정보"
       ></footer>
     </div>
-    <aside class="ti-right ti-mz-panel" aria-label="매거진 프리뷰 본문">
-      <div class="ti-mz-scroll">
+    <aside class="right mz-panel" aria-label="매거진 프리뷰 본문">
+      <div class="mz-scroll">
         <section class="preview-page" aria-labelledby="preview-page-title">
           <header class="section-page-head">
             <div class="section-page-head__row">
@@ -56,9 +56,9 @@
               </nav>
           </header>
 
-          <div class="ti-page-toolbar ti-page-toolbar--with-search">
-            <div class="ti-page-toolbar__meta">
-              <p class="ti-page-count" id="pagerCount" aria-live="polite"></p>
+          <div class="page-toolbar page-toolbar--with-search">
+            <div class="page-toolbar__meta">
+              <p class="page-count" id="pagerCount" aria-live="polite"></p>
               <div class="np-search" id="mzSearch"></div>
             </div>
             <div class="view-mode" role="tablist" aria-label="목록 보기 방식">
@@ -87,8 +87,8 @@
             </div>
           </div>
           <div id="previewList" class="preview-list is-list" aria-live="polite" hidden></div>
-          <nav class="ti-page-pager ti-page-pager--bottom" id="tiPagePager" aria-label="페이지"></nav>
-          <footer class="se-foot mz-pager ti-pager-foot--mobile-only" aria-label="프리뷰 페이지네이션">
+          <nav class="page-pager page-pager--bottom" id="tiPagePager" aria-label="페이지"></nav>
+          <footer class="se-foot mz-pager pager-foot--mobile-only" aria-label="프리뷰 페이지네이션">
             <button type="button" class="se-page-btn" id="mzPagerPrev" aria-label="이전 페이지">이전</button>
             <span class="se-fraction" id="mzPagerFraction" aria-live="polite">1 / 1</span>
             <div class="se-page-dots" id="mzPagerDots" aria-hidden="true"></div>
@@ -98,7 +98,7 @@
       </div>
     </aside>
     <footer
-      class="ti-footer ti-footer--slot-mobile site-footer"
+      class="footer footer--slot-mobile site-footer"
       data-ti-site-footer
       data-ti-asset-base=""
       aria-label="사이트 정보"

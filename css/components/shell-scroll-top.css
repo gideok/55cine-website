@@ -1,6 +1,6 @@
 /* 우측 하단 맨 위로 (scroll-top.js) */
 
-body.ti .ti-scroll-top {
+body.ti .scroll-top {
   position: fixed;
   right: max(12px, env(safe-area-inset-right, 0px));
   bottom: max(12px, env(safe-area-inset-bottom, 0px));
@@ -26,7 +26,7 @@ body.ti .ti-scroll-top {
     transform 0.15s ease;
 }
 
-body.ti .ti-scroll-top img {
+body.ti .scroll-top img {
   display: block;
   width: 56px;
   height: 56px;
@@ -34,32 +34,32 @@ body.ti .ti-scroll-top img {
   pointer-events: none;
 }
 
-body.ti .ti-scroll-top.is-visible {
+body.ti .scroll-top.is-visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-body.ti .ti-scroll-top:hover {
+body.ti .scroll-top:hover {
   transform: translateY(-2px);
 }
 
-body.ti .ti-scroll-top:active {
+body.ti .scroll-top:active {
   transform: translateY(0);
 }
 
-body.ti .ti-scroll-top:focus-visible {
+body.ti .scroll-top:focus-visible {
   outline: 2px solid #111111;
   outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.ti .ti-scroll-top {
+  body.ti .scroll-top {
     transition: none;
   }
 
-  body.ti .ti-scroll-top:hover,
-  body.ti .ti-scroll-top:active {
+  body.ti .scroll-top:hover,
+  body.ti .scroll-top:active {
     transform: none;
   }
 }

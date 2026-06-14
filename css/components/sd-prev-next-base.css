@@ -1,0 +1,95 @@
+/* 상세 하단 이전·다음 — 공통 타이포·상호작용 (레이아웃 없음) */
+
+.sd-nav {
+  padding: 0;
+}
+
+.sd-pn-link {
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sd-pn-dir {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #808080;
+}
+
+.sd-pn-chevron {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #808080;
+}
+
+.sd-pn-item-title,
+.sd-pn-empty-note {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.sd-pn-item-title {
+  color: #111111;
+}
+
+.sd-pn-empty-note {
+  color: #808080;
+}
+
+.sd-pn-link:hover .sd-pn-item-title {
+  text-decoration: underline;
+}
+
+.sd-back {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid #4a4a4a;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #333;
+  background: #fff;
+  text-decoration: none;
+  border-radius: 0;
+}
+
+.sd-back:hover {
+  background: #f0f0f0;
+  border-color: #111;
+  color: #000;
+}
+
+.sd-back.sd-back--list,
+.sd-back.sd-back--list:hover,
+.sd-back.sd-back--list:focus,
+.sd-back.sd-back--list:active,
+.sd-back.sd-back--list:visited {
+  color: #ffffff;
+}
+
+.sd-back--list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: #111111;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.sd-back.sd-back--list:hover {
+  background: #333333;
+  color: #ffffff;
+}

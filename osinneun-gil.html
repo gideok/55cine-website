@@ -23,21 +23,21 @@
   <link rel="stylesheet" href="css/components/theater-page-body.css" />
 </head>
 <body class="ti">
-  <div class="ti-shell" id="tiShell">
-    <div class="ti-left">
+  <div class="shell" id="tiShell">
+    <div class="left">
       <div data-ti-mobile-menu-bar></div>
-      <div class="ti-left-panel" id="tiLeftPanel">
-        <div class="ti-left-gnb-mount" data-ti-left-gnb></div>
+      <div class="left-panel" id="tiLeftPanel">
+        <div class="left-gnb-mount" data-ti-left-gnb></div>
       </div>
       <footer
-        class="ti-footer ti-footer--slot-pc site-footer"
+        class="footer footer--slot-pc site-footer"
         data-ti-site-footer
         data-ti-asset-base=""
         aria-label="사이트 정보"
       ></footer>
     </div>
-    <aside class="ti-right ti-sub-page" aria-label="오시는 길 본문">
-      <div class="ti-sub-scroll">
+    <aside class="right sub-page" aria-label="오시는 길 본문">
+      <div class="sub-scroll">
         <header class="section-page-head">
           <h1 id="direction-title" class="section-page-head__title">
             <span class="section-page-head__parent">오오극장</span><span class="section-page-head__sep" aria-hidden="true">·</span><span class="section-page-head__child">오시는 길</span>
@@ -57,7 +57,7 @@
           <!-- 가이드: 지도 영역에 width·height 지정 → SDK 스크립트 → 즉시 Map 생성 (https://apis.map.kakao.com/web/guide/#ready) -->
           <div
             id="map"
-            class="ti-dir-kakao-map"
+            class="dir-kakao-map"
             style="width:100%;height:400px;max-width:100%;box-sizing:border-box;"
             data-lat="35.8706649167601"
             data-lng="128.589448547683"
@@ -165,19 +165,19 @@
               document.head.appendChild(sdkScript);
             })();
           </script>
-          <!-- <section class="ti-dir-map-block" aria-label="네이버 지도">
-            <a class="ti-dir-map-cta" href="https://naver.me/G4W5AtEn" target="_blank" rel="noopener noreferrer">네이버 지도에서 위치 보기</a>
+          <!-- <section class="dir-map-block" aria-label="네이버 지도">
+            <a class="dir-map-cta" href="https://naver.me/G4W5AtEn" target="_blank" rel="noopener noreferrer">네이버 지도에서 위치 보기</a>
           </section> -->
 
-          <section class="ti-dir-meta" aria-label="오오극장 연락처">
-            <p class="ti-dir-address">대구광역시 중구 국채보상로 537, 한양학원 1층</p>
-            <p class="ti-dir-phone">T. <a href="tel:0534253553">053 425 3553</a></p>
+          <section class="dir-meta" aria-label="오오극장 연락처">
+            <p class="dir-address">대구광역시 중구 국채보상로 537, 한양학원 1층</p>
+            <p class="dir-phone">T. <a href="tel:0534253553">053 425 3553</a></p>
           </section>
 
-          <section class="ti-dir-transport" aria-labelledby="transport-title">
-            <h2 class="ti-dir-transport-heading" id="transport-title">대중교통 안내</h2>
+          <section class="dir-transport" aria-labelledby="transport-title">
+            <h2 class="dir-transport-heading" id="transport-title">대중교통 안내</h2>
 
-            <div class="ti-dir-transport-block">
+            <div class="dir-transport-block">
               <h3>버스</h3>
               <p><strong>곽병원 앞1, 앞2</strong> 156, 309, 402, 425, 501, 623, 724, 급행1, 급행3, 급행5</p>
               <p><strong>곽병원 건너</strong> 156, 309, 402, 425, 501, 623, 707, 724, 급행1, 급행3, 급행5 </p>
@@ -186,19 +186,19 @@
               <!-- <p><strong>호텔아미고 뒤</strong> 651, 653</p> -->
             </div>
 
-            <div class="ti-dir-transport-block">
+            <div class="dir-transport-block">
               <h3>지하철</h3>
               <p>1호선 중앙로역 대현프리몰 1번 출구 → 곽병원 방면 400m (도보 5분)</p>
             </div>
 
-            <p class="ti-dir-parking-note">※ 주차장이 따로 마련되어 있지 않습니다. 가급적 대중교통을 이용해 주시기 바랍니다.</p>
+            <p class="dir-parking-note">※ 주차장이 따로 마련되어 있지 않습니다. 가급적 대중교통을 이용해 주시기 바랍니다.</p>
           </section>
         </article>
 
       </div>
     </aside>
     <footer
-      class="ti-footer ti-footer--slot-mobile site-footer"
+      class="footer footer--slot-mobile site-footer"
       data-ti-site-footer
       data-ti-asset-base=""
       aria-label="사이트 정보"

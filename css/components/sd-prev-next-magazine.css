@@ -1,6 +1,20 @@
 /* 매거진·기획전 상세 하단 — 이전·다음(텍스트) + 목록으로 */
 
-.ti .ti-md-panel .sd-nav {
+/* 우측 패널(.md-page) 좌우 패딩 안에서 전체폭 — 본문 칼럼(max-width) 밖으로 마운트 */
+.ti .md-theme .md-page > .sd-nav--panel {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin-top: 48px;
+  padding: 0;
+  font-family: "Spoqa Han Sans Neo", sans-serif;
+}
+
+.ti .md-theme .md-page > .sd-nav--panel .sd-pn-cols {
+  width: 100%;
+}
+
+.ti .md-panel .sd-nav {
   max-width: none;
   width: 100%;
   margin-top: 48px;
@@ -8,8 +22,20 @@
   font-family: "Spoqa Han Sans Neo", sans-serif;
 }
 
+/* 목록으로 버튼 글자색 — movie-detail-theme.css 의 `.ti .md-theme a {color:inherit}` (0,2,1)
+   가 detail.css 의 `.sd-back.sd-back--list` (0,2,0) 를 덮어써 검은 버튼 위 글자가 어두워지므로,
+   md-theme 스코프(0,3,0)로 흰색을 복구 */
+.ti .md-theme .sd-back--list,
+.ti .md-theme .sd-back--list:hover,
+.ti .md-theme .sd-back--list:focus,
+.ti .md-theme .sd-back--list:active,
+.ti .md-theme .sd-back--list:visited {
+  color: #ffffff;
+}
+
 @media (max-width: 820px) {
-  .ti .ti-md-panel .sd-nav {
+  .ti .md-theme .md-page > .sd-nav--panel,
+  .ti .md-panel .sd-nav {
     margin-top: 32px;
   }
 }

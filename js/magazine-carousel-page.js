@@ -562,16 +562,16 @@
       var totalCount = getDisplayTotalCount();
       pagerCountEl.textContent = "";
       var totalSpan = document.createElement("span");
-      totalSpan.className = "ti-page-count__total";
+      totalSpan.className = "page-count__total";
       totalSpan.textContent = "총 " + totalCount + "건";
       pagerCountEl.appendChild(totalSpan);
       if (Pager.isDesktop() && st.totalPages > 1) {
         var dot = document.createElement("span");
-        dot.className = "ti-page-count__dot";
+        dot.className = "page-count__dot";
         dot.setAttribute("aria-hidden", "true");
         pagerCountEl.appendChild(dot);
         var pageSpan = document.createElement("span");
-        pageSpan.className = "ti-page-count__page";
+        pageSpan.className = "page-count__page";
         pageSpan.textContent = st.page + " / " + st.totalPages + " 페이지";
         pagerCountEl.appendChild(pageSpan);
       }
@@ -581,7 +581,7 @@
       Pager.render(pagePagerEl, {
         page: st.page,
         totalPages: st.totalPages,
-        scrollRootSelector: ".ti-mz-scroll",
+        scrollRootSelector: ".mz-scroll",
         onChange: function (p) {
           if (currentView === "thumb") goToThumbPage(p - 1);
           else goToListPage(p);
@@ -745,7 +745,7 @@
     sentinel.setAttribute("aria-hidden", "true");
     listEl.appendChild(sentinel);
 
-    var scrollRoot = document.querySelector(".ti-mz-scroll") || null;
+    var scrollRoot = document.querySelector(".mz-scroll") || null;
     listScrollObs = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -912,7 +912,7 @@
     }
     renderListView();
     updatePagerChrome();
-    var scrollEl = document.querySelector(".ti-mz-scroll");
+    var scrollEl = document.querySelector(".mz-scroll");
     if (scrollEl) scrollEl.scrollTo({ top: 0, behavior: "smooth" });
     else window.scrollTo({ top: 0, behavior: "smooth" });
   }

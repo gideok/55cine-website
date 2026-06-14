@@ -152,7 +152,9 @@
   function renderPrevNext(neighbors) {
     neighbors = neighbors || { prev: null, next: null };
     return window.TiSdPrevNext.render({
-      wrapClass: "sd-inner sd-inner--ex-nav",
+      returnNavOnly: true,
+      panelNav: true,
+      mountContextEl: root,
       navLabel: "기획전 이동",
       colsLabel: "이전·다음 기획전",
       listUrl: getListReturnUrl(),
@@ -529,7 +531,7 @@
           next: normalizeNeighbor(data.neighbors.next)
         }
       : findNeighbors(data.id);
-    root.appendChild(renderPrevNext(neighbors));
+    renderPrevNext(neighbors);
 
     setStatus("");
 

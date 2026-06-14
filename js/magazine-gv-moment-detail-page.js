@@ -117,6 +117,8 @@
   function renderPrevNext(neighbors) {
     return window.TiSdPrevNext.render({
       returnNavOnly: true,
+      panelNav: true,
+      mountContextEl: root,
       navLabel: "GV 모먼트 이동",
       colsLabel: "이전·다음 GV 모먼트",
       listUrl: LIST_URL,
@@ -176,7 +178,7 @@
     hydrateBodyImages(body);
     root.appendChild(body);
 
-    root.appendChild(renderPrevNext(neighbors));
+    renderPrevNext(neighbors);
 
     document.title = (pageTitle || "GV 모먼트") + " — 55CINE";
   }

@@ -1,17 +1,17 @@
 /* test/daegwan.html — 섹션 밝은 배경 · 어두운 전경 (가시성 우선) */
 
-.ti-right.ti-sub-page #daegwan {
+.right.sub-page #daegwan {
   color: var(--ti-text);
 }
 
-.ti-right.ti-sub-page #daegwan p,
-.ti-right.ti-sub-page #daegwan .ti-dg-facility-list > li,
-.ti-right.ti-sub-page #daegwan .ti-dg-facility-list__sub li {
+.right.sub-page #daegwan p,
+.right.sub-page #daegwan .dg-facility-list > li,
+.right.sub-page #daegwan .dg-facility-list__sub li {
   text-align: justify;
   text-justify: inter-word;
 }
 
-.ti-dg-photo {
+.dg-photo {
   margin: 0 0 24px;
   border-radius: 0;
   overflow: hidden;
@@ -21,13 +21,13 @@
   background: var(--ti-surface);
 }
 
-.ti-dg-photo img {
+.dg-photo img {
   width: 100%;
   height: auto;
   display: block;
 }
 
-.ti-dg-form-wrap {
+.dg-form-wrap {
   margin: 0 0 28px;
   padding: 20px;
   background: var(--ti-surface);
@@ -37,7 +37,7 @@
   text-align: center;
 }
 
-.ti-dg-form-link {
+.dg-form-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +55,7 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
-.ti-dg-form-link:hover {
+.dg-form-link:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   border-color: var(--ti-accent);
@@ -63,18 +63,18 @@
   color: var(--ti-text-strong);
 }
 
-.ti-dg-form-link:focus-visible {
+.dg-form-link:focus-visible {
   outline: 2px solid var(--ti-accent);
   outline-offset: 3px;
 }
 
-.ti-dg-form-link::after {
+.dg-form-link::after {
   content: "↗";
   font-size: 1rem;
   opacity: 0.9;
 }
 
-.ti-dg-form-wrap .ti-dg-form-note {
+.dg-form-wrap .dg-form-note {
   margin: 0;
   color: var(--ti-text-secondary);
   font-size: 0.9rem;
@@ -83,7 +83,7 @@
   text-justify: inter-word;
 }
 
-.ti-dg-steps {
+.dg-steps {
   margin: 0 0 28px;
   padding: 16px 18px;
   background: var(--ti-surface);
@@ -94,14 +94,14 @@
   color: var(--ti-text);
 }
 
-.ti-dg-steps strong {
+.dg-steps strong {
   display: block;
   margin-bottom: 8px;
   color: var(--ti-text-strong);
   font-size: 1rem;
 }
 
-.ti-dg-steps-intro {
+.dg-steps-intro {
   margin: 8px 0 0;
   color: var(--ti-text-secondary);
   font-size: 0.9rem;
@@ -109,7 +109,7 @@
   text-justify: inter-word;
 }
 
-.ti-proc-infographic {
+.proc-infographic {
   list-style: none;
   margin: 18px 0 0;
   padding: 0;
@@ -122,23 +122,23 @@
 }
 
 @media (min-width: 1040px) {
-  .ti-proc-infographic {
+  .proc-infographic {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 360px) {
-  .ti-proc-infographic {
+  .proc-infographic {
     gap: 10px 8px;
   }
 }
 
-.ti-proc-infographic__step {
+.proc-infographic__step {
   display: block;
   min-width: 0;
 }
 
-.ti-proc-infographic__card {
+.proc-infographic__card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -157,7 +157,7 @@
   color: var(--ti-text);
 }
 
-.ti-proc-infographic__badge {
+.proc-infographic__badge {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,7 +171,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.ti-proc-infographic__text {
+.proc-infographic__text {
   font-size: clamp(0.76rem, 2.4vw, 0.82rem);
   font-weight: 600;
   line-height: 1.45;
@@ -179,14 +179,14 @@
   text-align: center;
 }
 
-.ti-dg-subheading {
+.dg-subheading {
   font-size: 1.05rem;
   font-weight: 700;
   margin: 28px 0 12px;
   color: var(--ti-text-strong);
 }
 
-.ti-dg-fee-table {
+.dg-fee-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.92rem;
@@ -194,35 +194,35 @@
   border: 1px solid var(--ti-border);
 }
 
-.ti-dg-fee-table td {
+.dg-fee-table td {
   padding: 12px 14px;
   border: 0;
   color: var(--ti-text);
   vertical-align: middle;
 }
 
-.ti-dg-fee-table tbody tr + tr td {
+.dg-fee-table tbody tr + tr td {
   border-top: 1px solid var(--ti-border);
 }
 
-.ti-dg-fee-table__period {
+.dg-fee-table__period {
   text-align: left;
 }
 
-.ti-dg-fee-table__price {
+.dg-fee-table__price {
   text-align: center;
   font-weight: 700;
   white-space: nowrap;
 }
 
-.ti-dg-fee-table__note {
+.dg-fee-table__note {
   text-align: right;
   color: var(--ti-text-secondary);
   font-size: 0.88rem;
   white-space: nowrap;
 }
 
-.ti-dg-facility-list {
+.dg-facility-list {
   margin: 0;
   padding: 16px 18px;
   color: var(--ti-text);
@@ -232,7 +232,7 @@
   list-style: none;
 }
 
-.ti-dg-facility-list > li {
+.dg-facility-list > li {
   position: relative;
   margin-bottom: 14px;
   padding-left: 0.85rem;
@@ -240,11 +240,11 @@
   line-height: 1.6;
 }
 
-.ti-dg-facility-list > li:last-child {
+.dg-facility-list > li:last-child {
   margin-bottom: 0;
 }
 
-.ti-dg-facility-list > li::before {
+.dg-facility-list > li::before {
   content: "";
   position: absolute;
   left: 0;
@@ -255,13 +255,13 @@
   background: var(--ti-accent);
 }
 
-.ti-dg-facility-list__sub {
+.dg-facility-list__sub {
   margin: 8px 0 0 0.2rem;
   padding: 0;
   list-style: none;
 }
 
-.ti-dg-facility-list__sub li {
+.dg-facility-list__sub li {
   position: relative;
   margin-bottom: 6px;
   padding-left: 1rem;
@@ -270,11 +270,11 @@
   line-height: 1.6;
 }
 
-.ti-dg-facility-list__sub li:last-child {
+.dg-facility-list__sub li:last-child {
   margin-bottom: 0;
 }
 
-.ti-dg-facility-list__sub li::before {
+.dg-facility-list__sub li::before {
   content: "▸";
   position: absolute;
   left: 0;
@@ -283,19 +283,19 @@
   font-weight: 700;
 }
 
-.ti-dg-contact {
+.dg-contact {
   margin-top: 20px;
   font-size: 0.95rem;
   color: var(--ti-text);
 }
 
-.ti-dg-contact a {
+.dg-contact a {
   color: var(--ti-accent);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.ti-dg-contact a:hover {
+.dg-contact a:hover {
   color: var(--ti-accent-hover);
 }

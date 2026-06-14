@@ -44,7 +44,7 @@
     var target = raw.trim().toLowerCase();
     if (!target) return;
     var marked = false;
-    root.querySelectorAll(".ti-gnb a[href]").forEach(function (a) {
+    root.querySelectorAll(".side-gnb a[href]").forEach(function (a) {
       if (marked) return;
       var href = a.getAttribute("href");
       if (!href || href.charAt(0) === "#") return;
@@ -53,7 +53,7 @@
         var segs = u.pathname.split("/").filter(Boolean);
         var base = (segs[segs.length - 1] || "").toLowerCase();
         if (base === target) {
-          a.classList.add("ti-current");
+          a.classList.add("current");
           a.setAttribute("aria-current", "page");
           var det = a.closest("details");
           if (det) det.open = true;

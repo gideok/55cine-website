@@ -184,7 +184,7 @@
         <h2>컴포넌트</h2>
 
         <h3>section-page-head + subnav</h3>
-        <div class="ds-demo-stack ti ti-sub-scroll" style="max-width:640px;padding:16px;background:#f9f9f9">
+        <div class="ds-demo-stack ti sub-scroll" style="max-width:640px;padding:16px;background:#f9f9f9">
           <header class="section-page-head">
             <div class="section-page-head__row">
               <h2 class="section-page-head__title">
@@ -223,6 +223,36 @@
 
         <h3>멤버십 섹션 카드</h3>
         <p><code>.ti-mbr-static</code> — border #9a7b1a, 헤더 <code>.ti-mbr-static__head</code>, 본문 패널 공유 클래스.</p>
+
+        <h3>상세 하단 내비게이션 (prev/next + 목록으로)</h3>
+        <p>
+          매거진·기획전 상세 하단 공통. <code>js/sd-prev-next-render.js</code>(<code>window.TiSdPrevNext</code>)가
+          <code>.sd-nav</code> &gt; <code>.sd-pn-cols</code>(이전 <code>.sd-pn-col--prev</code> 좌 / 다음
+          <code>.sd-pn-col--next</code> 우, 위·아래 구분선) + <code>.sd-back--list</code>(검은 [목록으로] 버튼)를 생성.
+          스타일은 <code>css/components/sd-prev-next-base.css</code> ·
+          <code>css/components/sd-prev-next-pc.css</code> ·
+          <code>css/components/sd-prev-next-mobile.css</code>(<code>detail.css</code>에서 import) ·
+          <code>css/components/sd-prev-next-magazine.css</code>.
+        </p>
+        <ul>
+          <li>
+            <strong>우측 패널 전체폭</strong> — <code>panelNav: true</code> + <code>mountContextEl</code>로
+            <code>.sd-nav--panel</code>을 <code>.md-page</code> 직계 자식에 마운트. 본문 칼럼(<code>.mz-detail-root</code> 등
+            <code>max-width</code>) 밖에서 <code>.md-page</code> 좌우 패딩(<code>clamp(16px, 3vw, 48px)</code>) 안
+            전체폭에 구분선·prev/next 배치.
+          </li>
+          <li>
+            <strong>방향 chevron</strong> — <code>.sd-pn-chevron</code>(›)는 각 행 우측.
+            PC: 이전·다음 2열. 모바일(≤820px): 세로 2행(이전 → 다음), 라벨 좌 · 본문 · chevron 우,
+            행 사이 구분선, [목록으로] 버튼 전체폭.
+          </li>
+          <li>
+            <strong>[목록으로] 글자색</strong> — <code>movie-detail-theme.css</code>의
+            <code>.ti .md-theme a { color: inherit }</code>(명시도 0,2,1)가
+            <code>.sd-back.sd-back--list</code>(0,2,0)를 덮어써 검은 버튼 위 글자가 어두워짐.
+            <code>.ti .md-theme .sd-back--list</code>(0,3,0)로 <code>#fff</code> 복구.
+          </li>
+        </ul>
       </section>
 
       <section class="ds-section" id="css-bundles">

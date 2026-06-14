@@ -1,11 +1,11 @@
 /**
  * 세로 스크롤이 있고 일정 이상 내려간 경우에만 우측 하단 TOP 버튼 표시.
- * 스크롤 루트: window + #tiShell 안 공통 패널(.ti-mz-scroll 등) + [data-ti-scroll-root]
+ * 스크롤 루트: window + #tiShell 안 공통 패널(.mz-scroll 등) + [data-ti-scroll-root]
  */
 (function () {
   var THRESHOLD = 80;
   var SELECTORS =
-    ".ti-mz-scroll, .ti-sub-scroll, .ti-viewing-scroll, .ti-theater-scroll, .ti-np-scroll, .ti-md-scroll, [data-ti-scroll-root]";
+    ".mz-scroll, .sub-scroll, .viewing-scroll, .theater-scroll, .np-scroll, .md-scroll, [data-ti-scroll-root]";
 
   var btn;
   var innerRoots = [];
@@ -119,7 +119,7 @@
     btn = document.createElement("button");
     btn.id = "tiScrollTopBtn";
     btn.type = "button";
-    btn.className = "ti-scroll-top";
+    btn.className = "scroll-top";
     btn.setAttribute("aria-label", "맨 위로");
     btn.setAttribute("aria-hidden", "true");
     btn.tabIndex = -1;

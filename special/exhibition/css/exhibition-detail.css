@@ -1,6 +1,6 @@
 /* special/exhibition/exhibition_detail.html — 본문 그리드·필름·라이트박스 (상단 md-page는 now-playing-movie-detail.css) */
 
-.ti .ti-md-theme .exhibition-detail-root {
+.ti .md-theme .exhibition-detail-root {
   width: 100%;
   padding-top: 24px;
 }
@@ -409,7 +409,7 @@ body.exhibition-poster-lightbox-open {
 }
 
 @media (min-width: 900px) {
-  .ti .ti-md-theme .exhibition-detail-grid {
+  .ti .md-theme .exhibition-detail-grid {
     gap: 40px;
   }
 
@@ -419,7 +419,7 @@ body.exhibition-poster-lightbox-open {
 }
 
 @media (max-width: 900px) {
-  .ti .ti-md-theme .exhibition-detail-root {
+  .ti .md-theme .exhibition-detail-root {
     padding-top: 8px;
   }
 

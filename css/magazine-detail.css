@@ -1,12 +1,12 @@
 /* 매거진 삼삼오오 상세 — ti-md-theme 셸(상영작·기획전 상세와 동일) */
 
-.ti .ti-md-theme .mz-detail-root {
+.ti .md-theme .mz-detail-root {
   width: 100%;
   max-width: 629.61px;
   padding-top: 24px;
 }
 
-.ti .ti-md-theme .mz-detail-subtitle {
+.ti .md-theme .mz-detail-subtitle {
   margin: 0 0 16px;
   font-size: 16px;
   font-weight: 500;
@@ -14,7 +14,7 @@
   color: #404040;
 }
 
-.ti .ti-md-theme .mz-detail-meta {
+.ti .md-theme .mz-detail-meta {
   margin: 0 0 24px;
   padding-bottom: 24px;
   border-bottom: 1px solid #e2e2e2;
@@ -24,35 +24,35 @@
   color: #808080;
 }
 
-.ti .ti-md-theme .mz-detail-cover {
+.ti .md-theme .mz-detail-cover {
   margin: 0 0 24px;
   line-height: 0;
   border: 1px solid #595959;
   background: #f2f2f2;
 }
 
-.ti .ti-md-theme .mz-detail-cover img {
+.ti .md-theme .mz-detail-cover img {
   display: block;
   width: 100%;
   height: auto;
   object-fit: cover;
 }
 
-.ti .ti-md-theme .section-magazine-detail--preview .mz-detail-cover img {
+.ti .md-theme .section-magazine-detail--preview .mz-detail-cover img {
   aspect-ratio: 264 / 200;
   object-fit: cover;
 }
 
-.ti .ti-md-theme .section-magazine-detail--serial .mz-detail-cover img {
+.ti .md-theme .section-magazine-detail--serial .mz-detail-cover img {
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
 
-.ti .ti-md-theme .mz-detail-body {
+.ti .md-theme .mz-detail-body {
   text-align: justify;
 }
 
-.ti .ti-md-theme .mz-detail-body p {
+.ti .md-theme .mz-detail-body p {
   margin: 0 0 14px;
   font-size: 16px;
   font-weight: 400;
@@ -61,10 +61,10 @@
   text-align: justify;
 }
 
-.ti .ti-md-theme .mz-detail-body .body-heading,
-.ti .ti-md-theme .mz-detail-body h2,
-.ti .ti-md-theme .mz-detail-body h3,
-.ti .ti-md-theme .mz-detail-body h4 {
+.ti .md-theme .mz-detail-body .body-heading,
+.ti .md-theme .mz-detail-body h2,
+.ti .md-theme .mz-detail-body h3,
+.ti .md-theme .mz-detail-body h4 {
   margin: 18px 0 10px;
   font-weight: 700;
   line-height: 1.45;
@@ -72,11 +72,11 @@
   text-align: left;
 }
 
-.ti .ti-md-theme .mz-detail-body h3 {
+.ti .md-theme .mz-detail-body h3 {
   font-size: 16px;
 }
 
-.ti .ti-md-theme .mz-detail-body blockquote {
+.ti .md-theme .mz-detail-body blockquote {
   margin: 0 0 16px;
   padding: 12px 14px;
   border-left: 3px solid #b0b0b0;
@@ -84,15 +84,15 @@
   text-align: justify;
 }
 
-.ti .ti-md-theme .mz-detail-body .imageblock,
-.ti .ti-md-theme .mz-detail-body figure {
+.ti .md-theme .mz-detail-body .imageblock,
+.ti .md-theme .mz-detail-body figure {
   margin: 0 0 16px;
   text-align: center;
 }
 
-.ti .ti-md-theme .mz-detail-body .imageblock img,
-.ti .ti-md-theme .mz-detail-body figure img,
-.ti .ti-md-theme .mz-detail-body img {
+.ti .md-theme .mz-detail-body .imageblock img,
+.ti .md-theme .mz-detail-body figure img,
+.ti .md-theme .mz-detail-body img {
   max-width: 100%;
   height: auto;
   display: block;
@@ -100,25 +100,25 @@
   border: 1px solid #d4d4d4;
 }
 
-.ti .ti-md-theme .mz-detail-body iframe {
+.ti .md-theme .mz-detail-body iframe {
   width: 100%;
   max-width: 100%;
   aspect-ratio: 16 / 9;
   border: 1px solid #d4d4d4;
 }
 
-.ti .ti-md-theme .mz-detail-body a {
+.ti .md-theme .mz-detail-body a {
   color: #111111;
   text-decoration: underline;
 }
 
-.ti .ti-md-theme .mz-detail-attachments {
+.ti .md-theme .mz-detail-attachments {
   margin-top: 24px;
   padding-top: 18px;
   border-top: 1px solid #e2e2e2;
 }
 
-.ti .ti-md-theme .mz-detail-attachments__title {
+.ti .md-theme .mz-detail-attachments__title {
   margin: 0 0 12px;
   font-size: 16px;
   font-weight: 700;
@@ -126,19 +126,19 @@
   color: #111111;
 }
 
-.ti .ti-md-theme .mz-detail-attachments-grid {
+.ti .md-theme .mz-detail-attachments-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
-.ti .ti-md-theme .mz-detail-attachments-item {
+.ti .md-theme .mz-detail-attachments-item {
   margin: 0;
   border: 1px solid #c8c8c8;
   background: #ffffff;
 }
 
-.ti .ti-md-theme .mz-detail-attachments-item img {
+.ti .md-theme .mz-detail-attachments-item img {
   width: 100%;
   height: auto;
   display: block;
@@ -147,17 +147,17 @@
 }
 
 @media (max-width: 520px) {
-  .ti .ti-md-theme .mz-detail-attachments-grid {
+  .ti .md-theme .mz-detail-attachments-grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 899px) {
-  .ti .ti-md-theme .mz-detail-root {
+  .ti .md-theme .mz-detail-root {
     padding-top: 8px;
   }
 
-  .ti .ti-md-theme .mz-detail-meta {
+  .ti .md-theme .mz-detail-meta {
     margin-bottom: 16px;
     padding-bottom: 16px;
   }

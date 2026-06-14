@@ -12,7 +12,7 @@
   var EMPTY_MESSAGE = cfg.emptyMessage || "표시할 상영작이 없습니다.";
   var LOADING_MESSAGE = cfg.loadingMessage || "상영작 목록을 불러오는 중…";
   var ERROR_MESSAGE = cfg.errorMessage || "상영작 목록을 표시할 수 없습니다.";
-  var SCROLL_ROOT = cfg.scrollRootSelector || ".ti-np-scroll";
+  var SCROLL_ROOT = cfg.scrollRootSelector || ".np-scroll";
   var searchCfg = cfg.search || {};
   var SEARCH_ENABLED = !!searchCfg.enabled;
   var SEARCH_FIELDS = searchCfg.fields || ["titleKo", "titleEn", "director"];
@@ -899,42 +899,42 @@
   }
 
   function normalizeSearchToolbarLayout() {
-    var row = document.querySelector(".ti-np-root .np-meta-row--with-search");
+    var row = document.querySelector(".np-root .np-meta-row--with-search");
     if (row) return;
 
-    var toolbar = document.querySelector(".ti-np-root .ti-page-toolbar");
+    var toolbar = document.querySelector(".np-root .page-toolbar");
     if (!toolbar) return;
-    var legacy = toolbar.querySelector(".ti-page-toolbar__trailing");
+    var legacy = toolbar.querySelector(".page-toolbar__trailing");
     if (legacy) {
-      var pagerInLegacy = legacy.querySelector(".ti-page-pager");
+      var pagerInLegacy = legacy.querySelector(".page-pager");
       if (pagerInLegacy) toolbar.appendChild(pagerInLegacy);
-      legacy.classList.remove("ti-page-toolbar__trailing");
-      legacy.classList.add("ti-page-toolbar__meta");
+      legacy.classList.remove("page-toolbar__trailing");
+      legacy.classList.add("page-toolbar__meta");
     }
-    var meta = toolbar.querySelector(".ti-page-toolbar__meta");
+    var meta = toolbar.querySelector(".page-toolbar__meta");
     if (meta) {
-      var pagerInMeta = meta.querySelector(".ti-page-pager");
+      var pagerInMeta = meta.querySelector(".page-pager");
       if (pagerInMeta) toolbar.appendChild(pagerInMeta);
     }
     if (meta || toolbar.querySelector(".np-search")) {
-      toolbar.classList.add("ti-page-toolbar--with-search");
+      toolbar.classList.add("page-toolbar--with-search");
     }
   }
 
   function ensureSearchMetaRow() {
-    var row = document.querySelector(".ti-np-root .np-meta-row--with-search");
+    var row = document.querySelector(".np-root .np-meta-row--with-search");
     if (row) return row;
 
-    var toolbar = document.querySelector(".ti-np-root .ti-page-toolbar");
+    var toolbar = document.querySelector(".np-root .page-toolbar");
     if (!toolbar) return null;
     normalizeSearchToolbarLayout();
-    var meta = toolbar.querySelector(".ti-page-toolbar__meta");
+    var meta = toolbar.querySelector(".page-toolbar__meta");
     if (!meta) {
       meta = document.createElement("div");
-      meta.className = "ti-page-toolbar__meta";
-      var count = toolbar.querySelector(".ti-page-count");
+      meta.className = "page-toolbar__meta";
+      var count = toolbar.querySelector(".page-count");
       if (count) meta.appendChild(count);
-      toolbar.classList.add("ti-page-toolbar--with-search");
+      toolbar.classList.add("page-toolbar--with-search");
       toolbar.insertBefore(meta, toolbar.firstChild);
       var pagerEl = document.getElementById("npPager");
       if (pagerEl && pagerEl.parentElement !== toolbar) {
@@ -961,7 +961,7 @@
         if (metaRow) {
           metaRow.appendChild(searchWrap);
         } else {
-          var head = document.querySelector(".ti-np-root .np-head");
+          var head = document.querySelector(".np-root .np-head");
           if (head) head.insertAdjacentElement("afterend", searchWrap);
         }
       }

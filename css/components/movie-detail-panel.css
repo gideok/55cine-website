@@ -1,6 +1,6 @@
 /* 영화 상세 — TI 우측 패널·스크롤 (구조만) */
 
-.ti .ti-right.ti-md-panel {
+.ti .right.md-panel {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.ti .ti-md-scroll {
+.ti .md-scroll {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;

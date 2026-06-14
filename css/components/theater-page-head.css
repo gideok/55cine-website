@@ -1,8 +1,8 @@
 /* 오오극장 6개 하위 페이지 — 타이틀·서브네비 (theater-info.html 기준) */
 
-.ti-right.ti-theater-info,
-.ti-right.ti-viewing-guide,
-.ti-right.ti-sub-page {
+.right.theater-info,
+.right.viewing-guide,
+.right.sub-page {
   box-sizing: border-box;
   padding: 88px 0 0;
   background: #ffffff;
@@ -14,22 +14,22 @@
   );
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll,
-.ti-right.ti-viewing-guide .ti-sub-scroll,
-.ti-right.ti-sub-page .ti-sub-scroll {
+.right.theater-info .sub-scroll,
+.right.viewing-guide .sub-scroll,
+.right.sub-page .sub-scroll {
   max-width: var(--ti-content-max, 640px);
   padding: 0 20px 40px;
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-head {
+.right.theater-info .sub-scroll .section-page-head,
+.right.viewing-guide .sub-scroll .section-page-head,
+.right.sub-page .sub-scroll .section-page-head {
   margin-bottom: 24px;
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__title,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head__title,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-head__title {
+.right.theater-info .sub-scroll .section-page-head__title,
+.right.viewing-guide .sub-scroll .section-page-head__title,
+.right.sub-page .sub-scroll .section-page-head__title {
   margin: 0;
   padding: 0 0 16px;
   font-size: 22px;
@@ -39,28 +39,28 @@
   color: #111111;
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__sep,
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__parent,
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__child,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head__sep,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head__parent,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head__child,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-head__sep,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-head__parent,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-head__child {
+.right.theater-info .sub-scroll .section-page-head__sep,
+.right.theater-info .sub-scroll .section-page-head__parent,
+.right.theater-info .sub-scroll .section-page-head__child,
+.right.viewing-guide .sub-scroll .section-page-head__sep,
+.right.viewing-guide .sub-scroll .section-page-head__parent,
+.right.viewing-guide .sub-scroll .section-page-head__child,
+.right.sub-page .sub-scroll .section-page-head__sep,
+.right.sub-page .sub-scroll .section-page-head__parent,
+.right.sub-page .sub-scroll .section-page-head__child {
   color: inherit;
   font-weight: inherit;
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-head__rule,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head__rule,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-head__rule {
+.right.theater-info .sub-scroll .section-page-head__rule,
+.right.viewing-guide .sub-scroll .section-page-head__rule,
+.right.sub-page .sub-scroll .section-page-head__rule {
   display: none;
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav {
+.right.theater-info .sub-scroll .section-page-subnav,
+.right.viewing-guide .sub-scroll .section-page-subnav,
+.right.sub-page .sub-scroll .section-page-subnav {
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
@@ -72,9 +72,9 @@
   border-bottom: 1px solid #e2e2e2;
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a {
+.right.theater-info .sub-scroll .section-page-subnav a,
+.right.viewing-guide .sub-scroll .section-page-subnav a,
+.right.sub-page .sub-scroll .section-page-subnav a {
   flex: 1 1 0;
   min-width: 0;
   display: inline-flex;
@@ -94,20 +94,20 @@
   white-space: nowrap;
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
+.right.theater-info .sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+.right.theater-info .sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
+.right.viewing-guide .sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+.right.viewing-guide .sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
+.right.sub-page .sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+.right.sub-page .sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
   color: #111111;
   background: transparent;
   text-decoration: none;
 }
 
-.ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a.is-current,
-.ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a.is-current,
-.ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a.is-current {
+.right.theater-info .sub-scroll .section-page-subnav a.is-current,
+.right.viewing-guide .sub-scroll .section-page-subnav a.is-current,
+.right.sub-page .sub-scroll .section-page-subnav a.is-current {
   color: #111111;
   font-weight: 700;
   background: transparent;
@@ -116,57 +116,57 @@
 }
 
 @media (max-width: 480px) {
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a,
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a,
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a {
+  .right.theater-info .sub-scroll .section-page-subnav a,
+  .right.viewing-guide .sub-scroll .section-page-subnav a,
+  .right.sub-page .sub-scroll .section-page-subnav a {
     padding: 12px 4px;
     font-size: 12px;
   }
 }
 
 @media (min-width: 641px) {
-  .ti-right.ti-theater-info .ti-sub-scroll,
-  .ti-right.ti-viewing-guide .ti-sub-scroll,
-  .ti-right.ti-sub-page .ti-sub-scroll {
+  .right.theater-info .sub-scroll,
+  .right.viewing-guide .sub-scroll,
+  .right.sub-page .sub-scroll {
     padding-inline: clamp(20px, 4vw, 32px);
   }
 }
 
 @media (min-width: 821px) {
-  .ti-right.ti-theater-info .ti-sub-scroll,
-  .ti-right.ti-viewing-guide .ti-sub-scroll,
-  .ti-right.ti-sub-page .ti-sub-scroll {
+  .right.theater-info .sub-scroll,
+  .right.viewing-guide .sub-scroll,
+  .right.sub-page .sub-scroll {
     max-width: none;
     padding: 0 clamp(14px, 2.4vw, 28px) 40px;
   }
 
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head,
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head,
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-head {
+  .right.theater-info .sub-scroll .section-page-head,
+  .right.viewing-guide .sub-scroll .section-page-head,
+  .right.sub-page .sub-scroll .section-page-head {
     margin-bottom: 32px;
     padding-bottom: 0;
     border-bottom: none;
   }
 
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head__title,
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head__title,
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-head__title {
+  .right.theater-info .sub-scroll .section-page-head__title,
+  .right.viewing-guide .sub-scroll .section-page-head__title,
+  .right.sub-page .sub-scroll .section-page-head__title {
     padding: 0 0 16px;
     font-size: clamp(1.35rem, 2.1vw, 1.5rem);
     line-height: 1.28;
   }
 
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-head__rule,
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-head__rule,
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-head__rule {
+  .right.theater-info .sub-scroll .section-page-head__rule,
+  .right.viewing-guide .sub-scroll .section-page-head__rule,
+  .right.sub-page .sub-scroll .section-page-head__rule {
     display: block;
     margin: 0 0 16px;
     border-top: 1px solid #e2e2e2;
   }
 
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav,
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav,
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav {
+  .right.theater-info .sub-scroll .section-page-subnav,
+  .right.viewing-guide .sub-scroll .section-page-subnav,
+  .right.sub-page .sub-scroll .section-page-subnav {
     display: flex;
     flex-wrap: wrap;
     align-items: stretch;
@@ -178,9 +178,9 @@
     border-bottom: none;
   }
 
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a,
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a,
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a {
+  .right.theater-info .sub-scroll .section-page-subnav a,
+  .right.viewing-guide .sub-scroll .section-page-subnav a,
+  .right.sub-page .sub-scroll .section-page-subnav a {
     flex: none;
     padding: 10px 14px;
     font-size: 13px;
@@ -194,9 +194,9 @@
     border-bottom: none;
   }
 
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a.is-current,
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a.is-current,
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a.is-current {
+  .right.theater-info .sub-scroll .section-page-subnav a.is-current,
+  .right.viewing-guide .sub-scroll .section-page-subnav a.is-current,
+  .right.sub-page .sub-scroll .section-page-subnav a.is-current {
     color: #ffffff;
     font-weight: 700;
     background: #111111;
@@ -204,21 +204,21 @@
     border-bottom: none;
   }
 
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
-  .ti-right.ti-theater-info .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
-  .ti-right.ti-viewing-guide .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
-  .ti-right.ti-sub-page .ti-sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
+  .right.theater-info .sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+  .right.theater-info .sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
+  .right.viewing-guide .sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+  .right.viewing-guide .sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder),
+  .right.sub-page .sub-scroll .section-page-subnav a:hover:not(.is-current):not(.is-placeholder),
+  .right.sub-page .sub-scroll .section-page-subnav a:focus-visible:not(.is-current):not(.is-placeholder) {
     color: #111111;
     background: #f7f7f7;
     text-decoration: none;
   }
 
   /* 본문 폭: 소개와 동일 좌측 컬럼, 우측은 이미지 자리(빈 공간) */
-  .ti-right.ti-viewing-guide .ti-sub-scroll > article,
-  .ti-right.ti-sub-page .ti-sub-scroll > article,
-  .ti-right.ti-sub-page .ti-sub-scroll > .ti-mbr-stack {
+  .right.viewing-guide .sub-scroll > article,
+  .right.sub-page .sub-scroll > article,
+  .right.sub-page .sub-scroll > .mbr-stack {
     box-sizing: border-box;
     max-width: 100%;
     padding-right: var(--ti-theater-content-aside);

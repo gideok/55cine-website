@@ -117,6 +117,8 @@
   function renderPrevNext(neighbors) {
     return window.TiSdPrevNext.render({
       returnNavOnly: true,
+      panelNav: true,
+      mountContextEl: root,
       navLabel: "연재 이동",
       colsLabel: "이전·다음 연재",
       listUrl: LIST_URL,
@@ -168,7 +170,7 @@
     hydrateBodyImages(body);
     root.appendChild(body);
 
-    root.appendChild(renderPrevNext(neighbors));
+    renderPrevNext(neighbors);
 
     document.title = (pageTitle || "연재") + " — 55CINE";
   }
