@@ -259,6 +259,31 @@
     return subtitle;
   }
 
+  function isPreviewItemLayout() {
+    return cfg.apiSection === "preview" || cfg.itemClass === "preview-item";
+  }
+
+  function parseBracketTitle(rawTitle) {
+    var raw = displayText(rawTitle || "");
+    var match = raw.match(/^<([^>]+)>\s*(.*)$/);
+    if (!match) return null;
+    return {
+      primary: match[1].trim(),
+      secondary: match[2].trim()
+    };
+  }
+
+  function getItemDisplayTitles(item) {
+    if (isPreviewItemLayout()) {
+      var parsed = parseBracketTitle(item.title);
+      if (parsed) return parsed;
+    }
+    return {
+      primary: getListPrimaryTitle(item),
+      secondary: getListSubtitleText(item)
+    };
+  }
+
   function appendListHead(parent, href, primaryTitle, subtitleText, titleLinkClass, useHeading) {
     var head = document.createElement("div");
     head.className = "magazine-list-head";
@@ -291,13 +316,15 @@
     var article = document.createElement("article");
     article.className = cfg.itemClass;
     var listLayout = currentView === "list";
-    var primaryTitle = getListPrimaryTitle(item);
-    var subtitleText = getListSubtitleText(item);
+    var titles = getItemDisplayTitles(item);
+    var primaryTitle = titles.primary;
+    var subtitleText = titles.secondary;
+    var ariaTitle = subtitleText ? primaryTitle + " " + subtitleText : primaryTitle || displayText(item.title);
 
     var thumbLink = document.createElement("a");
     thumbLink.className = cfg.thumbLinkClass;
     thumbLink.href = href;
-    thumbLink.setAttribute("aria-label", primaryTitle || displayText(item.title));
+    thumbLink.setAttribute("aria-label", ariaTitle);
 
     var image = document.createElement("img");
     image.className = cfg.thumbClass;
@@ -342,7 +369,7 @@
     var body = document.createElement("div");
     body.className = cfg.bodyClass;
 
-    if (listLayout) {
+    if (listLayout || isPreviewItemLayout()) {
       appendListHead(body, href, primaryTitle, subtitleText, cfg.titleLinkClass, false);
     } else {
       var flatTitleLink = document.createElement("a");
