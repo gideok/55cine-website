@@ -9,9 +9,9 @@
   TiAdminApi.getDashboard()
     .then(function (stats) {
       var cards = [
-        { label: "웹 상영작 (web_program)", value: stats.programs.total },
+        { label: "총상영작", value: stats.programs.total },
         {
-          label: "2026년~ 데스크톱만",
+          label: "데스크톱만 등록된 자료",
           value: stats.programs.desktopOnlyFrom2026,
           href: "programs.html?desktopOnly=1"
         },

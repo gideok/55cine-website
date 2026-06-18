@@ -31,9 +31,9 @@
 
   function webStatusBadge(item) {
     if (item.hasWebProgram) {
-      return '<span class="admin-badge admin-badge--ok">웹 등록</span>';
+      return '<span class="admin-badge admin-badge--ok">WEB<BR>RDY</span>';
     }
-    return '<span class="admin-badge admin-badge--warn">데스크톱만</span>';
+    return '<span class="admin-badge admin-badge--warn">BASE<br/>ONLY</span>';
   }
 
   function updateFilterUi() {
