@@ -177,6 +177,28 @@
       });
   }
 
+  function bindAddButton() {
+    var btn = document.getElementById("progAddBtn");
+    if (!btn || !window.TiAdminProgramAddModal) return;
+    btn.addEventListener("click", function () {
+      TiAdminProgramAddModal.open(function (result) {
+        if (result && result.progId) {
+          var goEdit = confirm(
+            "상영작이 등록되었습니다. (prog_id: " +
+              result.progId +
+              ")\n웹 추가정보 입력 화면으로 이동할까요?"
+          );
+          if (goEdit) {
+            window.location.href =
+              "program-edit.html?progId=" + encodeURIComponent(String(result.progId));
+            return;
+          }
+        }
+        loadList();
+      });
+    });
+  }
+
   function mountShell() {
     el.innerHTML =
       '<p class="admin-lead">데스크톱(<code>prog_base</code>)에 등록된 상영작 목록입니다. <strong>데스크톱만</strong> 필터로 웹 미등록 항목만 볼 수 있습니다.</p>' +
@@ -191,12 +213,16 @@
       esc(state.q) +
       '" autocomplete="off">' +
       '<button type="button" class="admin-btn admin-btn--primary" id="progSearchBtn">검색</button>' +
+      "</div>" +
+      '<div class="admin-toolbar__col admin-toolbar__col--action">' +
+      '<button type="button" class="admin-btn admin-btn--primary" id="progAddBtn">상영작추가</button>' +
       "</div></div>" +
       '<div id="progListArea"></div>';
 
     listEl = document.getElementById("progListArea");
     bindFilterToggle();
     bindSearch();
+    bindAddButton();
     loadList();
   }
 

@@ -109,6 +109,18 @@
         body
       );
     },
+    getProgramFormOptions: function () {
+      return apiJson("GET", "/admin/programs/form-options");
+    },
+    checkProgramDuplicateTitle: function (name) {
+      return apiJson(
+        "GET",
+        "/admin/programs/check-duplicate-title?name=" + encodeURIComponent(String(name || ""))
+      );
+    },
+    createProgBase: function (body) {
+      return apiJson("POST", "/admin/programs/prog-base", body);
+    },
     getSpecialList: function (kind, q, page, pageSize) {
       var path =
         "/admin/special?page=" +

@@ -11,6 +11,12 @@ import {
   upsertAdminProgramByProgId
 } from "../../services/admin/web-program-admin.service.js";
 import {
+  getProgBaseFormOptions,
+  getAdminSysCodes,
+  countDuplicateProgTitle,
+  createProgBase
+} from "../../services/admin/prog-base-admin.service.js";
+import {
   getAdminSpecialList,
   createAdminSpecial,
   updateAdminSpecial,
@@ -152,6 +158,88 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "PROGRAM_LIST_FAILED", "상영작 목록 조회 실패");
+    }
+  });
+
+  app.get("/admin/programs/form-options", async (request, reply) => {
+    try {
+      return await getProgBaseFormOptions();
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "PROG_FORM_OPTIONS_FAILED", "상영작 폼 옵션 조회 실패");
+    }
+  });
+
+  app.get("/admin/programs/sys-codes", async (request, reply) => {
+    const parsed = z.object({ divCode: z.string().min(1).max(10) }).safeParse(request.query);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_QUERY", "divCode 필요");
+    }
+    try {
+      return await getAdminSysCodes(parsed.data.divCode);
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "SYS_CODE_FAILED", "코드 목록 조회 실패");
+    }
+  });
+
+  app.get("/admin/programs/check-duplicate-title", async (request, reply) => {
+    const parsed = z.object({ name: z.string().min(1) }).safeParse(request.query);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_QUERY", "name 필요");
+    }
+    try {
+      const count = await countDuplicateProgTitle(parsed.data.name);
+      return { count, duplicate: count > 0 };
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "DUPLICATE_CHECK_FAILED", "제목 중복 확인 실패");
+    }
+  });
+
+  app.post("/admin/programs/prog-base", async (request, reply) => {
+    const body = z
+      .object({
+        name: z.string().min(1, "영화명을 입력해 주세요."),
+        name2: z.string().min(1, "영문제목을 입력해 주세요."),
+        divScreen: z.coerce.number().int().min(0).max(255),
+        divProg: z.coerce.number().int().min(0).max(255),
+        grade: z.coerce.number().int().min(0).max(255),
+        country: z.coerce.number().int().min(0).max(255),
+        runningTime: z.coerce.number().int().min(0).nullable().optional(),
+        producer: z.string().nullable().optional(),
+        distributor: z.string().nullable().optional(),
+        specVideo: z.coerce.number().int().min(0).max(255),
+        specAudio: z.coerce.number().int().min(0).max(255),
+        specFormat: z.coerce.number().int().min(0).max(255),
+        volumn: z.string().nullable().optional(),
+        dateOpen: z.string().min(1, "개봉일을 입력해 주세요."),
+        dateClose: z.string().nullable().optional(),
+        divState: z.coerce.number().int().min(0).max(255),
+        progUrl: z.string().nullable().optional(),
+        confirmDuplicate: z.boolean().optional()
+      })
+      .safeParse(request.body);
+    if (!body.success) {
+      return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
+    }
+    try {
+      const created = await createProgBase(body.data);
+      reply.code(201);
+      return created;
+    } catch (err) {
+      request.log.error(err);
+      const code = err && typeof err === "object" && "code" in err ? String((err as { code: string }).code) : "";
+      if (code === "DUPLICATE_TITLE") {
+        return sendError(
+          reply,
+          409,
+          "DUPLICATE_TITLE",
+          err instanceof Error ? err.message : "동일한 제목의 영화가 등록되어 있습니다."
+        );
+      }
+      const msg = err instanceof Error ? err.message : "상영작 등록 실패";
+      return sendError(reply, 500, "PROG_BASE_CREATE_FAILED", msg);
     }
   });
 
