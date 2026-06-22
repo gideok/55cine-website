@@ -5,6 +5,7 @@
   var FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32];
   var PASTE_ALLOWED = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, SPAN: 1, BR: 1, HR: 1 };
   var NOTICE_LINK_CLASS = "site-notice-link";
+  var MAGAZINE_TEXT_BOX_CLASS = "mz-text-box";
 
   function normalizeLinkUrl(url) {
     var raw = String(url || "").trim();
@@ -30,13 +31,54 @@
     parent.removeChild(el);
   }
 
-  function isPasteTagAllowed(tag) {
-    if (PASTE_ALLOWED[tag]) return true;
-    return !!(options.linkAsButton && tag === "A");
+  /** 빈 블록(공백·단독 br만) 여부 — Enter 한 번으로 생기는 빈 div/p 감지 */
+  function isBlockEffectivelyEmpty(el) {
+    if (!el || !el.childNodes || !el.childNodes.length) return true;
+    for (var i = 0; i < el.childNodes.length; i++) {
+      var n = el.childNodes[i];
+      if (n.nodeType === 3 && n.textContent.replace(/[\u00a0\s]/g, "")) return false;
+      if (n.nodeType === 1) {
+        if (n.tagName === "BR") continue;
+        if (n.tagName === "IMG" || n.tagName === "HR") return false;
+        if (n.textContent.replace(/[\u00a0\s]/g, "")) return false;
+      }
+    }
+    return true;
+  }
+
+  function ensureBlockHasBreak(el) {
+    if (!isBlockEffectivelyEmpty(el)) return;
+    if (el.querySelector && el.querySelector("br")) return;
+    el.appendChild(document.createElement("br"));
+  }
+
+  function convertDivToParagraph(el) {
+    var p = document.createElement("p");
+    while (el.firstChild) p.appendChild(el.firstChild);
+    el.parentNode.replaceChild(p, el);
+    ensureBlockHasBreak(p);
+    return p;
+  }
+
+  function ensureParagraphBreaks(root) {
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll("p").forEach(function (p) {
+      ensureBlockHasBreak(p);
+    });
   }
 
   function createHtmlEditor(container, initialHtml, options) {
     options = options || {};
+
+    function isPasteTagAllowed(tag) {
+      if (PASTE_ALLOWED[tag]) return true;
+      if (options.allowParagraphs && tag === "P") return true;
+      if (options.linkAsButton && tag === "A") return true;
+      if (options.linkInline && tag === "A") return true;
+      if (options.showQuote && tag === "BLOCKQUOTE") return true;
+      if (options.showTextBox && tag === "DIV") return true;
+      return false;
+    }
     var toolbar = document.createElement("div");
     toolbar.className = "admin-editor-toolbar";
 
@@ -46,6 +88,22 @@
     body.innerHTML = initialHtml || "";
 
     var savedRange = null;
+
+    function placeCursorInParagraphAfter(el) {
+      var p = document.createElement("p");
+      p.appendChild(document.createElement("br"));
+      if (el.nextSibling) el.parentNode.insertBefore(p, el.nextSibling);
+      else el.parentNode.appendChild(p);
+      var newRange = document.createRange();
+      newRange.setStart(p, 0);
+      newRange.collapse(true);
+      var sel = global.getSelection();
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+      }
+      savedRange = newRange.cloneRange();
+    }
 
     function saveSelection() {
       var sel = global.getSelection();
@@ -100,6 +158,8 @@
     }
 
     function applyColor(color) {
+      if (!color) return;
+
       body.focus();
       restoreSelection();
       var sel = global.getSelection();
@@ -108,16 +168,37 @@
       if (range.collapsed) return;
 
       var fragment = range.extractContents();
-      var span = document.createElement("span");
-      span.style.color = color;
-      span.appendChild(fragment);
-      range.insertNode(span);
+      var blockTags = { P: 1, DIV: 1, BLOCKQUOTE: 1, H2: 1, H3: 1, H4: 1, LI: 1 };
+      var blocks = [];
 
-      var newRange = document.createRange();
-      newRange.selectNodeContents(span);
+      function collectBlocks(node) {
+        if (!node) return;
+        if (node.nodeType === 1 && blockTags[node.tagName]) {
+          blocks.push(node);
+          return;
+        }
+        Array.prototype.forEach.call(node.childNodes || [], collectBlocks);
+      }
+
+      collectBlocks(fragment);
+
+      if (blocks.length) {
+        blocks.forEach(function (block) {
+          block.style.color = color;
+        });
+        range.insertNode(fragment);
+      } else {
+        var span = document.createElement("span");
+        span.style.color = color;
+        span.appendChild(fragment);
+        range.insertNode(span);
+        range = document.createRange();
+        range.selectNodeContents(span);
+      }
+
       sel.removeAllRanges();
-      sel.addRange(newRange);
-      savedRange = newRange.cloneRange();
+      sel.addRange(range);
+      savedRange = range.cloneRange();
     }
 
     function applyLink(url) {
@@ -134,17 +215,87 @@
       var fragment = range.extractContents();
       var anchor = document.createElement("a");
       anchor.href = href;
-      anchor.className = NOTICE_LINK_CLASS;
       anchor.target = "_blank";
       anchor.rel = "noopener noreferrer";
+      if (options.linkAsButton) anchor.className = NOTICE_LINK_CLASS;
       anchor.appendChild(fragment);
       range.insertNode(anchor);
+      placeCursorInParagraphAfter(anchor);
+    }
+
+    function insertQuoteBlock() {
+      body.focus();
+      restoreSelection();
+      var sel = global.getSelection();
+      if (!sel || sel.rangeCount === 0) {
+        insertHtmlAtCursor("<blockquote><p>인용문을 입력하세요.</p></blockquote>");
+        return;
+      }
+      var range = sel.getRangeAt(0);
+      if (!rangeInBody(range) || range.collapsed) {
+        insertHtmlAtCursor("<blockquote><p>인용문을 입력하세요.</p></blockquote>");
+        return;
+      }
+
+      var fragment = range.extractContents();
+      var quote = document.createElement("blockquote");
+      quote.appendChild(fragment);
+      range.insertNode(quote);
 
       var newRange = document.createRange();
-      newRange.selectNodeContents(anchor);
+      newRange.selectNodeContents(quote);
       sel.removeAllRanges();
       sel.addRange(newRange);
       savedRange = newRange.cloneRange();
+    }
+
+    function insertTextBox() {
+      body.focus();
+      restoreSelection();
+      var sel = global.getSelection();
+      if (!sel || sel.rangeCount === 0) {
+        insertHtmlAtCursor(
+          '<div class="' + MAGAZINE_TEXT_BOX_CLASS + '"><p>내용을 입력하세요.</p></div><p><br></p>'
+        );
+        return;
+      }
+      var range = sel.getRangeAt(0);
+      if (!rangeInBody(range) || range.collapsed) {
+        insertHtmlAtCursor(
+          '<div class="' + MAGAZINE_TEXT_BOX_CLASS + '"><p>내용을 입력하세요.</p></div><p><br></p>'
+        );
+        return;
+      }
+
+      var fragment = range.extractContents();
+      var box = document.createElement("div");
+      box.className = MAGAZINE_TEXT_BOX_CLASS;
+      box.appendChild(fragment);
+      range.insertNode(box);
+      placeCursorInParagraphAfter(box);
+    }
+
+    function configureSanitizedAnchor(el) {
+      var linkHref = normalizeLinkUrl(el.getAttribute("href"));
+      if (!linkHref || !isSafeLinkHref(linkHref)) return false;
+      el.href = linkHref;
+      el.setAttribute("target", "_blank");
+      el.setAttribute("rel", "noopener noreferrer");
+      el.removeAttribute("style");
+      el.removeAttribute("face");
+      el.removeAttribute("data-ke-size");
+      el.removeAttribute("data-ti-asset-key");
+      if (options.linkAsButton) el.className = NOTICE_LINK_CLASS;
+      else el.removeAttribute("class");
+      Array.prototype.slice.call(el.attributes).forEach(function (attr) {
+        var keep =
+          attr.name === "href" ||
+          attr.name === "target" ||
+          attr.name === "rel" ||
+          (options.linkAsButton && attr.name === "class");
+        if (!keep) el.removeAttribute(attr.name);
+      });
+      return true;
     }
 
     function changeFontSize(delta) {
@@ -230,7 +381,7 @@
       }
 
       var el = document.createElement(tag === "SPAN" ? "span" : tag.toLowerCase());
-      if (tag === "A" && options.linkAsButton) {
+      if (tag === "A" && (options.linkAsButton || options.linkInline)) {
         var pasteHref = normalizeLinkUrl(node.getAttribute("href"));
         if (!pasteHref || !isSafeLinkHref(pasteHref)) {
           var unwrapFrag = document.createDocumentFragment();
@@ -241,9 +392,25 @@
           return unwrapFrag;
         }
         el.href = pasteHref;
-        el.className = NOTICE_LINK_CLASS;
         el.target = "_blank";
         el.rel = "noopener noreferrer";
+        if (options.linkAsButton) el.className = NOTICE_LINK_CLASS;
+      } else if (tag === "P" && options.allowParagraphs) {
+        el = document.createElement("p");
+      } else if (tag === "BLOCKQUOTE" && options.showQuote) {
+        el = document.createElement("blockquote");
+      } else if (tag === "DIV" && options.showTextBox) {
+        var nodeClass = node.getAttribute && node.getAttribute("class");
+        if (!nodeClass || !/\bmz-text-box\b/.test(nodeClass)) {
+          var divFrag = document.createDocumentFragment();
+          Array.prototype.forEach.call(node.childNodes, function (ch) {
+            var c = sanitizePasteNode(ch);
+            if (c) divFrag.appendChild(c);
+          });
+          return divFrag;
+        }
+        el = document.createElement("div");
+        el.className = MAGAZINE_TEXT_BOX_CLASS;
       }
       if (tag === "SPAN" && node.style) {
         if (node.style.fontSize) el.style.fontSize = node.style.fontSize;
@@ -284,8 +451,11 @@
     }
 
     function sanitizeOutputHtml(html) {
+      var normalized = String(html || "")
+        .replace(/<div(\s[^>]*)?>\s*<\/div>/gi, "<p><br></p>")
+        .replace(/<div(\s[^>]*)?>\s*<br\s*\/?>\s*<\/div>/gi, "<br>");
       var box = document.createElement("div");
-      box.innerHTML = html || "";
+      box.innerHTML = normalized;
       unwrapEditorFigures(box);
 
       function walk(node) {
@@ -306,27 +476,54 @@
           parent.removeChild(el);
           return;
         }
-        if (el.tagName === "A" && options.linkAsButton) {
-          var linkHref = normalizeLinkUrl(el.getAttribute("href"));
-          if (!linkHref || !isSafeLinkHref(linkHref)) {
+        if (el.tagName === "A" && (options.linkAsButton || options.linkInline)) {
+          if (!configureSanitizedAnchor(el)) {
             unwrapElement(el);
             return;
           }
-          el.href = linkHref;
-          el.className = NOTICE_LINK_CLASS;
-          el.setAttribute("target", "_blank");
-          el.setAttribute("rel", "noopener noreferrer");
-          el.removeAttribute("style");
-          el.removeAttribute("face");
-          el.removeAttribute("data-ke-size");
-          el.removeAttribute("data-ti-asset-key");
-          Array.prototype.slice.call(el.attributes).forEach(function (attr) {
-            if (attr.name !== "href" && attr.name !== "class" && attr.name !== "target" && attr.name !== "rel") {
-              el.removeAttribute(attr.name);
-            }
-          });
           var linkChildren = Array.prototype.slice.call(el.childNodes);
           linkChildren.forEach(walk);
+          return;
+        }
+        if (el.tagName === "BLOCKQUOTE" && options.showQuote) {
+          el.removeAttribute("class");
+          el.removeAttribute("data-ke-style");
+          el.removeAttribute("data-ke-size");
+          el.removeAttribute("data-ti-asset-key");
+          var quoteChildren = Array.prototype.slice.call(el.childNodes);
+          quoteChildren.forEach(walk);
+          return;
+        }
+        if (el.tagName === "DIV") {
+          if (options.showTextBox && el.classList.contains(MAGAZINE_TEXT_BOX_CLASS)) {
+            el.className = MAGAZINE_TEXT_BOX_CLASS;
+            el.removeAttribute("style");
+            el.removeAttribute("data-ke-style");
+            el.removeAttribute("data-ke-size");
+            el.removeAttribute("data-ti-asset-key");
+            Array.prototype.slice.call(el.attributes).forEach(function (attr) {
+              if (attr.name !== "class") el.removeAttribute(attr.name);
+            });
+            var boxChildren = Array.prototype.slice.call(el.childNodes);
+            boxChildren.forEach(walk);
+            return;
+          }
+          walk(convertDivToParagraph(el));
+          return;
+        }
+        if (el.tagName === "P" && options.allowParagraphs) {
+          el.removeAttribute("class");
+          el.removeAttribute("data-ke-style");
+          el.removeAttribute("data-ke-size");
+          el.removeAttribute("data-ti-asset-key");
+          if (el.hasAttribute("style")) {
+            var pStyle = stripFontStyles(el.getAttribute("style"), options.keepColor);
+            if (pStyle) el.setAttribute("style", pStyle);
+            else el.removeAttribute("style");
+          }
+          var pChildren = Array.prototype.slice.call(el.childNodes);
+          pChildren.forEach(walk);
+          ensureBlockHasBreak(el);
           return;
         }
         el.removeAttribute("class");
@@ -343,6 +540,7 @@
       }
 
       Array.prototype.slice.call(box.childNodes).forEach(walk);
+      ensureParagraphBreaks(box);
       return box.innerHTML;
     }
 
@@ -412,7 +610,7 @@
       { label: "밑줄", cmd: "underline" }
     ];
 
-    if (!options.linkAsButton) {
+    if (!options.linkAsButton && !options.linkInline) {
       buttons.push({ label: "링크", cmd: "createLink", prompt: "URL" });
     }
 
@@ -439,7 +637,7 @@
       toolbar.appendChild(btn);
     });
 
-    if (options.linkAsButton) {
+    if (options.linkAsButton || options.linkInline) {
       var urlBtn = document.createElement("button");
       urlBtn.type = "button";
       urlBtn.textContent = "URL";
@@ -449,6 +647,24 @@
         if (url) applyLink(url);
       });
       toolbar.appendChild(urlBtn);
+    }
+
+    if (options.showQuote) {
+      var quoteBtn = document.createElement("button");
+      quoteBtn.type = "button";
+      quoteBtn.textContent = "인용";
+      holdSelectionOnMouseDown(quoteBtn);
+      quoteBtn.addEventListener("click", insertQuoteBlock);
+      toolbar.appendChild(quoteBtn);
+    }
+
+    if (options.showTextBox) {
+      var textBoxBtn = document.createElement("button");
+      textBoxBtn.type = "button";
+      textBoxBtn.textContent = "텍스트박스";
+      holdSelectionOnMouseDown(textBoxBtn);
+      textBoxBtn.addEventListener("click", insertTextBox);
+      toolbar.appendChild(textBoxBtn);
     }
 
     if (options.showFontSize !== false) {
@@ -515,6 +731,15 @@
     body.addEventListener("keyup", saveSelection);
     body.addEventListener("mouseup", saveSelection);
     body.addEventListener("focus", saveSelection);
+
+    body.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" || !e.shiftKey) return;
+      e.preventDefault();
+      body.focus();
+      restoreSelection();
+      document.execCommand("insertLineBreak");
+      saveSelection();
+    });
 
     body.addEventListener("paste", function (e) {
       e.preventDefault();

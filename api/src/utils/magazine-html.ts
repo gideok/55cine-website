@@ -1,4 +1,14 @@
 export const MAGAZINE_LIST_EXCERPT_MAX = 160;
+export const MAGAZINE_TEXT_BOX_CLASS = "mz-text-box";
+
+function isSafeMagazineHref(href: string | null | undefined): boolean {
+  const h = String(href || "").trim();
+  if (!h) return false;
+  if (/^\s*javascript:/i.test(h)) return false;
+  if (/^\s*data:/i.test(h)) return false;
+  if (/^\s*vbscript:/i.test(h)) return false;
+  return true;
+}
 
 const NAMED_ENTITIES: Record<string, string> = {
   nbsp: " ",
@@ -70,7 +80,6 @@ const STRIP_STYLE_PROPS = new Set([
   "face",
   "line-height",
   "letter-spacing",
-  "color",
   "background",
   "background-color",
   "background-image",
@@ -84,32 +93,119 @@ const STRIP_STYLE_PROPS = new Set([
   "height"
 ]);
 
-function cleanStyleAttr(style: string, keepFontSize: boolean): string {
+function promoteColorSpanToBlocks(html: string): string {
+  let out = html;
+  let prev: string;
+  do {
+    prev = out;
+    out = out.replace(
+      /<span(\s+style="([^"]*)")[^>]*>\s*<p(\s[^>]*)?>/gi,
+      (_m, _s1: string, styleVal: string, pRest?: string) => {
+        const colorM = styleVal.match(/\bcolor\s*:\s*([^;"]+)/i);
+        if (!colorM) return _m;
+        const color = colorM[1].trim();
+        const attrs = pRest || "";
+        if (/\bstyle="/i.test(attrs)) {
+          if (/\bcolor\s*:/i.test(attrs)) return `<p${attrs}>`;
+          return `<p${attrs.replace(/\bstyle="([^"]*)"/i, `style="color: ${color}; $1`)}>`;
+        }
+        return `<p style="color: ${color}"${attrs}>`;
+      }
+    );
+  } while (out !== prev);
+  return cleanupOrphanColorSpans(out);
+}
+
+function cleanupOrphanColorSpans(html: string): string {
+  return html
+    .replace(/<span(\s+style="[^"]*\bcolor[^"]*")[^>]*>\s*(?=<p\b[^>]*\bstyle="[^"]*\bcolor)/gi, "")
+    .replace(/(<\/p>)\s*(?:<\/span>\s*)+/gi, "$1");
+}
+
+function escapeHtmlAttr(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+function convertFontColorToSpan(html: string): string {
+  let out = html.replace(/<font\b([^>]*)>/gi, (_m, attrs: string) => {
+    const colorAttr = attrs.match(/\bcolor=(["'])([^"']*)\1/i);
+    const styleAttr = attrs.match(/\bstyle=(["'])([\s\S]*?)\1/i);
+    let color = colorAttr?.[2]?.trim();
+    if (!color && styleAttr) {
+      const cm = styleAttr[2].match(/(?:^|;)\s*color\s*:\s*([^;]+)/i);
+      if (cm) color = cm[1].trim();
+    }
+    if (color) return `<span style="color: ${color}">`;
+    return "";
+  });
+  out = out.replace(/<\/font>/gi, "</span>");
+  return out;
+}
+
+function cleanStyleAttr(style: string): string {
   const parts = style
     .split(";")
     .map((p) => p.trim())
     .filter(Boolean)
     .filter((p) => {
       const prop = p.split(":")[0]?.trim().toLowerCase() ?? "";
-      if (keepFontSize && prop === "font-size") return true;
+      if (prop === "font-size" || prop === "color") return true;
       return !STRIP_STYLE_PROPS.has(prop);
     });
   return parts.join("; ");
 }
 
-/** 저장용: font-family 등 폰트·레이아웃 인라인 스타일 제거 (font-size 만 유지) */
+function sanitizeMagazineLinks(html: string): string {
+  return html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (_m, attrs: string, inner: string) => {
+    const hrefMatch = attrs.match(/\bhref\s*=\s*(["'])([\s\S]*?)\1/i);
+    if (!hrefMatch || !isSafeMagazineHref(hrefMatch[2])) return inner;
+    const href = hrefMatch[2].trim();
+    return `<a href="${escapeHtmlAttr(href)}" target="_blank" rel="noopener noreferrer">${inner}</a>`;
+  });
+}
+
+function preserveMagazineClasses(html: string): string {
+  return html.replace(/\sclass=(["'])([^"']*)\1/gi, (_m, q: string, cls: string) => {
+    if (/\bmz-text-box\b/i.test(cls)) return ` class=${q}${MAGAZINE_TEXT_BOX_CLASS}${q}`;
+    return "";
+  });
+}
+
+function normalizeParagraphBreaks(html: string): string {
+  return html
+    .replace(/<div(\s[^>]*)?>\s*<\/div>/gi, "<p><br></p>")
+    .replace(/<div(\s[^>]*)?>\s*<br\s*\/?>\s*<\/div>/gi, "<br>")
+    .replace(/<p(\s[^>]*)?>\s*<\/p>/gi, "<p$1><br></p>");
+}
+
+/** 저장용: font-size·color 유지, 인용·텍스트박스·링크·구분선 보존 */
 export function sanitizeMagazineBodyHtml(html: string | null | undefined): string | null {
   if (!html) return null;
-  let out = html.replace(/<\/?font\b[^>]*>/gi, "");
+
+  let out = String(html);
+  out = out.replace(/<script[\s\S]*?<\/script>/gi, "");
+  out = out.replace(/<style[\s\S]*?<\/style>/gi, "");
+  out = out.replace(/on\w+=(["'])[^"']*\1/gi, "");
+  out = convertFontColorToSpan(out);
+  out = out.replace(/<\/?font\b[^>]*>/gi, "");
 
   out = out.replace(/\sstyle=(["'])([\s\S]*?)\1/gi, (_m, q: string, style: string) => {
-    const cleaned = cleanStyleAttr(style, true);
+    const cleaned = cleanStyleAttr(style);
     return cleaned ? ` style=${q}${cleaned}${q}` : "";
   });
 
   out = out.replace(/\sface=(["'])[^"']*\1/gi, "");
-  out = out.replace(/\sclass=(["'])[^"']*\1/gi, "");
   out = out.replace(/\sdata-ke-size=(["'])[^"']*\1/gi, "");
+  out = out.replace(/\sdata-ke-style=(["'])[^"']*\1/gi, "");
 
-  return out;
+  out = preserveMagazineClasses(out);
+  out = normalizeParagraphBreaks(out);
+  out = promoteColorSpanToBlocks(out);
+  out = cleanupOrphanColorSpans(out);
+  out = sanitizeMagazineLinks(out);
+
+  return out.trim() || null;
 }

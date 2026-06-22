@@ -51,9 +51,13 @@
   }
 
   function prepareBodyHtml(html) {
-    return stripBackgroundStyles(html || "")
+    var out = stripBackgroundStyles(html || "")
       .replace(/\s+onerror="[^"]*"/gi, "")
       .replace(/\s+srcset="[^"]*"/gi, "");
+    if (window.TiMagazineBodyHtml && typeof window.TiMagazineBodyHtml.promoteColorSpanToBlocks === "function") {
+      out = window.TiMagazineBodyHtml.promoteColorSpanToBlocks(out);
+    }
+    return out;
   }
 
   function hydrateBodyImages(bodyEl, attachments, coverImage) {

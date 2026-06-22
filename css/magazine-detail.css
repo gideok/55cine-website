@@ -112,6 +112,25 @@
   text-decoration: underline;
 }
 
+.ti .md-theme .mz-detail-body hr {
+  border: none;
+  border-top: 1px solid #d4d4d4;
+  margin: 16px 0;
+}
+
+.ti .md-theme .mz-detail-body .mz-text-box {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border: 1px solid #d4d4d4;
+  border-radius: 2px;
+  background: #fafafa;
+  text-align: justify;
+}
+
+.ti .md-theme .mz-detail-body .mz-text-box p:last-child {
+  margin-bottom: 0;
+}
+
 .ti .md-theme .mz-detail-attachments {
   margin-top: 24px;
   padding-top: 18px;

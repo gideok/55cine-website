@@ -24,15 +24,11 @@
     backLink.setAttribute("aria-label", "연재 목록으로 돌아가기");
   }
 
-  function decodeHtmlEntities(text) {
-    if (!text) return "";
-    var el = document.createElement("textarea");
-    el.innerHTML = text;
-    return el.value;
-  }
-
   function prepareBodyHtml(html) {
-    return decodeHtmlEntities(html || "")
+    if (window.TiMagazineBodyHtml && typeof window.TiMagazineBodyHtml.prepare === "function") {
+      return window.TiMagazineBodyHtml.prepare(html);
+    }
+    return (html || "")
       .replace(/\r\n/g, "\n")
       .replace(/\.\.\/\.\.\/images\//g, "images/")
       .replace(/\.\.\/images\//g, "images/")

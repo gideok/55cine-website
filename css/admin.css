@@ -1576,6 +1576,32 @@ body.admin-modal-open {
   color: #fff;
 }
 
+.admin-editor-body blockquote {
+  margin: 0.75rem 0;
+  padding: 12px 14px;
+  border-left: 3px solid #b0b0b0;
+  background: #f7f7f7;
+}
+
+.admin-editor-body hr {
+  border: none;
+  border-top: 1px solid #d4d4d8;
+  margin: 0.75rem 0;
+}
+
+.admin-editor-body .mz-text-box {
+  margin: 0.75rem 0;
+  padding: 12px 14px;
+  border: 1px solid #d4d4d8;
+  border-radius: 4px;
+  background: #fafafa;
+}
+
+.admin-editor-body a:not(.site-notice-link) {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
 .admin-cover-preview--notice {
   max-width: 320px;
   margin-top: 0.5rem;

@@ -63,6 +63,21 @@
   text-decoration: underline;
 }
 
+.ti .sd-right--serial .sd-body hr {
+  border: none;
+  border-top: 1px solid #d4d4d4;
+  margin: 16px 0;
+}
+
+.ti .sd-right--serial .sd-body .mz-text-box {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border: 1px solid #d4d4d4;
+  border-radius: 2px;
+  background: #fafafa;
+  text-align: justify;
+}
+
 .ti .serial-detail-status {
   margin: 0 0 16px;
   padding: 14px 16px;

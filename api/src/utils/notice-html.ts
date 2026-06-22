@@ -54,6 +54,13 @@ function convertFontColorToSpan(html: string): string {
   return out;
 }
 
+function normalizeParagraphBreaks(html: string): string {
+  return html
+    .replace(/<div(\s[^>]*)?>\s*<\/div>/gi, "<p><br></p>")
+    .replace(/<div(\s[^>]*)?>\s*<br\s*\/?>\s*<\/div>/gi, "<br>")
+    .replace(/<p(\s[^>]*)?>\s*<\/p>/gi, "<p$1><br></p>");
+}
+
 /** 공지 본문 저장용 — 구분선(hr), 굵게, 글자크기·색상만 style 허용 */
 export function sanitizeNoticeBodyHtml(html: string | null | undefined): string | null {
   if (!html) return null;
@@ -74,6 +81,7 @@ export function sanitizeNoticeBodyHtml(html: string | null | undefined): string 
   out = out.replace(/\sface=(["'])[^"']*\1/gi, "");
   out = out.replace(/\sdata-ke-size=(["'])[^"']*\1/gi, "");
 
+  out = normalizeParagraphBreaks(out);
   out = sanitizeNoticeLinks(out);
 
   return out.trim() || null;

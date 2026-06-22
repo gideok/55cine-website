@@ -126,7 +126,8 @@
       showDivider: true,
       showColor: true,
       keepColor: true,
-      linkAsButton: true
+      linkAsButton: true,
+      allowParagraphs: true
     });
   }
 

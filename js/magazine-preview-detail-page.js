@@ -24,17 +24,12 @@
     backLink.setAttribute("aria-label", "프리뷰 목록으로 돌아가기");
   }
 
-  function decodeHtmlEntities(text) {
-    if (!text) return "";
-    var el = document.createElement("textarea");
-    el.innerHTML = text;
-    return el.value;
-  }
-
   function prepareBodyHtml(html) {
-    return decodeHtmlEntities(html || "")
-      .replace(/\r\n/g, "\n")
-      .replace(/\s+white-space:\s*pre-line/gi, "");
+    var out = (html || "").replace(/\s+white-space:\s*pre-line/gi, "");
+    if (window.TiMagazineBodyHtml && typeof window.TiMagazineBodyHtml.prepare === "function") {
+      return window.TiMagazineBodyHtml.prepare(out);
+    }
+    return out;
   }
 
   function resolveAssetUrl(url) {

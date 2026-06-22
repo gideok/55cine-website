@@ -972,7 +972,18 @@
 
       initialHtml,
 
-      { showLists: false, showImageUrl: false, showFontSize: true }
+      {
+        showLists: false,
+        showImageUrl: false,
+        showFontSize: true,
+        showDivider: true,
+        showColor: true,
+        keepColor: true,
+        linkInline: true,
+        showQuote: true,
+        showTextBox: true,
+        allowParagraphs: true
+      }
 
     );
 
