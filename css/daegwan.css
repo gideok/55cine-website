@@ -170,9 +170,10 @@
   border-radius: 0;
   font-size: 0.95rem;
   font-weight: 800;
-  color: #ffffff;
-  background: var(--ti-accent);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: var(--ti-text-strong);
+  background: var(--ti-surface);
+  border: 1px solid #9a7b1a;
+  box-shadow: none;
 }
 
 .proc-infographic__text {
@@ -226,7 +227,9 @@
   white-space: nowrap;
 }
 
-.dg-facility-list {
+/* theater-page-body.css 목록 리셋보다 우선 — #daegwan 스코프 */
+.right.sub-page #daegwan .dg-facility-list {
+  display: block;
   margin: 0;
   padding: 16px 18px;
   color: var(--ti-text);
@@ -236,19 +239,23 @@
   list-style: none;
 }
 
-.dg-facility-list > li {
+.right.sub-page #daegwan .dg-facility-list > li {
   position: relative;
-  margin-bottom: 14px;
-  padding-left: 0.85rem;
+  display: block;
+  margin: 0 0 14px;
+  padding: 0 0 0 0.85rem;
+  font-size: 0.92rem;
+  font-weight: 400;
   color: var(--ti-text);
   line-height: 1.6;
 }
 
-.dg-facility-list > li:last-child {
+.right.sub-page #daegwan .dg-facility-list > li:last-child {
   margin-bottom: 0;
 }
 
-.dg-facility-list > li::before {
+.right.sub-page #daegwan .dg-facility-list > li::before {
+  display: block;
   content: "";
   position: absolute;
   left: 0;
@@ -259,26 +266,30 @@
   background: var(--ti-accent);
 }
 
-.dg-facility-list__sub {
+.right.sub-page #daegwan .dg-facility-list__sub {
+  display: block;
   margin: 8px 0 0 0.2rem;
   padding: 0;
   list-style: none;
 }
 
-.dg-facility-list__sub li {
+.right.sub-page #daegwan .dg-facility-list__sub li {
   position: relative;
-  margin-bottom: 6px;
-  padding-left: 1rem;
+  display: block;
+  margin: 0 0 6px;
+  padding: 0 0 0 1rem;
   font-size: 0.9rem;
+  font-weight: 400;
   color: var(--ti-text-secondary);
   line-height: 1.6;
 }
 
-.dg-facility-list__sub li:last-child {
+.right.sub-page #daegwan .dg-facility-list__sub li:last-child {
   margin-bottom: 0;
 }
 
-.dg-facility-list__sub li::before {
+.right.sub-page #daegwan .dg-facility-list__sub li::before {
+  display: block;
   content: "▸";
   position: absolute;
   left: 0;

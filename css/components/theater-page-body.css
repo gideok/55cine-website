@@ -185,9 +185,7 @@
 .right.sub-page .mbr-acc__list,
 .right.sub-page .mbr-acc__dash-list,
 .right.sub-page .mbr-acc__callout-list,
-.right.sub-page .seat-list,
-.right.sub-page .dg-facility-list,
-.right.sub-page .dg-facility-list__sub {
+.right.sub-page .seat-list {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -201,9 +199,7 @@
 .right.sub-page .mbr-acc__list > li,
 .right.sub-page .mbr-acc__dash-list li,
 .right.sub-page .mbr-acc__callout-list li,
-.right.sub-page .seat-list li,
-.right.sub-page .dg-facility-list > li,
-.right.sub-page .dg-facility-list__sub li {
+.right.sub-page .seat-list li {
   position: static;
   margin: 0;
   padding: 0;
@@ -216,9 +212,7 @@
 .right.viewing-guide .viewing-list li::before,
 .right.viewing-guide .viewing-notes li::before,
 .right.sub-page .mbr-acc__list > li::before,
-.right.sub-page .mbr-acc__dash-list li::before,
-.right.sub-page .dg-facility-list > li::before,
-.right.sub-page .dg-facility-list__sub li::before {
+.right.sub-page .mbr-acc__dash-list li::before {
   display: none;
   content: none;
 }
@@ -270,17 +264,6 @@
   border: none;
 }
 
-.right.sub-page .dg-facility-list > li {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.right.sub-page .dg-facility-list__sub {
-  margin: 0;
-  padding: 0;
-}
-
 .right.sub-page .dir-transport-block + .dir-transport-block,
 .right.sub-page .dir-transport-block + .dir-parking-note {
   margin-top: 0;
@@ -313,9 +296,7 @@
   .right.viewing-guide .viewing-notes li,
   .right.sub-page .mbr-acc__list > li,
   .right.sub-page .mbr-acc__dash-list li,
-  .right.sub-page .seat-list li,
-  .right.sub-page .dg-facility-list > li,
-  .right.sub-page .dg-facility-list__sub li {
+  .right.sub-page .seat-list li {
     line-height: 1.5;
   }
 }
