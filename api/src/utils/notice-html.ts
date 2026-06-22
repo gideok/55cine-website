@@ -1,4 +1,30 @@
 const ALLOWED_STYLE_PROPS = new Set(["font-size", "color"]);
+export const NOTICE_LINK_CLASS = "site-notice-link";
+
+function escapeHtmlAttr(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+export function isSafeNoticeHref(href: string | null | undefined): boolean {
+  const h = String(href || "").trim();
+  if (!h) return false;
+  if (/^\s*javascript:/i.test(h)) return false;
+  if (/^\s*data:/i.test(h)) return false;
+  if (/^\s*vbscript:/i.test(h)) return false;
+  return true;
+}
+
+function sanitizeNoticeLinks(html: string): string {
+  return html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (_m, attrs: string, inner: string) => {
+    const hrefMatch = attrs.match(/\bhref\s*=\s*(["'])([\s\S]*?)\1/i);
+    if (!hrefMatch || !isSafeNoticeHref(hrefMatch[2])) return inner;
+    const href = hrefMatch[2].trim();
+    return `<a class="${NOTICE_LINK_CLASS}" href="${escapeHtmlAttr(href)}" target="_blank" rel="noopener noreferrer">${inner}</a>`;
+  });
+}
 
 function cleanNoticeStyle(style: string): string {
   const parts = style
@@ -47,6 +73,8 @@ export function sanitizeNoticeBodyHtml(html: string | null | undefined): string 
   out = out.replace(/\sclass=(["'])[^"']*\1/gi, "");
   out = out.replace(/\sface=(["'])[^"']*\1/gi, "");
   out = out.replace(/\sdata-ke-size=(["'])[^"']*\1/gi, "");
+
+  out = sanitizeNoticeLinks(out);
 
   return out.trim() || null;
 }

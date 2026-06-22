@@ -125,7 +125,8 @@
       showImageUrl: false,
       showDivider: true,
       showColor: true,
-      keepColor: true
+      keepColor: true,
+      linkAsButton: true
     });
   }
 

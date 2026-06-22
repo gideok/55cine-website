@@ -1552,6 +1552,30 @@ body.admin-modal-open {
   margin: 0.75rem 0;
 }
 
+.admin-editor-body a.site-notice-link,
+.admin-notice-preview-inner a.site-notice-link {
+  display: inline-block;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 0.35rem 0;
+  padding: 0.55rem 1rem;
+  border: 1px solid #27272a;
+  border-radius: 4px;
+  background: #18181b;
+  color: #f7f7f7;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.admin-editor-body a.site-notice-link:hover,
+.admin-notice-preview-inner a.site-notice-link:hover {
+  background: #27272a;
+  color: #fff;
+}
+
 .admin-cover-preview--notice {
   max-width: 320px;
   margin-top: 0.5rem;

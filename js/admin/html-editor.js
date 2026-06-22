@@ -4,6 +4,36 @@
 (function (global) {
   var FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32];
   var PASTE_ALLOWED = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, SPAN: 1, BR: 1, HR: 1 };
+  var NOTICE_LINK_CLASS = "site-notice-link";
+
+  function normalizeLinkUrl(url) {
+    var raw = String(url || "").trim();
+    if (!raw) return "";
+    if (/^(https?:\/\/|mailto:|tel:|\/|#)/i.test(raw)) return raw;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(raw)) return "";
+    return "https://" + raw;
+  }
+
+  function isSafeLinkHref(href) {
+    var h = String(href || "").trim();
+    if (!h) return false;
+    if (/^\s*javascript:/i.test(h)) return false;
+    if (/^\s*data:/i.test(h)) return false;
+    if (/^\s*vbscript:/i.test(h)) return false;
+    return true;
+  }
+
+  function unwrapElement(el) {
+    var parent = el.parentNode;
+    if (!parent) return;
+    while (el.firstChild) parent.insertBefore(el.firstChild, el);
+    parent.removeChild(el);
+  }
+
+  function isPasteTagAllowed(tag) {
+    if (PASTE_ALLOWED[tag]) return true;
+    return !!(options.linkAsButton && tag === "A");
+  }
 
   function createHtmlEditor(container, initialHtml, options) {
     options = options || {};
@@ -90,6 +120,33 @@
       savedRange = newRange.cloneRange();
     }
 
+    function applyLink(url) {
+      var href = normalizeLinkUrl(url);
+      if (!href || !isSafeLinkHref(href)) return;
+
+      body.focus();
+      restoreSelection();
+      var sel = global.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      var range = sel.getRangeAt(0);
+      if (range.collapsed) return;
+
+      var fragment = range.extractContents();
+      var anchor = document.createElement("a");
+      anchor.href = href;
+      anchor.className = NOTICE_LINK_CLASS;
+      anchor.target = "_blank";
+      anchor.rel = "noopener noreferrer";
+      anchor.appendChild(fragment);
+      range.insertNode(anchor);
+
+      var newRange = document.createRange();
+      newRange.selectNodeContents(anchor);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+      savedRange = newRange.cloneRange();
+    }
+
     function changeFontSize(delta) {
       body.focus();
       restoreSelection();
@@ -163,7 +220,7 @@
         return wrap;
       }
 
-      if (!PASTE_ALLOWED[tag]) {
+      if (!isPasteTagAllowed(tag)) {
         var frag = document.createDocumentFragment();
         Array.prototype.forEach.call(node.childNodes, function (ch) {
           var c = sanitizePasteNode(ch);
@@ -173,6 +230,21 @@
       }
 
       var el = document.createElement(tag === "SPAN" ? "span" : tag.toLowerCase());
+      if (tag === "A" && options.linkAsButton) {
+        var pasteHref = normalizeLinkUrl(node.getAttribute("href"));
+        if (!pasteHref || !isSafeLinkHref(pasteHref)) {
+          var unwrapFrag = document.createDocumentFragment();
+          Array.prototype.forEach.call(node.childNodes, function (ch) {
+            var c = sanitizePasteNode(ch);
+            if (c) unwrapFrag.appendChild(c);
+          });
+          return unwrapFrag;
+        }
+        el.href = pasteHref;
+        el.className = NOTICE_LINK_CLASS;
+        el.target = "_blank";
+        el.rel = "noopener noreferrer";
+      }
       if (tag === "SPAN" && node.style) {
         if (node.style.fontSize) el.style.fontSize = node.style.fontSize;
         if (options.keepColor && node.style.color) el.style.color = node.style.color;
@@ -232,6 +304,29 @@
           }
           while (el.firstChild) parent.insertBefore(el.firstChild, el);
           parent.removeChild(el);
+          return;
+        }
+        if (el.tagName === "A" && options.linkAsButton) {
+          var linkHref = normalizeLinkUrl(el.getAttribute("href"));
+          if (!linkHref || !isSafeLinkHref(linkHref)) {
+            unwrapElement(el);
+            return;
+          }
+          el.href = linkHref;
+          el.className = NOTICE_LINK_CLASS;
+          el.setAttribute("target", "_blank");
+          el.setAttribute("rel", "noopener noreferrer");
+          el.removeAttribute("style");
+          el.removeAttribute("face");
+          el.removeAttribute("data-ke-size");
+          el.removeAttribute("data-ti-asset-key");
+          Array.prototype.slice.call(el.attributes).forEach(function (attr) {
+            if (attr.name !== "href" && attr.name !== "class" && attr.name !== "target" && attr.name !== "rel") {
+              el.removeAttribute(attr.name);
+            }
+          });
+          var linkChildren = Array.prototype.slice.call(el.childNodes);
+          linkChildren.forEach(walk);
           return;
         }
         el.removeAttribute("class");
@@ -314,9 +409,12 @@
     var buttons = [
       { label: "굵게", cmd: "bold" },
       { label: "기울임", cmd: "italic" },
-      { label: "밑줄", cmd: "underline" },
-      { label: "링크", cmd: "createLink", prompt: "URL" }
+      { label: "밑줄", cmd: "underline" }
     ];
+
+    if (!options.linkAsButton) {
+      buttons.push({ label: "링크", cmd: "createLink", prompt: "URL" });
+    }
 
     if (options.showLists !== false) {
       buttons.push(
@@ -340,6 +438,18 @@
       });
       toolbar.appendChild(btn);
     });
+
+    if (options.linkAsButton) {
+      var urlBtn = document.createElement("button");
+      urlBtn.type = "button";
+      urlBtn.textContent = "URL";
+      holdSelectionOnMouseDown(urlBtn);
+      urlBtn.addEventListener("click", function () {
+        var url = global.prompt("연결할 URL");
+        if (url) applyLink(url);
+      });
+      toolbar.appendChild(urlBtn);
+    }
 
     if (options.showFontSize !== false) {
       var smallBtn = document.createElement("button");
