@@ -126,7 +126,24 @@
   /* 접힘: 패널이 flex-grow로 잔여 높이를 먹지 않도록 basis·grow 제거 (ti-left 빈 여백 방지) */
   .shell.menu-collapsed-mobile > .left {
     min-height: 0 !important;
-    border-bottom: 1px solid #e2e2e2;
+    padding-top: 0;
+    border-bottom: none;
+    grid-row: 1;
+    pointer-events: none;
+  }
+
+  .shell.menu-collapsed-mobile > .left .mobile-menu-bar {
+    pointer-events: auto;
+  }
+
+  /* 접힘: 좌열 빈 69px 대신 본문이 고정 메뉴 바 바로 아래부터 시작 */
+  .shell.menu-collapsed-mobile > .right {
+    grid-row: 1;
+    padding-top: var(--ti-mobile-menu-bar-offset);
+  }
+
+  .shell.menu-collapsed-mobile > .footer.footer--slot-mobile {
+    grid-row: 2;
   }
 
   .shell.menu-collapsed-mobile .left-panel {

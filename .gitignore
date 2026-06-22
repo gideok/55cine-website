@@ -11,6 +11,7 @@ images/**/*.ai
 images/*.zip
 images/[붙임2]*/
 figma/
+docs/오오극장 홈페이지*
 
 # --- 로컬·스크래치 ---
 tmp/
