@@ -185,6 +185,30 @@
     },
     uploadProgramPoster: function (file, programSeq) {
       return uploadFile(file, { category: "program", programSeq: String(programSeq) });
+    },
+    getNoticeList: function () {
+      return apiJson("GET", "/admin/notices");
+    },
+    getNotice: function (seq) {
+      return apiJson("GET", "/admin/notices/" + encodeURIComponent(String(seq)));
+    },
+    createNotice: function (body) {
+      return apiJson("POST", "/admin/notices", body);
+    },
+    updateNotice: function (seq, body) {
+      return apiJson("PUT", "/admin/notices/" + encodeURIComponent(String(seq)), body);
+    },
+    deleteNotice: function (seq) {
+      return apiJson("DELETE", "/admin/notices/" + encodeURIComponent(String(seq)));
+    },
+    activateNotice: function (seq) {
+      return apiJson("POST", "/admin/notices/" + encodeURIComponent(String(seq)) + "/activate");
+    },
+    deactivateNotice: function (seq) {
+      return apiJson("POST", "/admin/notices/" + encodeURIComponent(String(seq)) + "/deactivate");
+    },
+    uploadNoticeTemp: function (file) {
+      return uploadFile(file, { category: "notice-temp" });
     }
   };
 })(typeof window !== "undefined" ? window : globalThis);

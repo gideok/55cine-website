@@ -12,7 +12,9 @@ export type UploadCategory =
   | "magazine-cover"
   | "magazine-thumb"
   | "magazine-temp"
-  | "program";
+  | "program"
+  | "notice-temp"
+  | "notice-main";
 
 export function resolveUploadPath(
   category: UploadCategory,
@@ -23,6 +25,7 @@ export function resolveUploadPath(
     imageIndex?: number;
     tempId?: string;
     programSeq?: number;
+    noticeSeq?: number;
     originalFilename?: string;
   }
 ): string {
@@ -52,6 +55,12 @@ export function resolveUploadPath(
     case "program":
       if (!opts.programSeq) throw new Error("programSeq 필요");
       return `images/movies/wp/wp_${opts.programSeq}_1${ext}`;
+    case "notice-temp":
+      if (!opts.tempId) throw new Error("tempId 필요");
+      return `images/notice/_tmp/${opts.tempId}${ext}`;
+    case "notice-main":
+      if (!opts.noticeSeq) throw new Error("noticeSeq 필요");
+      return `images/notice/wn_${opts.noticeSeq}_main${ext}`;
     default:
       throw new Error(`Unknown category: ${category}`);
   }

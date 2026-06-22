@@ -3,7 +3,8 @@
     { href: "index.html", label: "대시보드", key: "dashboard" },
     { href: "programs.html", label: "상영작 관리", key: "programs" },
     { href: "special.html", label: "기획전·행사 관리", key: "special" },
-    { href: "magazine.html", label: "매거진 관리", key: "magazine" }
+    { href: "magazine.html", label: "매거진 관리", key: "magazine" },
+    { href: "notice.html", label: "공지사항 관리", key: "notice" }
   ];
 
   function renderSidebar(currentKey) {

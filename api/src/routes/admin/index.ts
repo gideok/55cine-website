@@ -31,6 +31,15 @@ import {
   deleteAdminMagazine,
   markMagazineAsPast
 } from "../../services/admin/magazine-admin.service.js";
+import {
+  getAdminNoticeList,
+  getAdminNoticeBySeq,
+  createAdminNotice,
+  updateAdminNotice,
+  deleteAdminNotice,
+  activateAdminNotice,
+  deactivateAdminNotice
+} from "../../services/admin/notice-admin.service.js";
 import { resolveUploadPath, saveUploadedFile } from "../../services/admin/upload.service.js";
 
 const kindSchema = z.enum(["exhibition", "event"]);
@@ -53,6 +62,24 @@ const magazineWriteBodySchema = z.object({
 
 const magazineUpdateBodySchema = magazineWriteBodySchema.partial().extend({
   title: z.string().min(1, "제목을 입력해 주세요.").max(500, "제목은 500자 이하여야 합니다.").optional()
+});
+
+const noticeFormatSchema = z.enum(["image-text", "text"]);
+const noticeWidthSchema = z.coerce
+  .number()
+  .refine((v) => v === 100 || v === 50 || v === 30, "폭은 100, 50, 30 중 하나여야 합니다.");
+
+const noticeWriteBodySchema = z.object({
+  title: z.string().min(1, "제목을 입력해 주세요.").max(200),
+  formatType: noticeFormatSchema,
+  bodyHtml: z.string().nullable().optional(),
+  contentWidth: noticeWidthSchema,
+  mainImageTempPath: z.string().max(500).nullable().optional(),
+  removeMainImage: z.boolean().optional()
+});
+
+const noticeUpdateBodySchema = noticeWriteBodySchema.partial().extend({
+  title: z.string().min(1).max(200).optional()
 });
 
 function zodBodyMessage(result: z.SafeParseError<unknown>): string {
@@ -551,6 +578,97 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
+  app.get("/admin/notices", async (request, reply) => {
+    try {
+      return { items: await getAdminNoticeList() };
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "NOTICE_LIST_FAILED", "공지 목록 조회 실패");
+    }
+  });
+
+  app.get("/admin/notices/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    try {
+      const detail = await getAdminNoticeBySeq(params.data.seq);
+      if (!detail) return sendError(reply, 404, "NOT_FOUND", "공지를 찾을 수 없습니다.");
+      return detail;
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "NOTICE_DETAIL_FAILED", "공지 상세 조회 실패");
+    }
+  });
+
+  app.post("/admin/notices", async (request, reply) => {
+    const body = noticeWriteBodySchema.safeParse(request.body);
+    if (!body.success) return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
+    try {
+      const created = await createAdminNotice(body.data);
+      reply.code(201);
+      return created;
+    } catch (err) {
+      request.log.error(err);
+      const msg = err instanceof Error ? err.message : "공지 등록 실패";
+      return sendError(reply, 500, "NOTICE_CREATE_FAILED", msg);
+    }
+  });
+
+  app.put("/admin/notices/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    const body = noticeUpdateBodySchema.safeParse(request.body);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    if (!body.success) return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
+    try {
+      const updated = await updateAdminNotice(params.data.seq, body.data);
+      if (!updated) return sendError(reply, 404, "NOT_FOUND", "공지를 찾을 수 없습니다.");
+      return updated;
+    } catch (err) {
+      request.log.error(err);
+      const msg = err instanceof Error ? err.message : "공지 수정 실패";
+      return sendError(reply, 500, "NOTICE_UPDATE_FAILED", msg);
+    }
+  });
+
+  app.delete("/admin/notices/:seq", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    try {
+      const ok = await deleteAdminNotice(params.data.seq);
+      if (!ok) return sendError(reply, 404, "NOT_FOUND", "공지를 찾을 수 없습니다.");
+      return { ok: true };
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "NOTICE_DELETE_FAILED", "공지 삭제 실패");
+    }
+  });
+
+  app.post("/admin/notices/:seq/activate", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    try {
+      const updated = await activateAdminNotice(params.data.seq);
+      if (!updated) return sendError(reply, 404, "NOT_FOUND", "공지를 찾을 수 없습니다.");
+      return updated;
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "NOTICE_ACTIVATE_FAILED", "공지 활성화 실패");
+    }
+  });
+
+  app.post("/admin/notices/:seq/deactivate", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    try {
+      const updated = await deactivateAdminNotice(params.data.seq);
+      if (!updated) return sendError(reply, 404, "NOT_FOUND", "공지를 찾을 수 없습니다.");
+      return updated;
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "NOTICE_DEACTIVATE_FAILED", "공지 비활성화 실패");
+    }
+  });
+
   app.post("/admin/upload", async (request, reply) => {
     try {
       const fields: Record<string, string> = {};
@@ -579,6 +697,7 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
         | "magazine-thumb"
         | "magazine-temp"
         | "program"
+        | "notice-temp"
         | undefined;
       if (!category) return sendError(reply, 400, "INVALID_CATEGORY", "category 필드 필요");
 
@@ -610,6 +729,12 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
         return saved;
       }
 
+      if (category === "notice-temp") {
+        const { saveNoticeTempFile } = await import("../../services/admin/notice-assets.service.js");
+        const saved = await saveNoticeTempFile(uploadBuffer, uploadFilename);
+        return saved;
+      }
+
       const relPath = resolveUploadPath(category, {
         specialSeq: fields.specialSeq ? Number(fields.specialSeq) : undefined,
         itemSeq: fields.itemSeq ? Number(fields.itemSeq) : undefined,
@@ -617,6 +742,7 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
         imageIndex: fields.imageIndex ? Number(fields.imageIndex) : undefined,
         tempId: fields.tempId || undefined,
         programSeq: fields.programSeq ? Number(fields.programSeq) : undefined,
+        noticeSeq: fields.noticeSeq ? Number(fields.noticeSeq) : undefined,
         originalFilename: uploadFilename
       });
 

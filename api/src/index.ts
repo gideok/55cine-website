@@ -7,6 +7,7 @@ import { registerScheduleRoutes } from "./routes/schedule.js";
 import { registerMovieRoutes } from "./routes/movies.js";
 import { registerSpecialRoutes } from "./routes/special.js";
 import { registerMagazineRoutes } from "./routes/magazine.js";
+import { registerNoticeRoutes } from "./routes/notice.js";
 import { registerAdminRoutes } from "./routes/admin/index.js";
 
 const app = Fastify({
@@ -27,6 +28,7 @@ await app.register(
     await registerMovieRoutes(api);
     await registerSpecialRoutes(api);
     await registerMagazineRoutes(api);
+    await registerNoticeRoutes(api);
     await registerAdminRoutes(api);
   },
   { prefix: config.apiPrefix }

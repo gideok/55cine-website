@@ -3,7 +3,7 @@
  */
 (function (global) {
   var FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32];
-  var PASTE_ALLOWED = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, SPAN: 1, BR: 1 };
+  var PASTE_ALLOWED = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, SPAN: 1, BR: 1, HR: 1 };
 
   function createHtmlEditor(container, initialHtml, options) {
     options = options || {};
@@ -69,6 +69,27 @@
       return best;
     }
 
+    function applyColor(color) {
+      body.focus();
+      restoreSelection();
+      var sel = global.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      var range = sel.getRangeAt(0);
+      if (range.collapsed) return;
+
+      var fragment = range.extractContents();
+      var span = document.createElement("span");
+      span.style.color = color;
+      span.appendChild(fragment);
+      range.insertNode(span);
+
+      var newRange = document.createRange();
+      newRange.selectNodeContents(span);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+      savedRange = newRange.cloneRange();
+    }
+
     function changeFontSize(delta) {
       body.focus();
       restoreSelection();
@@ -95,7 +116,7 @@
       savedRange = newRange.cloneRange();
     }
 
-    function stripFontStyles(style) {
+    function stripFontStyles(style, keepColor) {
       if (!style) return "";
       return style
         .split(";")
@@ -106,12 +127,12 @@
           if (!p) return false;
           var prop = p.split(":")[0].trim().toLowerCase();
           if (prop === "font-size") return true;
+          if (keepColor && prop === "color") return true;
           return (
             prop !== "font-family" &&
             prop !== "font" &&
             prop !== "line-height" &&
             prop !== "letter-spacing" &&
-            prop !== "color" &&
             prop !== "background" &&
             prop !== "background-color"
           );
@@ -127,11 +148,18 @@
 
       var tag = node.tagName;
       if (tag === "FONT") {
+        var colorAttr = node.getAttribute && node.getAttribute("color");
         var wrap = document.createDocumentFragment();
         Array.prototype.forEach.call(node.childNodes, function (ch) {
           var c = sanitizePasteNode(ch);
           if (c) wrap.appendChild(c);
         });
+        if (options.keepColor && colorAttr) {
+          var colorSpan = document.createElement("span");
+          colorSpan.style.color = colorAttr;
+          while (wrap.firstChild) colorSpan.appendChild(wrap.firstChild);
+          return colorSpan;
+        }
         return wrap;
       }
 
@@ -145,8 +173,9 @@
       }
 
       var el = document.createElement(tag === "SPAN" ? "span" : tag.toLowerCase());
-      if (tag === "SPAN" && node.style && node.style.fontSize) {
-        el.style.fontSize = node.style.fontSize;
+      if (tag === "SPAN" && node.style) {
+        if (node.style.fontSize) el.style.fontSize = node.style.fontSize;
+        if (options.keepColor && node.style.color) el.style.color = node.style.color;
       }
       Array.prototype.forEach.call(node.childNodes, function (ch) {
         var c = sanitizePasteNode(ch);
@@ -192,6 +221,15 @@
         var el = node;
         if (el.tagName === "FONT") {
           var parent = el.parentNode;
+          var color = options.keepColor ? el.getAttribute("color") : null;
+          if (color) {
+            var colorSpan = document.createElement("span");
+            colorSpan.style.color = color;
+            while (el.firstChild) colorSpan.appendChild(el.firstChild);
+            parent.replaceChild(colorSpan, el);
+            walk(colorSpan);
+            return;
+          }
           while (el.firstChild) parent.insertBefore(el.firstChild, el);
           parent.removeChild(el);
           return;
@@ -201,7 +239,7 @@
         el.removeAttribute("data-ke-size");
         el.removeAttribute("data-ti-asset-key");
         if (el.hasAttribute("style")) {
-          var cleaned = stripFontStyles(el.getAttribute("style"));
+          var cleaned = stripFontStyles(el.getAttribute("style"), options.keepColor);
           if (cleaned) el.setAttribute("style", cleaned);
           else el.removeAttribute("style");
         }
@@ -321,6 +359,35 @@
         changeFontSize(1);
       });
       toolbar.appendChild(largeBtn);
+    }
+
+    if (options.showDivider) {
+      var hrBtn = document.createElement("button");
+      hrBtn.type = "button";
+      hrBtn.textContent = "구분선";
+      holdSelectionOnMouseDown(hrBtn);
+      hrBtn.addEventListener("click", function () {
+        insertHtmlAtCursor("<hr>");
+      });
+      toolbar.appendChild(hrBtn);
+    }
+
+    if (options.showColor) {
+      var colorWrap = document.createElement("label");
+      colorWrap.className = "admin-editor-color";
+      colorWrap.title = "글자색";
+      var colorInput = document.createElement("input");
+      colorInput.type = "color";
+      colorInput.value = "#111111";
+      colorInput.addEventListener("mousedown", function (e) {
+        e.stopPropagation();
+      });
+      colorInput.addEventListener("input", function () {
+        applyColor(colorInput.value);
+      });
+      colorWrap.appendChild(colorInput);
+      colorWrap.appendChild(document.createTextNode(" 색상"));
+      toolbar.appendChild(colorWrap);
     }
 
     if (options.showImageUrl !== false) {

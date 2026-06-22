@@ -14,7 +14,7 @@
   padding-inline: var(--intro-kv-inset-inline);
   padding-bottom: var(--intro-kv-inset-block);
   padding-top: var(--intro-kv-inset-block);
-  background: #070707;
+  background: #000;
   color: #e8e8e8;
   overflow: hidden;
   box-sizing: border-box;
