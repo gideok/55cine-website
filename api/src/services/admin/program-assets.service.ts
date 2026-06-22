@@ -39,3 +39,28 @@ export async function finalizeProgramPosterUpload(
   await writeProgramThumbnail(saved.path, thumbRel);
   return { path: saved.path, thumbPath: thumbRel };
 }
+
+function guessImageExt(contentType: string | null, url: string): string {
+  const ct = (contentType || "").toLowerCase();
+  if (ct.includes("png")) return ".png";
+  if (ct.includes("webp")) return ".webp";
+  if (ct.includes("gif")) return ".gif";
+  const m = url.match(/\.(jpe?g|png|webp|gif)(?:\?|$)/i);
+  if (m) return m[1].toLowerCase() === "jpeg" ? ".jpg" : `.${m[1].toLowerCase()}`;
+  return ".jpg";
+}
+
+export async function finalizeProgramPosterFromUrl(
+  imageUrl: string,
+  programSeq: number
+): Promise<{ path: string; thumbPath: string }> {
+  const url = String(imageUrl || "").trim();
+  if (!url || !/^https?:\/\//i.test(url)) {
+    throw new Error("포스터 URL이 올바르지 않습니다.");
+  }
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`포스터 다운로드 실패 (${res.status})`);
+  const buffer = Buffer.from(await res.arrayBuffer());
+  const ext = guessImageExt(res.headers.get("content-type"), url);
+  return finalizeProgramPosterUpload(buffer, programSeq, `kmdb_poster${ext}`);
+}

@@ -21,8 +21,13 @@
     previewUrl: null,
     removed: false,
     uploading: false,
-    pendingFile: null
+    pendingFile: null,
+    kmdbPosterUrl: null
   };
+
+  var kmdbPickerEl = null;
+  var kmdbPickerListEl = null;
+  var kmdbPickerItems = [];
 
   var COMBO_MAP = [
     { key: "divScreen", id: "pbDivScreen" },
@@ -163,7 +168,13 @@
       '<div class="admin-form-grid">' +
       fieldInput("pbProgId", "ID", null, { disabled: true, placeholder: "자동 부여" }) +
       fieldSelect("pbDivScreen", "상영분류", "divScreen", true) +
-      fieldInput("pbName", "영화명", "name", { full: true, required: true }) +
+      '<div class="field admin-form-grid__cell admin-form-grid__cell--full">' +
+      '<label for="pbName">영화명 <span class="admin-req">*</span></label>' +
+      '<div class="admin-input-with-btn">' +
+      '<input type="text" id="pbName" name="name" required autocomplete="off" />' +
+      '<button type="button" class="admin-btn" id="pbKmdbSearch">KMDB</button>' +
+      "</div>" +
+      '<p class="field-hint" id="pbKmdbHint">제목 입력 후 KMDB 버튼으로 영화 정보를 불러올 수 있습니다.</p></div>' +
       fieldInput("pbName2", "영문제목", "name2", { full: true, required: true }) +
       fieldSelect("pbDivProg", "구분", "divProg", true) +
       fieldSelect("pbGrade", "관람등급", "grade", true) +
@@ -227,7 +238,21 @@
       '<div class="admin-form-actions admin-form-actions--modal">' +
       '<button type="button" class="admin-btn" data-prog-form-close>취소</button>' +
       '<button type="submit" class="admin-btn admin-btn--primary" id="progFormSubmit">저장</button>' +
-      "</div></footer></form></div></div>"
+      "</div></footer></form></div></div>" +
+      '<div class="admin-modal admin-modal--kmdb-picker" id="kmdbPickerModal" hidden aria-hidden="true">' +
+      '<div class="admin-modal__backdrop" data-kmdb-picker-close></div>' +
+      '<div class="admin-modal__dialog admin-modal__dialog--narrow" role="dialog" aria-modal="true" aria-labelledby="kmdbPickerTitle">' +
+      '<header class="admin-modal__head">' +
+      '<h2 id="kmdbPickerTitle">KMDB 검색 결과</h2>' +
+      '<button type="button" class="admin-modal__close" data-kmdb-picker-close aria-label="닫기">&times;</button>' +
+      "</header>" +
+      '<div class="admin-modal__scroll">' +
+      '<p class="field-hint" id="kmdbPickerHint"></p>' +
+      '<ul class="admin-kmdb-list" id="kmdbPickerList"></ul>' +
+      "</div>" +
+      '<footer class="admin-modal__footer">' +
+      '<button type="button" class="admin-btn" data-kmdb-picker-close>취소</button>' +
+      "</footer></div></div>"
     );
   }
 
@@ -282,7 +307,8 @@
       previewUrl: null,
       removed: false,
       uploading: false,
-      pendingFile: null
+      pendingFile: null,
+      kmdbPosterUrl: null
     };
   }
 
@@ -317,6 +343,9 @@
         hasReal = true;
       } else if (posterState.img1Path) {
         src = resolveAssetUrl(posterState.img1Path);
+        hasReal = true;
+      } else if (posterState.kmdbPosterUrl) {
+        src = posterState.kmdbPosterUrl;
         hasReal = true;
       } else if (posterState.pendingFile) {
         src = posterState.previewUrl || "";
@@ -417,6 +446,15 @@
     return "";
   }
 
+  function updateKmdbUi() {
+    var show = mode === "add";
+    var kmdbBtn = document.getElementById("pbKmdbSearch");
+    var kmdbHint = document.getElementById("pbKmdbHint");
+    if (kmdbBtn) kmdbBtn.hidden = !show;
+    if (kmdbHint) kmdbHint.hidden = !show;
+    if (!show) closeKmdbPicker();
+  }
+
   function updateBadges(detail) {
     var badges = document.getElementById("progFormBadges");
     if (!badges) return;
@@ -495,11 +533,13 @@
         previewUrl: null,
         removed: false,
         uploading: false,
-        pendingFile: null
+        pendingFile: null,
+        kmdbPosterUrl: null
       };
       updateBadges(detail);
     }
 
+    updateKmdbUi();
     updatePosterHint();
     updatePosterPreview();
     updateTrailerPreview();
@@ -507,6 +547,7 @@
 
   function closeModal() {
     if (!overlayEl) return;
+    closeKmdbPicker();
     isOpen = false;
     overlayEl.hidden = true;
     overlayEl.setAttribute("aria-hidden", "true");
@@ -523,6 +564,7 @@
     if (titleEl) {
       titleEl.textContent = mode === "add" ? "상영작 등록" : "상영작 수정";
     }
+    updateKmdbUi();
     var nameInput = document.getElementById("pbName");
     if (nameInput) nameInput.focus();
   }
@@ -585,13 +627,30 @@
     return chain.then(function (result) {
       var saved = result.saved;
       detailRef = saved;
-      if (posterState.pendingFile && saved && saved.seq) {
-        return uploadPendingPoster(saved.seq).then(function (paths) {
+      var afterPoster = Promise.resolve(saved);
+      if (saved && saved.seq && posterState.kmdbPosterUrl && !posterState.img1Path && !posterState.pendingFile && !posterState.removed) {
+        afterPoster = TiAdminApi.fetchProgramPosterFromUrl(saved.seq, posterState.kmdbPosterUrl)
+          .then(function (res) {
+            if (!res || !res.path) return saved;
+            posterState.img1Path = res.path;
+            posterState.imgThumbPath = res.thumbPath || null;
+            posterState.kmdbPosterUrl = null;
+            posterState.previewUrl = resolveAssetUrl(res.path);
+            return TiAdminApi.updateProgram(saved.seq, {
+              img1: res.path,
+              imgThumb: res.thumbPath || null
+            });
+          })
+          .catch(function () {
+            return saved;
+          });
+      } else if (posterState.pendingFile && saved && saved.seq) {
+        afterPoster = uploadPendingPoster(saved.seq).then(function (paths) {
           if (!paths) return saved;
           return TiAdminApi.updateProgram(saved.seq, paths);
         });
       }
-      return saved;
+      return afterPoster;
     });
   }
 
@@ -700,10 +759,154 @@
         posterState.imgThumbPath = null;
         posterState.previewUrl = null;
         posterState.pendingFile = null;
+        posterState.kmdbPosterUrl = null;
         posterState.removed = true;
         updatePosterPreview();
       });
     }
+  }
+
+  function setFieldValue(id, val) {
+    var el = document.getElementById(id);
+    if (!el || val == null || val === "") return;
+    el.value = String(val);
+  }
+
+  function applyKmdbData(item) {
+    if (!item) return;
+    setFieldValue("pbName", item.name);
+    setFieldValue("pbName2", item.name2);
+    if (item.runningTime != null) setFieldValue("pbRunningTime", item.runningTime);
+    if (item.producer) setFieldValue("pbProducer", item.producer);
+    if (item.dateOpen) setFieldValue("pbDateOpen", item.dateOpen);
+    if (item.director) setFieldValue("wpDirector", item.director);
+    if (item.castNames) setFieldValue("wpCastNames", item.castNames);
+    if (item.synopsis) setFieldValue("wpSynopsis", item.synopsis);
+    if (item.info) setFieldValue("wpInfo", item.info);
+    if (item.progUrl) setFieldValue("pbProgUrl", item.progUrl);
+    if (item.gradeSeq != null) setSelectValue("pbGrade", item.gradeSeq);
+    if (item.countrySeq != null) setSelectValue("pbCountry", item.countrySeq);
+
+    if (item.posterUrl) {
+      posterState.kmdbPosterUrl = item.posterUrl;
+      posterState.previewUrl = item.posterUrl;
+      posterState.removed = false;
+      posterState.pendingFile = null;
+      var seq = currentProgramSeq();
+      if (seq) {
+        setPosterUploading(true);
+        TiAdminApi.fetchProgramPosterFromUrl(seq, item.posterUrl)
+          .then(function (res) {
+            if (!res || !res.path) throw new Error("포스터 다운로드 실패");
+            posterState.img1Path = res.path;
+            posterState.imgThumbPath = res.thumbPath || null;
+            posterState.kmdbPosterUrl = null;
+            posterState.previewUrl = resolveAssetUrl(res.path);
+          })
+          .catch(function (err) {
+            showMsg(err.message || "KMDB 포스터를 가져오지 못했습니다.", true);
+          })
+          .finally(function () {
+            setPosterUploading(false);
+            updatePosterPreview();
+          });
+      } else {
+        updatePosterPreview();
+      }
+    }
+
+    updateTrailerPreview();
+    showMsg("KMDB 정보를 반영했습니다.", false);
+  }
+
+  function closeKmdbPicker() {
+    if (!kmdbPickerEl) return;
+    kmdbPickerEl.hidden = true;
+    kmdbPickerEl.setAttribute("aria-hidden", "true");
+    kmdbPickerItems = [];
+    if (kmdbPickerListEl) kmdbPickerListEl.innerHTML = "";
+  }
+
+  function renderKmdbPicker(items, query) {
+    if (!kmdbPickerEl || !kmdbPickerListEl) return;
+    kmdbPickerItems = items || [];
+    var hint = document.getElementById("kmdbPickerHint");
+    if (hint) {
+      hint.textContent =
+        '"' + query + '" 검색 결과 ' + kmdbPickerItems.length + "건 — 적용할 영화를 선택하세요.";
+    }
+    kmdbPickerListEl.innerHTML = kmdbPickerItems
+      .map(function (item, idx) {
+        var meta = [
+          item.prodYear ? item.prodYear + "년" : "",
+          item.directorLabel || "",
+          item.genre || "",
+          item.rating || "",
+          item.nation || ""
+        ]
+          .filter(Boolean)
+          .join(" · ");
+        return (
+          '<li class="admin-kmdb-item">' +
+          '<button type="button" class="admin-kmdb-item__btn" data-kmdb-pick="' +
+          idx +
+          '">' +
+          '<span class="admin-kmdb-item__title">' +
+          esc(item.title) +
+          (item.titleEn ? ' <span class="admin-kmdb-item__en">(' + esc(item.titleEn) + ")</span>" : "") +
+          "</span>" +
+          (meta ? '<span class="admin-kmdb-item__meta">' + esc(meta) + "</span>" : "") +
+          "</button></li>"
+        );
+      })
+      .join("");
+
+    kmdbPickerListEl.querySelectorAll("[data-kmdb-pick]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var idx = Number(btn.getAttribute("data-kmdb-pick"));
+        var picked = kmdbPickerItems[idx];
+        if (!picked) return;
+        closeKmdbPicker();
+        applyKmdbData(picked);
+      });
+    });
+
+    kmdbPickerEl.hidden = false;
+    kmdbPickerEl.setAttribute("aria-hidden", "false");
+  }
+
+  function onKmdbSearch() {
+    if (isSaving) return;
+    var title = document.getElementById("pbName");
+    var query = title ? title.value.trim() : "";
+    if (!query) {
+      showMsg("KMDB 검색할 영화명을 입력해 주세요.", true);
+      if (title) title.focus();
+      return;
+    }
+    showMsg("KMDB 검색 중…", false);
+    var btn = document.getElementById("pbKmdbSearch");
+    if (btn) btn.disabled = true;
+    TiAdminApi.searchKmdb(query)
+      .then(function (res) {
+        var items = (res && res.items) || [];
+        if (!items.length) {
+          showMsg('KMDB에서 "' + query + '" 검색 결과가 없습니다.', true);
+          return;
+        }
+        showMsg("");
+        if (items.length === 1) {
+          applyKmdbData(items[0]);
+          return;
+        }
+        renderKmdbPicker(items, query);
+      })
+      .catch(function (err) {
+        showMsg(err.message || "KMDB 검색 실패", true);
+      })
+      .finally(function () {
+        if (btn) btn.disabled = false;
+      });
   }
 
   function bindEvents() {
@@ -715,7 +918,13 @@
 
     document.addEventListener("keydown", function (e) {
       if (!isOpen) return;
-      if (e.key === "Escape") closeModal();
+      if (e.key === "Escape") {
+        if (kmdbPickerEl && !kmdbPickerEl.hidden) {
+          closeKmdbPicker();
+          return;
+        }
+        closeModal();
+      }
     });
 
     formEl.addEventListener("submit", onSubmit);
@@ -749,14 +958,28 @@
     }
 
     bindPosterUpload();
+
+    var kmdbBtn = document.getElementById("pbKmdbSearch");
+    if (kmdbBtn) kmdbBtn.addEventListener("click", onKmdbSearch);
+
+    if (kmdbPickerEl) {
+      kmdbPickerEl.addEventListener("click", function (e) {
+        if (e.target && e.target.getAttribute("data-kmdb-picker-close") != null) {
+          closeKmdbPicker();
+        }
+      });
+    }
   }
 
   function mount() {
     if (overlayEl) return;
     var wrap = document.createElement("div");
     wrap.innerHTML = buildMarkup();
-    overlayEl = wrap.firstElementChild;
-    document.body.appendChild(overlayEl);
+    overlayEl = wrap.querySelector("#progFormModal");
+    kmdbPickerEl = wrap.querySelector("#kmdbPickerModal");
+    kmdbPickerListEl = wrap.querySelector("#kmdbPickerList");
+    if (overlayEl) document.body.appendChild(overlayEl);
+    if (kmdbPickerEl) document.body.appendChild(kmdbPickerEl);
     formEl = document.getElementById("progForm");
     msgEl = document.getElementById("progFormMsg");
     titleEl = document.getElementById("progFormModalTitle");

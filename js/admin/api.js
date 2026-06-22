@@ -218,6 +218,19 @@
     },
     uploadSiteDocumentTemp: function (file) {
       return uploadFile(file, { category: "site-document-temp" });
+    },
+    searchKmdb: function (title) {
+      return apiJson(
+        "GET",
+        "/admin/kmdb/search?title=" + encodeURIComponent(String(title || ""))
+      );
+    },
+    fetchProgramPosterFromUrl: function (seq, url) {
+      return apiJson(
+        "POST",
+        "/admin/programs/" + encodeURIComponent(String(seq)) + "/poster-from-url",
+        { url: url }
+      );
     }
   };
 })(typeof window !== "undefined" ? window : globalThis);

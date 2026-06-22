@@ -14,6 +14,7 @@ export type AppConfig = {
   repoRoot: string;
   timezone: string;
   scheduleUseMock: boolean;
+  kmdbServiceKey: string | null;
   db: {
     server: string;
     port: number;
@@ -100,5 +101,6 @@ export const config: AppConfig = {
   repoRoot: path.resolve(__dirname, "../.."),
   timezone: process.env.TZ || "Asia/Seoul",
   scheduleUseMock: parseBool(process.env.SCHEDULE_USE_MOCK, false),
+  kmdbServiceKey: process.env.KMDB_SERVICE_KEY?.trim() || null,
   db: dbFromEnv()
 };

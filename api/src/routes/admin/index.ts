@@ -44,6 +44,7 @@ import {
   getAdminSiteSettings,
   updateAdminSiteSettings
 } from "../../services/admin/site-settings-admin.service.js";
+import { searchKmdbMoviesMapped } from "../../services/admin/kmdb.service.js";
 import { resolveUploadPath, saveUploadedFile } from "../../services/admin/upload.service.js";
 
 const kindSchema = z.enum(["exhibition", "event"]);
@@ -705,6 +706,44 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       request.log.error(err);
       const msg = err instanceof Error ? err.message : "사이트 설정 저장 실패";
       return sendError(reply, 500, "SITE_SETTINGS_SAVE_FAILED", msg);
+    }
+  });
+
+  app.get("/admin/kmdb/search", async (request, reply) => {
+    const parsed = z
+      .object({
+        title: z.string().min(1, "영화명을 입력해 주세요."),
+        listCount: z.coerce.number().int().min(3).max(50).optional()
+      })
+      .safeParse(request.query);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_QUERY", zodBodyMessage(parsed));
+    }
+    try {
+      const items = await searchKmdbMoviesMapped(parsed.data.title, parsed.data.listCount ?? 20);
+      return { items };
+    } catch (err) {
+      request.log.error(err);
+      const msg = err instanceof Error ? err.message : "KMDB 검색 실패";
+      return sendError(reply, 500, "KMDB_SEARCH_FAILED", msg);
+    }
+  });
+
+  app.post("/admin/programs/:seq/poster-from-url", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    const body = z.object({ url: z.string().url("포스터 URL이 올바르지 않습니다.") }).safeParse(request.body);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    if (!body.success) return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
+    try {
+      const { finalizeProgramPosterFromUrl } = await import(
+        "../../services/admin/program-assets.service.js"
+      );
+      const saved = await finalizeProgramPosterFromUrl(body.data.url, params.data.seq);
+      return saved;
+    } catch (err) {
+      request.log.error(err);
+      const msg = err instanceof Error ? err.message : "포스터 다운로드 실패";
+      return sendError(reply, 500, "POSTER_FETCH_FAILED", msg);
     }
   });
 
