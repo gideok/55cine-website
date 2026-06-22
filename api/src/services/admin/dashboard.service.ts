@@ -2,6 +2,13 @@ import sql from "mssql";
 import { getPool } from "../../db/pool.js";
 import { getServerToday } from "../schedule-flags.js";
 
+export type AdminDashboardNowPlayingItem = {
+  seq: number;
+  progId: number;
+  titleKo: string;
+  poster: string;
+};
+
 export type AdminDashboardStats = {
   programs: {
     total: number;
@@ -13,6 +20,7 @@ export type AdminDashboardStats = {
     upcoming: number;
     past: number;
   };
+  nowPlayingPrograms: AdminDashboardNowPlayingItem[];
   special: {
     exhibition: number;
     event: number;
@@ -31,7 +39,7 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
   const pool = await getPool();
   const today = getServerToday();
 
-  const [progRes, desktopOnly2026Res, nowRes, upRes, pastRes, spRes, mzRes] = await Promise.all([
+  const [progRes, desktopOnly2026Res, nowRes, nowListRes, upRes, pastRes, spRes, mzRes] = await Promise.all([
     pool.request().query<{ total: number }>(`SELECT COUNT(*) AS total FROM dbo.web_program`),
     pool.request().input("yearStart", sql.Date, "2026-01-01").query<{ total: number }>(`
       SELECT COUNT(*) AS total
@@ -49,6 +57,28 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
           NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NULL
           OR @today <= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
         )
+    `),
+    pool.request().input("today", sql.Date, today).query<{
+      seq: number;
+      prog_id: number;
+      name: string;
+      img1: string | null;
+    }>(`
+      SELECT
+        wp.seq,
+        pb.prog_id,
+        pb.name,
+        wp.img1
+      FROM dbo.web_program wp
+      INNER JOIN dbo.prog_base pb ON pb.prog_id = wp.prog_id
+      WHERE @today >= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open)))
+        AND (
+          NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NULL
+          OR @today <= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
+        )
+      ORDER BY
+        TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open))) DESC,
+        pb.name
     `),
     pool.request().input("today", sql.Date, today).query<{ total: number }>(`
       SELECT COUNT(*) AS total
@@ -102,6 +132,12 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
       upcoming: upRes.recordset[0]?.total ?? 0,
       past: pastRes.recordset[0]?.total ?? 0
     },
+    nowPlayingPrograms: nowListRes.recordset.map((row) => ({
+      seq: row.seq,
+      progId: row.prog_id,
+      titleKo: String(row.name || "").trim(),
+      poster: row.img1?.trim() || "images/schedule-poster-placeholder.svg"
+    })),
     special: { exhibition, event, total: exhibition + event },
     magazine
   };
