@@ -614,6 +614,22 @@
   max-width: 900px;
 }
 
+.admin-settings-section {
+  margin: 0 0 2rem;
+  padding: 0 0 1.5rem;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.admin-settings-section:last-of-type {
+  border-bottom: none;
+}
+
+.admin-settings-section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
 .admin-form label {
   display: block;
   font-size: 0.8rem;

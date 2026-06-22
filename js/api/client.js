@@ -198,6 +198,9 @@
     getSpecialDetail: getSpecialDetail,
     getMagazineListPage: getMagazineListPage,
     getMagazineDetail: getMagazineDetail,
-    formatAnchorDate: formatAnchorDate
+    formatAnchorDate: formatAnchorDate,
+    getSiteSettings: function () {
+      return apiGet("/site-settings");
+    }
   };
 })(typeof window !== "undefined" ? window : globalThis);

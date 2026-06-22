@@ -157,15 +157,42 @@
 }
 
 .seat-link {
-  display: inline-block;
-  padding: 8px 14px;
-  border: 1px solid var(--ti-border);
-  color: var(--ti-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 20px;
+  border-radius: 0;
+  border: 1px solid #9a7b1a;
+  background: var(--ti-surface-alt);
+  color: var(--ti-text-strong);
+  font-weight: 700;
+  font-size: 0.92rem;
   text-decoration: none;
-  font-weight: 600;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .seat-link:hover {
-  color: var(--ti-accent-hover);
-  border-color: var(--ti-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  border-color: var(--ti-accent);
+  background: #e8e8e8;
+  color: var(--ti-text-strong);
+}
+
+.seat-link:focus-visible {
+  outline: 2px solid var(--ti-accent);
+  outline-offset: 3px;
+}
+
+.seat-link::after {
+  content: "↗";
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.seat-link[hidden] {
+  display: none !important;
 }

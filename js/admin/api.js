@@ -209,6 +209,15 @@
     },
     uploadNoticeTemp: function (file) {
       return uploadFile(file, { category: "notice-temp" });
+    },
+    getSiteSettings: function () {
+      return apiJson("GET", "/admin/site-settings");
+    },
+    updateSiteSettings: function (body) {
+      return apiJson("PUT", "/admin/site-settings", body);
+    },
+    uploadSiteDocumentTemp: function (file) {
+      return uploadFile(file, { category: "site-document-temp" });
     }
   };
 })(typeof window !== "undefined" ? window : globalThis);

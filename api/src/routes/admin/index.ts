@@ -40,6 +40,10 @@ import {
   activateAdminNotice,
   deactivateAdminNotice
 } from "../../services/admin/notice-admin.service.js";
+import {
+  getAdminSiteSettings,
+  updateAdminSiteSettings
+} from "../../services/admin/site-settings-admin.service.js";
 import { resolveUploadPath, saveUploadedFile } from "../../services/admin/upload.service.js";
 
 const kindSchema = z.enum(["exhibition", "event"]);
@@ -80,6 +84,18 @@ const noticeWriteBodySchema = z.object({
 
 const noticeUpdateBodySchema = noticeWriteBodySchema.partial().extend({
   title: z.string().min(1).max(200).optional()
+});
+
+const siteSettingsBodySchema = z.object({
+  membershipCmsUrl: z.string().max(500).nullable().optional(),
+  membershipCmsLabel: z.string().max(100).optional(),
+  donationDocLabel: z.string().max(200).nullable().optional(),
+  donationDocTempPath: z.string().max(500).nullable().optional(),
+  removeDonationDoc: z.boolean().optional(),
+  seatSponsorUrl: z.string().max(500).nullable().optional(),
+  seatSponsorLabel: z.string().max(100).optional(),
+  rentalFormUrl: z.string().max(500).nullable().optional(),
+  rentalFormLabel: z.string().max(100).optional()
 });
 
 function zodBodyMessage(result: z.SafeParseError<unknown>): string {
@@ -669,6 +685,29 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
+  app.get("/admin/site-settings", async (request, reply) => {
+    try {
+      return await getAdminSiteSettings();
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "SITE_SETTINGS_GET_FAILED", "사이트 설정 조회 실패");
+    }
+  });
+
+  app.put("/admin/site-settings", async (request, reply) => {
+    const body = siteSettingsBodySchema.safeParse(request.body);
+    if (!body.success) {
+      return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
+    }
+    try {
+      return await updateAdminSiteSettings(body.data);
+    } catch (err) {
+      request.log.error(err);
+      const msg = err instanceof Error ? err.message : "사이트 설정 저장 실패";
+      return sendError(reply, 500, "SITE_SETTINGS_SAVE_FAILED", msg);
+    }
+  });
+
   app.post("/admin/upload", async (request, reply) => {
     try {
       const fields: Record<string, string> = {};
@@ -698,8 +737,17 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
         | "magazine-temp"
         | "program"
         | "notice-temp"
+        | "site-document-temp"
         | undefined;
       if (!category) return sendError(reply, 400, "INVALID_CATEGORY", "category 필드 필요");
+
+      if (category === "site-document-temp") {
+        const { saveSiteDocumentTempFile } = await import(
+          "../../services/admin/site-document-assets.service.js"
+        );
+        const saved = await saveSiteDocumentTempFile(uploadBuffer, uploadFilename);
+        return saved;
+      }
 
       if (category === "magazine-temp") {
         const { saveMagazineTempFile } = await import("../../services/admin/magazine-assets.service.js");

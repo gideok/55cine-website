@@ -74,6 +74,10 @@
   opacity: 0.9;
 }
 
+.dg-form-link[hidden] {
+  display: none !important;
+}
+
 .dg-form-wrap .dg-form-note {
   margin: 0;
   color: var(--ti-text-secondary);

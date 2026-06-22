@@ -8,6 +8,7 @@ import { registerMovieRoutes } from "./routes/movies.js";
 import { registerSpecialRoutes } from "./routes/special.js";
 import { registerMagazineRoutes } from "./routes/magazine.js";
 import { registerNoticeRoutes } from "./routes/notice.js";
+import { registerSiteSettingsRoutes } from "./routes/site-settings.js";
 import { registerAdminRoutes } from "./routes/admin/index.js";
 
 const app = Fastify({
@@ -29,6 +30,7 @@ await app.register(
     await registerSpecialRoutes(api);
     await registerMagazineRoutes(api);
     await registerNoticeRoutes(api);
+    await registerSiteSettingsRoutes(api);
     await registerAdminRoutes(api);
   },
   { prefix: config.apiPrefix }
