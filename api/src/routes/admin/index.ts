@@ -14,7 +14,8 @@ import {
   getProgBaseFormOptions,
   getAdminSysCodes,
   countDuplicateProgTitle,
-  createProgBase
+  createProgBase,
+  updateProgBase
 } from "../../services/admin/prog-base-admin.service.js";
 import {
   getAdminSpecialList,
@@ -60,6 +61,26 @@ function zodBodyMessage(result: z.SafeParseError<unknown>): string {
   const path = first.path.length ? first.path.join(".") + ": " : "";
   return path + first.message;
 }
+
+const progBaseBodySchema = z.object({
+  name: z.string().min(1, "영화명을 입력해 주세요."),
+  name2: z.string().min(1, "영문제목을 입력해 주세요."),
+  divScreen: z.coerce.number().int().min(0).max(255),
+  divProg: z.coerce.number().int().min(0).max(255),
+  grade: z.coerce.number().int().min(0).max(255),
+  country: z.coerce.number().int().min(0).max(255),
+  runningTime: z.coerce.number().int().min(0).nullable().optional(),
+  producer: z.string().nullable().optional(),
+  distributor: z.string().nullable().optional(),
+  specVideo: z.coerce.number().int().min(0).max(255),
+  specAudio: z.coerce.number().int().min(0).max(255),
+  specFormat: z.coerce.number().int().min(0).max(255),
+  volumn: z.string().nullable().optional(),
+  dateOpen: z.string().min(1, "개봉일을 입력해 주세요."),
+  dateClose: z.string().nullable().optional(),
+  divState: z.coerce.number().int().min(0).max(255),
+  progUrl: z.string().nullable().optional()
+});
 
 const specialImageBodyFields = {
   mainImageTempPath: z.string().max(500).nullable().optional(),
@@ -198,27 +219,8 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post("/admin/programs/prog-base", async (request, reply) => {
-    const body = z
-      .object({
-        name: z.string().min(1, "영화명을 입력해 주세요."),
-        name2: z.string().min(1, "영문제목을 입력해 주세요."),
-        divScreen: z.coerce.number().int().min(0).max(255),
-        divProg: z.coerce.number().int().min(0).max(255),
-        grade: z.coerce.number().int().min(0).max(255),
-        country: z.coerce.number().int().min(0).max(255),
-        runningTime: z.coerce.number().int().min(0).nullable().optional(),
-        producer: z.string().nullable().optional(),
-        distributor: z.string().nullable().optional(),
-        specVideo: z.coerce.number().int().min(0).max(255),
-        specAudio: z.coerce.number().int().min(0).max(255),
-        specFormat: z.coerce.number().int().min(0).max(255),
-        volumn: z.string().nullable().optional(),
-        dateOpen: z.string().min(1, "개봉일을 입력해 주세요."),
-        dateClose: z.string().nullable().optional(),
-        divState: z.coerce.number().int().min(0).max(255),
-        progUrl: z.string().nullable().optional(),
-        confirmDuplicate: z.boolean().optional()
-      })
+    const body = progBaseBodySchema
+      .extend({ confirmDuplicate: z.boolean().optional() })
       .safeParse(request.body);
     if (!body.success) {
       return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
@@ -240,6 +242,25 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       }
       const msg = err instanceof Error ? err.message : "상영작 등록 실패";
       return sendError(reply, 500, "PROG_BASE_CREATE_FAILED", msg);
+    }
+  });
+
+  app.put("/admin/programs/prog-base/:progId", async (request, reply) => {
+    const params = z.object({ progId: z.coerce.number().int().positive() }).safeParse(request.params);
+    const body = progBaseBodySchema.safeParse(request.body);
+    if (!params.success) {
+      return sendError(reply, 400, "INVALID_PARAMS", "progId 필요");
+    }
+    if (!body.success) {
+      return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
+    }
+    try {
+      return await updateProgBase(params.data.progId, body.data);
+    } catch (err) {
+      request.log.error(err);
+      const msg = err instanceof Error ? err.message : "상영작 수정 실패";
+      const code = msg.includes("찾을 수 없") ? 404 : 500;
+      return sendError(reply, code, "PROG_BASE_UPDATE_FAILED", msg);
     }
   });
 

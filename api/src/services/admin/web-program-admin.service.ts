@@ -4,7 +4,10 @@ import { getPool } from "../../db/pool.js";
 export type AdminProgramListItem = {
   seq: number | null;
   progId: number;
+  /** web_program 행 존재 여부 */
   hasWebProgram: boolean;
+  /** slug·img_thumb·synopsis 모두 입력 완료 */
+  webReady: boolean;
   slug: string;
   titleKo: string;
   titleEn: string;
@@ -27,6 +30,18 @@ export type AdminProgramDetail = AdminProgramListItem & {
   trailerUrl: string | null;
   grade: number | null;
   runningTime: number | null;
+  divScreen: number | null;
+  divProg: number | null;
+  country: number | null;
+  producer: string | null;
+  distributor: string | null;
+  specVideo: number | null;
+  specAudio: number | null;
+  specFormat: number | null;
+  volumn: string | null;
+  divState: number | null;
+  progUrl: string | null;
+  totSc: number | null;
 };
 
 type ProgramRow = {
@@ -51,46 +66,103 @@ type ProgramRow = {
   date_close: unknown;
   grade: number | null;
   runningtime: number | null;
+  div_screen: number | null;
+  div_prog: number | null;
+  country: number | null;
+  producer: string | null;
+  distributor: string | null;
+  spec_video: number | null;
+  spec_audio: number | null;
+  spec_format: number | null;
+  volumn: string | null;
+  div_state: number | null;
+  prog_url: string | null;
+  tot_sc: number | null;
 };
 
 function formatDate(val: unknown): string | null {
   if (val == null || val === "") return null;
-  const d = val instanceof Date ? val : new Date(String(val));
-  if (Number.isNaN(d.getTime())) return String(val).trim() || null;
-  return d.toISOString().slice(0, 10);
+  if (val instanceof Date) {
+    if (Number.isNaN(val.getTime())) return null;
+    const y = val.getFullYear();
+    const m = String(val.getMonth() + 1).padStart(2, "0");
+    const d = String(val.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+  const s = String(val).trim();
+  if (!s) return null;
+  const iso = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (iso) return iso[1]!;
+  const d = new Date(s);
+  if (Number.isNaN(d.getTime())) return s.slice(0, 10) || null;
+  return formatDate(d);
+}
+
+/** 레거시 DB: 문자열·숫자 혼재 컬럼 안전 변환 */
+function trimText(val: unknown): string | null {
+  if (val == null) return null;
+  const s = String(val).trim();
+  return s || null;
+}
+
+function toCode(val: unknown): number | null {
+  if (val == null || val === "") return null;
+  const n = Number(val);
+  return Number.isFinite(n) ? n : null;
+}
+
+/** WEB RDY: web_program 존재 + slug·img_thumb·synopsis 모두 비어 있지 않음 */
+function isWebReady(row: ProgramRow): boolean {
+  const hasRow = row.seq != null && Number(row.seq) > 0;
+  if (!hasRow) return false;
+  return !!(trimText(row.slug) && trimText(row.img_thumb) && trimText(row.synopsis));
 }
 
 function mapListItem(row: ProgramRow): AdminProgramListItem {
   const seq = row.seq != null ? Number(row.seq) : null;
+  const hasWebProgram = seq != null && seq > 0;
   return {
     seq,
     progId: row.prog_id,
-    hasWebProgram: seq != null && seq > 0,
-    slug: String(row.slug || "").trim(),
-    titleKo: String(row.name || "").trim(),
-    titleEn: String(row.name2 || "").trim(),
+    hasWebProgram,
+    webReady: isWebReady(row),
+    slug: trimText(row.slug) || "",
+    titleKo: trimText(row.name) || "",
+    titleEn: trimText(row.name2) || "",
     dateOpen: formatDate(row.date_open),
     dateClose: formatDate(row.date_close),
-    imgThumb: row.img_thumb?.trim() || null,
-    img1: row.img1?.trim() || null
+    imgThumb: trimText(row.img_thumb),
+    img1: trimText(row.img1)
   };
 }
 
 function mapDetail(row: ProgramRow): AdminProgramDetail {
   return {
     ...mapListItem(row),
-    detailUrl: row.detail_url?.trim() || null,
-    img2: row.img2?.trim() || null,
-    img3: row.img3?.trim() || null,
-    img4: row.img4?.trim() || null,
-    img5: row.img5?.trim() || null,
-    director: row.director?.trim() || null,
-    castNames: row.cast_names?.trim() || null,
-    info: row.info?.trim() || null,
-    synopsis: row.synopsis?.trim() || null,
-    trailerUrl: row.trailer_url?.trim() || null,
-    grade: row.grade ?? null,
-    runningTime: row.runningtime ?? null
+    detailUrl: trimText(row.detail_url),
+    img2: trimText(row.img2),
+    img3: trimText(row.img3),
+    img4: trimText(row.img4),
+    img5: trimText(row.img5),
+    director: trimText(row.director),
+    castNames: trimText(row.cast_names),
+    info: trimText(row.info),
+    synopsis: trimText(row.synopsis),
+    trailerUrl: trimText(row.trailer_url),
+    grade: toCode(row.grade),
+    runningTime: toCode(row.runningtime),
+    divScreen: toCode(row.div_screen),
+    divProg: toCode(row.div_prog),
+    country: toCode(row.country),
+    producer: trimText(row.producer),
+    distributor: trimText(row.distributor),
+    specVideo: toCode(row.spec_video),
+    specAudio: toCode(row.spec_audio),
+    specFormat: toCode(row.spec_format),
+    volumn: trimText(row.volumn),
+    divState: toCode(row.div_state),
+    progUrl: trimText(row.prog_url),
+    totSc: toCode(row.tot_sc)
   };
 }
 
@@ -104,7 +176,9 @@ const PROGRAM_SELECT = `
   wp.seq, pb.prog_id, wp.slug, wp.detail_url,
   wp.img_thumb, wp.img1, wp.img2, wp.img3, wp.img4, wp.img5,
   wp.director, wp.cast_names, wp.info, wp.synopsis, wp.trailer_url,
-  pb.name, pb.name2, pb.date_open, pb.date_close, pb.grade, pb.runningtime
+  pb.name, pb.name2, pb.date_open, pb.date_close, pb.grade, pb.runningtime,
+  pb.div_screen, pb.div_prog, pb.country, pb.producer, pb.distributor,
+  pb.spec_video, pb.spec_audio, pb.spec_format, pb.volumn, pb.div_state, pb.prog_url, pb.tot_sc
 `;
 
 function buildSearchWhere(q: string): string {

@@ -22,18 +22,31 @@
       .replace(/"/g, "&quot;");
   }
 
-  function editUrl(item) {
-    if (item.seq) {
-      return "program-edit.html?seq=" + encodeURIComponent(String(item.seq));
-    }
-    return "program-edit.html?progId=" + encodeURIComponent(String(item.progId));
-  }
-
   function webStatusBadge(item) {
-    if (item.hasWebProgram) {
+    if (item.webReady) {
       return '<span class="admin-badge admin-badge--ok">WEB<BR>RDY</span>';
     }
+    if (item.hasWebProgram) {
+      return '<span class="admin-badge admin-badge--warn">WEB<br/>미완</span>';
+    }
     return '<span class="admin-badge admin-badge--warn">BASE<br/>ONLY</span>';
+  }
+
+  function openProgramForm(item) {
+    if (!window.TiAdminProgramFormModal) return;
+    TiAdminList.persist(LIST_KEY, state);
+    if (item && item.progId) {
+      TiAdminProgramFormModal.openEdit(
+        { seq: item.seq || null, progId: item.progId },
+        function () {
+          loadList();
+        }
+      );
+      return;
+    }
+    TiAdminProgramFormModal.openAdd(function () {
+      loadList();
+    });
   }
 
   function updateFilterUi() {
@@ -102,12 +115,24 @@
     }
   }
 
+  function bindProgramEditButtons(root) {
+    if (!root) return;
+    root.querySelectorAll("[data-prog-edit]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var progId = Number(btn.getAttribute("data-prog-id"));
+        var seqRaw = btn.getAttribute("data-seq");
+        var seq = seqRaw ? Number(seqRaw) : null;
+        openProgramForm({ progId: progId, seq: seq });
+      });
+    });
+  }
+
   function renderList(data) {
     if (!listEl) return;
 
     var rows = (data.items || [])
       .map(function (item) {
-        var actionLabel = item.hasWebProgram ? "수정" : "추가정보 입력";
+        var actionLabel = item.hasWebProgram ? "수정" : "등록/수정";
         return (
           "<tr" +
           (item.hasWebProgram ? "" : ' class="admin-row--pending"') +
@@ -136,13 +161,15 @@
           esc(item.dateClose) +
           "</td>" +
           '<td class="actions">' +
-          '<a class="admin-btn' +
+          '<button type="button" class="admin-btn' +
           (item.hasWebProgram ? "" : " admin-btn--primary") +
-          '" data-admin-edit href="' +
-          esc(editUrl(item)) +
-          '">' +
+          '" data-prog-edit data-prog-id="' +
+          esc(String(item.progId)) +
+          '"' +
+          (item.seq != null ? ' data-seq="' + esc(String(item.seq)) + '"' : "") +
+          ">" +
           actionLabel +
-          "</a>" +
+          "</button>" +
           "</td></tr>"
         );
       })
@@ -161,7 +188,7 @@
       TiAdminList.renderPagerHtml(data, PAGER_PREFIX);
 
     TiAdminList.bindPager(PAGER_PREFIX, state, data, loadList);
-    TiAdminList.bindEditLinks(listEl, LIST_KEY, state);
+    bindProgramEditButtons(listEl);
   }
 
   function loadList() {
@@ -179,29 +206,38 @@
 
   function bindAddButton() {
     var btn = document.getElementById("progAddBtn");
-    if (!btn || !window.TiAdminProgramAddModal) return;
+    if (!btn || !window.TiAdminProgramFormModal) return;
     btn.addEventListener("click", function () {
-      TiAdminProgramAddModal.open(function (result) {
-        if (result && result.progId) {
-          var goEdit = confirm(
-            "상영작이 등록되었습니다. (prog_id: " +
-              result.progId +
-              ")\n웹 추가정보 입력 화면으로 이동할까요?"
-          );
-          if (goEdit) {
-            window.location.href =
-              "program-edit.html?progId=" + encodeURIComponent(String(result.progId));
-            return;
-          }
-        }
+      openProgramForm(null);
+    });
+  }
+
+  function openEditFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var seq = Number(params.get("editSeq"));
+    var progId = Number(params.get("editProgId"));
+    if (seq > 0 && !Number.isNaN(seq)) {
+      TiAdminProgramFormModal.openEdit({ seq: seq }, function () {
         loadList();
       });
-    });
+      if (window.history.replaceState) {
+        window.history.replaceState({}, "", "programs.html");
+      }
+      return;
+    }
+    if (progId > 0 && !Number.isNaN(progId)) {
+      TiAdminProgramFormModal.openEdit({ progId: progId }, function () {
+        loadList();
+      });
+      if (window.history.replaceState) {
+        window.history.replaceState({}, "", "programs.html");
+      }
+    }
   }
 
   function mountShell() {
     el.innerHTML =
-      '<p class="admin-lead">데스크톱(<code>prog_base</code>)에 등록된 상영작 목록입니다. <strong>데스크톱만</strong> 필터로 웹 미등록 항목만 볼 수 있습니다.</p>' +
+      '<p class="admin-lead">데스크톱(<code>prog_base</code>) 상영작을 한 화면에서 등록·수정할 수 있습니다. <strong>데스크톱만</strong> 필터로 웹 미등록 항목만 볼 수 있습니다.</p>' +
       '<div class="admin-toolbar admin-toolbar--split">' +
       '<div class="admin-toolbar__col admin-toolbar__col--filter">' +
       '<div class="admin-segment" role="group" aria-label="등록 상태 필터">' +
@@ -224,6 +260,7 @@
     bindSearch();
     bindAddButton();
     loadList();
+    openEditFromUrl();
   }
 
   mountShell();

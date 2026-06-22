@@ -121,6 +121,13 @@
     createProgBase: function (body) {
       return apiJson("POST", "/admin/programs/prog-base", body);
     },
+    updateProgBase: function (progId, body) {
+      return apiJson(
+        "PUT",
+        "/admin/programs/prog-base/" + encodeURIComponent(String(progId)),
+        body
+      );
+    },
     getSpecialList: function (kind, q, page, pageSize) {
       var path =
         "/admin/special?page=" +
