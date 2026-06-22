@@ -190,7 +190,7 @@
 .ti .mz-panel .preview-excerpt-link {
   color: var(--muted);
   font-size: 0.9rem;
-  line-height: 1.55;
+  line-height: 1.7;
   display: inline;
   text-decoration: none;
   text-underline-offset: 2px;
@@ -207,7 +207,7 @@
   width: 100%;
   font-size: 16px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.7;
   color: #404040;
   text-align: left;
   text-decoration: none;
