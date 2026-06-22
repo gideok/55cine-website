@@ -299,6 +299,45 @@
     statusEl.classList.toggle("is-error", !!isError);
   }
 
+  function getKstDateTimeParts(date) {
+    var fmt = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+    var map = {};
+    fmt.formatToParts(date).forEach(function (part) {
+      if (part.type !== "literal") map[part.type] = part.value;
+    });
+    return map;
+  }
+
+  /** 상영 일시가 KST 기준 현재보다 이전이면 true */
+  function isScreeningPast(screening) {
+    if (!screening || !screening.date) return false;
+    var dateStr = String(screening.date).trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+
+    var kst = getKstDateTimeParts(new Date());
+    var todayStr = kst.year + "-" + kst.month + "-" + kst.day;
+    if (dateStr < todayStr) return true;
+    if (dateStr > todayStr) return false;
+
+    var timeStr = String(screening.time || "").trim();
+    if (!timeStr) return false;
+
+    var tp = timeStr.split(":");
+    var sh = Number(tp[0]) || 0;
+    var sm = Number(tp[1]) || 0;
+    var nh = Number(kst.hour) || 0;
+    var nm = Number(kst.minute) || 0;
+    return sh * 60 + sm <= nh * 60 + nm;
+  }
+
   function createScreeningBadge(screening, bookingUrl, filmTitle) {
     var dateLabel = formatScreeningDate(screening.date);
     var timeLabel = screening.time || "";
@@ -312,12 +351,17 @@
       (gv ? " GV" : "") +
       " 예매";
 
-    var link = document.createElement("a");
-    link.className = "exhibition-detail-time-badge";
-    link.href = bookingUrl;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.setAttribute("aria-label", aria);
+    var past = isScreeningPast(screening);
+    var badge = document.createElement(past ? "span" : "a");
+    badge.className = "exhibition-detail-time-badge" + (past ? " is-past" : "");
+    if (!past) {
+      badge.href = bookingUrl;
+      badge.target = "_blank";
+      badge.rel = "noopener noreferrer";
+    } else {
+      badge.setAttribute("aria-disabled", "true");
+    }
+    badge.setAttribute("aria-label", aria + (past ? " (종료)" : ""));
 
     var dateRow = document.createElement("span");
     dateRow.className = "badge-date-row";
@@ -338,9 +382,9 @@
     timeSpan.className = "badge-time";
     timeSpan.textContent = timeLabel;
 
-    link.appendChild(dateRow);
-    link.appendChild(timeSpan);
-    return link;
+    badge.appendChild(dateRow);
+    badge.appendChild(timeSpan);
+    return badge;
   }
 
   function createFilmSection(film, bookingUrl) {
@@ -494,11 +538,14 @@
     var infoInner = document.createElement("div");
     infoInner.className = "exhibition-detail-section__inner";
 
+    var lead = document.createElement("div");
+    lead.className = "exhibition-detail-info-lead";
+
     if (data.introduction) {
       var intro = document.createElement("p");
       intro.className = "exhibition-detail-intro";
       intro.textContent = data.introduction;
-      infoInner.appendChild(intro);
+      lead.appendChild(intro);
     }
 
     var bookBtn = document.createElement("a");
@@ -508,7 +555,9 @@
     bookBtn.rel = "noopener noreferrer";
     bookBtn.setAttribute("aria-label", pageTitle + " 예매하기");
     bookBtn.textContent = "예매하기";
-    infoInner.appendChild(bookBtn);
+    lead.appendChild(bookBtn);
+
+    infoInner.appendChild(lead);
 
     infoSec.appendChild(infoInner);
     grid.appendChild(infoSec);
