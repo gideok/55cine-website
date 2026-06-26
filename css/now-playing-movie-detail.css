@@ -236,6 +236,11 @@
   word-break: keep-all;
 }
 
+.ti .md-theme .md-meta-row--cast .md-meta-value {
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
 .ti .md-theme .md-meta-value--inline {
   display: inline-flex;
   flex-wrap: wrap;

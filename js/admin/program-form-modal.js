@@ -14,6 +14,8 @@
   var isSaving = false;
   var mode = "add";
   var detailRef = null;
+  var slugAutoSync = true;
+  var slugSyncSilent = false;
 
   var posterState = {
     img1Path: null,
@@ -28,6 +30,21 @@
   var kmdbPickerEl = null;
   var kmdbPickerListEl = null;
   var kmdbPickerItems = [];
+  var guideEl = null;
+  var guideMsgEl = null;
+  var guideListEl = null;
+  var guideFocusId = null;
+
+  var REQUIRED_SELECTS = [
+    { id: "pbDivScreen", label: "상영분류" },
+    { id: "pbDivProg", label: "구분" },
+    { id: "pbGrade", label: "관람등급" },
+    { id: "pbCountry", label: "국가" },
+    { id: "pbSpecVideo", label: "비디오" },
+    { id: "pbSpecAudio", label: "오디오" },
+    { id: "pbSpecFormat", label: "포맷" },
+    { id: "pbDivState", label: "상영상태" }
+  ];
 
   var COMBO_MAP = [
     { key: "divScreen", id: "pbDivScreen" },
@@ -175,7 +192,7 @@
       '<button type="button" class="admin-btn" id="pbKmdbSearch">KMDB</button>' +
       "</div>" +
       '<p class="field-hint" id="pbKmdbHint">제목 입력 후 KMDB 버튼으로 영화 정보를 불러올 수 있습니다.</p></div>' +
-      fieldInput("pbName2", "영문제목", "name2", { full: true, required: true }) +
+      fieldInput("pbName2", "영문제목", "name2", { full: true }) +
       fieldSelect("pbDivProg", "구분", "divProg", true) +
       fieldSelect("pbGrade", "관람등급", "grade", true) +
       fieldSelect("pbCountry", "국가", "country", true) +
@@ -203,7 +220,10 @@
       "</div></div></div>" +
       sectionTitle("웹 노출 (web_program)") +
       '<div class="admin-form-grid">' +
-      fieldInput("wpSlug", "slug", "slug", { full: true }) +
+      '<div class="field admin-form-grid__cell admin-form-grid__cell--full">' +
+      '<label for="wpSlug" id="wpSlugLabel">slug <span class="admin-req" id="wpSlugReq" hidden>*</span></label>' +
+      '<input type="text" id="wpSlug" name="slug" autocomplete="off" />' +
+      "</div>" +
       fieldInput("wpDetailUrl", "detail_url", "detailUrl", { full: true }) +
       '<div class="field admin-form-grid__cell admin-form-grid__cell--full">' +
       "<label>포스터 이미지</label>" +
@@ -252,7 +272,22 @@
       "</div>" +
       '<footer class="admin-modal__footer">' +
       '<button type="button" class="admin-btn" data-kmdb-picker-close>취소</button>' +
-      "</footer></div></div>"
+      "</footer></div></div>" +
+      '<div class="admin-modal admin-modal--guide" id="progFormGuideModal" hidden aria-hidden="true">' +
+      '<div class="admin-modal__backdrop" data-prog-guide-close></div>' +
+      '<div class="admin-modal__dialog admin-modal__dialog--narrow" role="alertdialog" aria-modal="true" aria-labelledby="progFormGuideTitle">' +
+      '<header class="admin-modal__head">' +
+      '<h2 id="progFormGuideTitle">입력 확인</h2>' +
+      '<button type="button" class="admin-modal__close" data-prog-guide-close aria-label="닫기">&times;</button>' +
+      "</header>" +
+      '<div class="admin-modal__body">' +
+      '<p class="admin-guide-msg" id="progFormGuideMsg"></p>' +
+      '<ul class="admin-guide-list" id="progFormGuideList" hidden></ul>' +
+      "</div>" +
+      '<footer class="admin-modal__footer">' +
+      '<div class="admin-form-actions admin-form-actions--modal">' +
+      '<button type="button" class="admin-btn admin-btn--primary" data-prog-guide-close>확인</button>' +
+      "</div></footer></div></div>"
     );
   }
 
@@ -267,6 +302,57 @@
     msgEl.hidden = false;
     msgEl.textContent = text;
     msgEl.className = "admin-msg" + (isError ? " admin-msg--error" : "");
+  }
+
+  function closeGuide() {
+    if (!guideEl) return;
+    guideEl.hidden = true;
+    guideEl.setAttribute("aria-hidden", "true");
+    var focusId = guideFocusId;
+    guideFocusId = null;
+    if (focusId) {
+      var target = document.getElementById(focusId);
+      if (target) {
+        target.focus();
+        if (typeof target.select === "function" && target.tagName === "INPUT") {
+          target.select();
+        }
+      }
+    }
+  }
+
+  function showGuide(messages, focusId) {
+    if (!guideEl || !guideMsgEl || !guideListEl) return;
+    var items = (messages || []).filter(Boolean);
+    if (!items.length) return;
+
+    guideFocusId = focusId || null;
+    if (items.length === 1) {
+      guideMsgEl.textContent = items[0];
+      guideMsgEl.hidden = false;
+      guideListEl.innerHTML = "";
+      guideListEl.hidden = true;
+    } else {
+      guideMsgEl.textContent = "아래 항목을 확인해 주세요.";
+      guideMsgEl.hidden = false;
+      guideListEl.innerHTML = items
+        .map(function (msg) {
+          return "<li>" + esc(msg) + "</li>";
+        })
+        .join("");
+      guideListEl.hidden = false;
+    }
+
+    guideEl.hidden = false;
+    guideEl.setAttribute("aria-hidden", "false");
+    var confirmBtn = guideEl.querySelector("[data-prog-guide-close].admin-btn--primary");
+    if (confirmBtn) confirmBtn.focus();
+  }
+
+  function isSelectMissing(id) {
+    var el = document.getElementById(id);
+    if (!el) return true;
+    return el.value === "" || el.value == null;
   }
 
   function comboOptionsHtml(items) {
@@ -410,7 +496,7 @@
       specVideo: getNum("pbSpecVideo"),
       specAudio: getNum("pbSpecAudio"),
       specFormat: getNum("pbSpecFormat"),
-      volumn: getVal("pbVolumn") || null,
+      volumn: getVal("pbVolumn"),
       dateOpen: getVal("pbDateOpen"),
       dateClose: dateClose,
       divState: getNum("pbDivState"),
@@ -439,11 +525,64 @@
     };
   }
 
-  function validateClient(base) {
-    if (!base.name) return "영화명을 입력해 주세요.";
-    if (!base.name2) return "영문제목을 입력해 주세요.";
-    if (!base.dateOpen) return "개봉일을 입력해 주세요.";
-    return "";
+  function validateClient() {
+    var errors = [];
+    var focusId = null;
+
+    function addError(message, fieldId) {
+      errors.push(message);
+      if (!focusId && fieldId) focusId = fieldId;
+    }
+
+    var nameEl = document.getElementById("pbName");
+    if (!nameEl || !nameEl.value.trim()) {
+      addError("영화명을 입력해 주세요.", "pbName");
+    }
+    REQUIRED_SELECTS.forEach(function (field) {
+      if (isSelectMissing(field.id)) {
+        addError(field.label + "을(를) 선택해 주세요.", field.id);
+      }
+    });
+    var dateOpenEl = document.getElementById("pbDateOpen");
+    if (!dateOpenEl || !dateOpenEl.value.trim()) {
+      addError("개봉일을 입력해 주세요.", "pbDateOpen");
+    }
+    if (mode === "add") {
+      var slugEl = document.getElementById("wpSlug");
+      if (!slugEl || !slugEl.value.trim()) {
+        addError("slug를 입력해 주세요.", "wpSlug");
+      }
+    }
+    return { errors: errors, focusId: focusId };
+  }
+
+  function buildSlugDuplicateMessage(slug, conflict) {
+    var trimmed = String(slug || "").trim();
+    var title = (conflict && conflict.titleKo) || "다른 상영작";
+    var seq = conflict && conflict.seq != null ? conflict.seq : "—";
+    return (
+      'slug "' +
+      trimmed +
+      '"는 이미 등록된 상영작("' +
+      title +
+      '", seq ' +
+      seq +
+      ')과 중복됩니다.\nslug를 수정한 뒤 다시 저장해 주세요.'
+    );
+  }
+
+  function checkSlugDuplicate(slug) {
+    var trimmed = String(slug || "").trim();
+    if (!trimmed) return Promise.resolve(null);
+    var excludeSeq = detailRef && detailRef.seq ? detailRef.seq : null;
+    return TiAdminApi.checkProgramDuplicateSlug(trimmed, excludeSeq).then(function (res) {
+      if (!res || !res.duplicate) return null;
+      return buildSlugDuplicateMessage(trimmed, res.conflict);
+    });
+  }
+
+  function isSlugDuplicateError(message) {
+    return !!message && (message.indexOf("slug") >= 0 || message.indexOf("중복") >= 0);
   }
 
   function updateKmdbUi() {
@@ -453,6 +592,50 @@
     if (kmdbBtn) kmdbBtn.hidden = !show;
     if (kmdbHint) kmdbHint.hidden = !show;
     if (!show) closeKmdbPicker();
+  }
+
+  function updateSlugRequiredUi() {
+    var isAdd = mode === "add";
+    var req = document.getElementById("wpSlugReq");
+    var input = document.getElementById("wpSlug");
+    if (req) req.hidden = !isAdd;
+    if (input) {
+      if (isAdd) input.setAttribute("required", "");
+      else input.removeAttribute("required");
+    }
+  }
+
+  function slugFromTitleEn(titleEn) {
+    return String(titleEn || "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "_");
+  }
+
+  function syncSlugFromTitleEn() {
+    if (!slugAutoSync) return;
+    var name2El = document.getElementById("pbName2");
+    var slugEl = document.getElementById("wpSlug");
+    if (!name2El || !slugEl) return;
+    slugSyncSilent = true;
+    slugEl.value = slugFromTitleEn(name2El.value);
+    slugSyncSilent = false;
+  }
+
+  function resetSlugAutoSyncState() {
+    if (mode === "add") {
+      slugAutoSync = true;
+      return;
+    }
+    var name2El = document.getElementById("pbName2");
+    var slugEl = document.getElementById("wpSlug");
+    if (!slugEl) {
+      slugAutoSync = true;
+      return;
+    }
+    var slug = slugEl.value.trim();
+    var expected = slugFromTitleEn(name2El ? name2El.value : "");
+    slugAutoSync = !slug || slug === expected;
   }
 
   function updateBadges(detail) {
@@ -540,6 +723,8 @@
     }
 
     updateKmdbUi();
+    updateSlugRequiredUi();
+    resetSlugAutoSyncState();
     updatePosterHint();
     updatePosterPreview();
     updateTrailerPreview();
@@ -548,11 +733,14 @@
   function closeModal() {
     if (!overlayEl) return;
     closeKmdbPicker();
+    closeGuide();
     isOpen = false;
     overlayEl.hidden = true;
     overlayEl.setAttribute("aria-hidden", "true");
     document.body.classList.remove("admin-modal-open");
     detailRef = null;
+    slugAutoSync = true;
+    slugSyncSilent = false;
   }
 
   function openModalShell() {
@@ -565,6 +753,7 @@
       titleEl.textContent = mode === "add" ? "상영작 등록" : "상영작 수정";
     }
     updateKmdbUi();
+    updateSlugRequiredUi();
     var nameInput = document.getElementById("pbName");
     if (nameInput) nameInput.focus();
   }
@@ -683,6 +872,10 @@
           return;
         }
         showMsg(err.message || "저장 실패", true);
+        if (isSlugDuplicateError(err.message)) {
+          showMsg("");
+          showGuide([err.message], "wpSlug");
+        }
       })
       .finally(function () {
         isSaving = false;
@@ -698,15 +891,27 @@
       var normalized = normalizeTrailerUrl(trailerInput.value);
       if (normalized) trailerInput.value = normalized;
     }
-    var baseBody = readProgBaseForm(false);
-    var webBody = readWebForm();
-    var clientErr = validateClient(baseBody);
-    if (clientErr) {
-      showMsg(clientErr, true);
+    var validation = validateClient();
+    if (validation.errors.length) {
+      showGuide(validation.errors, validation.focusId);
       return;
     }
+
+    var baseBody = readProgBaseForm(false);
+    var webBody = readWebForm();
     showMsg("");
-    saveWithConfirm(baseBody, webBody);
+
+    checkSlugDuplicate(webBody.slug)
+      .then(function (slugError) {
+        if (slugError) {
+          showGuide([slugError], "wpSlug");
+          return;
+        }
+        saveWithConfirm(baseBody, webBody);
+      })
+      .catch(function (err) {
+        showGuide([err.message || "slug 중복 확인 실패"], "wpSlug");
+      });
   }
 
   function bindPosterUpload() {
@@ -776,6 +981,7 @@
     if (!item) return;
     setFieldValue("pbName", item.name);
     setFieldValue("pbName2", item.name2);
+    syncSlugFromTitleEn();
     if (item.runningTime != null) setFieldValue("pbRunningTime", item.runningTime);
     if (item.producer) setFieldValue("pbProducer", item.producer);
     if (item.dateOpen) setFieldValue("pbDateOpen", item.dateOpen);
@@ -919,6 +1125,10 @@
     document.addEventListener("keydown", function (e) {
       if (!isOpen) return;
       if (e.key === "Escape") {
+        if (guideEl && !guideEl.hidden) {
+          closeGuide();
+          return;
+        }
         if (kmdbPickerEl && !kmdbPickerEl.hidden) {
           closeKmdbPicker();
           return;
@@ -959,6 +1169,18 @@
 
     bindPosterUpload();
 
+    var name2Input = document.getElementById("pbName2");
+    if (name2Input) {
+      name2Input.addEventListener("input", syncSlugFromTitleEn);
+    }
+
+    var slugInput = document.getElementById("wpSlug");
+    if (slugInput) {
+      slugInput.addEventListener("input", function () {
+        if (!slugSyncSilent) slugAutoSync = false;
+      });
+    }
+
     var kmdbBtn = document.getElementById("pbKmdbSearch");
     if (kmdbBtn) kmdbBtn.addEventListener("click", onKmdbSearch);
 
@@ -966,6 +1188,14 @@
       kmdbPickerEl.addEventListener("click", function (e) {
         if (e.target && e.target.getAttribute("data-kmdb-picker-close") != null) {
           closeKmdbPicker();
+        }
+      });
+    }
+
+    if (guideEl) {
+      guideEl.addEventListener("click", function (e) {
+        if (e.target && e.target.getAttribute("data-prog-guide-close") != null) {
+          closeGuide();
         }
       });
     }
@@ -978,8 +1208,12 @@
     overlayEl = wrap.querySelector("#progFormModal");
     kmdbPickerEl = wrap.querySelector("#kmdbPickerModal");
     kmdbPickerListEl = wrap.querySelector("#kmdbPickerList");
+    guideEl = wrap.querySelector("#progFormGuideModal");
+    guideMsgEl = wrap.querySelector("#progFormGuideMsg");
+    guideListEl = wrap.querySelector("#progFormGuideList");
     if (overlayEl) document.body.appendChild(overlayEl);
     if (kmdbPickerEl) document.body.appendChild(kmdbPickerEl);
+    if (guideEl) document.body.appendChild(guideEl);
     formEl = document.getElementById("progForm");
     msgEl = document.getElementById("progFormMsg");
     titleEl = document.getElementById("progFormModalTitle");

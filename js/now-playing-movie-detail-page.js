@@ -168,6 +168,7 @@
   function createMetaRow(label, valueNode) {
     var row = document.createElement("div");
     row.className = "md-meta-row";
+    if (label === "출연") row.classList.add("md-meta-row--cast");
     var labelEl = document.createElement("span");
     labelEl.className = "md-meta-label";
     labelEl.textContent = label;

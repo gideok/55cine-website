@@ -118,6 +118,15 @@
         "/admin/programs/check-duplicate-title?name=" + encodeURIComponent(String(name || ""))
       );
     },
+    checkProgramDuplicateSlug: function (slug, excludeSeq) {
+      var path =
+        "/admin/programs/check-duplicate-slug?slug=" +
+        encodeURIComponent(String(slug || ""));
+      if (excludeSeq != null && excludeSeq > 0) {
+        path += "&excludeSeq=" + encodeURIComponent(String(excludeSeq));
+      }
+      return apiJson("GET", path);
+    },
     createProgBase: function (body) {
       return apiJson("POST", "/admin/programs/prog-base", body);
     },

@@ -295,10 +295,78 @@ export type UpdateProgramInput = {
   trailerUrl?: string | null;
 };
 
+export type SlugConflict = {
+  seq: number;
+  progId: number;
+  titleKo: string;
+  slug: string;
+};
+
+export async function findProgramSlugConflict(
+  slug: string,
+  excludeSeq?: number | null
+): Promise<SlugConflict | null> {
+  const normalized = String(slug || "").trim().toLowerCase();
+  if (!normalized) return null;
+
+  const pool = await getPool();
+  const req = pool.request().input("slug", sql.NVarChar(200), normalized);
+  let excludeClause = "";
+  if (excludeSeq != null && excludeSeq > 0) {
+    req.input("excludeSeq", sql.Int, excludeSeq);
+    excludeClause = " AND wp.seq <> @excludeSeq";
+  }
+
+  const result = await req.query<{ seq: number; prog_id: number; name: string; slug: string }>(`
+    SELECT TOP 1 wp.seq, pb.prog_id, pb.name, wp.slug
+    FROM dbo.web_program wp
+    INNER JOIN dbo.prog_base pb ON pb.prog_id = wp.prog_id
+    WHERE LOWER(LTRIM(RTRIM(wp.slug))) = @slug
+      ${excludeClause}
+  `);
+
+  const row = result.recordset[0];
+  if (!row) return null;
+
+  return {
+    seq: Number(row.seq),
+    progId: Number(row.prog_id),
+    titleKo: String(row.name || "").trim(),
+    slug: String(row.slug || "").trim()
+  };
+}
+
+export async function checkAdminProgramDuplicateSlug(
+  slug: string,
+  excludeSeq?: number
+): Promise<{ duplicate: boolean; conflict?: SlugConflict }> {
+  const conflict = await findProgramSlugConflict(slug, excludeSeq);
+  return conflict ? { duplicate: true, conflict } : { duplicate: false };
+}
+
+async function assertSlugNotDuplicate(
+  slug: string | null | undefined,
+  excludeSeq?: number | null
+): Promise<void> {
+  const trimmed = String(slug ?? "").trim();
+  if (!trimmed) return;
+  const conflict = await findProgramSlugConflict(trimmed, excludeSeq);
+  if (!conflict) return;
+  const err = new Error(
+    `slug "${trimmed}"는 이미 등록된 상영작("${conflict.titleKo}", seq ${conflict.seq})과 중복됩니다.\nslug를 수정한 뒤 다시 저장해 주세요.`
+  );
+  (err as Error & { code: string }).code = "DUPLICATE_SLUG";
+  throw err;
+}
+
 async function applyWebProgramUpdate(
   seq: number,
   input: UpdateProgramInput
 ): Promise<AdminProgramDetail | null> {
+  if (input.slug !== undefined) {
+    await assertSlugNotDuplicate(input.slug, seq);
+  }
+
   const pool = await getPool();
   const req = pool.request().input("seq", sql.Int, seq);
 
@@ -353,6 +421,8 @@ export async function upsertAdminProgramByProgId(
     input.slug !== undefined && input.slug !== null
       ? String(input.slug).trim() || null
       : null;
+
+  await assertSlugNotDuplicate(slug, null);
 
   const insert = await pool
     .request()

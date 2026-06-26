@@ -31,7 +31,7 @@ export type ProgBaseFormOptions = {
 
 export type CreateProgBaseInput = {
   name: string;
-  name2: string;
+  name2?: string;
   divScreen: number;
   divProg: number;
   grade: number;
@@ -42,7 +42,7 @@ export type CreateProgBaseInput = {
   specVideo: number;
   specAudio: number;
   specFormat: number;
-  volumn?: string | null;
+  volumn?: string;
   dateOpen: string;
   dateClose?: string | null;
   divState: number;
@@ -117,9 +117,8 @@ function parseOptionalInt(val: number | null | undefined): number | null {
 
 export async function createProgBase(input: CreateProgBaseInput): Promise<CreateProgBaseResult> {
   const name = String(input.name || "").trim();
-  const name2 = String(input.name2 || "").trim();
+  const name2 = String(input.name2 ?? "").trim();
   if (!name) throw new Error("영화명을 입력해 주세요.");
-  if (!name2) throw new Error("영문제목을 입력해 주세요.");
 
   const dup = await countDuplicateProgTitle(name);
   if (dup > 0 && !input.confirmDuplicate) {
@@ -146,7 +145,7 @@ export async function createProgBase(input: CreateProgBaseInput): Promise<Create
     .input("specVideo", sql.TinyInt, input.specVideo)
     .input("specAudio", sql.TinyInt, input.specAudio)
     .input("specFormat", sql.TinyInt, input.specFormat)
-    .input("volumn", sql.NVarChar(50), input.volumn?.trim() || null)
+    .input("volumn", sql.NVarChar(50), String(input.volumn ?? "").trim())
     .input("dateOpen", sql.Date, input.dateOpen)
     .input("dateClose", sql.Date, dateClose)
     .input("divState", sql.TinyInt, input.divState)
@@ -176,9 +175,8 @@ export async function updateProgBase(
   input: UpdateProgBaseInput
 ): Promise<{ progId: number; titleKo: string; titleEn: string }> {
   const name = String(input.name || "").trim();
-  const name2 = String(input.name2 || "").trim();
+  const name2 = String(input.name2 ?? "").trim();
   if (!name) throw new Error("영화명을 입력해 주세요.");
-  if (!name2) throw new Error("영문제목을 입력해 주세요.");
 
   const pool = await getPool();
   const prev = await pool.request().input("progId", sql.Int, progId).query<{
@@ -205,7 +203,7 @@ export async function updateProgBase(
     .input("specVideo", sql.TinyInt, input.specVideo)
     .input("specAudio", sql.TinyInt, input.specAudio)
     .input("specFormat", sql.TinyInt, input.specFormat)
-    .input("volumn", sql.NVarChar(50), input.volumn?.trim() || null)
+    .input("volumn", sql.NVarChar(50), String(input.volumn ?? "").trim())
     .input("dateOpen", sql.Date, input.dateOpen)
     .input("dateClose", sql.Date, dateClose)
     .input("divState", sql.TinyInt, input.divState)

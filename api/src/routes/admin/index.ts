@@ -8,7 +8,8 @@ import {
   getAdminProgramBySeq,
   getAdminProgramByProgId,
   updateAdminProgram,
-  upsertAdminProgramByProgId
+  upsertAdminProgramByProgId,
+  checkAdminProgramDuplicateSlug
 } from "../../services/admin/web-program-admin.service.js";
 import {
   getProgBaseFormOptions,
@@ -108,7 +109,7 @@ function zodBodyMessage(result: z.SafeParseError<unknown>): string {
 
 const progBaseBodySchema = z.object({
   name: z.string().min(1, "영화명을 입력해 주세요."),
-  name2: z.string().min(1, "영문제목을 입력해 주세요."),
+  name2: z.preprocess((v) => String(v ?? ""), z.string()),
   divScreen: z.coerce.number().int().min(0).max(255),
   divProg: z.coerce.number().int().min(0).max(255),
   grade: z.coerce.number().int().min(0).max(255),
@@ -119,7 +120,7 @@ const progBaseBodySchema = z.object({
   specVideo: z.coerce.number().int().min(0).max(255),
   specAudio: z.coerce.number().int().min(0).max(255),
   specFormat: z.coerce.number().int().min(0).max(255),
-  volumn: z.string().nullable().optional(),
+  volumn: z.preprocess((v) => String(v ?? ""), z.string()),
   dateOpen: z.string().min(1, "개봉일을 입력해 주세요."),
   dateClose: z.string().nullable().optional(),
   divState: z.coerce.number().int().min(0).max(255),
@@ -262,6 +263,24 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
+  app.get("/admin/programs/check-duplicate-slug", async (request, reply) => {
+    const parsed = z
+      .object({
+        slug: z.string().min(1),
+        excludeSeq: z.coerce.number().int().positive().optional()
+      })
+      .safeParse(request.query);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_QUERY", "slug 필요");
+    }
+    try {
+      return await checkAdminProgramDuplicateSlug(parsed.data.slug, parsed.data.excludeSeq);
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "DUPLICATE_CHECK_FAILED", "slug 중복 확인 실패");
+    }
+  });
+
   app.post("/admin/programs/prog-base", async (request, reply) => {
     const body = progBaseBodySchema
       .extend({ confirmDuplicate: z.boolean().optional() })
@@ -349,6 +368,15 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       return updated;
     } catch (err) {
       request.log.error(err);
+      const code = err && typeof err === "object" && "code" in err ? String((err as { code: string }).code) : "";
+      if (code === "DUPLICATE_SLUG") {
+        return sendError(
+          reply,
+          409,
+          "DUPLICATE_SLUG",
+          err instanceof Error ? err.message : "slug가 다른 상영작과 중복됩니다."
+        );
+      }
       return sendError(reply, 500, "PROGRAM_UPDATE_FAILED", "상영작 저장 실패");
     }
   });
@@ -394,6 +422,15 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       return updated;
     } catch (err) {
       request.log.error(err);
+      const code = err && typeof err === "object" && "code" in err ? String((err as { code: string }).code) : "";
+      if (code === "DUPLICATE_SLUG") {
+        return sendError(
+          reply,
+          409,
+          "DUPLICATE_SLUG",
+          err instanceof Error ? err.message : "slug가 다른 상영작과 중복됩니다."
+        );
+      }
       return sendError(reply, 500, "PROGRAM_UPDATE_FAILED", "상영작 수정 실패");
     }
   });
