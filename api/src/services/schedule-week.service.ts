@@ -169,6 +169,7 @@ export async function fetchWeekScheduleFromDb(anchor?: string): Promise<WeekSche
     ) AS wp
     WHERE TRY_CONVERT(date, pd.date_sc) >= @rangeStart
       AND TRY_CONVERT(date, pd.date_sc) <= @rangeEnd
+      AND ISNULL(pd.divhidden, 0) = 0
     ORDER BY pd.date_sc, pd.time_sc
   `);
 
