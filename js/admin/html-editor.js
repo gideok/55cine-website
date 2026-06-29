@@ -4,8 +4,13 @@
 (function (global) {
   var FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32];
   var PASTE_ALLOWED = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, SPAN: 1, BR: 1, HR: 1 };
+  var HEADING_TAGS = { H2: 1, H3: 1, H4: 1 };
   var NOTICE_LINK_CLASS = "site-notice-link";
   var MAGAZINE_TEXT_BOX_CLASS = "mz-text-box";
+
+  function isHeadingTag(tag) {
+    return !!HEADING_TAGS[String(tag || "").toUpperCase()];
+  }
 
   function normalizeLinkUrl(url) {
     var raw = String(url || "").trim();
@@ -77,6 +82,7 @@
       if (options.linkInline && tag === "A") return true;
       if (options.showQuote && tag === "BLOCKQUOTE") return true;
       if (options.showTextBox && tag === "DIV") return true;
+      if (options.showHeadings && isHeadingTag(tag)) return true;
       return false;
     }
     var toolbar = document.createElement("div");
@@ -249,6 +255,31 @@
       savedRange = newRange.cloneRange();
     }
 
+    function applyFormatBlock(tagName) {
+      body.focus();
+      restoreSelection();
+      var tag = String(tagName || "p").toLowerCase();
+      if (!document.execCommand("formatBlock", false, tag)) {
+        document.execCommand("formatBlock", false, "<" + tag + ">");
+      }
+      saveSelection();
+    }
+
+    function sanitizeBlockElement(el, walkFn) {
+      el.removeAttribute("class");
+      el.removeAttribute("face");
+      el.removeAttribute("data-ke-style");
+      el.removeAttribute("data-ke-size");
+      el.removeAttribute("data-ti-asset-key");
+      if (el.hasAttribute("style")) {
+        var cleaned = stripFontStyles(el.getAttribute("style"), options.keepColor);
+        if (cleaned) el.setAttribute("style", cleaned);
+        else el.removeAttribute("style");
+      }
+      var children = Array.prototype.slice.call(el.childNodes);
+      children.forEach(walkFn);
+    }
+
     function insertTextBox() {
       body.focus();
       restoreSelection();
@@ -411,6 +442,13 @@
         }
         el = document.createElement("div");
         el.className = MAGAZINE_TEXT_BOX_CLASS;
+      } else if (options.showHeadings && isHeadingTag(tag)) {
+        el = document.createElement(tag.toLowerCase());
+        var headingStyle = node.getAttribute && node.getAttribute("style");
+        if (headingStyle) {
+          var hs = stripFontStyles(headingStyle, options.keepColor);
+          if (hs) el.setAttribute("style", hs);
+        }
       }
       if (tag === "SPAN" && node.style) {
         if (node.style.fontSize) el.style.fontSize = node.style.fontSize;
@@ -512,18 +550,12 @@
           return;
         }
         if (el.tagName === "P" && options.allowParagraphs) {
-          el.removeAttribute("class");
-          el.removeAttribute("data-ke-style");
-          el.removeAttribute("data-ke-size");
-          el.removeAttribute("data-ti-asset-key");
-          if (el.hasAttribute("style")) {
-            var pStyle = stripFontStyles(el.getAttribute("style"), options.keepColor);
-            if (pStyle) el.setAttribute("style", pStyle);
-            else el.removeAttribute("style");
-          }
-          var pChildren = Array.prototype.slice.call(el.childNodes);
-          pChildren.forEach(walk);
+          sanitizeBlockElement(el, walk);
           ensureBlockHasBreak(el);
+          return;
+        }
+        if (options.showHeadings && isHeadingTag(el.tagName)) {
+          sanitizeBlockElement(el, walk);
           return;
         }
         el.removeAttribute("class");
@@ -636,6 +668,25 @@
       });
       toolbar.appendChild(btn);
     });
+
+    if (options.showHeadings) {
+      [
+        { label: "H2", tag: "h2" },
+        { label: "H3", tag: "h3" },
+        { label: "H4", tag: "h4" },
+        { label: "본문", tag: "p" }
+      ].forEach(function (h) {
+        var hBtn = document.createElement("button");
+        hBtn.type = "button";
+        hBtn.textContent = h.label;
+        hBtn.title = h.tag === "p" ? "일반 단락으로 변환" : h.tag.toUpperCase() + " 제목";
+        holdSelectionOnMouseDown(hBtn);
+        hBtn.addEventListener("click", function () {
+          applyFormatBlock(h.tag);
+        });
+        toolbar.appendChild(hBtn);
+      });
+    }
 
     if (options.linkAsButton || options.linkInline) {
       var urlBtn = document.createElement("button");

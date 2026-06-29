@@ -982,7 +982,8 @@
         linkInline: true,
         showQuote: true,
         showTextBox: true,
-        allowParagraphs: true
+        allowParagraphs: true,
+        showHeadings: true
       }
 
     );
