@@ -4,6 +4,7 @@
   var SPECIAL_LIST_FIELDS = ["kind", "q", "page", "pageSize"];
   var SPECIAL_FILM_PLACEHOLDER = "images/schedule-poster-placeholder.svg";
   var SPECIAL_TEMP_PREFIX = "images/special/_tmp/";
+  var EMPTY_FILM_TITLE = "EmptyFilms";
 
   function specialListUrl() {
     return TiAdminList.listUrl("special.html", "special", null, SPECIAL_LIST_FIELDS);
@@ -96,6 +97,7 @@
   function createEmptyFilm() {
     return {
       title: "",
+      isEmptySpacer: false,
       image: "",
       imageTempPath: null,
       imagePreviewUrl: null,
@@ -113,8 +115,10 @@
 
   function normalizeFilm(film) {
     film = film || {};
+    var isEmptySpacer = !!(film.isEmptySpacer || film.title === EMPTY_FILM_TITLE);
     return {
-      title: film.title || "",
+      title: isEmptySpacer ? EMPTY_FILM_TITLE : film.title || "",
+      isEmptySpacer: isEmptySpacer,
       image: film.image || "",
       imageTempPath: null,
       imagePreviewUrl: null,
@@ -227,6 +231,7 @@
   }
 
   function addFilmItem() {
+    syncFilmsFromDom();
     films.push(createEmptyFilm());
     renderFilms();
   }
@@ -309,21 +314,135 @@
     updateMainCoverPreview();
   }
 
+  function buildFilmHeadHtml(film, idx) {
+    var isSpacer = !!film.isEmptySpacer;
+    return (
+      '<h3 class="admin-film-list__head">' +
+      '<button type="button" class="admin-film-list__drag" draggable="true" data-drag="' +
+      idx +
+      '" aria-label="작품 #' +
+      (idx + 1) +
+      ' 순서 변경" title="드래그하여 순서 변경">⋮⋮</button>' +
+      '<span class="admin-film-list__label">작품 #' +
+      (idx + 1) +
+      "</span>" +
+      '<label class="admin-film-spacer-check">' +
+      '<input type="checkbox" id="filmSpacer-' +
+      idx +
+      '" data-spacer="' +
+      idx +
+      '"' +
+      (isSpacer ? " checked" : "") +
+      "> 빈칸</label>" +
+      '<button type="button" class="admin-btn admin-btn--danger" data-rm="' +
+      idx +
+      '">삭제</button>' +
+      "</h3>"
+    );
+  }
+
+  function setFilmSpacerMode(idx, isSpacer) {
+    if (!films[idx]) return;
+    films[idx].isEmptySpacer = !!isSpacer;
+
+    var body = document.getElementById("filmBody-" + idx);
+    var titleInput = document.getElementById("title-" + idx);
+    var card = document.querySelector('.admin-film-list[data-idx="' + idx + '"]');
+
+    if (isSpacer) {
+      films[idx].title = EMPTY_FILM_TITLE;
+      if (titleInput) {
+        titleInput.value = EMPTY_FILM_TITLE;
+        titleInput.readOnly = true;
+      }
+      if (body) body.hidden = true;
+      if (card) card.classList.add("admin-film-list--spacer");
+    } else {
+      if (titleInput) {
+        titleInput.readOnly = false;
+        if (titleInput.value === EMPTY_FILM_TITLE) titleInput.value = "";
+        films[idx].title = titleInput.value.trim();
+      }
+      if (body) body.hidden = false;
+      if (card) card.classList.remove("admin-film-list--spacer");
+    }
+  }
+
+  function bindFilmDragDrop() {
+    var box = document.getElementById("filmList");
+    if (!box) return;
+
+    var dragFromIdx = null;
+
+    box.querySelectorAll(".admin-film-list").forEach(function (card) {
+      var idx = Number(card.getAttribute("data-idx"));
+      var handle = card.querySelector(".admin-film-list__drag");
+      if (!handle) return;
+
+      handle.addEventListener("dragstart", function (e) {
+        syncFilmsFromDom();
+        dragFromIdx = idx;
+        card.classList.add("is-dragging");
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", String(idx));
+        }
+      });
+
+      handle.addEventListener("dragend", function () {
+        card.classList.remove("is-dragging");
+        dragFromIdx = null;
+        box.querySelectorAll(".admin-film-list").forEach(function (c) {
+          c.classList.remove("is-drag-over");
+        });
+      });
+
+      card.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+        card.classList.add("is-drag-over");
+      });
+
+      card.addEventListener("dragleave", function (e) {
+        if (!card.contains(e.relatedTarget)) {
+          card.classList.remove("is-drag-over");
+        }
+      });
+
+      card.addEventListener("drop", function (e) {
+        e.preventDefault();
+        card.classList.remove("is-drag-over");
+        var from =
+          dragFromIdx != null ? dragFromIdx : Number(e.dataTransfer && e.dataTransfer.getData("text/plain"));
+        var to = Number(card.getAttribute("data-idx"));
+        if (Number.isNaN(from) || Number.isNaN(to) || from === to) return;
+        syncFilmsFromDom();
+        var item = films.splice(from, 1)[0];
+        films.splice(to, 0, item);
+        renderFilms();
+      });
+    });
+  }
+
   function renderFilms() {
     var box = document.getElementById("filmList");
     if (!box) return;
     box.innerHTML = films
       .map(function (film, idx) {
+        var isSpacer = !!film.isEmptySpacer;
         return (
-          '<div class="admin-film-list" data-idx="' +
+          '<div class="admin-film-list' +
+          (isSpacer ? " admin-film-list--spacer" : "") +
+          '" data-idx="' +
           idx +
           '">' +
-          "<h3>작품 #" +
-          (idx + 1) +
-          ' <button type="button" class="admin-btn admin-btn--danger" data-rm="' +
+          buildFilmHeadHtml(film, idx) +
+          '<div class="admin-film-list__body" id="filmBody-' +
           idx +
-          '">삭제</button></h3>' +
-          field("title-" + idx, "제목", film.title) +
+          '"' +
+          (isSpacer ? " hidden" : "") +
+          ">" +
+          field("title-" + idx, "제목", film.title, isSpacer) +
           '<div class="field"><label>작품 이미지</label>' +
           '<input type="file" id="filmUpload-' +
           idx +
@@ -346,6 +465,10 @@
           esc(film.description) +
           "</textarea></div>" +
           field("sectionName-" + idx, "섹션명", film.sectionName) +
+          "</div>" +
+          (isSpacer
+            ? '<p class="admin-film-spacer-note">상세 페이지 2열 그리드용 빈 칸(EmptyFilms)으로 표시됩니다.</p>'
+            : "") +
           "</div>"
         );
       })
@@ -353,12 +476,21 @@
 
     box.querySelectorAll("[data-rm]").forEach(function (btn) {
       btn.onclick = function () {
+        syncFilmsFromDom();
         films.splice(Number(btn.getAttribute("data-rm")), 1);
         renderFilms();
       };
     });
 
-    films.forEach(function (_film, idx) {
+    box.querySelectorAll("[data-spacer]").forEach(function (input) {
+      input.onchange = function () {
+        setFilmSpacerMode(Number(input.getAttribute("data-spacer")), input.checked);
+      };
+    });
+
+    films.forEach(function (film, idx) {
+      if (film.isEmptySpacer) setFilmSpacerMode(idx, true);
+
       updateFilmImagePreview(idx);
 
       var fileInput = document.getElementById("filmUpload-" + idx);
@@ -396,9 +528,11 @@
         };
       }
     });
+
+    bindFilmDragDrop();
   }
 
-  function field(name, label, val) {
+  function field(name, label, val, readOnly) {
     return (
       '<div class="field"><label>' +
       label +
@@ -406,25 +540,36 @@
       name +
       '" value="' +
       esc(val) +
-      '"></div>'
+      '"' +
+      (readOnly ? " readonly" : "") +
+      "></div>"
     );
   }
 
+  function isFilmSpacerChecked(idx) {
+    var input = document.getElementById("filmSpacer-" + idx);
+    if (!input) return !!(films[idx] && films[idx].isEmptySpacer);
+    return input.checked;
+  }
+
   function collectFilms() {
+    syncFilmsFromDom();
     return films.map(function (film, idx) {
+      var isSpacer = !!film.isEmptySpacer;
       var descEl = document.querySelector("[data-desc='" + idx + "']");
       return {
-        title: val("title-" + idx),
-        image: film.image || "",
-        imageTempPath: film.imageTempPath,
-        removeImage: film.imageRemoved && !film.imageTempPath,
-        titleEn: val("titleEn-" + idx),
-        info: val("info-" + idx),
-        director: val("director-" + idx),
-        cast: val("cast-" + idx),
-        description: descEl ? descEl.value : "",
-        sectionName: val("sectionName-" + idx),
-        screenings: film.screenings || []
+        title: isSpacer ? EMPTY_FILM_TITLE : val("title-" + idx),
+        isEmptySpacer: isSpacer,
+        image: isSpacer ? "" : film.image || "",
+        imageTempPath: isSpacer ? null : film.imageTempPath,
+        removeImage: isSpacer ? true : film.imageRemoved && !film.imageTempPath,
+        titleEn: isSpacer ? "" : val("titleEn-" + idx),
+        info: isSpacer ? "" : val("info-" + idx),
+        director: isSpacer ? "" : val("director-" + idx),
+        cast: isSpacer ? "" : val("cast-" + idx),
+        description: isSpacer ? "" : descEl ? descEl.value : "",
+        sectionName: isSpacer ? "" : val("sectionName-" + idx),
+        screenings: isSpacer ? [] : film.screenings || []
       };
     });
   }
@@ -432,6 +577,25 @@
   function val(id) {
     var node = document.getElementById(id);
     return node ? node.value.trim() : "";
+  }
+
+  /** re-render 전 DOM 입력값을 films 배열에 반영 (작품 추가·삭제·순서 변경 시 유실 방지) */
+  function syncFilmsFromDom() {
+    films.forEach(function (film, idx) {
+      film.isEmptySpacer = isFilmSpacerChecked(idx);
+      if (film.isEmptySpacer) {
+        film.title = EMPTY_FILM_TITLE;
+      } else {
+        film.title = val("title-" + idx);
+        film.titleEn = val("titleEn-" + idx);
+        film.info = val("info-" + idx);
+        film.director = val("director-" + idx);
+        film.cast = val("cast-" + idx);
+        film.sectionName = val("sectionName-" + idx);
+        var descEl = document.querySelector("[data-desc='" + idx + "']");
+        film.description = descEl ? descEl.value : "";
+      }
+    });
   }
 
   function bindMainCoverUpload() {
@@ -524,7 +688,9 @@
       buildMainCoverPreviewHtml() +
       "</div>" +
       '<p class="field-hint">예매 링크는 디트릭스 오오극장 페이지로 자동 연결됩니다.</p>' +
-      '<div id="filmsSection"><div id="filmList"></div></div>' +
+      '<div id="filmsSection">' +
+      '<p class="field-hint admin-film-list-hint">작품 카드 왼쪽 ⋮⋮ 핸들을 드래그하여 순서를 변경할 수 있습니다.</p>' +
+      '<div id="filmList"></div></div>' +
       buildFormActionsHtml(kind) +
       "</form>";
 

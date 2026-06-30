@@ -833,11 +833,92 @@
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
+  transition: box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.admin-film-list.is-dragging {
+  opacity: 0.55;
+}
+
+.admin-film-list.is-drag-over {
+  box-shadow: 0 0 0 2px #2b6cb0 inset;
+}
+
+.admin-film-list--spacer {
+  background-color: #f4f4f5;
+  border-style: dotted;
+}
+
+.admin-film-list__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+}
+
+.admin-film-list__label {
+  font-weight: 600;
+  margin-right: auto;
+}
+
+.admin-film-list__drag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  background: #fff;
+  color: #718096;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.admin-film-list__drag:active {
+  cursor: grabbing;
+}
+
+.admin-film-spacer-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #52525b;
+  cursor: pointer;
+  user-select: none;
+}
+
+.admin-film-spacer-check input {
+  margin: 0;
+}
+
+.admin-film-spacer-note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #71717a;
+}
+
+.admin-film-list-hint {
+  margin: 0 0 0.75rem;
 }
 
 .admin-film-list h3 {
   margin: 0 0 0.75rem;
   font-size: 0.95rem;
+}
+
+.admin-film-list__head .admin-btn {
+  width: auto;
+  min-width: 72px;
+  margin-left: 0;
 }
 
 .admin-film-list h3 .admin-btn {

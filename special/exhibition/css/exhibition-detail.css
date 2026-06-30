@@ -244,7 +244,8 @@ body.exhibition-poster-lightbox-open {
 .ti .exhibition-film-section-badge {
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  align-self: center;
   justify-content: center;
   box-sizing: border-box;
   max-width: 46%;
@@ -255,7 +256,7 @@ body.exhibition-poster-lightbox-open {
   font-size: 0.72rem;
   font-weight: 700;
   line-height: 1.3;
-  text-align: right;
+  text-align: center;
   white-space: normal;
   word-break: keep-all;
   overflow: hidden;
