@@ -194,6 +194,13 @@
     markMagazinePast: function (seq) {
       return apiJson("POST", "/admin/magazine/" + encodeURIComponent(String(seq)) + "/mark-past");
     },
+    restoreMagazineFromPast: function (seq, section) {
+      return apiJson(
+        "POST",
+        "/admin/magazine/" + encodeURIComponent(String(seq)) + "/restore",
+        { section: section }
+      );
+    },
     uploadFile: uploadFile,
     uploadMagazineTemp: function (file) {
       return uploadFile(file, { category: "magazine-temp" });

@@ -11,6 +11,7 @@
   var searchTimer = null;
   var SEARCH_DELAY_MS = 350;
   var state = { section: "preview", isPast: false, q: "", page: 1, pageSize: 20 };
+  var restoreModalSeq = null;
 
   TiAdminList.restoreState(LIST_KEY, state, STATE_FIELDS);
   if (!state.isPast && !state.section) state.section = "preview";
@@ -111,7 +112,9 @@
             ? '<button type="button" class="admin-btn" data-past="' +
               item.seq +
               '">지난기사</button>'
-            : "") +
+            : '<button type="button" class="admin-btn" data-restore="' +
+              item.seq +
+              '">복원</button>') +
           '<button type="button" class="admin-btn admin-btn--danger" data-del="' +
           item.seq +
           '">삭제</button>' +
@@ -153,6 +156,105 @@
           });
       };
     });
+    listEl.querySelectorAll("[data-restore]").forEach(function (btn) {
+      btn.onclick = function () {
+        openRestoreModal(Number(btn.getAttribute("data-restore")));
+      };
+    });
+  }
+
+  function ensureRestoreModal() {
+    var modal = document.getElementById("mzRestoreModal");
+    if (modal) return modal;
+
+    modal = document.createElement("div");
+    modal.id = "mzRestoreModal";
+    modal.className = "admin-modal admin-modal--restore";
+    modal.hidden = true;
+    modal.innerHTML =
+      '<div class="admin-modal__backdrop" data-restore-close></div>' +
+      '<div class="admin-modal__dialog admin-modal__dialog--narrow" role="dialog" aria-modal="true" aria-labelledby="mzRestoreTitle">' +
+      '<header class="admin-modal__head">' +
+      '<h2 id="mzRestoreTitle">지난기사 복원</h2>' +
+      '<button type="button" class="admin-modal__close" data-restore-close aria-label="닫기">&times;</button>' +
+      "</header>" +
+      '<div class="admin-modal__body admin-restore-body">' +
+      '<p class="admin-restore-msg" id="mzRestoreDesc"></p>' +
+      '<div class="admin-restore-field field">' +
+      '<label for="mzRestoreSection">복원 카테고리</label>' +
+      '<select id="mzRestoreSection" class="admin-restore-select">' +
+      '<option value="preview">프리뷰</option>' +
+      '<option value="serial">연재</option>' +
+      '<option value="gv-moment">GV모먼트</option>' +
+      "</select>" +
+      '<p class="field-hint">복원 후 선택한 카테고리 목록·상세 페이지에 다시 노출됩니다.</p>' +
+      "</div></div>" +
+      '<footer class="admin-modal__footer">' +
+      '<div class="admin-form-actions admin-form-actions--modal">' +
+      '<button type="button" class="admin-btn" data-restore-close>취소</button>' +
+      '<button type="button" class="admin-btn admin-btn--primary" id="mzRestoreConfirm">복원</button>' +
+      "</div></footer></div>";
+    document.body.appendChild(modal);
+
+    modal.querySelectorAll("[data-restore-close]").forEach(function (el) {
+      el.addEventListener("click", closeRestoreModal);
+    });
+
+    document.getElementById("mzRestoreConfirm").onclick = confirmRestoreModal;
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !modal.hidden) closeRestoreModal();
+    });
+
+    return modal;
+  }
+
+  function openRestoreModal(seq) {
+    restoreModalSeq = seq;
+    var modal = ensureRestoreModal();
+    var desc = document.getElementById("mzRestoreDesc");
+    if (desc) {
+      desc.textContent =
+        "seq " + seq + " 기사를 지난기사에서 해제하고, 아래 카테고리로 복원합니다.";
+    }
+    var sectionSelect = document.getElementById("mzRestoreSection");
+    if (sectionSelect) sectionSelect.value = "preview";
+    modal.hidden = false;
+    document.body.classList.add("admin-modal-open");
+    if (sectionSelect) sectionSelect.focus();
+  }
+
+  function closeRestoreModal() {
+    restoreModalSeq = null;
+    var modal = document.getElementById("mzRestoreModal");
+    if (modal) modal.hidden = true;
+    document.body.classList.remove("admin-modal-open");
+  }
+
+  function confirmRestoreModal() {
+    if (!restoreModalSeq) return;
+    var sectionSelect = document.getElementById("mzRestoreSection");
+    var section = sectionSelect ? sectionSelect.value : "preview";
+    var label = sectionLabel(section, false);
+    if (!confirm("seq " + restoreModalSeq + " 을(를) 「" + label + "」로 복원할까요?")) {
+      return;
+    }
+
+    var btn = document.getElementById("mzRestoreConfirm");
+    if (btn) btn.disabled = true;
+
+    TiAdminApi.restoreMagazineFromPast(restoreModalSeq, section)
+      .then(function (res) {
+        alert("복원됨: seq " + res.seq + " → " + sectionLabel(res.section, false));
+        closeRestoreModal();
+        loadList();
+      })
+      .catch(function (err) {
+        alert(err.message || "복원에 실패했습니다.");
+      })
+      .finally(function () {
+        if (btn) btn.disabled = false;
+      });
   }
 
   function loadList() {

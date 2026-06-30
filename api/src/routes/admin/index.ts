@@ -30,7 +30,8 @@ import {
   createAdminMagazine,
   updateAdminMagazine,
   deleteAdminMagazine,
-  markMagazineAsPast
+  markMagazineAsPast,
+  restoreMagazineFromPast
 } from "../../services/admin/magazine-admin.service.js";
 import {
   getAdminNoticeList,
@@ -648,6 +649,26 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "MAGAZINE_MARK_PAST_FAILED", "지난기사 처리 실패");
+    }
+  });
+
+  app.post("/admin/magazine/:seq/restore", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "seq 필요");
+    const body = z.object({ section: sectionSchema }).safeParse(request.body);
+    if (!body.success) {
+      return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
+    }
+    try {
+      const updated = await restoreMagazineFromPast(params.data.seq, body.data.section);
+      if (!updated) return sendError(reply, 404, "NOT_FOUND", "기사를 찾을 수 없습니다.");
+      return updated;
+    } catch (err) {
+      if (err instanceof Error && err.message === "NOT_PAST_ARTICLE") {
+        return sendError(reply, 400, "NOT_PAST", "지난기사만 복원할 수 있습니다.");
+      }
+      request.log.error(err);
+      return sendError(reply, 500, "MAGAZINE_RESTORE_FAILED", "지난기사 복원 실패");
     }
   });
 

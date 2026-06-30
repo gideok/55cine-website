@@ -347,3 +347,27 @@ export async function markMagazineAsPast(seq: number): Promise<AdminMagazineDeta
 
   return getAdminMagazineBySeq(seq);
 }
+
+export async function restoreMagazineFromPast(
+  seq: number,
+  section: MagazineSection
+): Promise<AdminMagazineDetail | null> {
+  const pool = await getPool();
+  const existing = await getAdminMagazineBySeq(seq);
+  if (!existing) return null;
+  if (!existing.isPast) {
+    throw new Error("NOT_PAST_ARTICLE");
+  }
+
+  await pool
+    .request()
+    .input("seq", sql.Int, seq)
+    .input("section", sql.NVarChar, section)
+    .query(`
+      UPDATE dbo.web_magazine
+      SET is_past = 0, section = @section, updated_at = SYSUTCDATETIME()
+      WHERE seq = @seq
+    `);
+
+  return getAdminMagazineBySeq(seq);
+}
