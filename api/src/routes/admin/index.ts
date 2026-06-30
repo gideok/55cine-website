@@ -46,6 +46,7 @@ import {
   updateAdminSiteSettings
 } from "../../services/admin/site-settings-admin.service.js";
 import { searchKmdbMoviesMapped } from "../../services/admin/kmdb.service.js";
+import { getWorkScheduleMonth } from "../../services/admin/work-schedule-admin.service.js";
 import { resolveUploadPath, saveUploadedFile } from "../../services/admin/upload.service.js";
 
 const kindSchema = z.enum(["exhibition", "event"]);
@@ -195,6 +196,24 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "DASHBOARD_FAILED", "대시보드 조회 실패");
+    }
+  });
+
+  app.get("/admin/work-schedule", async (request, reply) => {
+    const parsed = z
+      .object({
+        year: z.coerce.number().int().min(2000).max(2100),
+        month: z.coerce.number().int().min(1).max(12)
+      })
+      .safeParse(request.query);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_QUERY", "year, month(1–12) 쿼리가 필요합니다.");
+    }
+    try {
+      return await getWorkScheduleMonth(parsed.data.year, parsed.data.month);
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "WORK_SCHEDULE_FAILED", "근무스케줄 조회 실패");
     }
   });
 

@@ -1834,3 +1834,184 @@ body.admin-modal-open {
   color: #71717a;
   line-height: 1.45;
 }
+
+/* 근무스케줄 (읽기 전용) */
+.ws-calendar {
+  max-width: 1200px;
+}
+
+.ws-calendar__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.ws-calendar__month-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #27272a;
+}
+
+.ws-calendar__month-label input[type="month"] {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.ws-calendar__readonly {
+  margin-left: auto;
+  font-size: 0.82rem;
+  color: #71717a;
+}
+
+.ws-calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.ws-calendar__weekday {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #52525b;
+  padding: 0.25rem 0;
+}
+
+.ws-calendar__weekday:first-child {
+  color: #b45309;
+}
+
+.ws-calendar__weekday:last-child {
+  color: #2563eb;
+}
+
+.ws-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.ws-day {
+  min-height: 118px;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ws-day--other-month {
+  background: #fafafa;
+  opacity: 0.72;
+}
+
+.ws-day--other-month .ws-day__head {
+  background: #f4f4f5;
+}
+
+.ws-day--today {
+  border-color: #0891b2;
+  box-shadow: 0 0 0 1px #0891b2 inset;
+}
+
+.ws-day--today .ws-day__num {
+  color: #dc2626;
+  font-weight: 800;
+}
+
+.ws-day__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  background: #fde68a;
+  border-bottom: 1px solid #f3e8c8;
+}
+
+.ws-day--other-month .ws-day__head {
+  background: #ececec;
+}
+
+.ws-day__num {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #18181b;
+  line-height: 1;
+}
+
+.ws-day__meeting {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #7c2d12;
+  background: #fed7aa;
+  border-radius: 999px;
+  padding: 0.12rem 0.4rem;
+  white-space: nowrap;
+}
+
+.ws-day__body {
+  flex: 1;
+  padding: 0.4rem 0.5rem 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.ws-day__shift {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  gap: 0.25rem 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.ws-day__shift--empty .ws-day__shift-value {
+  color: #a1a1aa;
+}
+
+.ws-day__shift-label {
+  font-weight: 600;
+  color: #52525b;
+}
+
+.ws-day__shift-value {
+  color: #18181b;
+  word-break: keep-all;
+}
+
+.ws-day__remarks {
+  margin: 0.35rem 0 0;
+  padding-left: 1rem;
+  color: #3f3f46;
+}
+
+.ws-day__remarks li {
+  margin-bottom: 0.15rem;
+}
+
+@media (max-width: 900px) {
+  .ws-calendar__grid,
+  .ws-calendar__weekdays {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ws-calendar__readonly {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .ws-calendar__grid,
+  .ws-calendar__weekdays {
+    grid-template-columns: 1fr;
+  }
+}

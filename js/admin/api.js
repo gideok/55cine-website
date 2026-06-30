@@ -80,6 +80,15 @@
     getDashboard: function () {
       return apiJson("GET", "/admin/dashboard");
     },
+    getWorkSchedule: function (year, month) {
+      return apiJson(
+        "GET",
+        "/admin/work-schedule?year=" +
+          encodeURIComponent(String(year)) +
+          "&month=" +
+          encodeURIComponent(String(month))
+      );
+    },
     getPrograms: function (q, page, pageSize, desktopOnly) {
       var path =
         "/admin/programs?page=" +
