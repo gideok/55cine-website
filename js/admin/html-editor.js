@@ -402,6 +402,34 @@
         return wrap;
       }
 
+      if (tag === "DIV") {
+        var divClass = node.getAttribute && node.getAttribute("class");
+        if (options.showTextBox && divClass && /\bmz-text-box\b/.test(divClass)) {
+          var textBox = document.createElement("div");
+          textBox.className = MAGAZINE_TEXT_BOX_CLASS;
+          Array.prototype.forEach.call(node.childNodes, function (ch) {
+            var c = sanitizePasteNode(ch);
+            if (c) textBox.appendChild(c);
+          });
+          return textBox;
+        }
+        if (options.allowParagraphs) {
+          var block = document.createElement("div");
+          Array.prototype.forEach.call(node.childNodes, function (ch) {
+            var c = sanitizePasteNode(ch);
+            if (c) block.appendChild(c);
+          });
+          ensureBlockHasBreak(block);
+          return block;
+        }
+        var divFrag = document.createDocumentFragment();
+        Array.prototype.forEach.call(node.childNodes, function (ch) {
+          var c = sanitizePasteNode(ch);
+          if (c) divFrag.appendChild(c);
+        });
+        return divFrag;
+      }
+
       if (!isPasteTagAllowed(tag)) {
         var frag = document.createDocumentFragment();
         Array.prototype.forEach.call(node.childNodes, function (ch) {
@@ -430,18 +458,6 @@
         el = document.createElement("p");
       } else if (tag === "BLOCKQUOTE" && options.showQuote) {
         el = document.createElement("blockquote");
-      } else if (tag === "DIV" && options.showTextBox) {
-        var nodeClass = node.getAttribute && node.getAttribute("class");
-        if (!nodeClass || !/\bmz-text-box\b/.test(nodeClass)) {
-          var divFrag = document.createDocumentFragment();
-          Array.prototype.forEach.call(node.childNodes, function (ch) {
-            var c = sanitizePasteNode(ch);
-            if (c) divFrag.appendChild(c);
-          });
-          return divFrag;
-        }
-        el = document.createElement("div");
-        el.className = MAGAZINE_TEXT_BOX_CLASS;
       } else if (options.showHeadings && isHeadingTag(tag)) {
         el = document.createElement(tag.toLowerCase());
         var headingStyle = node.getAttribute && node.getAttribute("style");
@@ -596,12 +612,8 @@
       range.deleteContents();
       var tpl = document.createElement("template");
       tpl.innerHTML = html;
-      var nodes = Array.prototype.slice.call(tpl.content.childNodes);
-      var last = null;
-      nodes.forEach(function (node) {
-        range.insertNode(node);
-        last = node;
-      });
+      var last = tpl.content.lastChild;
+      range.insertNode(tpl.content);
       if (last) {
         range.setStartAfter(last);
         range.collapse(true);
@@ -792,6 +804,28 @@
       saveSelection();
     });
 
+    function insertPlainTextAtCursor(text) {
+      if (!text) return;
+      if (options.allowParagraphs && /\r|\n/.test(text)) {
+        var lines = String(text).replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+        var htmlParts = lines.map(function (line) {
+          if (!line) return "<div><br></div>";
+          return (
+            "<div>" +
+            line
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;") +
+            "</div>"
+          );
+        });
+        insertHtmlAtCursor(htmlParts.join(""));
+        return;
+      }
+      document.execCommand("insertText", false, text);
+      saveSelection();
+    }
+
     body.addEventListener("paste", function (e) {
       e.preventDefault();
       body.focus();
@@ -801,8 +835,7 @@
       if (html) {
         insertHtmlAtCursor(sanitizePasteHtml(html));
       } else if (text) {
-        document.execCommand("insertText", false, text);
-        saveSelection();
+        insertPlainTextAtCursor(text);
       }
     });
 
