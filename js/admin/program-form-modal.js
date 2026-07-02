@@ -87,6 +87,16 @@
     return "../" + rel;
   }
 
+  function withCacheBuster(url) {
+    if (!url) return "";
+    if (/^blob:/i.test(url) || /^data:/i.test(url)) return url;
+    return url + (url.indexOf("?") >= 0 ? "&" : "?") + "_ts=" + Date.now();
+  }
+
+  function posterPreviewUrl(path) {
+    return withCacheBuster(resolveAssetUrl(path));
+  }
+
   function parseYoutubeVideoId(raw) {
     var s = String(raw || "").trim();
     if (!s) return "";
@@ -450,7 +460,9 @@
   function setPosterUploading(loading) {
     posterState.uploading = !!loading;
     var pickLabel = document.getElementById("posterPickLabel");
+    var submitBtn = document.getElementById("progFormSubmit");
     if (pickLabel) pickLabel.classList.toggle("is-disabled", loading);
+    if (submitBtn) submitBtn.disabled = !!loading || !!isSaving;
     updatePosterPreview();
   }
 
@@ -775,7 +787,7 @@
         if (!res || !res.path) throw new Error("포스터 업로드 실패");
         posterState.img1Path = res.path;
         posterState.imgThumbPath = res.thumbPath || null;
-        posterState.previewUrl = resolveAssetUrl(res.path);
+        posterState.previewUrl = posterPreviewUrl(res.path);
         posterState.pendingFile = null;
         posterState.removed = false;
         return {
@@ -806,10 +818,8 @@
     } else {
       var progId = detailRef && detailRef.progId;
       if (!progId) return Promise.reject(new Error("prog_id가 없습니다."));
-      chain = TiAdminApi.updateProgBase(progId, baseBody).then(function () {
-        return saveWebProgram(progId, webBody).then(function (saved) {
-          return { progId: progId, saved: saved };
-        });
+      chain = TiAdminApi.updateProgramAll(progId, baseBody, webBody).then(function (saved) {
+        return { progId: progId, saved: saved };
       });
     }
 
@@ -824,7 +834,7 @@
             posterState.img1Path = res.path;
             posterState.imgThumbPath = res.thumbPath || null;
             posterState.kmdbPosterUrl = null;
-            posterState.previewUrl = resolveAssetUrl(res.path);
+            posterState.previewUrl = posterPreviewUrl(res.path);
             return TiAdminApi.updateProgram(saved.seq, {
               img1: res.path,
               imgThumb: res.thumbPath || null
@@ -886,6 +896,10 @@
   function onSubmit(e) {
     e.preventDefault();
     if (isSaving) return;
+    if (posterState.uploading) {
+      showMsg("포스터 업로드가 완료된 후 저장해 주세요.", true);
+      return;
+    }
     var trailerInput = document.getElementById("wpTrailerUrl");
     if (trailerInput) {
       var normalized = normalizeTrailerUrl(trailerInput.value);
@@ -932,7 +946,7 @@
             if (!res || !res.path) throw new Error("서버 업로드 경로를 받지 못했습니다.");
             posterState.img1Path = res.path;
             posterState.imgThumbPath = res.thumbPath || null;
-            posterState.previewUrl = resolveAssetUrl(res.path);
+            posterState.previewUrl = posterPreviewUrl(res.path);
             posterState.pendingFile = null;
             posterState.removed = false;
             updatePosterPreview();
@@ -1007,7 +1021,7 @@
             posterState.img1Path = res.path;
             posterState.imgThumbPath = res.thumbPath || null;
             posterState.kmdbPosterUrl = null;
-            posterState.previewUrl = resolveAssetUrl(res.path);
+            posterState.previewUrl = posterPreviewUrl(res.path);
           })
           .catch(function (err) {
             showMsg(err.message || "KMDB 포스터를 가져오지 못했습니다.", true);

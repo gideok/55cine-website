@@ -1,5 +1,6 @@
 import sql from "mssql";
 import { getPool } from "../../db/pool.js";
+import type { UpdateProgBaseInput } from "./prog-base-admin.service.js";
 
 export type AdminProgramListItem = {
   seq: number | null;
@@ -295,6 +296,11 @@ export type UpdateProgramInput = {
   trailerUrl?: string | null;
 };
 
+export type UpdateProgramAllInput = {
+  base: UpdateProgBaseInput;
+  web: UpdateProgramInput;
+};
+
 export type SlugConflict = {
   seq: number;
   progId: number;
@@ -377,19 +383,19 @@ async function applyWebProgramUpdate(
     req.input(param, sql.NVarChar(sql.MAX), val);
   };
 
-  set("slug", "slug", input.slug ?? null);
-  set("detail_url", "detailUrl", input.detailUrl ?? null);
-  set("img_thumb", "imgThumb", input.imgThumb ?? null);
-  set("img1", "img1", input.img1 ?? null);
-  set("img2", "img2", input.img2 ?? null);
-  set("img3", "img3", input.img3 ?? null);
-  set("img4", "img4", input.img4 ?? null);
-  set("img5", "img5", input.img5 ?? null);
-  set("director", "director", input.director ?? null);
-  set("cast_names", "castNames", input.castNames ?? null);
-  set("info", "info", input.info ?? null);
-  set("synopsis", "synopsis", input.synopsis ?? null);
-  set("trailer_url", "trailerUrl", input.trailerUrl ?? null);
+  set("slug", "slug", input.slug);
+  set("detail_url", "detailUrl", input.detailUrl);
+  set("img_thumb", "imgThumb", input.imgThumb);
+  set("img1", "img1", input.img1);
+  set("img2", "img2", input.img2);
+  set("img3", "img3", input.img3);
+  set("img4", "img4", input.img4);
+  set("img5", "img5", input.img5);
+  set("director", "director", input.director);
+  set("cast_names", "castNames", input.castNames);
+  set("info", "info", input.info);
+  set("synopsis", "synopsis", input.synopsis);
+  set("trailer_url", "trailerUrl", input.trailerUrl);
 
   if (fields.length) {
     await req.query(`UPDATE dbo.web_program SET ${fields.join(", ")} WHERE seq = @seq`);
@@ -438,4 +444,163 @@ export async function upsertAdminProgramByProgId(
   if (!seq) return null;
 
   return applyWebProgramUpdate(seq, input);
+}
+
+export async function updateAdminProgramAllByProgId(
+  progId: number,
+  input: UpdateProgramAllInput
+): Promise<AdminProgramDetail | null> {
+  const pool = await getPool();
+  const tx = new sql.Transaction(pool);
+  await tx.begin();
+  try {
+    const base = input.base;
+    const web = input.web;
+
+    const name = String(base.name || "").trim();
+    const name2 = String(base.name2 ?? "").trim();
+    if (!name) throw new Error("영화명을 입력해 주세요.");
+
+    const runningTime = base.runningTime == null ? null : Number(base.runningTime);
+    const dateClose = base.dateClose ? String(base.dateClose).trim().slice(0, 10) : null;
+
+    const prevReq = new sql.Request(tx).input("progId", sql.Int, progId);
+    const prev = await prevReq.query<{ prog_id: number }>(
+      `SELECT prog_id FROM dbo.prog_base WHERE prog_id = @progId`
+    );
+    if (!prev.recordset[0]) {
+      await tx.rollback();
+      return null;
+    }
+
+    await new sql.Request(tx)
+      .input("progId", sql.Int, progId)
+      .input("name", sql.NVarChar(300), name)
+      .input("name2", sql.NVarChar(300), name2)
+      .input("divScreen", sql.TinyInt, base.divScreen)
+      .input("divProg", sql.TinyInt, base.divProg)
+      .input("grade", sql.TinyInt, base.grade)
+      .input("country", sql.TinyInt, base.country)
+      .input("runningTime", sql.Int, Number.isFinite(runningTime) ? runningTime : null)
+      .input("producer", sql.NVarChar(200), base.producer?.trim() || null)
+      .input("distributor", sql.NVarChar(200), base.distributor?.trim() || null)
+      .input("specVideo", sql.TinyInt, base.specVideo)
+      .input("specAudio", sql.TinyInt, base.specAudio)
+      .input("specFormat", sql.TinyInt, base.specFormat)
+      .input("volumn", sql.NVarChar(50), String(base.volumn ?? "").trim())
+      .input("dateOpen", sql.Date, base.dateOpen)
+      .input("dateClose", sql.Date, dateClose)
+      .input("divState", sql.TinyInt, base.divState)
+      .input("progUrl", sql.NVarChar(500), base.progUrl?.trim() || "")
+      .query(`
+        UPDATE dbo.prog_base SET
+          name = @name,
+          name2 = @name2,
+          div_screen = @divScreen,
+          div_prog = @divProg,
+          grade = @grade,
+          country = @country,
+          runningtime = @runningTime,
+          producer = @producer,
+          distributor = @distributor,
+          spec_video = @specVideo,
+          spec_audio = @specAudio,
+          spec_format = @specFormat,
+          volumn = @volumn,
+          date_open = @dateOpen,
+          date_close = @dateClose,
+          div_state = @divState,
+          prog_url = @progUrl
+        WHERE prog_id = @progId
+      `);
+
+    const existingWeb = await new sql.Request(tx)
+      .input("progId", sql.Int, progId)
+      .query<{ seq: number }>(`SELECT seq FROM dbo.web_program WHERE prog_id = @progId`);
+    const existingSeq = existingWeb.recordset[0]?.seq ? Number(existingWeb.recordset[0].seq) : null;
+
+    const slug = web.slug != null ? String(web.slug).trim() || null : null;
+    if (slug) {
+      const dupReq = new sql.Request(tx).input("slug", sql.NVarChar(200), slug.toLowerCase());
+      let dupWhere = "";
+      if (existingSeq) {
+        dupReq.input("excludeSeq", sql.Int, existingSeq);
+        dupWhere = " AND wp.seq <> @excludeSeq";
+      }
+      const dup = await dupReq.query<{ seq: number; name: string | null }>(`
+        SELECT TOP 1 wp.seq, pb.name
+        FROM dbo.web_program wp
+        INNER JOIN dbo.prog_base pb ON pb.prog_id = wp.prog_id
+        WHERE LOWER(LTRIM(RTRIM(wp.slug))) = @slug
+          ${dupWhere}
+      `);
+      const row = dup.recordset[0];
+      if (row) {
+        const title = String(row.name || "").trim() || "다른 상영작";
+        const err = new Error(
+          `slug "${slug}"는 이미 등록된 상영작("${title}", seq ${Number(row.seq)})과 중복됩니다.\nslug를 수정한 뒤 다시 저장해 주세요.`
+        );
+        (err as Error & { code: string }).code = "DUPLICATE_SLUG";
+        throw err;
+      }
+    }
+
+    const req = new sql.Request(tx)
+      .input("progId", sql.Int, progId)
+      .input("slug", sql.NVarChar(120), web.slug ?? null)
+      .input("detailUrl", sql.NVarChar(500), web.detailUrl ?? null)
+      .input("imgThumb", sql.NVarChar(500), web.imgThumb ?? null)
+      .input("img1", sql.NVarChar(500), web.img1 ?? null)
+      .input("img2", sql.NVarChar(500), web.img2 ?? null)
+      .input("img3", sql.NVarChar(500), web.img3 ?? null)
+      .input("img4", sql.NVarChar(500), web.img4 ?? null)
+      .input("img5", sql.NVarChar(500), web.img5 ?? null)
+      .input("director", sql.NVarChar(200), web.director ?? null)
+      .input("castNames", sql.NVarChar(1000), web.castNames ?? null)
+      .input("info", sql.NVarChar(300), web.info ?? null)
+      .input("synopsis", sql.NVarChar(sql.MAX), web.synopsis ?? null)
+      .input("trailerUrl", sql.NVarChar(120), web.trailerUrl ?? null);
+
+    if (existingSeq) {
+      req.input("seq", sql.Int, existingSeq);
+      await req.query(`
+        UPDATE dbo.web_program SET
+          slug = @slug,
+          detail_url = @detailUrl,
+          img_thumb = @imgThumb,
+          img1 = @img1,
+          img2 = @img2,
+          img3 = @img3,
+          img4 = @img4,
+          img5 = @img5,
+          director = @director,
+          cast_names = @castNames,
+          info = @info,
+          synopsis = @synopsis,
+          trailer_url = @trailerUrl
+        WHERE seq = @seq
+      `);
+    } else {
+      await req.query(`
+        INSERT INTO dbo.web_program (
+          prog_id, slug, detail_url, img_thumb, img1, img2, img3, img4, img5,
+          director, cast_names, info, synopsis, trailer_url
+        )
+        VALUES (
+          @progId, @slug, @detailUrl, @imgThumb, @img1, @img2, @img3, @img4, @img5,
+          @director, @castNames, @info, @synopsis, @trailerUrl
+        )
+      `);
+    }
+
+    await tx.commit();
+    return getAdminProgramByProgId(progId);
+  } catch (err) {
+    try {
+      await tx.rollback();
+    } catch (_e) {
+      /* ignore rollback error */
+    }
+    throw err;
+  }
 }

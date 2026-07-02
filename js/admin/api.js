@@ -146,6 +146,13 @@
         body
       );
     },
+    updateProgramAll: function (progId, baseBody, webBody) {
+      return apiJson(
+        "PUT",
+        "/admin/programs/full/" + encodeURIComponent(String(progId)),
+        { base: baseBody, web: webBody }
+      );
+    },
     getSpecialList: function (kind, q, page, pageSize) {
       var path =
         "/admin/special?page=" +

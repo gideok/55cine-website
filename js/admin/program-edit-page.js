@@ -58,6 +58,16 @@
     return "../" + rel;
   }
 
+  function withCacheBuster(url) {
+    if (!url) return "";
+    if (/^blob:/i.test(url) || /^data:/i.test(url)) return url;
+    return url + (url.indexOf("?") >= 0 ? "&" : "?") + "_ts=" + Date.now();
+  }
+
+  function posterPreviewUrl(path) {
+    return withCacheBuster(resolveAssetUrl(path));
+  }
+
   function field(name, label, val) {
     return (
       '<div class="field"><label>' +
@@ -195,7 +205,7 @@
           }
           posterState.img1Path = res.path;
           posterState.imgThumbPath = res.thumbPath || null;
-          posterState.previewUrl = resolveAssetUrl(res.path);
+          posterState.previewUrl = posterPreviewUrl(res.path);
           posterState.removed = false;
           updatePosterPreview();
         })

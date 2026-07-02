@@ -6,6 +6,26 @@ import { resolveUploadPath, saveUploadedFile } from "./upload.service.js";
 
 export const PROGRAM_THUMB_SIZE = 40;
 
+function isWindowsReplaceLockError(err: unknown): boolean {
+  if (!err || typeof err !== "object") return false;
+  const code = "code" in err ? String((err as { code?: unknown }).code || "") : "";
+  const msg = "message" in err ? String((err as { message?: unknown }).message || "") : "";
+  return (
+    code === "EPERM" ||
+    code === "EBUSY" ||
+    code === "EACCES" ||
+    code === "UNKNOWN" ||
+    /operation not permitted|access is denied|resource busy|unknown error/i.test(msg)
+  );
+}
+
+function withVersionSuffix(relPath: string): string {
+  const normalized = String(relPath || "").replace(/\\/g, "/");
+  const ext = path.extname(normalized);
+  const base = ext ? normalized.slice(0, -ext.length) : normalized;
+  return `${base}_u${Date.now()}${ext || ".jpg"}`;
+}
+
 function absFromRel(rel: string): string {
   return path.join(config.repoRoot, rel.replace(/\//g, path.sep));
 }
@@ -34,7 +54,15 @@ export async function finalizeProgramPosterUpload(
   originalFilename?: string
 ): Promise<{ path: string; thumbPath: string }> {
   const relPath = resolveUploadPath("program", { programSeq, originalFilename });
-  const saved = await saveUploadedFile(buffer, relPath);
+  let saved;
+  try {
+    saved = await saveUploadedFile(buffer, relPath);
+  } catch (err) {
+    // Windows에서 기존 이미지 파일 잠금(미리보기/정적서버 핸들) 시 대체 파일명으로 저장
+    if (!isWindowsReplaceLockError(err)) throw err;
+    const fallbackRel = withVersionSuffix(relPath);
+    saved = await saveUploadedFile(buffer, fallbackRel);
+  }
   const thumbRel = thumbPathFromPoster(saved.path);
   await writeProgramThumbnail(saved.path, thumbRel);
   return { path: saved.path, thumbPath: thumbRel };

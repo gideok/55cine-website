@@ -9,7 +9,8 @@ import {
   getAdminProgramByProgId,
   updateAdminProgram,
   upsertAdminProgramByProgId,
-  checkAdminProgramDuplicateSlug
+  checkAdminProgramDuplicateSlug,
+  updateAdminProgramAllByProgId
 } from "../../services/admin/web-program-admin.service.js";
 import {
   getProgBaseFormOptions,
@@ -127,6 +128,22 @@ const progBaseBodySchema = z.object({
   dateClose: z.string().nullable().optional(),
   divState: z.coerce.number().int().min(0).max(255),
   progUrl: z.string().nullable().optional()
+});
+
+const webProgramBodySchema = z.object({
+  slug: z.string().max(120, "slug는 120자 이하여야 합니다.").nullable().optional(),
+  detailUrl: z.string().max(500, "detail_url은 500자 이하여야 합니다.").nullable().optional(),
+  imgThumb: z.string().max(500).nullable().optional(),
+  img1: z.string().max(500).nullable().optional(),
+  img2: z.string().max(500).nullable().optional(),
+  img3: z.string().max(500).nullable().optional(),
+  img4: z.string().max(500).nullable().optional(),
+  img5: z.string().max(500).nullable().optional(),
+  director: z.string().max(200, "감독은 200자 이하여야 합니다.").nullable().optional(),
+  castNames: z.string().max(1000, "출연은 1000자 이하여야 합니다.").nullable().optional(),
+  info: z.string().max(300, "info는 300자 이하여야 합니다.").nullable().optional(),
+  synopsis: z.string().nullable().optional(),
+  trailerUrl: z.string().max(120, "예고편 ID는 120자 이하여야 합니다.").nullable().optional()
 });
 
 const specialImageBodyFields = {
@@ -362,23 +379,7 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
 
   app.put("/admin/programs/by-prog/:progId", async (request, reply) => {
     const params = z.object({ progId: z.coerce.number().int().positive() }).safeParse(request.params);
-    const body = z
-      .object({
-        slug: z.string().nullable().optional(),
-        detailUrl: z.string().nullable().optional(),
-        imgThumb: z.string().nullable().optional(),
-        img1: z.string().nullable().optional(),
-        img2: z.string().nullable().optional(),
-        img3: z.string().nullable().optional(),
-        img4: z.string().nullable().optional(),
-        img5: z.string().nullable().optional(),
-        director: z.string().nullable().optional(),
-        castNames: z.string().nullable().optional(),
-        info: z.string().nullable().optional(),
-        synopsis: z.string().nullable().optional(),
-        trailerUrl: z.string().nullable().optional()
-      })
-      .safeParse(request.body);
+    const body = webProgramBodySchema.safeParse(request.body);
     if (!params.success || !body.success) {
       return sendError(reply, 400, "INVALID_BODY", "요청 본문이 올바르지 않습니다.");
     }
@@ -416,23 +417,7 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
 
   app.put("/admin/programs/:seq", async (request, reply) => {
     const params = z.object({ seq: z.coerce.number().int().positive() }).safeParse(request.params);
-    const body = z
-      .object({
-        slug: z.string().nullable().optional(),
-        detailUrl: z.string().nullable().optional(),
-        imgThumb: z.string().nullable().optional(),
-        img1: z.string().nullable().optional(),
-        img2: z.string().nullable().optional(),
-        img3: z.string().nullable().optional(),
-        img4: z.string().nullable().optional(),
-        img5: z.string().nullable().optional(),
-        director: z.string().nullable().optional(),
-        castNames: z.string().nullable().optional(),
-        info: z.string().nullable().optional(),
-        synopsis: z.string().nullable().optional(),
-        trailerUrl: z.string().nullable().optional()
-      })
-      .safeParse(request.body);
+    const body = webProgramBodySchema.safeParse(request.body);
     if (!params.success || !body.success) {
       return sendError(reply, 400, "INVALID_BODY", "요청 본문이 올바르지 않습니다.");
     }
@@ -452,6 +437,35 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
         );
       }
       return sendError(reply, 500, "PROGRAM_UPDATE_FAILED", "상영작 수정 실패");
+    }
+  });
+
+  app.put("/admin/programs/full/:progId", async (request, reply) => {
+    const params = z.object({ progId: z.coerce.number().int().positive() }).safeParse(request.params);
+    const body = z.object({ base: progBaseBodySchema, web: webProgramBodySchema }).safeParse(request.body);
+    if (!params.success) return sendError(reply, 400, "INVALID_PARAMS", "progId 필요");
+    if (!body.success) return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(body));
+    try {
+      const updated = await updateAdminProgramAllByProgId(params.data.progId, body.data);
+      if (!updated) return sendError(reply, 404, "NOT_FOUND", "상영작을 찾을 수 없습니다.");
+      return updated;
+    } catch (err) {
+      request.log.error(err);
+      const code = err && typeof err === "object" && "code" in err ? String((err as { code: string }).code) : "";
+      if (code === "DUPLICATE_SLUG") {
+        return sendError(
+          reply,
+          409,
+          "DUPLICATE_SLUG",
+          err instanceof Error ? err.message : "slug가 다른 상영작과 중복됩니다."
+        );
+      }
+      const raw = err instanceof Error ? err.message : "";
+      let msg = raw || "상영작 저장 실패";
+      if (/truncat/i.test(raw)) {
+        msg = "입력값이 허용 길이를 초과했습니다. slug/감독/출연/info 길이를 확인해 주세요.";
+      }
+      return sendError(reply, 500, "PROGRAM_UPDATE_FAILED", msg);
     }
   });
 
