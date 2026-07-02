@@ -83,6 +83,9 @@ def upload_and_extract(
     ssh_run(client, f"tar -xzf {remote_tar} -C {APP_ROOT}")
     ssh_run(client, f"rm -f {remote_tar}")
 
+    ssh_run(client, f"chmod +x {APP_ROOT}/deploy/scripts/*.sh")
+    ssh_run(client, f"sed -i 's/\\r$//' {APP_ROOT}/deploy/scripts/*.sh")
+
     if preserve:
         ssh_run(client, f"bash {APP_ROOT}/deploy/scripts/server-images-guard.sh merge")
 
@@ -92,8 +95,6 @@ def upload_and_extract(
         sftp.put(str(env_path), f"{APP_ROOT}/.env")
         sftp.close()
 
-    ssh_run(client, f"chmod +x {APP_ROOT}/deploy/scripts/*.sh")
-    ssh_run(client, f"sed -i 's/\\r$//' {APP_ROOT}/deploy/scripts/*.sh")
     ssh_run(client, f"bash {APP_ROOT}/deploy/scripts/remote-setup.sh {APP_ROOT}")
     client.close()
     print("[deploy] complete")

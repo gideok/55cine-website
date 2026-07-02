@@ -71,9 +71,8 @@ jobs:
             tar -xzf /root/release/55cine-deploy.tar.gz -C "$APP_ROOT"
             rm -rf /root/release
 
-            bash "$APP_ROOT/deploy/scripts/server-images-guard.sh" merge
-
             chmod +x "$APP_ROOT/deploy/scripts/"*.sh
             sed -i 's/\r$//' "$APP_ROOT/deploy/scripts/"*.sh
+            bash "$APP_ROOT/deploy/scripts/server-images-guard.sh" merge
             bash "$APP_ROOT/deploy/scripts/remote-setup.sh" "$APP_ROOT"
             curl -fsS http://127.0.0.1/api/v1/health || curl -fsS http://127.0.0.1:3000/api/v1/health
