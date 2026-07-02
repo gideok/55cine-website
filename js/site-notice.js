@@ -1,8 +1,20 @@
 /**
  * 활성 공지 — index.html 우측 패널(PC) / 전체 화면 중앙(모바일)
+ *
+ * 닫기(×): 저장 없음 — HOME 재방문 시마다 표시
+ * 당일보지않기: localStorage에 오늘 날짜 저장 — 당일 재방문 시 숨김
  */
 (function (global) {
-  var DISMISS_KEY_PREFIX = "ti-site-notice-dismiss-";
+  var HIDE_TODAY_KEY_PREFIX = "ti-site-notice-hide-today-";
+
+  function pad2(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  function todayYmd() {
+    var d = new Date();
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
 
   function esc(s) {
     return String(s || "")
@@ -36,17 +48,17 @@
     return meta && meta.getAttribute("content") === "index.html";
   }
 
-  function isDismissed(seq) {
+  function isHiddenToday(seq) {
     try {
-      return sessionStorage.getItem(DISMISS_KEY_PREFIX + seq) === "1";
+      return global.localStorage.getItem(HIDE_TODAY_KEY_PREFIX + seq) === todayYmd();
     } catch (e) {
       return false;
     }
   }
 
-  function markDismissed(seq) {
+  function markHiddenToday(seq) {
     try {
-      sessionStorage.setItem(DISMISS_KEY_PREFIX + seq, "1");
+      global.localStorage.setItem(HIDE_TODAY_KEY_PREFIX + seq, todayYmd());
     } catch (e) {
       /* ignore */
     }
@@ -92,7 +104,10 @@
     if (notice.bodyHtml) {
       html += '<div class="site-notice__body">' + notice.bodyHtml + "</div>";
     }
-    html += "</div></article>";
+    html +=
+      '</div><footer class="site-notice__foot">' +
+      '<button type="button" class="site-notice__hide-today">당일보지않기</button>' +
+      "</footer></article>";
 
     mount.innerHTML = html;
     mount.hidden = false;
@@ -101,7 +116,14 @@
     var closeBtn = mount.querySelector(".site-notice__close");
     if (closeBtn) {
       closeBtn.addEventListener("click", function () {
-        markDismissed(notice.seq);
+        clearNotice(mount, aside);
+      });
+    }
+
+    var hideTodayBtn = mount.querySelector(".site-notice__hide-today");
+    if (hideTodayBtn) {
+      hideTodayBtn.addEventListener("click", function () {
+        markHiddenToday(notice.seq);
         clearNotice(mount, aside);
       });
     }
@@ -132,7 +154,7 @@
           clearNotice(mount, aside);
           return;
         }
-        if (isDismissed(data.seq)) {
+        if (isHiddenToday(data.seq)) {
           clearNotice(mount, aside);
           return;
         }
