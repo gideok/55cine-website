@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var LIST_KEY = "special";
   var STATE_FIELDS = ["kind", "q", "page", "pageSize"];
@@ -167,4 +167,5 @@
   }
 
   mountShell();
+  });
 })();

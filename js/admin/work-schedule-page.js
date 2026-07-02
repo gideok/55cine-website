@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
   var state = {
@@ -240,4 +240,5 @@
   renderShell("");
   bindToolbar();
   loadMonth();
+  });
 })();

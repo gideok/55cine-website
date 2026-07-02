@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var PROGRAM_POSTER_PLACEHOLDER = "images/schedule-poster-placeholder.svg";
 
@@ -355,4 +355,5 @@
         esc(err.message) +
         '</div><p><a href="' + esc(programsListUrl()) + '">← 상영작 목록</a></p>';
     });
+  });
 })();

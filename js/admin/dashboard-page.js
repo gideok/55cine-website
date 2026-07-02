@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var POSTER_PLACEHOLDER = "images/schedule-poster-placeholder.svg";
 
@@ -145,4 +145,5 @@
         (err.message || "대시보드 로드 실패") +
         "</div>";
     });
+  });
 })();

@@ -13,11 +13,10 @@
   API_BASE = API_BASE.replace(/\/$/, "");
 
   function adminHeaders(withJsonBody) {
-    var headers = {
-      Accept: "application/json",
-      // 추후수정 및 로그인 연동 — 스텁 인증 헤더
-      "X-Admin-Auth": "true"
-    };
+    var headers = { Accept: "application/json" };
+    if (global.TiAdminAuth && typeof global.TiAdminAuth.sessionHeaders === "function") {
+      Object.assign(headers, global.TiAdminAuth.sessionHeaders());
+    }
     if (withJsonBody) {
       headers["Content-Type"] = "application/json";
     }
@@ -36,7 +35,7 @@
     var hasBody = body !== undefined;
     var opts = {
       method: method,
-      credentials: "same-origin",
+      credentials: "include",
       headers: adminHeaders(hasBody)
     };
     if (hasBody) opts.body = JSON.stringify(body);
@@ -44,6 +43,17 @@
       return res.json().catch(function () {
         return {};
       }).then(function (data) {
+        if (res.status === 401 && global.TiAdminAuth) {
+          try {
+            global.localStorage.removeItem(global.TiAdminAuth.TOKEN_KEY);
+          } catch (_e) {
+            /* ignore */
+          }
+          if (global.TiAdminAuth.isAdminPath && global.TiAdminAuth.isAdminPath()) {
+            global.TiAdminAuth.redirectUnauthenticated();
+            return Promise.reject(new Error(global.TiAdminAuth.AUTH_MESSAGE || "관리자 인증이 필요합니다."));
+          }
+        }
         if (!res.ok) parseError(res, data);
         return data;
       });
@@ -59,12 +69,8 @@
     form.append("file", file);
     return fetch(url, {
       method: "POST",
-      credentials: "same-origin",
-      headers: {
-        Accept: "application/json",
-        // 추후수정 및 로그인 연동
-        "X-Admin-Auth": "true"
-      },
+      credentials: "include",
+      headers: adminHeaders(false),
       body: form
     }).then(function (res) {
       return res.json().catch(function () {

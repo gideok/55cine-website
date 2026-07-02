@@ -135,6 +135,14 @@
     var neighbors = article.neighbors || findNeighbors(article.id);
     var pageTitle = article.movieTitle || article.title || "";
     if (titleEl) titleEl.textContent = pageTitle;
+    var headEl = document.querySelector(".md-head");
+    var editSeq = article.seq || article.id;
+    if (headEl && editSeq && window.TiAdminDetailEdit) {
+      TiAdminDetailEdit.mount(
+        headEl,
+        TiAdminDetailEdit.buildHref("admin/magazine-edit.html", editSeq)
+      );
+    }
     root.innerHTML = "";
     if (statusEl) statusEl.hidden = true;
 

@@ -2,6 +2,14 @@ import type { FastifyInstance } from "fastify";
 import multipart from "@fastify/multipart";
 import { z } from "zod";
 import { requireAdminAuth } from "../../middleware/admin-auth.js";
+import {
+  clearAdminSessionCookie,
+  createAdminSessionToken,
+  isAdminAuthConfigured,
+  isAdminSessionActive,
+  setAdminSessionCookie,
+  verifyAdminCredentials
+} from "../../services/admin-session.service.js";
 import { getAdminDashboardStats } from "../../services/admin/dashboard.service.js";
 import {
   getAdminProgramList,
@@ -199,10 +207,58 @@ function sendError(reply: import("fastify").FastifyReply, code: number, errCode:
   return reply.code(code).send({ error: { code: errCode, message } });
 }
 
+const adminLoginBodySchema = z.object({
+  username: z.string().min(1, "아이디를 입력해 주세요."),
+  password: z.string().min(1, "비밀번호를 입력해 주세요.")
+});
+
+function isPublicAdminRoute(url: string): boolean {
+  const path = url.split("?")[0];
+  return (
+    path.endsWith("/admin/login") ||
+    path.endsWith("/admin/logout") ||
+    path.endsWith("/admin/session")
+  );
+}
+
 export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
   await app.register(multipart, { limits: { fileSize: 20 * 1024 * 1024 } });
 
+  app.post("/admin/login", async (request, reply) => {
+    if (!isAdminAuthConfigured()) {
+      return sendError(reply, 503, "ADMIN_NOT_CONFIGURED", "관리자 계정이 설정되지 않았습니다.");
+    }
+
+    const parsed = adminLoginBodySchema.safeParse(request.body);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_BODY", zodBodyMessage(parsed));
+    }
+
+    const { username, password } = parsed.data;
+    if (!verifyAdminCredentials(username, password)) {
+      return sendError(reply, 401, "INVALID_CREDENTIALS", "아이디 또는 비밀번호가 올바르지 않습니다.");
+    }
+
+    const token = createAdminSessionToken();
+    if (!token) {
+      return sendError(reply, 500, "SESSION_FAILED", "세션을 생성하지 못했습니다.");
+    }
+
+    setAdminSessionCookie(reply, token);
+    return { ok: true, token };
+  });
+
+  app.post("/admin/logout", async (_request, reply) => {
+    clearAdminSessionCookie(reply);
+    return { ok: true };
+  });
+
+  app.get("/admin/session", async (request) => {
+    return { authenticated: isAdminSessionActive(request) };
+  });
+
   app.addHook("preHandler", async (request, reply) => {
+    if (isPublicAdminRoute(request.url)) return;
     await requireAdminAuth(request, reply);
     if (reply.sent) return;
   });

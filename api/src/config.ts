@@ -4,8 +4,11 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "../..");
-dotenv.config({ path: path.join(repoRoot, ".env") });
-dotenv.config({ path: path.join(repoRoot, "api", ".env") });
+const isProduction = process.env.NODE_ENV === "production";
+const dotenvOpts = { override: !isProduction };
+
+dotenv.config({ path: path.join(repoRoot, ".env"), ...dotenvOpts });
+dotenv.config({ path: path.join(repoRoot, "api", ".env"), ...dotenvOpts });
 
 export type AppConfig = {
   host: string;
@@ -15,6 +18,12 @@ export type AppConfig = {
   timezone: string;
   scheduleUseMock: boolean;
   kmdbServiceKey: string | null;
+  admin: {
+    id: string | null;
+    password: string | null;
+    sessionSecret: string | null;
+    secureCookie: boolean;
+  };
   db: {
     server: string;
     port: number;
@@ -94,6 +103,12 @@ function dbFromEnv(): AppConfig["db"] {
   };
 }
 
+const adminId = process.env.ADMIN_ID?.trim() || process.env.ADMIN_USERNAME?.trim() || null;
+const adminPassword = process.env.ADMIN_PASSWORD?.trim() || null;
+const adminSessionSecret =
+  process.env.ADMIN_SESSION_SECRET?.trim() ||
+  (adminId && adminPassword ? `${adminId}:${adminPassword}` : null);
+
 export const config: AppConfig = {
   host: process.env.API_HOST || "0.0.0.0",
   port: Number(process.env.API_PORT || 3000),
@@ -102,5 +117,11 @@ export const config: AppConfig = {
   timezone: process.env.TZ || "Asia/Seoul",
   scheduleUseMock: parseBool(process.env.SCHEDULE_USE_MOCK, false),
   kmdbServiceKey: process.env.KMDB_SERVICE_KEY?.trim() || null,
+  admin: {
+    id: adminId,
+    password: adminPassword,
+    sessionSecret: adminSessionSecret,
+    secureCookie: parseBool(process.env.ADMIN_SECURE_COOKIE, process.env.NODE_ENV === "production")
+  },
   db: dbFromEnv()
 };

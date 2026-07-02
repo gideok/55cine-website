@@ -1,6 +1,8 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import cookie from "@fastify/cookie";
 import { config } from "./config.js";
+import { isAdminAuthConfigured } from "./services/admin-session.service.js";
 import { closePool } from "./db/pool.js";
 import { registerHealthRoutes } from "./routes/health.js";
 import { registerScheduleRoutes } from "./routes/schedule.js";
@@ -15,12 +17,20 @@ const app = Fastify({
   logger: true
 });
 
+if (isAdminAuthConfigured()) {
+  app.log.info(`Admin auth enabled (id: ${config.admin.id})`);
+} else {
+  app.log.warn("Admin auth is NOT configured — set ADMIN_ID, ADMIN_PASSWORD, ADMIN_SESSION_SECRET in .env");
+}
+
 await app.register(cors, {
   origin: true,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Accept", "X-Admin-Auth"]
+  allowedHeaders: ["Content-Type", "Accept", "X-Admin-Session"]
 });
+
+await app.register(cookie);
 
 await app.register(
   async (api) => {
@@ -31,7 +41,11 @@ await app.register(
     await registerMagazineRoutes(api);
     await registerNoticeRoutes(api);
     await registerSiteSettingsRoutes(api);
-    await registerAdminRoutes(api);
+
+    // admin 인증 훅이 공개 API에 적용되지 않도록 별도 플러그인으로 분리
+    await api.register(async (adminApi) => {
+      await registerAdminRoutes(adminApi);
+    });
   },
   { prefix: config.apiPrefix }
 );

@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var SPECIAL_LIST_FIELDS = ["kind", "q", "page", "pageSize"];
   var SPECIAL_FILM_PLACEHOLDER = "images/schedule-poster-placeholder.svg";
@@ -756,6 +756,9 @@
 
       p.then(function (saved) {
         alert("저장되었습니다.");
+        if (!isNew && window.TiAdminDetailEdit && TiAdminDetailEdit.redirectAfterSave()) {
+          return;
+        }
         if (isNew) {
           window.location.href =
             "special-edit.html?seq=" + encodeURIComponent(String(saved.seq));
@@ -793,4 +796,5 @@
           '<div class="admin-msg admin-msg--error">' + esc(err.message) + "</div>";
       });
   }
+  });
 })();

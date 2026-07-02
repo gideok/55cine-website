@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   TiAdminLayout.mount("notice", "공지사항 관리");
   var el = TiAdminLayout.contentEl();
@@ -134,4 +134,5 @@
 
   listEl = document.getElementById("noticeListArea");
   loadList();
+  });
 })();

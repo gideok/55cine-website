@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var LIST_KEY = "programs";
   var STATE_FIELDS = ["q", "page", "pageSize", "desktopOnly"];
@@ -264,4 +264,5 @@
   }
 
   mountShell();
+  });
 })();

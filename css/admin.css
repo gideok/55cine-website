@@ -50,6 +50,9 @@
 }
 
 .admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: #18181b;
   color: #fafafa;
   padding: 1.5rem 0;
@@ -70,6 +73,15 @@
   color: #d4d4d8;
   text-decoration: none;
   font-size: 0.9rem;
+}
+
+.admin-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar__nav a {
+  flex-shrink: 0;
 }
 
 .admin-sidebar nav a:hover,
@@ -725,6 +737,7 @@
 .admin-form input[type="text"],
 .admin-form input[type="url"],
 .admin-form input[type="number"],
+.admin-form input[type="password"],
 .admin-form input[type="datetime-local"],
 .admin-form textarea,
 .admin-form select {
@@ -1411,11 +1424,17 @@
   .admin-layout {
     grid-template-columns: 1fr;
   }
-  .admin-sidebar nav {
-    display: flex;
+  .admin-sidebar__nav {
+    flex-direction: row;
     flex-wrap: wrap;
+    flex: none;
   }
   .admin-sidebar nav a {
+    padding: 0.5rem 0.75rem;
+  }
+  .admin-sidebar__logout {
+    margin-top: 0;
+    width: auto;
     padding: 0.5rem 0.75rem;
   }
 }
@@ -2207,4 +2226,94 @@ body.admin-modal-open {
   .ws-calendar__weekdays {
     grid-template-columns: 1fr;
   }
+}
+
+.admin-body--login {
+  min-height: 100vh;
+}
+
+.admin-layout--login {
+  min-height: 100vh;
+}
+
+.admin-main--login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 520px;
+}
+
+.admin-login-sidebar__note {
+  margin: 0;
+  padding: 0.75rem 1.25rem 0;
+  color: #a1a1aa;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.admin-login-form {
+  max-width: 100%;
+}
+
+.admin-login-form__actions {
+  margin-top: 0.5rem;
+}
+
+.admin-login-form__actions .admin-btn {
+  width: 100%;
+}
+
+.admin-login-foot {
+  margin: 1.25rem 0 0;
+  font-size: 0.875rem;
+}
+
+.admin-login-foot__link {
+  color: #52525b;
+  text-decoration: none;
+}
+
+.admin-login-foot__link:hover {
+  color: var(--admin-btn-primary-bg);
+  text-decoration: underline;
+}
+
+.admin-entry {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.admin-entry__status {
+  margin: 0;
+  color: #71717a;
+  font-size: 0.9rem;
+}
+
+.admin-sidebar__logout {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+  background: transparent;
+  color: #fca5a5;
+  padding: 0.6rem 1.25rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.admin-sidebar__logout:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fecaca;
+}
+
+.admin-sidebar__logout:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

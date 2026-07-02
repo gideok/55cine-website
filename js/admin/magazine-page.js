@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var LIST_KEY = "magazine";
   var STATE_FIELDS = ["section", "isPast", "q", "page", "pageSize"];
@@ -303,4 +303,5 @@
   }
 
   mountShell();
+  });
 })();

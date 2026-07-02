@@ -35,6 +35,7 @@ export type SpecialNeighbor = {
 };
 
 export type SpecialDetail = {
+  seq: number;
   id: string;
   title: string;
   image: string;
@@ -284,6 +285,7 @@ export async function getSpecialDetail(
   ]);
 
   return {
+    seq: row.seq,
     id: row.public_id,
     title: row.title,
     image,

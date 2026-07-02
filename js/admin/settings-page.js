@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var settingsRef = null;
   var docState = {
@@ -209,4 +209,5 @@
         esc(err.message || "설정을 불러오지 못했습니다.") +
         "</p>";
     });
+  });
 })();

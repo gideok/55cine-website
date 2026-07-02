@@ -1,7 +1,5 @@
 (function () {
-
-  if (!window.TiAdminAuth.require()) return;
-
+  TiAdminAuth.guard(function () {
   var MAGAZINE_LIST_FIELDS = ["section", "isPast", "q", "page", "pageSize"];
 
   function magazineListUrl() {
@@ -1068,6 +1066,10 @@
 
         alert("저장되었습니다. (seq " + saved.seq + ")");
 
+        if (!isNew && window.TiAdminDetailEdit && TiAdminDetailEdit.redirectAfterSave()) {
+          return;
+        }
+
         if (isNew) {
 
           window.location.href =
@@ -1140,5 +1142,6 @@
 
   }
 
+  });
 })();
 

@@ -1,6 +1,6 @@
 (function (global) {
   var NAV = [
-    { href: "index.html", label: "대시보드", key: "dashboard" },
+    { href: "dashboard.html", label: "대시보드", key: "dashboard" },
     { href: "programs.html", label: "상영작 관리", key: "programs" },
     { href: "special.html", label: "기획전·행사 관리", key: "special" },
     { href: "magazine.html", label: "매거진 관리", key: "magazine" },
@@ -17,10 +17,10 @@
     return (
       '<aside class="admin-sidebar">' +
       '<div class="admin-sidebar__brand">55CINE 관리자</div>' +
-      "<nav>" +
+      '<nav class="admin-sidebar__nav">' +
       nav +
+      '<button type="button" class="admin-sidebar__logout" id="adminLogoutBtn">로그아웃</button>' +
       "</nav>" +
-      '<p class="admin-stub-note" style="padding:0.75rem 1.25rem">추후수정 및 로그인 연동</p>' +
       "</aside>"
     );
   }
@@ -34,6 +34,16 @@
       (title ? '<h1 class="admin-page-title">' + title + "</h1>" : "") +
       '<div id="adminContent"></div>' +
       "</main>";
+
+    var logoutBtn = document.getElementById("adminLogoutBtn");
+    if (logoutBtn && global.TiAdminAuth && typeof global.TiAdminAuth.logout === "function") {
+      logoutBtn.addEventListener("click", function () {
+        logoutBtn.disabled = true;
+        global.TiAdminAuth.logout().finally(function () {
+          global.location.href = global.TiAdminAuth.loginUrl();
+        });
+      });
+    }
   }
 
   global.TiAdminLayout = {

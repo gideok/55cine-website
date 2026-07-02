@@ -515,6 +515,14 @@
     document.title = pageTitle + " — 테스트 UI · 55CINE";
     if (titleEl) titleEl.textContent = pageTitle;
 
+    var headEl = document.querySelector(".md-head");
+    if (headEl && data.seq && window.TiAdminDetailEdit) {
+      TiAdminDetailEdit.mount(
+        headEl,
+        TiAdminDetailEdit.buildHref("admin/special-edit.html", data.seq)
+      );
+    }
+
     root.innerHTML = "";
 
     var grid = document.createElement("div");

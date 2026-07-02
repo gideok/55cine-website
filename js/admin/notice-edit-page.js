@@ -1,5 +1,5 @@
 (function () {
-  if (!window.TiAdminAuth.require()) return;
+  TiAdminAuth.guard(function () {
 
   var params = new URLSearchParams(window.location.search);
   var seq = Number(params.get("seq"));
@@ -288,4 +288,5 @@
           '</div><p><a href="notice.html">← 공지 목록</a></p>';
       });
   }
+  });
 })();
