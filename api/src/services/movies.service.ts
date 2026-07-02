@@ -73,6 +73,22 @@ const PROG_WEB_SELECT = `
   wp.trailer_url
 `;
 
+/** sys_code div_code 040 — 상영상태 */
+const PROG_STATE_DIV_CODE = "040";
+const PROG_STATE_ENDED_NAME = "상영종료";
+
+function excludeScreeningEndedClause(): string {
+  return `
+    AND NOT EXISTS (
+      SELECT 1
+      FROM dbo.sys_code AS sc
+      WHERE sc.div_code = N'${PROG_STATE_DIV_CODE}'
+        AND sc.seq_code = pb.div_state
+        AND sc.name = N'${PROG_STATE_ENDED_NAME}'
+    )
+  `;
+}
+
 function sectionWhereClause(section: MovieSection): string {
   switch (section) {
     case "now-playing":
@@ -82,6 +98,7 @@ function sectionWhereClause(section: MovieSection): string {
           NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NULL
           OR @today <= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
         )
+        ${excludeScreeningEndedClause()}
       `;
     case "upcoming":
       return `@today < TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open)))`;
