@@ -24,6 +24,34 @@
     return state.year + "-" + pad2(state.month);
   }
 
+  function syncMonthInput() {
+    var monthInput = document.getElementById("wsMonthInput");
+    if (monthInput) monthInput.value = monthInputValue();
+  }
+
+  function shiftMonth(delta) {
+    var m = state.month + delta;
+    var y = state.year;
+    if (m < 1) {
+      m = 12;
+      y -= 1;
+    } else if (m > 12) {
+      m = 1;
+      y += 1;
+    }
+    state.year = y;
+    state.month = m;
+    syncMonthInput();
+    loadMonth();
+  }
+
+  function setMonthNavDisabled(disabled) {
+    ["wsPrevMonth", "wsNextMonth", "wsMonthInput", "wsTodayBtn"].forEach(function (id) {
+      var node = document.getElementById(id);
+      if (node) node.disabled = disabled;
+    });
+  }
+
   function esc(s) {
     return String(s || "")
       .replace(/&/g, "&amp;")
@@ -122,13 +150,16 @@
     el.innerHTML =
       '<div class="ws-calendar">' +
       '<div class="ws-calendar__toolbar">' +
-      '<label class="ws-calendar__month-label">' +
-      "월 선택 " +
+      '<div class="ws-calendar__month-picker">' +
+      '<span class="ws-calendar__month-label">월 선택</span>' +
+      '<div class="ws-calendar__month-nav">' +
+      '<button type="button" class="admin-btn ws-calendar__month-btn" id="wsPrevMonth" aria-label="이전 달">‹</button>' +
       '<input type="month" id="wsMonthInput" value="' +
       esc(monthInputValue()) +
-      '" />' +
-      "</label>" +
-      '<button type="button" class="admin-btn admin-btn--secondary" id="wsTodayBtn">이번 달</button>' +
+      '" aria-label="조회 월" />' +
+      '<button type="button" class="admin-btn ws-calendar__month-btn" id="wsNextMonth" aria-label="다음 달">›</button>' +
+      "</div></div>" +
+      '<button type="button" class="admin-btn" id="wsTodayBtn">이번 달</button>' +
       '<span class="ws-calendar__readonly">조회 전용 · TRMS에서 편집</span>' +
       "</div>" +
       '<p class="admin-msg" id="wsStatus">' +
@@ -148,6 +179,8 @@
   function bindToolbar() {
     var monthInput = document.getElementById("wsMonthInput");
     var todayBtn = document.getElementById("wsTodayBtn");
+    var prevBtn = document.getElementById("wsPrevMonth");
+    var nextBtn = document.getElementById("wsNextMonth");
 
     if (monthInput) {
       monthInput.onchange = function () {
@@ -160,12 +193,24 @@
       };
     }
 
+    if (prevBtn) {
+      prevBtn.onclick = function () {
+        shiftMonth(-1);
+      };
+    }
+
+    if (nextBtn) {
+      nextBtn.onclick = function () {
+        shiftMonth(1);
+      };
+    }
+
     if (todayBtn) {
       todayBtn.onclick = function () {
         var d = new Date();
         state.year = d.getFullYear();
         state.month = d.getMonth() + 1;
-        if (monthInput) monthInput.value = monthInputValue();
+        syncMonthInput();
         loadMonth();
       };
     }
@@ -174,6 +219,7 @@
   function loadMonth() {
     if (state.loading) return;
     state.loading = true;
+    setMonthNavDisabled(true);
     setStatus("불러오는 중…");
 
     TiAdminApi.getWorkSchedule(state.year, state.month)
@@ -187,6 +233,7 @@
       })
       .finally(function () {
         state.loading = false;
+        setMonthNavDisabled(false);
       });
   }
 

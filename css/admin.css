@@ -2012,20 +2012,45 @@ body.admin-modal-open {
   margin-bottom: 0.75rem;
 }
 
-.ws-calendar__month-label {
+.ws-calendar__month-picker {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.ws-calendar__month-label {
   font-size: 0.92rem;
   font-weight: 500;
   color: #27272a;
+  white-space: nowrap;
 }
 
-.ws-calendar__month-label input[type="month"] {
+.ws-calendar__month-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ws-calendar__month-nav input[type="month"] {
   padding: 0.35rem 0.5rem;
   border: 1px solid #d4d4d8;
   border-radius: 6px;
   font: inherit;
+}
+
+.ws-calendar__month-btn {
+  width: 2.1rem;
+  min-width: 2.1rem;
+  height: 2.05rem;
+  padding: 0;
+  font-size: 1.35rem;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.ws-calendar__toolbar .admin-btn#wsTodayBtn {
+  width: auto;
+  min-width: 5.5rem;
 }
 
 .ws-calendar__readonly {
