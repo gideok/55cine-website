@@ -77,9 +77,9 @@ const PROG_WEB_SELECT = `
 const PROG_STATE_DIV_CODE = "040";
 const PROG_STATE_ENDED_NAME = "상영종료";
 
-function excludeScreeningEndedClause(): string {
+function screeningEndedExistsClause(): string {
   return `
-    AND NOT EXISTS (
+    EXISTS (
       SELECT 1
       FROM dbo.sys_code AS sc
       WHERE sc.div_code = N'${PROG_STATE_DIV_CODE}'
@@ -87,6 +87,10 @@ function excludeScreeningEndedClause(): string {
         AND sc.name = N'${PROG_STATE_ENDED_NAME}'
     )
   `;
+}
+
+function excludeScreeningEndedClause(): string {
+  return `AND NOT (${screeningEndedExistsClause().trim()})`;
 }
 
 function sectionWhereClause(section: MovieSection): string {
@@ -104,8 +108,11 @@ function sectionWhereClause(section: MovieSection): string {
       return `@today < TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open)))`;
     case "past":
       return `
-        NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NOT NULL
-        AND @today > TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
+        (
+          NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NOT NULL
+          AND @today > TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
+        )
+        OR (${screeningEndedExistsClause().trim()})
       `;
     default:
       throw new Error(`Unknown section: ${section}`);
@@ -213,7 +220,10 @@ type ProgRowWithTotal = ProgRow & { _total: number };
 function listOrderClause(section: MovieSection): string {
   if (section === "past") {
     return `
-      TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close))) DESC,
+      COALESCE(
+        TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close))),
+        TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open)))
+      ) DESC,
       pb.name
     `;
   }
