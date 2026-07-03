@@ -8,6 +8,7 @@
   var TOKEN_KEY = "ti_admin_session_token";
   var AUTH_MESSAGE = "관리자 인증이 필요합니다.";
   var loggedIn = false;
+  var refreshSessionPromise = null;
 
   function apiBase() {
     var base =
@@ -49,7 +50,9 @@
   }
 
   function refreshSession() {
-    return fetch(apiBase() + "/admin/session", {
+    if (refreshSessionPromise) return refreshSessionPromise;
+
+    refreshSessionPromise = fetch(apiBase() + "/admin/session", {
       method: "GET",
       credentials: "include",
       headers: sessionHeaders()
@@ -68,7 +71,12 @@
       .catch(function () {
         setLoggedIn(false);
         return false;
+      })
+      .finally(function () {
+        refreshSessionPromise = null;
       });
+
+    return refreshSessionPromise;
   }
 
   function isAdminPath() {
@@ -180,8 +188,7 @@
             throw new Error(msg);
           }
           if (data && data.token) storeToken(data.token);
-          setLoggedIn(true);
-          return true;
+          return refreshSession();
         });
       });
   }

@@ -121,7 +121,8 @@ export const config: AppConfig = {
     id: adminId,
     password: adminPassword,
     sessionSecret: adminSessionSecret,
-    secureCookie: parseBool(process.env.ADMIN_SECURE_COOKIE, process.env.NODE_ENV === "production")
+    // 현재 운영 Nginx는 HTTP 80으로 서비스한다. HTTPS 적용 시 .env에서 true로 명시한다.
+    secureCookie: parseBool(process.env.ADMIN_SECURE_COOKIE, false)
   },
   db: dbFromEnv()
 };

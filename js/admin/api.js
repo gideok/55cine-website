@@ -44,15 +44,23 @@
         return {};
       }).then(function (data) {
         if (res.status === 401 && global.TiAdminAuth) {
+          var rejectAuth = function () {
+            if (global.TiAdminAuth.isAdminPath && global.TiAdminAuth.isAdminPath()) {
+              if (!global.TiAdminAuth.isLoginPage || !global.TiAdminAuth.isLoginPage()) {
+                global.TiAdminAuth.redirectUnauthenticated();
+              }
+            }
+            return Promise.reject(new Error(global.TiAdminAuth.AUTH_MESSAGE || "관리자 인증이 필요합니다."));
+          };
+          if (typeof global.TiAdminAuth.logout === "function") {
+            return global.TiAdminAuth.logout().then(rejectAuth, rejectAuth);
+          }
           try {
             global.localStorage.removeItem(global.TiAdminAuth.TOKEN_KEY);
           } catch (_e) {
             /* ignore */
           }
-          if (global.TiAdminAuth.isAdminPath && global.TiAdminAuth.isAdminPath()) {
-            global.TiAdminAuth.redirectUnauthenticated();
-            return Promise.reject(new Error(global.TiAdminAuth.AUTH_MESSAGE || "관리자 인증이 필요합니다."));
-          }
+          return rejectAuth();
         }
         if (!res.ok) parseError(res, data);
         return data;

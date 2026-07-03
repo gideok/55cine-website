@@ -60,10 +60,16 @@ export function verifyAdminSessionToken(token: string | undefined | null): boole
 
 export function readAdminSessionToken(request: FastifyRequest): string | null {
   const header = request.headers[ADMIN_SESSION_HEADER];
-  if (typeof header === "string" && header.trim()) return header.trim();
+  if (typeof header === "string" && header.trim()) {
+    const token = header.trim();
+    if (verifyAdminSessionToken(token)) return token;
+  }
 
   const cookieToken = request.cookies?.[ADMIN_SESSION_COOKIE];
-  if (typeof cookieToken === "string" && cookieToken.trim()) return cookieToken.trim();
+  if (typeof cookieToken === "string" && cookieToken.trim()) {
+    const token = cookieToken.trim();
+    if (verifyAdminSessionToken(token)) return token;
+  }
 
   return null;
 }

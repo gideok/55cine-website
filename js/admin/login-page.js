@@ -47,6 +47,9 @@
   showMessageFromQuery();
 
   TiAdminAuth.whenReady().then(function (loggedIn) {
+    var params = new URLSearchParams(window.location.search);
+    // 인증 실패로 돌아온 경우(msg) 자동 이동하지 않음 — programs ↔ login 무한 루프 방지
+    if (params.get("msg")) return;
     if (loggedIn) redirectAfterLogin();
   });
 
