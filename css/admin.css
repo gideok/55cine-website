@@ -2209,22 +2209,71 @@ body.admin-modal-open {
   margin-bottom: 0.15rem;
 }
 
-@media (max-width: 900px) {
-  .ws-calendar__grid,
-  .ws-calendar__weekdays {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+#wsCalendarMount {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
+#wsCalendarMount .ws-calendar__weekdays,
+#wsCalendarMount .ws-calendar__grid {
+  min-width: 560px;
+}
+
+@media (max-width: 900px) {
   .ws-calendar__readonly {
     margin-left: 0;
     width: 100%;
   }
+
+  .ws-day {
+    min-height: 96px;
+  }
+
+  .ws-day__head {
+    padding: 0.3rem 0.4rem;
+  }
+
+  .ws-day__body {
+    padding: 0.3rem 0.35rem 0.4rem;
+    font-size: 0.72rem;
+  }
+
+  .ws-day__shift {
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    gap: 0.2rem 0.25rem;
+  }
+
+  .ws-day__meeting {
+    font-size: 0.58rem;
+    padding: 0.1rem 0.3rem;
+  }
+
+  .ws-calendar__weekday {
+    font-size: 0.75rem;
+  }
 }
 
 @media (max-width: 520px) {
-  .ws-calendar__grid,
+  #wsCalendarMount .ws-calendar__weekdays,
+  #wsCalendarMount .ws-calendar__grid {
+    min-width: 504px;
+  }
+
+  .ws-calendar__grid {
+    gap: 4px;
+  }
+
   .ws-calendar__weekdays {
-    grid-template-columns: 1fr;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .ws-day {
+    min-height: 88px;
+  }
+
+  .ws-day__num {
+    font-size: 0.85rem;
   }
 }
 
