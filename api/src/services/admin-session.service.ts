@@ -4,7 +4,8 @@ import { config } from "../config.js";
 
 export const ADMIN_SESSION_COOKIE = "ti_admin_session";
 export const ADMIN_SESSION_HEADER = "x-admin-session";
-export const ADMIN_SESSION_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+/** 브라우저 재시작·재부팅 후에도 유지(로그아웃 시 삭제). 토큰 자체는 만료 없음. */
+export const ADMIN_SESSION_COOKIE_MAX_AGE_SEC = 10 * 365 * 24 * 60 * 60;
 
 function sessionSecret(): string | null {
   return config.admin.sessionSecret;
@@ -19,9 +20,25 @@ function signPayload(payloadB64: string): string {
 export function createAdminSessionToken(): string | null {
   const secret = sessionSecret();
   if (!secret) return null;
-  const payload = { exp: Date.now() + ADMIN_SESSION_MAX_AGE_MS };
+  const payload = { v: 1 };
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
   return `${payloadB64}.${signPayload(payloadB64)}`;
+}
+
+function parseSessionPayload(payloadB64: string): { exp?: number } | null {
+  try {
+    return JSON.parse(Buffer.from(payloadB64, "base64url").toString("utf8")) as { exp?: number };
+  } catch {
+    return null;
+  }
+}
+
+function isSessionPayloadValid(payload: { exp?: number } | null): boolean {
+  if (!payload) return false;
+  if (typeof payload.exp === "number") {
+    return payload.exp > Date.now();
+  }
+  return true;
 }
 
 export function verifyAdminSessionToken(token: string | undefined | null): boolean {
@@ -38,14 +55,7 @@ export function verifyAdminSessionToken(token: string | undefined | null): boole
     return false;
   }
 
-  try {
-    const payload = JSON.parse(Buffer.from(payloadB64, "base64url").toString("utf8")) as {
-      exp?: number;
-    };
-    return typeof payload.exp === "number" && payload.exp > Date.now();
-  } catch {
-    return false;
-  }
+  return isSessionPayloadValid(parseSessionPayload(payloadB64));
 }
 
 export function readAdminSessionToken(request: FastifyRequest): string | null {
@@ -68,7 +78,7 @@ export function setAdminSessionCookie(reply: FastifyReply, token: string): void 
     httpOnly: true,
     sameSite: "lax",
     secure: config.admin.secureCookie,
-    maxAge: Math.floor(ADMIN_SESSION_MAX_AGE_MS / 1000)
+    maxAge: ADMIN_SESSION_COOKIE_MAX_AGE_SEC
   });
 }
 
