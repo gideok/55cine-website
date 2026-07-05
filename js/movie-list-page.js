@@ -255,7 +255,7 @@
         slug: slug,
         poster: item.poster || "",
         titleKo: item.titleKo || item.title || "",
-        titleEn: titleEnFromSlug(slug),
+        titleEn: item.titleEn || titleEnFromSlug(slug),
         director: item.director || "",
         detailUrl: item.detailUrl || (slug ? buildDetailUrl(slug) : "")
       };
@@ -374,7 +374,7 @@
     body.appendChild(h2);
     var en = document.createElement("p");
     en.className = "np-card-en";
-    en.textContent = titleEnFromSlug(m.slug || "");
+    en.textContent = m.titleEn || titleEnFromSlug(m.slug || "");
     body.appendChild(en);
     article.appendChild(media);
     article.appendChild(body);

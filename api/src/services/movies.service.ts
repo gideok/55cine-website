@@ -109,10 +109,12 @@ function sectionWhereClause(section: MovieSection): string {
     case "past":
       return `
         (
-          NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NOT NULL
-          AND @today > TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
+          (
+            NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NOT NULL
+            AND @today > TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
+          )
+          OR (${screeningEndedExistsClause().trim()})
         )
-        OR (${screeningEndedExistsClause().trim()})
       `;
     default:
       throw new Error(`Unknown section: ${section}`);
@@ -123,8 +125,8 @@ function titleEnFromSlug(slug: string): string {
   return String(slug || "").trim().replace(/-/g, " ");
 }
 
-function resolveListTitleEn(slug: string): string {
-  return titleEnFromSlug(slug);
+function resolveListTitleEn(row: ProgRow): string {
+  return String(row.name2 || "").trim() || titleEnFromSlug(String(row.slug || ""));
 }
 
 function resolveDetailTitleEn(row: ProgRow): string {
@@ -137,7 +139,7 @@ function mapListItem(row: ProgRow, section: MovieSection): MovieListItem {
     slug,
     poster: row.img1?.trim() || "images/schedule-poster-placeholder.svg",
     titleKo: String(row.name || "").trim(),
-    titleEn: resolveListTitleEn(slug),
+    titleEn: resolveListTitleEn(row),
     director: row.director?.trim() || undefined,
     detailUrl: `movies/movie-detail.html?slug=${encodeURIComponent(slug)}&from=${section}`
   };
@@ -241,6 +243,7 @@ function listSearchClause(search?: string): string {
       pb.name LIKE @search
       OR ISNULL(pb.name2, '') LIKE @search
       OR ISNULL(wp.director, '') LIKE @search
+      OR REPLACE(ISNULL(wp.slug, ''), '-', ' ') LIKE @search
     )
   `;
 }
