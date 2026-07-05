@@ -2009,6 +2009,14 @@ body.admin-modal-open {
   line-height: 1.35;
 }
 
+.admin-kmdb-item__hl {
+  padding: 0 0.12em;
+  border-radius: 3px;
+  background: #fef08a;
+  color: #713f12;
+  font-weight: 800;
+}
+
 .admin-kmdb-item__en {
   font-weight: 500;
   color: #52525b;

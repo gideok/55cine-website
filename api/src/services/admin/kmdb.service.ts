@@ -4,9 +4,15 @@ import { config } from "../../config.js";
 const KMDB_SEARCH_URL =
   "http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp";
 
+export type KmdbTitleSegment = {
+  text: string;
+  highlight: boolean;
+};
+
 export type KmdbMovieRaw = {
   docId: string;
   title: string;
+  titleSegments: KmdbTitleSegment[];
   titleEn: string | null;
   titleOrg: string | null;
   prodYear: string | null;
@@ -39,6 +45,7 @@ export type KmdbMappedProgram = {
   progUrl: string | null;
   /** 선택 팝업 표시용 */
   title: string;
+  titleSegments: KmdbTitleSegment[];
   titleEn: string | null;
   prodYear: string | null;
   directorLabel: string | null;
@@ -59,8 +66,59 @@ function textVal(val: unknown): string | null {
 }
 
 function normalizeKmdbQuery(title: string): string {
-  return String(title || "").trim().replace(/\s+/g, "");
+  return String(title || "").trim().replace(/\s+/g, " ");
 }
+
+/** API title 파라미터용 — 공백 제거 버전 */
+function normalizeKmdbQueryCompact(title: string): string {
+  return normalizeKmdbQuery(title).replace(/\s+/g, "");
+}
+
+function normalizeTitleKey(text: string): string {
+  return normalizeKmdbTitleText(text).replace(/\s+/g, "").toLowerCase();
+}
+
+/** 검색어와 제목 일치도 (높을수록 상위) */
+export function scoreKmdbTitleMatch(
+  query: string,
+  title: string,
+  titleEn?: string | null,
+  titleOrg?: string | null
+): number {
+  const q = normalizeTitleKey(query);
+  if (!q) return 0;
+
+  const candidates = [title, titleEn, titleOrg]
+    .filter((v): v is string => !!v)
+    .map((v) => normalizeTitleKey(v));
+
+  let best = 0;
+  for (const t of candidates) {
+    if (!t) continue;
+    if (t === q) {
+      best = Math.max(best, 1000);
+      continue;
+    }
+    if (t.startsWith(q)) {
+      best = Math.max(best, 800 + Math.round((q.length / t.length) * 50));
+      continue;
+    }
+    if (t.includes(q)) {
+      best = Math.max(best, 600 + Math.round((q.length / t.length) * 100));
+      continue;
+    }
+    const qWords = normalizeKmdbQuery(query)
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((w) => normalizeTitleKey(w));
+    if (qWords.length > 1 && qWords.every((w) => t.includes(w))) {
+      best = Math.max(best, 350);
+    }
+  }
+  return best;
+}
+
+type KmdbMovieRawScored = KmdbMovieRaw & { _matchScore: number };
 
 function pickPoster(posters?: string | null): string | null {
   if (!posters) return null;
@@ -100,6 +158,58 @@ function parseRuntime(raw: unknown): number | null {
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
+function normalizeKmdbTitleText(text: string): string {
+  return String(text || "")
+    .replace(/!HS/g, "")
+    .replace(/!HE/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function pushTitleSegment(segments: KmdbTitleSegment[], raw: string, highlight: boolean): void {
+  const text = normalizeKmdbTitleText(raw);
+  if (!text) return;
+  const last = segments[segments.length - 1];
+  if (last && last.highlight === highlight) {
+    last.text = `${last.text} ${text}`;
+    return;
+  }
+  segments.push({ text, highlight });
+}
+
+/** KMDB 검색 API의 !HS / !HE 하이라이트 마커 파싱 */
+export function parseKmdbTitle(raw: string): { title: string; titleSegments: KmdbTitleSegment[] } {
+  const src = String(raw || "");
+  const segments: KmdbTitleSegment[] = [];
+  const markerRe = /!HS\s*([\s\S]*?)\s*!HE/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let hasMarkers = false;
+
+  while ((match = markerRe.exec(src)) !== null) {
+    hasMarkers = true;
+    pushTitleSegment(segments, src.slice(lastIndex, match.index), false);
+    pushTitleSegment(segments, match[1], true);
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (hasMarkers) {
+    pushTitleSegment(segments, src.slice(lastIndex), false);
+    const title = segments
+      .map((seg) => seg.text)
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+    return { title, titleSegments: segments };
+  }
+
+  const title = normalizeKmdbTitleText(src);
+  return {
+    title,
+    titleSegments: title ? [{ text: title, highlight: false }] : []
+  };
+}
+
 function parseKmdbResult(row: Record<string, unknown>): KmdbMovieRaw {
   const directors = joinNames(
     asArray((row.directors as { director?: unknown })?.director) as Record<string, unknown>[],
@@ -109,10 +219,12 @@ function parseKmdbResult(row: Record<string, unknown>): KmdbMovieRaw {
     asArray((row.actors as { actor?: unknown })?.actor) as Record<string, unknown>[],
     "actorNm"
   );
-  const title = textVal(row.title) || textVal(row.titleOrg) || "";
+  const rawTitle = textVal(row.title) || textVal(row.titleOrg) || "";
+  const { title, titleSegments } = parseKmdbTitle(rawTitle);
   return {
     docId: textVal(row.DOCID) || textVal(row.movieId) || title,
     title,
+    titleSegments,
     titleEn: textVal(row.titleEng),
     titleOrg: textVal(row.titleOrg),
     prodYear: textVal(row.prodYear),
@@ -141,19 +253,38 @@ function extractResults(payload: unknown): Record<string, unknown>[] {
   return out;
 }
 
-export async function searchKmdbMovies(title: string, listCount = 20): Promise<KmdbMovieRaw[]> {
+function rankKmdbResults(query: string, rows: KmdbMovieRaw[]): KmdbMovieRaw[] {
+  const scored: KmdbMovieRawScored[] = rows.map((row) => ({
+    ...row,
+    _matchScore: scoreKmdbTitleMatch(query, row.title, row.titleEn, row.titleOrg)
+  }));
+
+  scored.sort((a, b) => {
+    if (b._matchScore !== a._matchScore) return b._matchScore - a._matchScore;
+    const yearA = Number(a.prodYear) || 0;
+    const yearB = Number(b.prodYear) || 0;
+    return yearB - yearA;
+  });
+
+  const hasPositive = scored.some((row) => row._matchScore > 0);
+  const filtered = hasPositive ? scored.filter((row) => row._matchScore > 0) : scored;
+
+  return filtered.map(({ _matchScore: _s, ...row }) => row);
+}
+
+async function fetchKmdbRows(searchParam: "title" | "query", value: string, listCount: number): Promise<KmdbMovieRaw[]> {
   const key = config.kmdbServiceKey?.trim();
   if (!key) {
-    throw new Error("KMDB API 인증키(KMDB_SERVICE_KEY)가 설정되지 않았습니다.");
+    throw new Error(
+      "KMDB API 인증키가 설정되지 않았습니다. .env에 KMDB_SERVICE_KEY(또는 KMDB_API_KEY)를 등록하세요."
+    );
   }
-  const query = normalizeKmdbQuery(title);
-  if (!query) throw new Error("검색할 영화명을 입력해 주세요.");
 
   const url = new URL(KMDB_SEARCH_URL);
   url.searchParams.set("collection", "kmdb_new2");
   url.searchParams.set("ServiceKey", key);
   url.searchParams.set("detail", "Y");
-  url.searchParams.set("query", query);
+  url.searchParams.set(searchParam, value);
   url.searchParams.set("listCount", String(Math.max(3, Math.min(listCount, 50))));
 
   const res = await fetch(url.toString(), {
@@ -164,8 +295,25 @@ export async function searchKmdbMovies(title: string, listCount = 20): Promise<K
   }
 
   const payload = (await res.json()) as unknown;
-  const rows = extractResults(payload).map(parseKmdbResult).filter((row) => row.title);
-  return rows;
+  return extractResults(payload).map(parseKmdbResult).filter((row) => row.title);
+}
+
+export async function searchKmdbMovies(title: string, listCount = 20): Promise<KmdbMovieRaw[]> {
+  const query = normalizeKmdbQuery(title);
+  if (!query) throw new Error("검색할 영화명을 입력해 주세요.");
+
+  // title: 영화명 상세검색 — query(통합검색)보다 정확. 공백 유·무 모두 시도.
+  let rows = await fetchKmdbRows("title", query, listCount);
+  if (!rows.length) {
+    rows = await fetchKmdbRows("title", normalizeKmdbQueryCompact(query), listCount);
+  }
+
+  // title 검색 결과가 없을 때만 통합검색 fallback
+  if (!rows.length) {
+    rows = await fetchKmdbRows("query", normalizeKmdbQueryCompact(query), listCount);
+  }
+
+  return rankKmdbResults(query, rows);
 }
 
 function dateFromProdYear(year: string | null): string | null {
@@ -234,6 +382,7 @@ export function mapKmdbMovieToProgram(
     posterUrl: item.posterUrl,
     progUrl: item.kmdbUrl,
     title: name,
+    titleSegments: item.titleSegments,
     titleEn: item.titleEn,
     prodYear: item.prodYear,
     directorLabel: item.director,

@@ -116,7 +116,10 @@ export const config: AppConfig = {
   repoRoot: path.resolve(__dirname, "../.."),
   timezone: process.env.TZ || "Asia/Seoul",
   scheduleUseMock: parseBool(process.env.SCHEDULE_USE_MOCK, false),
-  kmdbServiceKey: process.env.KMDB_SERVICE_KEY?.trim() || null,
+  kmdbServiceKey:
+    process.env.KMDB_SERVICE_KEY?.trim() ||
+    process.env.KMDB_API_KEY?.trim() ||
+    null,
   admin: {
     id: adminId,
     password: adminPassword,

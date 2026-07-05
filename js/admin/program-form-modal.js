@@ -1047,6 +1047,21 @@
     if (kmdbPickerListEl) kmdbPickerListEl.innerHTML = "";
   }
 
+  function renderKmdbTitleHtml(item) {
+    var segments = (item && item.titleSegments) || [];
+    if (!segments.length) return esc(item && item.title ? item.title : "");
+    return segments
+      .map(function (seg, idx) {
+        var text = esc(seg.text);
+        var prefix = idx > 0 ? " " : "";
+        if (seg.highlight) {
+          return prefix + '<mark class="admin-kmdb-item__hl">' + text + "</mark>";
+        }
+        return prefix + text;
+      })
+      .join("");
+  }
+
   function renderKmdbPicker(items, query) {
     if (!kmdbPickerEl || !kmdbPickerListEl) return;
     kmdbPickerItems = items || [];
@@ -1072,7 +1087,7 @@
           idx +
           '">' +
           '<span class="admin-kmdb-item__title">' +
-          esc(item.title) +
+          renderKmdbTitleHtml(item) +
           (item.titleEn ? ' <span class="admin-kmdb-item__en">(' + esc(item.titleEn) + ")</span>" : "") +
           "</span>" +
           (meta ? '<span class="admin-kmdb-item__meta">' + esc(meta) + "</span>" : "") +
