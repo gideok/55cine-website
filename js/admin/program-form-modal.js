@@ -598,12 +598,16 @@
   }
 
   function updateKmdbUi() {
-    var show = mode === "add";
     var kmdbBtn = document.getElementById("pbKmdbSearch");
     var kmdbHint = document.getElementById("pbKmdbHint");
-    if (kmdbBtn) kmdbBtn.hidden = !show;
-    if (kmdbHint) kmdbHint.hidden = !show;
-    if (!show) closeKmdbPicker();
+    if (kmdbBtn) kmdbBtn.hidden = false;
+    if (kmdbHint) {
+      kmdbHint.hidden = false;
+      kmdbHint.textContent =
+        mode === "add"
+          ? "제목 입력 후 KMDB 버튼으로 영화 정보를 불러올 수 있습니다."
+          : "KMDB 버튼으로 영화 정보를 다시 불러올 수 있습니다. (입력된 값 일부가 덮어씌워집니다)";
+    }
   }
 
   function updateSlugRequiredUi() {
