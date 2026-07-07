@@ -2287,10 +2287,12 @@ body.admin-modal-open {
 
 .admin-body--login {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .admin-layout--login {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .admin-main--login {
@@ -2333,6 +2335,107 @@ body.admin-modal-open {
 .admin-login-foot__link:hover {
   color: var(--admin-btn-primary-bg);
   text-decoration: underline;
+}
+
+.admin-login-lead {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .admin-layout--login {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+  }
+
+  .admin-layout--login .admin-sidebar {
+    flex: none;
+    min-height: 0;
+    padding: max(1rem, env(safe-area-inset-top)) 1.25rem 1rem;
+    text-align: center;
+  }
+
+  .admin-layout--login .admin-sidebar__brand {
+    margin-bottom: 0;
+    padding: 0;
+    border-bottom: none;
+    font-size: 0.8rem;
+  }
+
+  .admin-login-sidebar__note {
+    display: none;
+  }
+
+  .admin-main--login {
+    flex: 1;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    padding:
+      0.5rem max(1.25rem, env(safe-area-inset-right))
+      max(1.5rem, env(safe-area-inset-bottom))
+      max(1.25rem, env(safe-area-inset-left));
+  }
+
+  .admin-main--login .admin-page-title {
+    margin: 0 0 0.35rem;
+    font-size: 1.35rem;
+    text-align: center;
+  }
+
+  .admin-login-lead {
+    display: block;
+    margin: 0 0 1.25rem;
+    text-align: center;
+    color: #71717a;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .admin-login-form {
+    padding: 1.35rem 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(24, 24, 27, 0.08);
+  }
+
+  .admin-login-form .field {
+    margin-bottom: 1.1rem;
+  }
+
+  .admin-login-form .field:last-of-type {
+    margin-bottom: 0.25rem;
+  }
+
+  .admin-login-form input[type="text"],
+  .admin-login-form input[type="password"] {
+    min-height: 48px;
+    padding: 0.75rem 0.85rem;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
+  .admin-login-form__actions {
+    margin-top: 1rem;
+  }
+
+  .admin-login-form__actions .admin-btn {
+    min-height: 48px;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+
+  .admin-login-foot {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) and (min-height: 640px) {
+  .admin-main--login {
+    justify-content: center;
+    padding-top: 0;
+  }
 }
 
 .admin-entry {
