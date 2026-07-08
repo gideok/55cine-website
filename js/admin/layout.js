@@ -5,6 +5,7 @@
     { href: "special.html", label: "기획전·행사 관리", key: "special" },
     { href: "magazine.html", label: "매거진 관리", key: "magazine" },
     { href: "notice.html", label: "공지사항 관리", key: "notice" },
+    { href: "screening-schedule.html", label: "상영시간표", key: "screening-schedule" },
     { href: "work-schedule.html", label: "근무스케줄", key: "work-schedule" },
     { href: "settings.html", label: "사이트 설정", key: "settings" }
   ];

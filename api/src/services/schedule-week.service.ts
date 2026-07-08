@@ -13,7 +13,8 @@ import {
   parseAnchorDate,
   parseFlagsFromProgLabel,
   stripTime,
-  toDateOnly
+  toDateOnly,
+  toDateIsoString
 } from "./schedule-flags.js";
 
 export type WeekScheduleEntry = {
@@ -138,8 +139,8 @@ export async function fetchWeekScheduleFromDb(anchor?: string): Promise<WeekSche
   const { anchorDate, start, end } = getScheduleFetchRange(anchor);
   const pool = await getPool();
   const request = pool.request();
-  request.input("rangeStart", sql.Date, start);
-  request.input("rangeEnd", sql.Date, end);
+  request.input("rangeStart", sql.NVarChar(10), toDateIsoString(start));
+  request.input("rangeEnd", sql.NVarChar(10), toDateIsoString(end));
 
   const result = await request.query<DailyRow>(`
     SELECT
@@ -167,8 +168,8 @@ export async function fetchWeekScheduleFromDb(anchor?: string): Promise<WeekSche
       WHERE w.prog_id = pd.prog_id
       ORDER BY w.seq DESC
     ) AS wp
-    WHERE TRY_CONVERT(date, pd.date_sc) >= @rangeStart
-      AND TRY_CONVERT(date, pd.date_sc) <= @rangeEnd
+    WHERE TRY_CONVERT(date, LTRIM(RTRIM(pd.date_sc))) >= TRY_CONVERT(date, @rangeStart)
+      AND TRY_CONVERT(date, LTRIM(RTRIM(pd.date_sc))) <= TRY_CONVERT(date, @rangeEnd)
       AND ISNULL(pd.divhidden, 0) = 0
     ORDER BY pd.date_sc, pd.time_sc
   `);

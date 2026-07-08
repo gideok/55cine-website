@@ -70,6 +70,15 @@ export function stripTime(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
+/** MS SQL date 파라미터용 — JS Date 타임존 오차 방지 */
+export function toDateIsoString(date: Date): string {
+  const d = stripTime(date);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export function addDays(date: Date, days: number): Date {
   const d = new Date(date.getTime());
   d.setDate(d.getDate() + days);

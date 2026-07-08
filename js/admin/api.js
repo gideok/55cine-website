@@ -103,6 +103,18 @@
           encodeURIComponent(String(month))
       );
     },
+    getScreeningScheduleWeek: function (anchor) {
+      var path = "/admin/screening-schedule";
+      if (anchor) path += "?anchor=" + encodeURIComponent(anchor);
+      return apiJson("GET", path);
+    },
+    setScreeningVisibility: function (seq, hidden) {
+      return apiJson(
+        "PATCH",
+        "/admin/screening-schedule/" + encodeURIComponent(String(seq)) + "/visibility",
+        { hidden: !!hidden }
+      );
+    },
     getPrograms: function (q, page, pageSize, desktopOnly) {
       var path =
         "/admin/programs?page=" +

@@ -57,6 +57,10 @@ import {
 } from "../../services/admin/site-settings-admin.service.js";
 import { searchKmdbMoviesMapped } from "../../services/admin/kmdb.service.js";
 import { getWorkScheduleMonth } from "../../services/admin/work-schedule-admin.service.js";
+import {
+  getAdminScreeningWeek,
+  setAdminScreeningVisibility
+} from "../../services/admin/screening-schedule-admin.service.js";
 import { resolveUploadPath, saveUploadedFile } from "../../services/admin/upload.service.js";
 
 const kindSchema = z.enum(["exhibition", "event"]);
@@ -288,6 +292,44 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "WORK_SCHEDULE_FAILED", "근무스케줄 조회 실패");
+    }
+  });
+
+  app.get("/admin/screening-schedule", async (request, reply) => {
+    const parsed = z
+      .object({
+        anchor: z
+          .string()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .optional()
+      })
+      .safeParse(request.query);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_QUERY", "anchor=YYYY-MM-DD 형식이어야 합니다.");
+    }
+    try {
+      return await getAdminScreeningWeek(parsed.data.anchor);
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "SCREENING_SCHEDULE_FAILED", "상영시간표 조회 실패");
+    }
+  });
+
+  app.patch("/admin/screening-schedule/:seq/visibility", async (request, reply) => {
+    const params = z.object({ seq: z.coerce.number().int().min(1) }).safeParse(request.params);
+    const body = z.object({ hidden: z.boolean() }).safeParse(request.body);
+    if (!params.success || !body.success) {
+      return sendError(reply, 400, "INVALID_REQUEST", "seq와 hidden(boolean)이 필요합니다.");
+    }
+    try {
+      const updated = await setAdminScreeningVisibility(params.data.seq, body.data.hidden);
+      if (!updated) {
+        return sendError(reply, 404, "NOT_FOUND", "상영 회차를 찾을 수 없습니다.");
+      }
+      return updated;
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "SCREENING_VISIBILITY_FAILED", "표시 여부 변경 실패");
     }
   });
 
