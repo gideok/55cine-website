@@ -186,6 +186,7 @@ async function fetchScreeningsFromProgDaily(
         AND NULLIF(LTRIM(RTRIM(pd.date_sc)), '') IS NOT NULL
         AND TRY_CONVERT(date, LTRIM(RTRIM(pd.date_sc))) IS NOT NULL
         AND TRY_CONVERT(date, LTRIM(RTRIM(pd.date_sc))) >= @today
+        AND ISNULL(pd.divhidden, 0) = 0
       ORDER BY
         TRY_CONVERT(date, LTRIM(RTRIM(pd.date_sc))),
         pd.time_sc
