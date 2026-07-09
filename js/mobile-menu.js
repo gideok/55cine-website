@@ -47,6 +47,9 @@
         "aria-label",
         nowCollapsed ? "메뉴·시간표 펼치기" : "메뉴·시간표 접기"
       );
+      if (!nowCollapsed) {
+        window.dispatchEvent(new CustomEvent("ti-mobile-menu:opened"));
+      }
       window.requestAnimationFrame(requestRelayout);
       window.setTimeout(requestRelayout, 480);
     });

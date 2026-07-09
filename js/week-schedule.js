@@ -65,18 +65,33 @@
   var SCHEDULE_STATE_KEY = "ti-gnb-schedule-state";
   /** API 응답 anchor — 백엔드 서버 기준 '오늘' */
   var scheduleAnchorToday = null;
+  /** PC: 날짜 변경(자정) 감지용 */
+  var lastKnownAnchorDate = null;
+  var dateRolloverWatchStarted = false;
+
+  function pad2(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  function formatAnchorIso(date) {
+    var d = stripTime(date);
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
 
   function saveScheduleState() {
     var days = daysForActiveView();
     if (!days.length) return;
     var day = days[scheduleState.activeIndex];
+    var anchorDate = formatAnchorIso(getScheduleToday());
+    lastKnownAnchorDate = anchorDate;
     try {
       sessionStorage.setItem(
         SCHEDULE_STATE_KEY,
         JSON.stringify({
           weekView: scheduleState.weekView,
           activeIndex: scheduleState.activeIndex,
-          dayLabel: day && day.label ? day.label : ""
+          dayLabel: day && day.label ? day.label : "",
+          anchorDate: anchorDate
         })
       );
     } catch (e) {
@@ -237,6 +252,94 @@
       return day.date && day.date.getTime() === today.getTime();
     });
     return idx >= 0 ? idx : 0;
+  }
+
+  function refreshEnrichedDays() {
+    enrichedDays = inferScheduleDates(getWeekScheduleRef(), getScheduleToday());
+    enrichedDays.sort(function (a, b) {
+      if (!a.date || !b.date) return 0;
+      return compareDates(a.date, b.date);
+    });
+  }
+
+  function resetScheduleToToday(options) {
+    if (!scheduleDom.dayTabs || scheduleDom.dayTabs.dataset.scheduleReady !== "1") return;
+    var opts = options || {};
+    scheduleState.weekView = "primary";
+    refreshEnrichedDays();
+    renderSchedule();
+    var days = daysForActiveView();
+    var index = defaultActiveIndex(days);
+    setActiveIndex(index, {
+      scrollTab: true,
+      scrollPanel: isMobileSwipeMode(),
+      instant: true,
+      skipSave: !!opts.skipSave
+    });
+    if (!opts.skipSave) {
+      saveScheduleState();
+    } else {
+      lastKnownAnchorDate = formatAnchorIso(getScheduleToday());
+    }
+  }
+
+  function resolveInitialScheduleState() {
+    scheduleState.weekView = "primary";
+    var primaryDays = daysForActiveView();
+    var todayIndex = defaultActiveIndex(primaryDays);
+
+    if (MOBILE_MQ.matches) {
+      return todayIndex;
+    }
+
+    var saved = getSavedScheduleState();
+    var todayIso = formatAnchorIso(getScheduleToday());
+    if (!saved) {
+      return todayIndex;
+    }
+    if (!saved.anchorDate || saved.anchorDate !== todayIso) {
+      return todayIndex;
+    }
+
+    scheduleState.weekView =
+      saved.weekView === "following" && hasFollowingWeekData() ? "following" : "primary";
+    var days = daysForActiveView();
+    if (!days.length) {
+      scheduleState.weekView = "primary";
+      return defaultActiveIndex(daysForActiveView());
+    }
+    var savedIndex = resolveSavedScheduleIndex(saved, days);
+    return savedIndex >= 0 ? savedIndex : defaultActiveIndex(days);
+  }
+
+  function checkScheduleDateRollover() {
+    if (MOBILE_MQ.matches) return;
+    if (!scheduleBootstrapped) return;
+    if (!scheduleDom.dayTabs || scheduleDom.dayTabs.dataset.scheduleReady !== "1") return;
+
+    var clientToday = stripTime(new Date());
+    var clientTodayIso = formatAnchorIso(clientToday);
+    if (!lastKnownAnchorDate) {
+      lastKnownAnchorDate = clientTodayIso;
+      return;
+    }
+    if (lastKnownAnchorDate === clientTodayIso) return;
+
+    lastKnownAnchorDate = clientTodayIso;
+    scheduleAnchorToday = clientToday;
+    resetScheduleToToday();
+  }
+
+  function startDateRolloverWatch() {
+    if (dateRolloverWatchStarted || MOBILE_MQ.matches) return;
+    dateRolloverWatchStarted = true;
+    window.setInterval(checkScheduleDateRollover, 60000);
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") {
+        checkScheduleDateRollover();
+      }
+    });
+    window.addEventListener("focus", checkScheduleDateRollover);
   }
 
   function resolvePosterSrc(posterUrl) {
@@ -615,29 +718,16 @@
     if (scheduleDom.dayTabs.dataset.scheduleReady === "1") return;
 
     scheduleDom.dayTabs.dataset.scheduleReady = "1";
-    enrichedDays = inferScheduleDates(getWeekScheduleRef(), getScheduleToday());
-    enrichedDays.sort(function (a, b) {
-      if (!a.date || !b.date) return 0;
-      return compareDates(a.date, b.date);
-    });
+    refreshEnrichedDays();
 
-    var saved = getSavedScheduleState();
-    if (saved && saved.dayLabel) {
-      scheduleState.weekView =
-        saved.weekView === "following" && hasFollowingWeekData() ? "following" : "primary";
-      var savedDays = daysForActiveView();
-      var savedIndex = resolveSavedScheduleIndex(saved, savedDays);
-      scheduleState.activeIndex = savedIndex >= 0 ? savedIndex : defaultActiveIndex(savedDays);
-    } else {
-      scheduleState.weekView = "primary";
-      scheduleState.activeIndex = defaultActiveIndex(daysForActiveView());
-    }
+    scheduleState.activeIndex = resolveInitialScheduleState();
 
     renderSchedule();
     setActiveIndex(scheduleState.activeIndex, { scrollTab: true, scrollPanel: false, skipSave: true });
     saveScheduleState();
 
     bindScrollSync();
+    startDateRolloverWatch();
 
     if (typeof MOBILE_MQ.addEventListener === "function") {
       MOBILE_MQ.addEventListener("change", updateSwipeLayout);
@@ -648,11 +738,23 @@
 
   function restoreScheduleOnPageShow() {
     if (!scheduleDom.dayTabs || scheduleDom.dayTabs.dataset.scheduleReady !== "1") return;
+    if (MOBILE_MQ.matches) return;
+
     var saved = getSavedScheduleState();
-    if (saved) applySavedScheduleState(saved);
+    var todayIso = formatAnchorIso(getScheduleToday());
+    if (!saved || !saved.anchorDate || saved.anchorDate !== todayIso) {
+      resetScheduleToToday();
+      return;
+    }
+    applySavedScheduleState(saved);
+    lastKnownAnchorDate = todayIso;
   }
 
   window.addEventListener("pageshow", restoreScheduleOnPageShow);
+  window.addEventListener("ti-mobile-menu:opened", function () {
+    if (!MOBILE_MQ.matches) return;
+    resetScheduleToToday();
+  });
   window.addEventListener("ti-week-schedule:data-ready", bootstrapWeekSchedule);
   window.addEventListener("ti-left-gnb:loaded", startWeekScheduleLoading);
   window.addEventListener("load", startWeekScheduleLoading);
