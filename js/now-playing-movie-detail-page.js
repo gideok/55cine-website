@@ -440,10 +440,10 @@
       scheduleHead.className = "md-schedule-head";
       scheduleHead.appendChild(createSectionHead("상영시간표"));
 
-      var note = document.createElement("p");
-      note.className = "md-schedule-note ref-note";
-      note.textContent = "오오극장 공식 사이트 기준 · 변경될 수 있습니다.";
-      scheduleHead.appendChild(note);
+      // var note = document.createElement("p");
+      // note.className = "md-schedule-note ref-note";
+      // note.textContent = "오오극장 공식 사이트 기준 · 변경될 수 있습니다.";
+      // scheduleHead.appendChild(note);
       schedule.appendChild(scheduleHead);
 
       var scheduleGrid = document.createElement("div");
