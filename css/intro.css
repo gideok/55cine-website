@@ -48,8 +48,41 @@
     height: auto;
   }
 
+  .right.intro-kv {
+    flex: 0 0 auto;
+    align-self: start;
+    min-height: 0;
+    height: auto;
+    overflow: visible;
+    padding-top: var(--intro-kv-inset-block);
+    padding-bottom: var(--intro-kv-inset-block);
+  }
+
+  .right.intro-kv .intro-kv__frame {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    display: block;
+    line-height: 0;
+  }
+
+  .right.intro-kv .intro-kv__img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    object-fit: initial;
+    object-position: top center;
+    vertical-align: top;
+  }
+
   /* shell-mobile-menu 접힘 시 padding-top — shorthand 덮어쓰기 방지 */
   .ti .shell.menu-collapsed-mobile > .right {
+    padding-top: calc(var(--ti-mobile-menu-bar-offset, 69px) + var(--intro-kv-inset-block));
+  }
+
+  .ti .shell.menu-collapsed-mobile > .right.intro-kv {
     padding-top: calc(var(--ti-mobile-menu-bar-offset, 69px) + var(--intro-kv-inset-block));
   }
 }
