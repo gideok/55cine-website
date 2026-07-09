@@ -53,7 +53,7 @@
 }
 
 .ti .md-theme .mz-detail-body p {
-  margin: 0 0 14px;
+  margin: 0;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.65;
@@ -127,8 +127,12 @@
   text-align: justify;
 }
 
-.ti .md-theme .mz-detail-body .mz-text-box p:last-child {
-  margin-bottom: 0;
+.ti .md-theme .mz-detail-body .mz-text-box p {
+  margin: 0;
+}
+
+.ti .md-theme .mz-detail-body .mz-text-box p + p {
+  margin-top: 0.5em;
 }
 
 .ti .md-theme .mz-detail-attachments {

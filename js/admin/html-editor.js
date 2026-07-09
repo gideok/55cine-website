@@ -373,7 +373,17 @@
             prop !== "line-height" &&
             prop !== "letter-spacing" &&
             prop !== "background" &&
-            prop !== "background-color"
+            prop !== "background-color" &&
+            prop !== "margin" &&
+            prop !== "margin-top" &&
+            prop !== "margin-right" &&
+            prop !== "margin-bottom" &&
+            prop !== "margin-left" &&
+            prop !== "padding" &&
+            prop !== "padding-top" &&
+            prop !== "padding-right" &&
+            prop !== "padding-bottom" &&
+            prop !== "padding-left"
           );
         })
         .join("; ");
@@ -572,6 +582,33 @@
         }
         if (options.showHeadings && isHeadingTag(el.tagName)) {
           sanitizeBlockElement(el, walk);
+          return;
+        }
+        if (el.tagName === "IMG" && options.preserveImageSize) {
+          var imgSrc = el.getAttribute("src");
+          var imgAlt = el.getAttribute("alt");
+          var imgTemp = el.getAttribute("data-ti-temp");
+          var imgStyle = el.getAttribute("style") || "";
+          var widthAttr = el.getAttribute("width");
+          var cleanedImgStyle = imgStyle
+            .split(";")
+            .map(function (part) {
+              return part.trim();
+            })
+            .filter(function (part) {
+              if (!part) return false;
+              var prop = part.split(":")[0].trim().toLowerCase();
+              return prop === "width" || prop === "max-width" || prop === "height" ||
+                prop === "display" || prop === "margin-left" || prop === "margin-right";
+            })
+            .join("; ");
+          var nextImg = document.createElement("img");
+          if (imgSrc) nextImg.setAttribute("src", imgSrc);
+          if (imgAlt != null) nextImg.setAttribute("alt", imgAlt);
+          if (imgTemp) nextImg.setAttribute("data-ti-temp", imgTemp);
+          if (cleanedImgStyle) nextImg.setAttribute("style", cleanedImgStyle);
+          if (widthAttr && !cleanedImgStyle) nextImg.setAttribute("width", widthAttr);
+          el.parentNode.replaceChild(nextImg, el);
           return;
         }
         el.removeAttribute("class");

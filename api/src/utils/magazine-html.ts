@@ -158,6 +158,64 @@ function cleanStyleAttr(style: string): string {
   return parts.join("; ");
 }
 
+const IMG_STYLE_PROPS = new Set([
+  "width",
+  "max-width",
+  "height",
+  "display",
+  "margin-left",
+  "margin-right"
+]);
+
+function cleanImgStyleAttr(style: string): string {
+  const parts = style
+    .split(";")
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .filter((p) => {
+      const prop = p.split(":")[0]?.trim().toLowerCase() ?? "";
+      return IMG_STYLE_PROPS.has(prop);
+    });
+  return parts.join("; ");
+}
+
+const IMG_PLACEHOLDER_PREFIX = "\x00TI_IMG_";
+
+function extractImgTags(html: string): { html: string; imgs: string[] } {
+  const imgs: string[] = [];
+  const withoutImgs = html.replace(/<img\b[^>]*>/gi, (tag) => {
+    const idx = imgs.length;
+    imgs.push(tag);
+    return `${IMG_PLACEHOLDER_PREFIX}${idx}\x00`;
+  });
+  return { html: withoutImgs, imgs };
+}
+
+function restoreImgTags(html: string, imgs: string[]): string {
+  return html.replace(/\x00TI_IMG_(\d+)\x00/g, (_m, idx: string) => {
+    const raw = imgs[Number(idx)];
+    return raw ? sanitizeImgTag(raw) : "";
+  });
+}
+
+function sanitizeImgTag(tag: string): string {
+  return tag.replace(/<img\b([^>]*)>/gi, (_m, attrs: string) => {
+    let out = attrs
+      .replace(/\sdata-ti-asset-key=(["'])[^"']*\1/gi, "")
+      .replace(/\son\w+=(["'])[^"']*\1/gi, "");
+
+    const styleMatch = out.match(/\bstyle=(["'])([\s\S]*?)\1/i);
+    if (styleMatch) {
+      const cleaned = cleanImgStyleAttr(styleMatch[2]);
+      out = cleaned
+        ? out.replace(styleMatch[0], ` style=${styleMatch[1]}${cleaned}${styleMatch[1]}`)
+        : out.replace(styleMatch[0], "");
+    }
+
+    return `<img${out}>`;
+  });
+}
+
 function sanitizeMagazineLinks(html: string): string {
   return html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (_m, attrs: string, inner: string) => {
     const hrefMatch = attrs.match(/\bhref\s*=\s*(["'])([\s\S]*?)\1/i);
@@ -192,6 +250,9 @@ export function sanitizeMagazineBodyHtml(html: string | null | undefined): strin
   out = convertFontColorToSpan(out);
   out = out.replace(/<\/?font\b[^>]*>/gi, "");
 
+  const { html: withoutImgs, imgs } = extractImgTags(out);
+  out = withoutImgs;
+
   out = out.replace(/\sstyle=(["'])([\s\S]*?)\1/gi, (_m, q: string, style: string) => {
     const cleaned = cleanStyleAttr(style);
     return cleaned ? ` style=${q}${cleaned}${q}` : "";
@@ -206,6 +267,7 @@ export function sanitizeMagazineBodyHtml(html: string | null | undefined): strin
   out = promoteColorSpanToBlocks(out);
   out = cleanupOrphanColorSpans(out);
   out = sanitizeMagazineLinks(out);
+  out = restoreImgTags(out, imgs);
 
   return out.trim() || null;
 }

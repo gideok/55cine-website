@@ -254,6 +254,176 @@
     return null;
   }
 
+  function detectImgAlign(img) {
+
+    if (!img) return "left";
+
+    var ml = "";
+
+    var mr = "";
+
+    var style = img.getAttribute("style") || "";
+
+    style.split(";").forEach(function (part) {
+
+      var sep = part.indexOf(":");
+
+      if (sep === -1) return;
+
+      var prop = part.slice(0, sep).trim().toLowerCase();
+
+      var val = part.slice(sep + 1).trim().toLowerCase();
+
+      if (prop === "margin-left") ml = val;
+
+      if (prop === "margin-right") mr = val;
+
+    });
+
+    if (!ml) ml = String(img.style.marginLeft || "").toLowerCase();
+
+    if (!mr) mr = String(img.style.marginRight || "").toLowerCase();
+
+    if (ml === "auto" && mr === "auto") return "center";
+
+    if (ml === "auto" && (mr === "0" || mr === "0px")) return "right";
+
+    return "left";
+
+  }
+
+  function applyImgAlign(img, align) {
+
+    if (!img) return;
+
+    align = align || "left";
+
+    img.style.display = "block";
+
+    if (!img.style.maxWidth) img.style.maxWidth = "100%";
+
+    if (align === "center") {
+
+      img.style.marginLeft = "auto";
+
+      img.style.marginRight = "auto";
+
+    } else if (align === "right") {
+
+      img.style.marginLeft = "auto";
+
+      img.style.marginRight = "0";
+
+    } else {
+
+      img.style.marginLeft = "0";
+
+      img.style.marginRight = "auto";
+
+    }
+
+    syncFigureAlignState(img);
+
+  }
+
+  function syncFigureAlignState(img) {
+
+    var figure = closestEl(img, "figure[data-ti-editor-figure]");
+
+    if (!figure) return;
+
+    var align = detectImgAlign(img);
+
+    figure.dataset.tiImgAlign = align;
+
+    Array.prototype.forEach.call(
+
+      figure.querySelectorAll(".admin-editor-figure__align-btn"),
+
+      function (btn) {
+
+        var active = btn.getAttribute("data-align") === align;
+
+        btn.classList.toggle("is-active", active);
+
+        btn.setAttribute("aria-pressed", active ? "true" : "false");
+
+      }
+
+    );
+
+  }
+
+  function createAlignToolbar() {
+
+    var group = document.createElement("div");
+
+    group.className = "admin-editor-figure__align";
+
+    group.setAttribute("role", "group");
+
+    group.setAttribute("aria-label", "이미지 정렬");
+
+    [
+
+      { id: "left", label: "좌" },
+
+      { id: "center", label: "중" },
+
+      { id: "right", label: "우" }
+
+    ].forEach(function (item) {
+
+      var btn = document.createElement("button");
+
+      btn.type = "button";
+
+      btn.className = "admin-editor-figure__align-btn";
+
+      btn.setAttribute("data-align", item.id);
+
+      btn.title = item.id === "left" ? "왼쪽" : item.id === "center" ? "가운데" : "오른쪽";
+
+      btn.textContent = item.label;
+
+      group.appendChild(btn);
+
+    });
+
+    return group;
+
+  }
+
+  function bindFigureAlign(figure) {
+
+    if (!figure || figure.dataset.tiAlignBound === "1") return;
+
+    var toolbar = figure.querySelector(".admin-editor-figure__align");
+
+    if (!toolbar) return;
+
+    figure.dataset.tiAlignBound = "1";
+
+    toolbar.addEventListener("click", function (e) {
+
+      var btn = closestEl(e.target, ".admin-editor-figure__align-btn");
+
+      if (!btn || !toolbar.contains(btn)) return;
+
+      e.preventDefault();
+
+      e.stopPropagation();
+
+      var img = figure.querySelector("img");
+
+      if (!img) return;
+
+      applyImgAlign(img, btn.getAttribute("data-align"));
+
+    });
+
+  }
+
   function wrapImgAsFigure(img) {
 
     if (!img || closestEl(img, "figure[data-ti-editor-figure]")) return;
@@ -280,6 +450,8 @@
 
     figure.setAttribute("data-ti-editor-figure", "1");
 
+    var align = createAlignToolbar();
+
     var del = document.createElement("button");
 
     del.type = "button";
@@ -288,13 +460,129 @@
 
     del.textContent = "삭제";
 
+    var resize = document.createElement("span");
+
+    resize.className = "admin-editor-figure__resize";
+
+    resize.setAttribute("aria-hidden", "true");
+
+    resize.title = "드래그하여 크기 조절";
+
     var parent = img.parentNode;
 
     parent.insertBefore(figure, img);
 
     figure.appendChild(img);
 
+    figure.appendChild(align);
+
     figure.appendChild(del);
+
+    figure.appendChild(resize);
+
+    applyImgAlign(img, detectImgAlign(img));
+
+    bindFigureAlign(figure);
+
+    bindFigureResize(figure);
+
+  }
+
+  function bindFigureResize(figure) {
+
+    if (!figure || figure.dataset.tiResizeBound === "1") return;
+
+    var handle = figure.querySelector(".admin-editor-figure__resize");
+
+    var img = figure.querySelector("img");
+
+    if (!handle || !img) return;
+
+    figure.dataset.tiResizeBound = "1";
+
+    handle.addEventListener("mousedown", function (e) {
+
+      e.preventDefault();
+
+      e.stopPropagation();
+
+      var body = editor && editor.getBodyEl();
+
+      var maxWidth = body ? body.clientWidth : 720;
+
+      var startX = e.clientX;
+
+      var startWidth = img.getBoundingClientRect().width;
+
+      figure.classList.add("is-resizing");
+
+      function onMove(ev) {
+
+        var nextWidth = Math.round(
+
+          Math.max(80, Math.min(startWidth + (ev.clientX - startX), maxWidth))
+
+        );
+
+        img.style.width = nextWidth + "px";
+
+        img.style.maxWidth = "100%";
+
+        img.style.height = "auto";
+
+        img.removeAttribute("height");
+
+      }
+
+      function onUp() {
+
+        figure.classList.remove("is-resizing");
+
+        document.removeEventListener("mousemove", onMove);
+
+        document.removeEventListener("mouseup", onUp);
+
+      }
+
+      document.addEventListener("mousemove", onMove);
+
+      document.addEventListener("mouseup", onUp);
+
+    });
+
+  }
+
+  function enhanceFigureControls(figure) {
+
+    if (!figure) return;
+
+    if (!figure.querySelector(".admin-editor-figure__align")) {
+
+      figure.insertBefore(createAlignToolbar(), figure.firstChild);
+
+    }
+
+    if (!figure.querySelector(".admin-editor-figure__resize")) {
+
+      var resize = document.createElement("span");
+
+      resize.className = "admin-editor-figure__resize";
+
+      resize.setAttribute("aria-hidden", "true");
+
+      resize.title = "드래그하여 크기 조절";
+
+      figure.appendChild(resize);
+
+    }
+
+    var img = figure.querySelector("img");
+
+    if (img) applyImgAlign(img, detectImgAlign(img));
+
+    bindFigureAlign(figure);
+
+    bindFigureResize(figure);
 
   }
 
@@ -309,6 +597,8 @@
     var imgs = body.querySelectorAll("img");
 
     Array.prototype.forEach.call(imgs, wrapImgAsFigure);
+
+    Array.prototype.forEach.call(body.querySelectorAll("figure[data-ti-editor-figure]"), enhanceFigureControls);
 
   }
 
@@ -981,7 +1271,8 @@
         showQuote: true,
         showTextBox: true,
         allowParagraphs: true,
-        showHeadings: true
+        showHeadings: true,
+        preserveImageSize: true
       }
 
     );
