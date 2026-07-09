@@ -54,6 +54,12 @@
     var out = stripBackgroundStyles(html || "")
       .replace(/\s+onerror="[^"]*"/gi, "")
       .replace(/\s+srcset="[^"]*"/gi, "");
+    if (window.TiMagazineBodyHtml && typeof window.TiMagazineBodyHtml.normalizeImgSrcInHtml === "function") {
+      out = window.TiMagazineBodyHtml.normalizeImgSrcInHtml(out);
+    }
+    if (window.TiMagazineBodyHtml && typeof window.TiMagazineBodyHtml.consolidateNestedSpansInHtml === "function") {
+      out = window.TiMagazineBodyHtml.consolidateNestedSpansInHtml(out);
+    }
     if (window.TiMagazineBodyHtml && typeof window.TiMagazineBodyHtml.promoteColorSpanToBlocks === "function") {
       out = window.TiMagazineBodyHtml.promoteColorSpanToBlocks(out);
     }

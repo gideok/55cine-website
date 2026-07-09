@@ -74,6 +74,10 @@
   text-align: justify;
 }
 
+.ti .sd-right--preview .sd-body .mz-text-box p {
+  margin: 0;
+}
+
 .ti .sd-right--preview .sd-body a {
   color: #1a1a1a;
   text-decoration: underline;

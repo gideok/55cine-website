@@ -36,6 +36,298 @@
     parent.removeChild(el);
   }
 
+  function normalizeMagazineAssetRelPath(url) {
+    if (!url) return "";
+    var s = String(url).trim();
+    if (!s) return "";
+    if (/^https?:\/\//i.test(s)) {
+      try {
+        s = new URL(s).pathname;
+      } catch (e) {
+        return s;
+      }
+    }
+    while (/^\.\.\//.test(s)) {
+      s = s.slice(3);
+    }
+    return s.replace(/^\/+/, "");
+  }
+
+  function parseStyleAttr(style) {
+    var out = {};
+    (style || "").split(";").forEach(function (part) {
+      var idx = part.indexOf(":");
+      if (idx === -1) return;
+      var key = part.slice(0, idx).trim().toLowerCase();
+      var val = part.slice(idx + 1).trim();
+      if (key && val) out[key] = val;
+    });
+    return out;
+  }
+
+  function serializeStyleAttr(map) {
+    return Object.keys(map)
+      .filter(function (key) {
+        return !!map[key];
+      })
+      .map(function (key) {
+        return key + ": " + map[key];
+      })
+      .join("; ");
+  }
+
+  function removeStylePropFromAttr(style, prop) {
+    var map = parseStyleAttr(style);
+    delete map[prop];
+    return serializeStyleAttr(map);
+  }
+
+  function isRedundantInlineSpan(el) {
+    if (!el || el.nodeType !== 1 || el.tagName !== "SPAN") return false;
+    if (el.attributes.length === 0) return true;
+    if (el.attributes.length === 1 && el.hasAttribute("style") && !el.getAttribute("style").trim()) {
+      return true;
+    }
+    return false;
+  }
+
+  function stripFontSizeFromSubtree(root) {
+    if (!root) return;
+
+    var styled = [];
+    if (root.nodeType === 1 && root.hasAttribute && root.hasAttribute("style")) {
+      styled.push(root);
+    }
+    if (root.querySelectorAll) {
+      styled = styled.concat(Array.prototype.slice.call(root.querySelectorAll("[style]")));
+    }
+
+    styled.forEach(function (el) {
+      var cleaned = removeStylePropFromAttr(el.getAttribute("style"), "font-size");
+      if (cleaned) el.setAttribute("style", cleaned);
+      else el.removeAttribute("style");
+    });
+
+    var spans = root.querySelectorAll
+      ? Array.prototype.slice.call(root.querySelectorAll("span"))
+      : root.nodeType === 1 && root.tagName === "SPAN"
+        ? [root]
+        : [];
+    spans.reverse().forEach(function (span) {
+      if (isRedundantInlineSpan(span)) unwrapElement(span);
+    });
+  }
+
+  function consolidateNestedSpans(root) {
+    if (!root || !root.querySelectorAll) return;
+
+    var changed = true;
+    while (changed) {
+      changed = false;
+      var spans = Array.prototype.slice.call(root.querySelectorAll("span"));
+      spans.forEach(function (span) {
+        while (
+          span.parentNode &&
+          span.childNodes.length === 1 &&
+          span.firstChild.nodeType === 1 &&
+          span.firstChild.tagName === "SPAN"
+        ) {
+          var inner = span.firstChild;
+          var merged = parseStyleAttr(span.getAttribute("style"));
+          var innerMap = parseStyleAttr(inner.getAttribute("style"));
+          Object.keys(innerMap).forEach(function (key) {
+            merged[key] = innerMap[key];
+          });
+          var mergedStyle = serializeStyleAttr(merged);
+          if (mergedStyle) span.setAttribute("style", mergedStyle);
+          else span.removeAttribute("style");
+          while (inner.firstChild) span.appendChild(inner.firstChild);
+          span.removeChild(inner);
+          changed = true;
+        }
+        if (isRedundantInlineSpan(span)) {
+          unwrapElement(span);
+          changed = true;
+        }
+      });
+    }
+  }
+
+  function mergeStyleOntoElement(el, styleStr) {
+    if (!el || el.nodeType !== 1 || !styleStr) return;
+    var incoming = parseStyleAttr(styleStr);
+    var current = parseStyleAttr(el.getAttribute("style") || "");
+    ["font-size", "color"].forEach(function (key) {
+      if (incoming[key] && !current[key]) current[key] = incoming[key];
+    });
+    var merged = serializeStyleAttr(current);
+    if (merged) el.setAttribute("style", merged);
+    else el.removeAttribute("style");
+  }
+
+  function unwrapBlockWrappingSpans(root) {
+    if (!root || !root.querySelectorAll) return;
+    var blockTags = { P: 1, DIV: 1, BLOCKQUOTE: 1, H2: 1, H3: 1, H4: 1 };
+    var spans = Array.prototype.slice.call(root.querySelectorAll("span"));
+    spans.forEach(function (span) {
+      var hasBlockChild = Array.prototype.some.call(span.children, function (ch) {
+        return !!blockTags[ch.tagName];
+      });
+      if (!hasBlockChild) return;
+      var style = span.getAttribute("style");
+      var parent = span.parentNode;
+      if (!parent) return;
+      while (span.firstChild) {
+        var child = span.firstChild;
+        parent.insertBefore(child, span);
+        if (style && child.nodeType === 1 && blockTags[child.tagName]) {
+          mergeStyleOntoElement(child, style);
+        }
+      }
+      parent.removeChild(span);
+    });
+  }
+
+  function isBlankParagraph(p) {
+    return isBlockEffectivelyEmpty(p);
+  }
+
+  function paragraphStyleKey(p) {
+    return serializeStyleAttr(parseStyleAttr(p.getAttribute("style") || ""));
+  }
+
+  function hoistSingleSpanInParagraph(p) {
+    if (!p || p.tagName !== "P") return;
+    var meaningful = [];
+    Array.prototype.forEach.call(p.childNodes, function (n) {
+      if (n.nodeType === 3 && !n.textContent.replace(/\u00a0/g, " ").trim()) return;
+      if (n.nodeType === 1 && n.tagName === "BR") return;
+      meaningful.push(n);
+    });
+    if (meaningful.length !== 1 || meaningful[0].tagName !== "SPAN") return;
+    var span = meaningful[0];
+    mergeStyleOntoElement(p, span.getAttribute("style") || "");
+    unwrapElement(span);
+  }
+
+  function unwrapIdenticalAdjacentSpans(p) {
+    if (!p) return;
+    var node = p.firstChild;
+    while (node) {
+      var next = node.nextSibling;
+      if (
+        node.nodeType === 1 &&
+        node.tagName === "SPAN" &&
+        node.getAttribute("style") &&
+        next &&
+        next.nodeType === 1 &&
+        next.tagName === "BR"
+      ) {
+        var afterBr = next.nextSibling;
+        if (
+          afterBr &&
+          afterBr.nodeType === 1 &&
+          afterBr.tagName === "SPAN" &&
+          afterBr.getAttribute("style") === node.getAttribute("style")
+        ) {
+          while (afterBr.firstChild) node.appendChild(afterBr.firstChild);
+          p.removeChild(afterBr);
+          p.removeChild(next);
+          continue;
+        }
+      }
+      node = next;
+    }
+    hoistSingleSpanInParagraph(p);
+  }
+
+  function mergeSoftLineParagraphs(box) {
+    if (!box) return;
+    var nodes = Array.prototype.slice.call(box.childNodes);
+    var i = 0;
+    while (i < nodes.length) {
+      var current = nodes[i];
+      if (!current || current.nodeType !== 1 || current.tagName !== "P" || isBlankParagraph(current)) {
+        i++;
+        continue;
+      }
+      var styleKey = paragraphStyleKey(current);
+      var j = i + 1;
+      while (j < nodes.length) {
+        var next = nodes[j];
+        if (!next || next.nodeType !== 1 || next.tagName !== "P") break;
+        if (isBlankParagraph(next)) break;
+        if (paragraphStyleKey(next) !== styleKey) break;
+        current.appendChild(document.createElement("br"));
+        while (next.firstChild) current.appendChild(next.firstChild);
+        if (next.parentNode) next.parentNode.removeChild(next);
+        nodes.splice(j, 1);
+      }
+      i = j;
+    }
+    Array.prototype.forEach.call(box.querySelectorAll(":scope > p"), function (p) {
+      unwrapIdenticalAdjacentSpans(p);
+      hoistSingleSpanInParagraph(p);
+    });
+  }
+
+  function normalizeTextBoxes(root) {
+    if (!root || !root.querySelectorAll) return;
+    Array.prototype.forEach.call(root.querySelectorAll("." + MAGAZINE_TEXT_BOX_CLASS), function (box) {
+      consolidateNestedSpans(box);
+      mergeSoftLineParagraphs(box);
+      consolidateNestedSpans(box);
+    });
+  }
+
+  /** 빈 문단(빈 줄)에 남은 인라인 서식 제거 — 삭제 시 아랫줄로 서식이 전파되는 것 방지 */
+  function cleanBlankParagraphs(root) {
+    if (!root || !root.querySelectorAll) return;
+    Array.prototype.forEach.call(root.querySelectorAll("p"), function (p) {
+      if (!isBlockEffectivelyEmpty(p)) return;
+      if (p.querySelector("img, hr, iframe, video")) return;
+      p.removeAttribute("style");
+      while (p.firstChild) p.removeChild(p.firstChild);
+      p.appendChild(document.createElement("br"));
+    });
+  }
+
+  function normalizeBodyHtmlStructure(root) {
+    if (!root) return;
+    consolidateNestedSpans(root);
+    unwrapBlockWrappingSpans(root);
+    normalizeTextBoxes(root);
+    cleanBlankParagraphs(root);
+    consolidateNestedSpans(root);
+  }
+
+  function stripColorFromSubtree(root) {
+    if (!root) return;
+
+    var styled = [];
+    if (root.nodeType === 1 && root.hasAttribute && root.hasAttribute("style")) {
+      styled.push(root);
+    }
+    if (root.querySelectorAll) {
+      styled = styled.concat(Array.prototype.slice.call(root.querySelectorAll("[style]")));
+    }
+
+    styled.forEach(function (el) {
+      var cleaned = removeStylePropFromAttr(el.getAttribute("style"), "color");
+      if (cleaned) el.setAttribute("style", cleaned);
+      else el.removeAttribute("style");
+    });
+
+    var spans = root.querySelectorAll
+      ? Array.prototype.slice.call(root.querySelectorAll("span"))
+      : root.nodeType === 1 && root.tagName === "SPAN"
+        ? [root]
+        : [];
+    spans.reverse().forEach(function (span) {
+      if (isRedundantInlineSpan(span)) unwrapElement(span);
+    });
+  }
+
   /** 빈 블록(공백·단독 br만) 여부 — Enter 한 번으로 생기는 빈 div/p 감지 */
   function isBlockEffectivelyEmpty(el) {
     if (!el || !el.childNodes || !el.childNodes.length) return true;
@@ -139,6 +431,18 @@
       saveSelection();
     }
 
+    function getInlineFontSizePx(el) {
+      var node = el;
+      while (node && node !== body) {
+        if (node.nodeType === 1 && node.hasAttribute("style")) {
+          var match = node.getAttribute("style").match(/font-size:\s*(\d+(?:\.\d+)?)px/i);
+          if (match) return Math.round(parseFloat(match[1]));
+        }
+        node = node.parentNode;
+      }
+      return null;
+    }
+
     function getSelectionFontSizePx() {
       var sel = global.getSelection();
       if (!sel || sel.rangeCount === 0) return 16;
@@ -146,6 +450,8 @@
       if (!node) return 16;
       if (node.nodeType === 3) node = node.parentElement;
       if (!node || !body.contains(node)) return 16;
+      var inlinePx = getInlineFontSizePx(node);
+      if (inlinePx) return inlinePx;
       var px = parseInt(global.getComputedStyle(node).fontSize, 10);
       return Number.isNaN(px) ? 16 : px;
     }
@@ -194,6 +500,7 @@
         });
         range.insertNode(fragment);
       } else {
+        stripColorFromSubtree(fragment);
         var span = document.createElement("span");
         span.style.color = color;
         span.appendChild(fragment);
@@ -205,6 +512,7 @@
       sel.removeAllRanges();
       sel.addRange(range);
       savedRange = range.cloneRange();
+      consolidateNestedSpans(body);
     }
 
     function applyLink(url) {
@@ -255,14 +563,69 @@
       savedRange = newRange.cloneRange();
     }
 
+    function collectFormatBlocksInRange(range) {
+      var candidates = body.querySelectorAll("p, h2, h3, h4, div, blockquote, li");
+      var blocks = [];
+      Array.prototype.forEach.call(candidates, function (el) {
+        if (el.classList && el.classList.contains(MAGAZINE_TEXT_BOX_CLASS)) return;
+        if (closestByTag(el, "figure")) return;
+        if (el.querySelector("p, h2, h3, h4, div, blockquote, li")) return;
+        if (range.intersectsNode(el)) blocks.push(el);
+      });
+      return blocks;
+    }
+
+    function closestByTag(el, tagName) {
+      var t = String(tagName).toUpperCase();
+      var node = el;
+      while (node && node !== body) {
+        if (node.nodeType === 1 && node.tagName === t) return node;
+        node = node.parentNode;
+      }
+      return null;
+    }
+
+    /** H2·H3·H4·본문 — 블록 태그 교체 + 내부 font-size 제거로 표준 서식 강제 */
     function applyFormatBlock(tagName) {
       body.focus();
       restoreSelection();
+      var sel = global.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      var range = sel.getRangeAt(0);
+      if (!rangeInBody(range)) return;
+
       var tag = String(tagName || "p").toLowerCase();
-      if (!document.execCommand("formatBlock", false, tag)) {
-        document.execCommand("formatBlock", false, "<" + tag + ">");
+      var blocks = collectFormatBlocksInRange(range);
+
+      if (!blocks.length) {
+        if (!document.execCommand("formatBlock", false, tag)) {
+          document.execCommand("formatBlock", false, "<" + tag + ">");
+        }
+        sel = global.getSelection();
+        if (!sel || sel.rangeCount === 0) return;
+        range = sel.getRangeAt(0);
+        if (!rangeInBody(range)) return;
+        blocks = collectFormatBlocksInRange(range);
       }
-      saveSelection();
+      if (!blocks.length) return;
+
+      var converted = blocks.map(function (blockEl) {
+        var next = document.createElement(tag);
+        var color = blockEl.style ? blockEl.style.color : "";
+        while (blockEl.firstChild) next.appendChild(blockEl.firstChild);
+        if (color) next.style.color = color;
+        blockEl.parentNode.replaceChild(next, blockEl);
+        stripFontSizeFromSubtree(next);
+        ensureBlockHasBreak(next);
+        return next;
+      });
+
+      var newRange = document.createRange();
+      newRange.setStartBefore(converted[0]);
+      newRange.setEndAfter(converted[converted.length - 1]);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+      savedRange = newRange.cloneRange();
     }
 
     function sanitizeBlockElement(el, walkFn) {
@@ -343,10 +706,12 @@
       var next = FONT_SIZES[Math.max(0, Math.min(FONT_SIZES.length - 1, idx + delta))];
 
       var fragment = range.extractContents();
+      stripFontSizeFromSubtree(fragment);
       var span = document.createElement("span");
       span.style.fontSize = next + "px";
       span.appendChild(fragment);
       range.insertNode(span);
+      consolidateNestedSpans(body);
 
       var newRange = document.createRange();
       newRange.selectNodeContents(span);
@@ -603,7 +968,7 @@
             })
             .join("; ");
           var nextImg = document.createElement("img");
-          if (imgSrc) nextImg.setAttribute("src", imgSrc);
+          if (imgSrc) nextImg.setAttribute("src", normalizeMagazineAssetRelPath(imgSrc));
           if (imgAlt != null) nextImg.setAttribute("alt", imgAlt);
           if (imgTemp) nextImg.setAttribute("data-ti-temp", imgTemp);
           if (cleanedImgStyle) nextImg.setAttribute("style", cleanedImgStyle);
@@ -626,6 +991,8 @@
 
       Array.prototype.slice.call(box.childNodes).forEach(walk);
       ensureParagraphBreaks(box);
+      normalizeBodyHtmlStructure(box);
+      consolidateNestedSpans(box);
       return box.innerHTML;
     }
 
@@ -885,6 +1252,7 @@
       },
       setHtml: function (html) {
         body.innerHTML = html || "";
+        normalizeBodyHtmlStructure(body);
       },
       getBodyEl: function () {
         return body;

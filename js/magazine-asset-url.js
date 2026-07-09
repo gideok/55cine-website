@@ -4,15 +4,35 @@
 (function (global) {
   "use strict";
 
+  /** 저장·표시 공통 — images/magazine/... 형태로 통일 */
+  function normalizeMagazineAssetRelPath(url) {
+    if (!url) return "";
+    var s = String(url).trim();
+    if (!s) return "";
+    if (/^https?:\/\//i.test(s)) {
+      try {
+        s = new URL(s).pathname;
+      } catch (e) {
+        return s;
+      }
+    }
+    while (/^\.\.\//.test(s)) {
+      s = s.slice(3);
+    }
+    return s.replace(/^\/+/, "");
+  }
+
   function resolveBase(url, base) {
     if (!url) return "";
     if (/^https?:\/\//i.test(url)) return url;
     if (url.indexOf("//") === 0) return "https:" + url;
+    var rel = normalizeMagazineAssetRelPath(url);
+    if (!rel) return "";
     if (global.TiSiteRoot && typeof global.TiSiteRoot.resolve === "function") {
-      return global.TiSiteRoot.resolve(url);
+      return global.TiSiteRoot.resolve(rel);
     }
-    if (url.charAt(0) === "/") return url;
-    return (base || "../") + String(url).replace(/^\//, "");
+    if (rel.charAt(0) === "/") return rel;
+    return (base || "../") + rel;
   }
 
   function cacheKeyFromArticle(article) {
@@ -45,6 +65,7 @@
 
   global.TiMagazineAsset = {
     resolve: resolve,
+    normalizeRelPath: normalizeMagazineAssetRelPath,
     cacheKeyFromArticle: cacheKeyFromArticle,
     withCacheBust: withCacheBust
   };

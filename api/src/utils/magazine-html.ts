@@ -101,15 +101,18 @@ function promoteColorSpanToBlocks(html: string): string {
     out = out.replace(
       /<span(\s+style="([^"]*)")[^>]*>\s*<p(\s[^>]*)?>/gi,
       (_m, _s1: string, styleVal: string, pRest?: string) => {
+        const fontM = styleVal.match(/\bfont-size\s*:\s*([^;"]+)/i);
         const colorM = styleVal.match(/\bcolor\s*:\s*([^;"]+)/i);
-        if (!colorM) return _m;
-        const color = colorM[1].trim();
+        if (!fontM && !colorM) return _m;
+        const parts: string[] = [];
+        if (fontM) parts.push(`font-size: ${fontM[1].trim()}`);
+        if (colorM) parts.push(`color: ${colorM[1].trim()}`);
+        const merged = parts.join("; ");
         const attrs = pRest || "";
         if (/\bstyle="/i.test(attrs)) {
-          if (/\bcolor\s*:/i.test(attrs)) return `<p${attrs}>`;
-          return `<p${attrs.replace(/\bstyle="([^"]*)"/i, `style="color: ${color}; $1`)}>`;
+          return `<p${attrs.replace(/\bstyle="([^"]*)"/i, `style="${merged}; $1`)}>`;
         }
-        return `<p style="color: ${color}"${attrs}>`;
+        return `<p style="${merged}"${attrs}>`;
       }
     );
   } while (out !== prev);
@@ -127,6 +130,20 @@ function escapeHtmlAttr(value: string): string {
     .replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;");
+}
+
+function normalizeMagazineAssetRelPath(src: string): string {
+  let s = String(src || "").trim();
+  if (!s) return "";
+  if (/^https?:\/\//i.test(s)) {
+    try {
+      s = new URL(s).pathname;
+    } catch {
+      return s;
+    }
+  }
+  while (/^\.\.\//.test(s)) s = s.slice(3);
+  return s.replace(/^\/+/, "");
 }
 
 function convertFontColorToSpan(html: string): string {
@@ -203,6 +220,12 @@ function sanitizeImgTag(tag: string): string {
     let out = attrs
       .replace(/\sdata-ti-asset-key=(["'])[^"']*\1/gi, "")
       .replace(/\son\w+=(["'])[^"']*\1/gi, "");
+
+    const srcMatch = out.match(/\bsrc=(["'])([^"']*)\1/i);
+    if (srcMatch) {
+      const norm = normalizeMagazineAssetRelPath(srcMatch[2]);
+      out = out.replace(srcMatch[0], ` src=${srcMatch[1]}${norm}${srcMatch[1]}`);
+    }
 
     const styleMatch = out.match(/\bstyle=(["'])([\s\S]*?)\1/i);
     if (styleMatch) {

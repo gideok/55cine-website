@@ -131,10 +131,6 @@
   margin: 0;
 }
 
-.ti .md-theme .mz-detail-body .mz-text-box p + p {
-  margin-top: 0.5em;
-}
-
 .ti .md-theme .mz-detail-attachments {
   margin-top: 24px;
   padding-top: 18px;

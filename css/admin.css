@@ -2241,6 +2241,10 @@ body.admin-modal-open {
   background: #fafafa;
 }
 
+.admin-editor-body .mz-text-box p {
+  margin: 0;
+}
+
 .admin-editor-body a:not(.site-notice-link) {
   color: #1a1a1a;
   text-decoration: underline;

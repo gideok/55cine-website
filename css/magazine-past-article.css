@@ -75,6 +75,10 @@
   text-align: justify;
 }
 
+.ti .sd-body .mz-text-box p {
+  margin: 0;
+}
+
 .ti .sd-attachments {
   margin-top: 24px;
   padding-top: 18px;

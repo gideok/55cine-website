@@ -78,6 +78,10 @@
   text-align: justify;
 }
 
+.ti .sd-right--serial .sd-body .mz-text-box p {
+  margin: 0;
+}
+
 .ti .serial-detail-status {
   margin: 0 0 16px;
   padding: 14px 16px;

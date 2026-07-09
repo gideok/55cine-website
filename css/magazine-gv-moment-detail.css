@@ -73,6 +73,10 @@
   text-align: justify;
 }
 
+.ti .sd-right--gv-moment .sd-body .mz-text-box p {
+  margin: 0;
+}
+
 .ti .gv-moment-detail-status {
   margin: 0 0 16px;
   padding: 14px 16px;

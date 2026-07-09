@@ -54,20 +54,37 @@
 
   }
 
+  function normalizeAssetRelPath(path) {
+    if (window.TiMagazineAsset && typeof window.TiMagazineAsset.normalizeRelPath === "function") {
+      return window.TiMagazineAsset.normalizeRelPath(path);
+    }
+    var s = String(path || "").trim();
+    if (/^https?:\/\//i.test(s)) {
+      try {
+        s = new URL(s).pathname;
+      } catch (e) {
+        return s;
+      }
+    }
+    while (/^\.\.\//.test(s)) s = s.slice(3);
+    return s.replace(/^\//, "");
+  }
+
   function resolveAssetUrl(path) {
     if (!path) return "";
     if (/^https?:\/\//i.test(path) || /^blob:/i.test(path) || /^data:/i.test(path)) {
       return path;
     }
 
-    var rel = String(path).replace(/^\//, "");
-
-    if (window.TiSiteRoot && typeof window.TiSiteRoot.relativePrefix === "function") {
-      return window.TiSiteRoot.relativePrefix() + rel;
-    }
+    var rel = normalizeAssetRelPath(path);
+    if (!rel) return "";
 
     if (window.TiSiteRoot && typeof window.TiSiteRoot.resolve === "function") {
       return window.TiSiteRoot.resolve(rel);
+    }
+
+    if (window.TiSiteRoot && typeof window.TiSiteRoot.relativePrefix === "function") {
+      return window.TiSiteRoot.relativePrefix() + rel;
     }
 
     return "../" + rel;
@@ -118,6 +135,8 @@
       }
 
     }
+
+    while (/^\.\.\//.test(s)) s = s.slice(3);
 
     return s.replace(/^\//, "");
 
