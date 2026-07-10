@@ -22,10 +22,12 @@
         function (_m, _s1, styleVal, pRest) {
           var fontM = styleVal.match(/\bfont-size\s*:\s*([^;"]+)/i);
           var colorM = styleVal.match(/\bcolor\s*:\s*([^;"]+)/i);
-          if (!fontM && !colorM) return _m;
+          var alignM = styleVal.match(/\btext-align\s*:\s*([^;"]+)/i);
+          if (!fontM && !colorM && !alignM) return _m;
           var parts = [];
           if (fontM) parts.push("font-size: " + fontM[1].trim());
           if (colorM) parts.push("color: " + colorM[1].trim());
+          if (alignM) parts.push("text-align: " + alignM[1].trim());
           var merged = parts.join("; ");
           var attrs = pRest || "";
           if (/\bstyle="/i.test(attrs)) {
@@ -166,7 +168,7 @@
     if (!el || el.nodeType !== 1 || !styleStr) return;
     var incoming = parseStyleAttr(styleStr);
     var current = parseStyleAttr(el.getAttribute("style") || "");
-    ["font-size", "color"].forEach(function (key) {
+    ["font-size", "color", "text-align"].forEach(function (key) {
       if (incoming[key] && !current[key]) current[key] = incoming[key];
     });
     var merged = serializeStyleAttr(current);

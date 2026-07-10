@@ -812,6 +812,22 @@
   cursor: pointer;
 }
 
+/* 툴바 버튼 그룹 배경 — 1그룹: 인라인 서식, 2그룹: 블록 서식·글자 크기, 3그룹: 정렬 */
+.admin-editor-toolbar button.admin-editor-btn--g1 {
+  background: #e8f0fe;
+  border-color: #b6cdf5;
+}
+
+.admin-editor-toolbar button.admin-editor-btn--g2 {
+  background: #e9f7ec;
+  border-color: #b7e0c1;
+}
+
+.admin-editor-toolbar button.admin-editor-btn--g3 {
+  background: #fdf3e3;
+  border-color: #eed9ae;
+}
+
 .admin-editor-body {
   min-height: 120px;
   max-height: 360px;

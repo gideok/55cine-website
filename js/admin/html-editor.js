@@ -157,7 +157,7 @@
     if (!el || el.nodeType !== 1 || !styleStr) return;
     var incoming = parseStyleAttr(styleStr);
     var current = parseStyleAttr(el.getAttribute("style") || "");
-    ["font-size", "color"].forEach(function (key) {
+    ["font-size", "color", "text-align"].forEach(function (key) {
       if (incoming[key] && !current[key]) current[key] = incoming[key];
     });
     var merged = serializeStyleAttr(current);
@@ -379,6 +379,7 @@
     }
     var toolbar = document.createElement("div");
     toolbar.className = "admin-editor-toolbar";
+    toolbar.addEventListener("mousedown", snapshotEditorSelection, true);
 
     var body = document.createElement("div");
     body.className = "admin-editor-body";
@@ -386,6 +387,37 @@
     body.innerHTML = initialHtml || "";
 
     var savedRange = null;
+    var blockActionRange = null;
+
+    function rememberBlockActionRange(range) {
+      if (!range) return;
+      try {
+        if (!body.contains(range.startContainer) || !body.contains(range.endContainer)) return;
+        blockActionRange = range.cloneRange();
+      } catch (e) {
+        /* ignore */
+      }
+    }
+
+    /** 편집기 안의 현재 선택을 blockActionRange·savedRange에 반영 */
+    function snapshotEditorSelection() {
+      var sel = global.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      if (!body.contains(sel.anchorNode)) return;
+      var live = sel.getRangeAt(0);
+      if (!rangeInBody(live)) return;
+
+      rememberBlockActionRange(live);
+      if (!live.collapsed) {
+        savedRange = live.cloneRange();
+        return;
+      }
+      if (!isRangeValid(savedRange) || savedRange.collapsed) {
+        if (getAlignableBlockFromRange(live)) {
+          savedRange = live.cloneRange();
+        }
+      }
+    }
 
     function placeCursorInParagraphAfter(el) {
       var p = document.createElement("p");
@@ -403,24 +435,129 @@
       savedRange = newRange.cloneRange();
     }
 
+    function isRangeValid(range) {
+      if (!range) return false;
+      try {
+        if (!body.contains(range.startContainer) || !body.contains(range.endContainer)) return false;
+        range.startOffset;
+        range.endOffset;
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
     function saveSelection() {
       var sel = global.getSelection();
       if (!sel || sel.rangeCount === 0) return;
       if (!body.contains(sel.anchorNode)) return;
-      savedRange = sel.getRangeAt(0).cloneRange();
+      var live = sel.getRangeAt(0);
+      if (live.collapsed && isRangeValid(savedRange) && !savedRange.collapsed) {
+        if (getAlignableBlockFromRange(live)) rememberBlockActionRange(live);
+        return;
+      }
+      savedRange = live.cloneRange();
+      rememberBlockActionRange(live);
+    }
+
+    function applySavedRange(range) {
+      if (!range) return false;
+      var sel = global.getSelection();
+      if (!sel) return false;
+      try {
+        sel.removeAllRanges();
+        sel.addRange(range);
+        savedRange = range.cloneRange();
+        return true;
+      } catch (e) {
+        return false;
+      }
     }
 
     function restoreSelection() {
-      if (!savedRange) return;
-      var sel = global.getSelection();
-      if (!sel) return;
-      sel.removeAllRanges();
-      sel.addRange(savedRange);
+      if (!isRangeValid(savedRange)) return false;
+      return applySavedRange(savedRange);
+    }
+
+    function isRangeUsableForBlockOps(range) {
+      if (!range || !rangeInBody(range)) return false;
+      if (!range.collapsed) return true;
+      return !!getAlignableBlockFromRange(range);
+    }
+
+    function captureToolbarSelection() {
+      snapshotEditorSelection();
+    }
+
+    function getAlignableBlockFromRange(range) {
+      var block = getAlignableBlockFromNode(range.startContainer);
+      if (block) return block;
+      if (!range.collapsed || range.startContainer !== body) return null;
+
+      var offset = range.startOffset;
+      if (offset < body.childNodes.length) {
+        block = getAlignableBlockFromNode(body.childNodes[offset]);
+        if (block) return block;
+      }
+      if (offset > 0) {
+        block = getAlignableBlockFromNode(body.childNodes[offset - 1]);
+        if (block) return block;
+      }
+      return null;
+    }
+
+    function rangeTouchesBlocks(range, blocks) {
+      if (!range || !blocks.length) return false;
+      return blocks.some(function (block) {
+        try {
+          return range.intersectsNode(block);
+        } catch (e) {
+          return block.contains(range.startContainer) || block.contains(range.endContainer);
+        }
+      });
+    }
+
+    function createRangeOverBlockContents(blocks) {
+      if (!blocks.length) return null;
+      var newRange = document.createRange();
+      var first = blocks[0];
+      var last = blocks[blocks.length - 1];
+      newRange.setStart(first, 0);
+
+      var lastText = null;
+      var walker = document.createTreeWalker(last, NodeFilter.SHOW_TEXT, null);
+      var node;
+      while ((node = walker.nextNode())) {
+        lastText = node;
+      }
+      if (lastText) {
+        newRange.setEnd(lastText, lastText.length);
+      } else {
+        newRange.setEnd(last, last.childNodes.length);
+      }
+      return newRange;
+    }
+
+    function finalizeSelectionAfterBlockOps(blocks, originalRange) {
+      if (!blocks.length) return;
+
+      var nextRange = null;
+      if (isRangeValid(originalRange) && rangeTouchesBlocks(originalRange, blocks)) {
+        nextRange = originalRange.cloneRange();
+      }
+      if (!nextRange) {
+        nextRange = createRangeOverBlockContents(blocks);
+      }
+      if (!nextRange) return;
+
+      body.focus();
+      applySavedRange(nextRange);
     }
 
     function holdSelectionOnMouseDown(btn) {
       btn.addEventListener("mousedown", function (e) {
         e.preventDefault();
+        captureToolbarSelection();
       });
     }
 
@@ -563,6 +700,212 @@
       savedRange = newRange.cloneRange();
     }
 
+    function isAlignableBlockCandidate(el) {
+      if (!el || el.nodeType !== 1) return false;
+      if (el.classList && el.classList.contains(MAGAZINE_TEXT_BOX_CLASS)) return false;
+      if (closestByTag(el, "figure")) return false;
+      if (el.querySelector("p, h2, h3, h4, div, blockquote, li")) return false;
+      var tag = el.tagName;
+      return tag === "P" || tag === "H2" || tag === "H3" || tag === "H4" || tag === "BLOCKQUOTE";
+    }
+
+    function getAlignableBlockFromNode(node) {
+      if (!node) return null;
+      if (node.nodeType === 3) node = node.parentElement;
+      while (node && node !== body) {
+        if (isAlignableBlockCandidate(node)) return node;
+        node = node.parentNode;
+      }
+      return null;
+    }
+
+    function rangeFullyInsideBlock(range, blockEl) {
+      if (!range || !blockEl) return false;
+      try {
+        var blockRange = document.createRange();
+        blockRange.selectNodeContents(blockEl);
+        return (
+          range.compareBoundaryPoints(Range.START_TO_START, blockRange) >= 0 &&
+          range.compareBoundaryPoints(Range.END_TO_END, blockRange) <= 0
+        );
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function rangeSelectsTextInBlock(range, blockEl) {
+      if (!range || !blockEl || !range.intersectsNode(blockEl)) return false;
+      if (isBlockEffectivelyEmpty(blockEl)) return rangeFullyInsideBlock(range, blockEl);
+
+      var walker = document.createTreeWalker(blockEl, NodeFilter.SHOW_TEXT, null);
+      var textNode;
+      while ((textNode = walker.nextNode())) {
+        if (!textNode.textContent.replace(/[\u00a0\s]/g, "")) continue;
+        if (!range.intersectsNode(textNode)) continue;
+
+        var start = range.startContainer === textNode ? range.startOffset : 0;
+        var end = range.endContainer === textNode ? range.endOffset : textNode.length;
+        if (end > start) return true;
+      }
+
+      var media = blockEl.querySelectorAll("img, hr");
+      for (var i = 0; i < media.length; i++) {
+        if (range.intersectsNode(media[i])) return true;
+      }
+      return false;
+    }
+
+    function isRangeEndAtBlockStart(range, blockEl) {
+      if (!range || !blockEl) return false;
+      try {
+        var endPoint = range.cloneRange();
+        endPoint.collapse(false);
+        var blockStart = document.createRange();
+        blockStart.setStart(blockEl, 0);
+        blockStart.collapse(true);
+        return endPoint.compareBoundaryPoints(Range.START_TO_START, blockStart) === 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function resolveAlignEndBlock(range, startBlock) {
+      var endBlock = getAlignableBlockFromNode(range.endContainer) || startBlock;
+      if (endBlock === startBlock) return startBlock;
+      if (!rangeSelectsTextInBlock(range, endBlock) && isRangeEndAtBlockStart(range, endBlock)) {
+        return startBlock;
+      }
+      return endBlock;
+    }
+
+    function collectAlignBlocksInRange(range) {
+      if (!range || !rangeInBody(range)) return [];
+
+      var startBlock = getAlignableBlockFromRange(range);
+      if (!startBlock) return [];
+      if (range.collapsed) return [startBlock];
+
+      var endBlock = resolveAlignEndBlock(range, startBlock);
+      if (startBlock === endBlock) return [startBlock];
+
+      var blocks = [];
+      var collecting = false;
+      var candidates = body.querySelectorAll("p, h2, h3, h4, blockquote");
+      Array.prototype.forEach.call(candidates, function (el) {
+        if (!isAlignableBlockCandidate(el)) return;
+        if (el === startBlock) collecting = true;
+        if (!collecting) return;
+
+        if (el === startBlock || el === endBlock) {
+          blocks.push(el);
+        } else if (isBlockEffectivelyEmpty(el)) {
+          if (rangeFullyInsideBlock(range, el)) blocks.push(el);
+        } else if (rangeSelectsTextInBlock(range, el)) {
+          blocks.push(el);
+        }
+
+        if (el === endBlock) collecting = false;
+      });
+
+      return blocks.length ? blocks : [startBlock];
+    }
+
+    function rangeCoversFullBlock(range, blockEl) {
+      if (!range || !blockEl) return false;
+      try {
+        var blockRange = document.createRange();
+        blockRange.selectNodeContents(blockEl);
+        return (
+          range.compareBoundaryPoints(Range.START_TO_START, blockRange) <= 0 &&
+          range.compareBoundaryPoints(Range.END_TO_END, blockRange) >= 0
+        );
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function shouldSplitBlockForAlign(range, blockEl) {
+      if (!blockEl || blockEl.tagName !== "P") return false;
+      if (!blockEl.querySelector("br")) return false;
+      if (rangeCoversFullBlock(range, blockEl)) return false;
+      return rangeFullyInsideBlock(range, blockEl);
+    }
+
+    /** 한 <p> 안의 <br> 줄바꿈을 각각 별도 단락으로 분리 */
+    function splitBlockByBrLines(blockEl) {
+      if (!blockEl || !blockEl.parentNode) return [blockEl];
+
+      var segments = [[]];
+      var nodes = Array.prototype.slice.call(blockEl.childNodes);
+      nodes.forEach(function (node) {
+        if (node.nodeType === 1 && node.tagName === "BR") {
+          if (node.parentNode) node.parentNode.removeChild(node);
+          segments.push([]);
+          return;
+        }
+        segments[segments.length - 1].push(node);
+      });
+
+      var baseStyle = removeStylePropFromAttr(blockEl.getAttribute("style") || "", "text-align");
+      var parent = blockEl.parentNode;
+      var insertRef = blockEl;
+      var created = [];
+
+      segments.forEach(function (segNodes) {
+        var newBlock = document.createElement(blockEl.tagName);
+        if (baseStyle) newBlock.setAttribute("style", baseStyle);
+        if (!segNodes.length) {
+          newBlock.appendChild(document.createElement("br"));
+        } else {
+          segNodes.forEach(function (n) {
+            newBlock.appendChild(n);
+          });
+        }
+        parent.insertBefore(newBlock, insertRef);
+        created.push(newBlock);
+      });
+
+      parent.removeChild(blockEl);
+      return created.length ? created : [blockEl];
+    }
+
+    function prepareBlocksForAlign(blocks, range) {
+      var prepared = [];
+      blocks.forEach(function (blockEl) {
+        if (!shouldSplitBlockForAlign(range, blockEl)) {
+          prepared.push(blockEl);
+          return;
+        }
+
+        var parts = splitBlockByBrLines(blockEl);
+        var matched = false;
+        parts.forEach(function (part) {
+          if (range.collapsed) {
+            if (part.contains(range.startContainer)) {
+              prepared.push(part);
+              matched = true;
+            }
+            return;
+          }
+          if (rangeSelectsTextInBlock(range, part) || rangeFullyInsideBlock(range, part)) {
+            prepared.push(part);
+            matched = true;
+          }
+        });
+        if (!matched && parts.length) {
+          var startPart = null;
+          for (var i = 0; i < parts.length; i++) {
+            if (parts[i].contains(range.startContainer)) {
+              startPart = parts[i];
+              break;
+            }
+          }
+          prepared.push(startPart || parts[0]);
+        }
+      });
+      return prepared.length ? prepared : blocks;
+    }
+
     function collectFormatBlocksInRange(range) {
       var candidates = body.querySelectorAll("p, h2, h3, h4, div, blockquote, li");
       var blocks = [];
@@ -594,6 +937,7 @@
       var range = sel.getRangeAt(0);
       if (!rangeInBody(range)) return;
 
+      var originalRange = range.cloneRange();
       var tag = String(tagName || "p").toLowerCase();
       var blocks = collectFormatBlocksInRange(range);
 
@@ -605,6 +949,7 @@
         if (!sel || sel.rangeCount === 0) return;
         range = sel.getRangeAt(0);
         if (!rangeInBody(range)) return;
+        originalRange = range.cloneRange();
         blocks = collectFormatBlocksInRange(range);
       }
       if (!blocks.length) return;
@@ -612,20 +957,94 @@
       var converted = blocks.map(function (blockEl) {
         var next = document.createElement(tag);
         var color = blockEl.style ? blockEl.style.color : "";
+        var textAlign = blockEl.style ? blockEl.style.textAlign : "";
         while (blockEl.firstChild) next.appendChild(blockEl.firstChild);
         if (color) next.style.color = color;
+        if (textAlign) next.style.textAlign = textAlign;
         blockEl.parentNode.replaceChild(next, blockEl);
         stripFontSizeFromSubtree(next);
         ensureBlockHasBreak(next);
         return next;
       });
 
-      var newRange = document.createRange();
-      newRange.setStartBefore(converted[0]);
-      newRange.setEndAfter(converted[converted.length - 1]);
-      sel.removeAllRanges();
-      sel.addRange(newRange);
-      savedRange = newRange.cloneRange();
+      finalizeSelectionAfterBlockOps(converted, originalRange);
+    }
+
+    function findBlocksForAlign(range) {
+      if (!range) return [];
+
+      var candidates = body.querySelectorAll("p, h2, h3, h4, blockquote");
+      var blocks = [];
+      Array.prototype.forEach.call(candidates, function (el) {
+        if (!isAlignableBlockCandidate(el)) return;
+        try {
+          if (range.intersectsNode(el)) blocks.push(el);
+        } catch (e) {
+          if (el.contains(range.startContainer) || el.contains(range.endContainer)) {
+            blocks.push(el);
+          }
+        }
+      });
+      if (blocks.length) return blocks;
+
+      var block = getAlignableBlockFromRange(range);
+      return block ? [block] : [];
+    }
+
+    function setBlockTextAlign(blockEl, align) {
+      if (!blockEl) return;
+      if (!align || align === "left") {
+        var cleaned = removeStylePropFromAttr(blockEl.getAttribute("style") || "", "text-align");
+        if (cleaned) blockEl.setAttribute("style", cleaned);
+        else blockEl.removeAttribute("style");
+        return;
+      }
+      blockEl.style.textAlign = align;
+    }
+
+    /** 선택 블록(p·h2·h3·h4·blockquote 등)에 text-align 적용 */
+    function applyBlockAlign(align) {
+      body.focus();
+      restoreSelection();
+
+      var range = null;
+      var sel = global.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        var live = sel.getRangeAt(0);
+        if (rangeInBody(live)) range = live.cloneRange();
+      }
+      if (!range && isRangeValid(blockActionRange)) range = blockActionRange.cloneRange();
+      if (!range && isRangeValid(savedRange)) range = savedRange.cloneRange();
+      if (!range) return;
+
+      var originalRange = range.cloneRange();
+      var blocks = findBlocksForAlign(range);
+      if (!blocks.length) return;
+
+      blocks = prepareBlocksForAlign(blocks, range);
+      if (!blocks.length) return;
+
+      blocks.forEach(function (blockEl) {
+        setBlockTextAlign(blockEl, align);
+      });
+
+      finalizeSelectionAfterBlockOps(blocks, originalRange);
+      rememberBlockActionRange(originalRange);
+      saveSelection();
+    }
+
+    function makeToolbarAlignButton(label, align, title) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.className = "admin-editor-btn--g3";
+      if (title) btn.title = title;
+      btn.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        applyBlockAlign(align);
+      });
+      toolbar.appendChild(btn);
+      return btn;
     }
 
     function sanitizeBlockElement(el, walkFn) {
@@ -731,6 +1150,7 @@
           if (!p) return false;
           var prop = p.split(":")[0].trim().toLowerCase();
           if (prop === "font-size") return true;
+          if (prop === "text-align") return true;
           if (keepColor && prop === "color") return true;
           return (
             prop !== "font-family" &&
@@ -1052,10 +1472,23 @@
       insertHtmlAtCursor(html);
     }
 
+    function makeToolbarButton(label, groupClass, title, onClick) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      if (groupClass) btn.className = groupClass;
+      if (title) btn.title = title;
+      holdSelectionOnMouseDown(btn);
+      btn.addEventListener("click", onClick);
+      toolbar.appendChild(btn);
+      return btn;
+    }
+
+    /* 1그룹 — 인라인 서식 */
     var buttons = [
-      { label: "굵게", cmd: "bold" },
-      { label: "기울임", cmd: "italic" },
-      { label: "밑줄", cmd: "underline" }
+      { label: "굵게", cmd: "bold", group: "admin-editor-btn--g1" },
+      { label: "기울임", cmd: "italic", group: "admin-editor-btn--g1" },
+      { label: "밑줄", cmd: "underline", group: "admin-editor-btn--g1" }
     ];
 
     if (!options.linkAsButton && !options.linkInline) {
@@ -1070,11 +1503,7 @@
     }
 
     buttons.forEach(function (b) {
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = b.label;
-      holdSelectionOnMouseDown(btn);
-      btn.addEventListener("click", function () {
+      makeToolbarButton(b.label, b.group, null, function () {
         if (b.prompt) {
           var url = global.prompt(b.prompt);
           if (url) exec(b.cmd, url);
@@ -1082,9 +1511,9 @@
           exec(b.cmd);
         }
       });
-      toolbar.appendChild(btn);
     });
 
+    /* 2그룹 — 블록 서식·글자 크기 */
     if (options.showHeadings) {
       [
         { label: "H2", tag: "h2" },
@@ -1092,77 +1521,56 @@
         { label: "H4", tag: "h4" },
         { label: "본문", tag: "p" }
       ].forEach(function (h) {
-        var hBtn = document.createElement("button");
-        hBtn.type = "button";
-        hBtn.textContent = h.label;
-        hBtn.title = h.tag === "p" ? "일반 단락으로 변환" : h.tag.toUpperCase() + " 제목";
-        holdSelectionOnMouseDown(hBtn);
-        hBtn.addEventListener("click", function () {
-          applyFormatBlock(h.tag);
-        });
-        toolbar.appendChild(hBtn);
+        makeToolbarButton(
+          h.label,
+          "admin-editor-btn--g2",
+          h.tag === "p" ? "일반 단락으로 변환" : h.tag.toUpperCase() + " 제목",
+          function () {
+            applyFormatBlock(h.tag);
+          }
+        );
+      });
+    }
+
+    if (options.showFontSize !== false) {
+      makeToolbarButton("작게", "admin-editor-btn--g2", "글자 크기 줄이기", function () {
+        changeFontSize(-1);
+      });
+      makeToolbarButton("크게", "admin-editor-btn--g2", "글자 크기 키우기", function () {
+        changeFontSize(1);
+      });
+    }
+
+    /* 3그룹 — 블록 정렬 (mousedown에서 즉시 적용) */
+    if (options.showBlockAlign) {
+      [
+        { label: "왼쪽", align: "left", title: "블록 왼쪽 정렬" },
+        { label: "중앙", align: "center", title: "블록 가운데 정렬" },
+        { label: "오른쪽", align: "right", title: "블록 오른쪽 정렬" }
+      ].forEach(function (item) {
+        makeToolbarAlignButton(item.label, item.align, item.title);
       });
     }
 
     if (options.linkAsButton || options.linkInline) {
-      var urlBtn = document.createElement("button");
-      urlBtn.type = "button";
-      urlBtn.textContent = "URL";
-      holdSelectionOnMouseDown(urlBtn);
-      urlBtn.addEventListener("click", function () {
+      makeToolbarButton("URL", null, null, function () {
         var url = global.prompt("연결할 URL");
         if (url) applyLink(url);
       });
-      toolbar.appendChild(urlBtn);
-    }
-
-    if (options.showQuote) {
-      var quoteBtn = document.createElement("button");
-      quoteBtn.type = "button";
-      quoteBtn.textContent = "인용";
-      holdSelectionOnMouseDown(quoteBtn);
-      quoteBtn.addEventListener("click", insertQuoteBlock);
-      toolbar.appendChild(quoteBtn);
-    }
-
-    if (options.showTextBox) {
-      var textBoxBtn = document.createElement("button");
-      textBoxBtn.type = "button";
-      textBoxBtn.textContent = "텍스트박스";
-      holdSelectionOnMouseDown(textBoxBtn);
-      textBoxBtn.addEventListener("click", insertTextBox);
-      toolbar.appendChild(textBoxBtn);
-    }
-
-    if (options.showFontSize !== false) {
-      var smallBtn = document.createElement("button");
-      smallBtn.type = "button";
-      smallBtn.textContent = "작게";
-      holdSelectionOnMouseDown(smallBtn);
-      smallBtn.addEventListener("click", function () {
-        changeFontSize(-1);
-      });
-      toolbar.appendChild(smallBtn);
-
-      var largeBtn = document.createElement("button");
-      largeBtn.type = "button";
-      largeBtn.textContent = "크게";
-      holdSelectionOnMouseDown(largeBtn);
-      largeBtn.addEventListener("click", function () {
-        changeFontSize(1);
-      });
-      toolbar.appendChild(largeBtn);
     }
 
     if (options.showDivider) {
-      var hrBtn = document.createElement("button");
-      hrBtn.type = "button";
-      hrBtn.textContent = "구분선";
-      holdSelectionOnMouseDown(hrBtn);
-      hrBtn.addEventListener("click", function () {
+      makeToolbarButton("구분선", null, null, function () {
         insertHtmlAtCursor("<hr>");
       });
-      toolbar.appendChild(hrBtn);
+    }
+
+    if (options.showQuote) {
+      makeToolbarButton("인용", null, null, insertQuoteBlock);
+    }
+
+    if (options.showTextBox) {
+      makeToolbarButton("텍스트박스", null, null, insertTextBox);
     }
 
     if (options.showColor) {
@@ -1195,9 +1603,45 @@
       toolbar.appendChild(imgBtn);
     }
 
+    /** focus 시엔 기존 비접힘 선택을 접힌 커서로 덮어쓰지 않는다 */
+    function saveSelectionOnFocus() {
+      var sel = global.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      if (!body.contains(sel.anchorNode)) return;
+      var live = sel.getRangeAt(0);
+      if (live.collapsed && isRangeValid(savedRange) && !savedRange.collapsed) return;
+      savedRange = live.cloneRange();
+    }
+
     body.addEventListener("keyup", saveSelection);
     body.addEventListener("mouseup", saveSelection);
-    body.addEventListener("focus", saveSelection);
+    body.addEventListener("focus", saveSelectionOnFocus);
+    document.addEventListener("mouseup", saveSelection, true);
+    document.addEventListener(
+      "pointerdown",
+      function (e) {
+        if (!toolbar.contains(e.target)) return;
+        snapshotEditorSelection();
+      },
+      true
+    );
+    document.addEventListener("selectionchange", function () {
+      var sel = global.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      if (!body.contains(sel.anchorNode)) return;
+      var live = sel.getRangeAt(0);
+      if (!live.collapsed) {
+        savedRange = live.cloneRange();
+        rememberBlockActionRange(live);
+        return;
+      }
+      if (!isRangeValid(savedRange) || savedRange.collapsed) {
+        if (getAlignableBlockFromRange(live)) {
+          savedRange = live.cloneRange();
+          rememberBlockActionRange(live);
+        }
+      }
+    });
 
     body.addEventListener("keydown", function (e) {
       if (e.key !== "Enter" || !e.shiftKey) return;

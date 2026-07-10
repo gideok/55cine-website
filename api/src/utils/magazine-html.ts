@@ -86,7 +86,6 @@ const STRIP_STYLE_PROPS = new Set([
   "font-weight",
   "font-style",
   "text-decoration",
-  "text-align",
   "margin",
   "padding",
   "width",
@@ -103,10 +102,12 @@ function promoteColorSpanToBlocks(html: string): string {
       (_m, _s1: string, styleVal: string, pRest?: string) => {
         const fontM = styleVal.match(/\bfont-size\s*:\s*([^;"]+)/i);
         const colorM = styleVal.match(/\bcolor\s*:\s*([^;"]+)/i);
-        if (!fontM && !colorM) return _m;
+        const alignM = styleVal.match(/\btext-align\s*:\s*([^;"]+)/i);
+        if (!fontM && !colorM && !alignM) return _m;
         const parts: string[] = [];
         if (fontM) parts.push(`font-size: ${fontM[1].trim()}`);
         if (colorM) parts.push(`color: ${colorM[1].trim()}`);
+        if (alignM) parts.push(`text-align: ${alignM[1].trim()}`);
         const merged = parts.join("; ");
         const attrs = pRest || "";
         if (/\bstyle="/i.test(attrs)) {
@@ -169,7 +170,7 @@ function cleanStyleAttr(style: string): string {
     .filter(Boolean)
     .filter((p) => {
       const prop = p.split(":")[0]?.trim().toLowerCase() ?? "";
-      if (prop === "font-size" || prop === "color") return true;
+      if (prop === "font-size" || prop === "color" || prop === "text-align") return true;
       return !STRIP_STYLE_PROPS.has(prop);
     });
   return parts.join("; ");

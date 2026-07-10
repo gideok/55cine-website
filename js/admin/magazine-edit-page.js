@@ -1291,6 +1291,7 @@
         showTextBox: true,
         allowParagraphs: true,
         showHeadings: true,
+        showBlockAlign: true,
         preserveImageSize: true
       }
 
