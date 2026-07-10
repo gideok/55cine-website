@@ -121,10 +121,11 @@
     color: #111;
   }
 
-  .intro-mobile-quick-nav__ico svg {
+  .intro-mobile-quick-nav__ico img {
     display: block;
     width: 100%;
     height: 100%;
+    object-fit: contain;
   }
 
   .intro-mobile-quick-nav__label {
