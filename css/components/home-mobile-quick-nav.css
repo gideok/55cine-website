@@ -27,6 +27,7 @@
     align-self: start;
     width: 100%;
     flex: none;
+    padding-inline: 0;
   }
 
   body.ti:has(#tiShell > .right.intro-kv) .footer.footer--slot-mobile {
