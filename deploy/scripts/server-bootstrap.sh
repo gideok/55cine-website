@@ -20,6 +20,8 @@ if ! command -v nginx >/dev/null 2>&1; then
   systemctl enable nginx
 fi
 
+mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
+
 echo "[bootstrap] create app directory"
 mkdir -p /var/www/55cine
 chown -R www-data:www-data /var/www/55cine
