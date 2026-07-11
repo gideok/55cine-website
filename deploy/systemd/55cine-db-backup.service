@@ -1,0 +1,18 @@
+[Unit]
+Description=55cine MS SQL database backup
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+EnvironmentFile=/var/www/55cine/.env
+Environment=APP_ROOT=/var/www/55cine
+Environment=DB_BACKUP_DIR=/var/backups/55cine/db
+Environment=DB_BACKUP_RETAIN=42
+Environment=DB_BACKUP_LOG=/var/log/55cine-db-backup.log
+ExecStart=/bin/bash /var/www/55cine/deploy/scripts/db-backup.sh
+
+[Install]
+WantedBy=multi-user.target

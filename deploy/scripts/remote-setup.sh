@@ -42,7 +42,16 @@ install_nginx_site_config() {
 if [[ -n "$REPO_DEPLOY_DIR" && -d "$REPO_DEPLOY_DIR/deploy" ]]; then
   install_nginx_site_config
   cp "$REPO_DEPLOY_DIR/deploy/systemd/55cine-api.service" /etc/systemd/system/55cine-api.service
+  cp "$REPO_DEPLOY_DIR/deploy/systemd/55cine-db-backup.service" /etc/systemd/system/55cine-db-backup.service
+  cp "$REPO_DEPLOY_DIR/deploy/systemd/55cine-db-backup.timer" /etc/systemd/system/55cine-db-backup.timer
 fi
+
+mkdir -p /var/backups/55cine/db
+touch /var/log/55cine-db-backup.log
+chown -R www-data:www-data /var/backups/55cine
+chown www-data:www-data /var/log/55cine-db-backup.log
+chmod 750 /var/backups/55cine /var/backups/55cine/db
+chmod 640 /var/log/55cine-db-backup.log
 
 chown -R www-data:www-data "$APP_ROOT"
 chmod 640 "$APP_ROOT/.env" || true
@@ -53,6 +62,9 @@ npm ci --omit=dev
 systemctl daemon-reload
 systemctl enable 55cine-api
 systemctl restart 55cine-api
+
+systemctl enable 55cine-db-backup.timer
+systemctl start 55cine-db-backup.timer
 
 nginx -t
 systemctl reload nginx

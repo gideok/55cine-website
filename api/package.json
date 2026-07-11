@@ -9,7 +9,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "db:migrate": "node scripts/run-all-sql.mjs",
-    "db:inspect": "node scripts/inspect-db.mjs",
+    "db:backup": "node scripts/db-backup.mjs",
     "db:seed:web-program": "node scripts/seed-web-program.mjs",
     "db:seed:content": "node scripts/seed-web-program-content.mjs",
     "db:migrate:nowshowing-archive": "node scripts/migrate-nowshowing-archive.mjs",

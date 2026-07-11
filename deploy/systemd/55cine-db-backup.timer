@@ -1,0 +1,10 @@
+[Unit]
+Description=55cine DB backup every 4 hours
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=4h
+Persistent=true
+
+[Install]
+WantedBy=timers.target
