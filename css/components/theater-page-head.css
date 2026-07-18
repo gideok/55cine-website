@@ -115,6 +115,24 @@
   border-bottom-color: #111111;
 }
 
+@media (max-width: 820px) {
+  /*
+   * 모바일: 데스크톱용 88px 상단 패딩 대신 GNB(메뉴 바) 아래 여백만 확보.
+   * shell-mobile-menu.css 의 --ti-mobile-menu-bar-offset 위에 gap 추가.
+   */
+  .right.theater-info,
+  .right.viewing-guide,
+  .right.sub-page {
+    padding-top: 24px;
+  }
+
+  .shell.menu-collapsed-mobile > .right.theater-info,
+  .shell.menu-collapsed-mobile > .right.viewing-guide,
+  .shell.menu-collapsed-mobile > .right.sub-page {
+    padding-top: calc(var(--ti-mobile-menu-bar-offset) + 24px);
+  }
+}
+
 @media (max-width: 480px) {
   .right.theater-info .sub-scroll .section-page-subnav a,
   .right.viewing-guide .sub-scroll .section-page-subnav a,
