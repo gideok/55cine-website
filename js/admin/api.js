@@ -212,6 +212,9 @@
       if (opts.q) parts.push("q=" + encodeURIComponent(opts.q));
       return apiJson("GET", "/admin/magazine?" + parts.join("&"));
     },
+    reorderMagazineList: function (seqs) {
+      return apiJson("PUT", "/admin/magazine/reorder", { seqs: seqs || [] });
+    },
     getMagazine: function (seq) {
       return apiJson("GET", "/admin/magazine/" + encodeURIComponent(String(seq)));
     },

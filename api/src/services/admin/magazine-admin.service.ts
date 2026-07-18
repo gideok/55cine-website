@@ -46,6 +46,7 @@ export type AdminMagazineListItem = {
   publishedLabel: string | null;
   createdAt: string | null;
   imgThumb: string | null;
+  listOrder: number;
 };
 
 export type AdminMagazineDetail = AdminMagazineListItem & {
@@ -70,12 +71,13 @@ type MagazineRow = {
   img_thumb: string | null;
   img_cover: string | null;
   source_url: string | null;
+  list_order: number;
 };
 
 const MAGAZINE_SELECT = `
   seq, section, is_past, title, movie_title, subtitle,
   published_label, published_at, created_at, body_html,
-  img_thumb, img_cover, source_url
+  img_thumb, img_cover, source_url, list_order
 `;
 
 function mapListItem(row: MagazineRow): AdminMagazineListItem {
@@ -87,7 +89,8 @@ function mapListItem(row: MagazineRow): AdminMagazineListItem {
     movieTitle: row.movie_title?.trim() || null,
     publishedLabel: row.published_label?.trim() || null,
     createdAt: row.created_at ? row.created_at.toISOString() : null,
-    imgThumb: row.img_thumb?.trim() || null
+    imgThumb: row.img_thumb?.trim() || null,
+    listOrder: Number(row.list_order) || 0
   };
 }
 
@@ -155,7 +158,7 @@ export async function getAdminMagazineList(opts: {
     SELECT ${MAGAZINE_SELECT}
     FROM dbo.web_magazine
     WHERE ${where}
-    ORDER BY created_at DESC, seq DESC
+    ORDER BY list_order DESC, seq DESC
     OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY
   `);
 
@@ -197,10 +200,18 @@ export type CreateMagazineInput = MagazineAssetInput & {
   sourceUrl?: string | null;
 };
 
+async function getNextListOrder(req: sql.Request): Promise<number> {
+  const res = await req.query<{ nextOrder: number }>(`
+    SELECT ISNULL(MAX(list_order), 0) + 1 AS nextOrder FROM dbo.web_magazine
+  `);
+  return res.recordset[0]?.nextOrder ?? 1;
+}
+
 export async function createAdminMagazine(input: CreateMagazineInput): Promise<AdminMagazineDetail> {
   const pool = await getPool();
   const data = normalizeMagazineTextFields(input);
   const createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
+  const listOrder = await getNextListOrder(pool.request());
   const insertRes = await pool
     .request()
     .input("section", sql.NVarChar, data.section)
@@ -210,6 +221,7 @@ export async function createAdminMagazine(input: CreateMagazineInput): Promise<A
     .input("publishedLabel", sql.NVarChar, data.publishedLabel ?? null)
     .input("publishedAt", sql.DateTime2, data.publishedAt ? new Date(data.publishedAt) : null)
     .input("createdAt", sql.DateTime2, createdAt)
+    .input("listOrder", sql.Int, listOrder)
     .input("bodyHtml", sql.NVarChar(sql.MAX), data.bodyHtml ?? null)
     .input("imgThumb", sql.NVarChar, data.imgThumb ?? null)
     .input("imgCover", sql.NVarChar, data.imgCover ?? null)
@@ -217,13 +229,13 @@ export async function createAdminMagazine(input: CreateMagazineInput): Promise<A
     .query<{ seq: number }>(`
       INSERT INTO dbo.web_magazine (
         section, is_past, title, movie_title, subtitle,
-        published_label, published_at, created_at, body_html,
+        published_label, published_at, created_at, list_order, body_html,
         img_thumb, img_cover, source_url
       )
       OUTPUT INSERTED.seq
       VALUES (
         @section, 0, @title, @movieTitle, @subtitle,
-        @publishedLabel, @publishedAt, @createdAt, @bodyHtml,
+        @publishedLabel, @publishedAt, @createdAt, @listOrder, @bodyHtml,
         @imgThumb, @imgCover, @sourceUrl
       )
     `);
@@ -370,4 +382,64 @@ export async function restoreMagazineFromPast(
     `);
 
   return getAdminMagazineBySeq(seq);
+}
+
+/**
+ * 화면 표시 순서(위→아래)로 seq 배열을 받아 list_order를 재할당.
+ * 해당 seq들의 기존 list_order 값(내림차순)을 그대로 재사용한다.
+ */
+export async function reorderAdminMagazineList(orderedSeqs: number[]): Promise<{ ok: true; count: number }> {
+  const seqs = Array.from(
+    new Set(
+      orderedSeqs
+        .map((n) => Number(n))
+        .filter((n) => Number.isInteger(n) && n > 0)
+    )
+  );
+  if (seqs.length < 2) {
+    return { ok: true, count: seqs.length };
+  }
+
+  const pool = await getPool();
+  const req = pool.request();
+  const placeholders = seqs.map((_, i) => {
+    const name = `seq${i}`;
+    req.input(name, sql.Int, seqs[i]);
+    return `@${name}`;
+  });
+
+  const current = await req.query<{ seq: number; list_order: number }>(`
+    SELECT seq, list_order
+    FROM dbo.web_magazine
+    WHERE seq IN (${placeholders.join(", ")})
+  `);
+
+  if (current.recordset.length !== seqs.length) {
+    throw new Error("REORDER_SEQ_MISMATCH");
+  }
+
+  const orders = current.recordset
+    .map((r) => Number(r.list_order) || 0)
+    .sort((a, b) => b - a);
+
+  const transaction = new sql.Transaction(pool);
+  await transaction.begin();
+  try {
+    for (let i = 0; i < seqs.length; i++) {
+      await new sql.Request(transaction)
+        .input("seq", sql.Int, seqs[i])
+        .input("listOrder", sql.Int, orders[i])
+        .query(`
+          UPDATE dbo.web_magazine
+          SET list_order = @listOrder, updated_at = SYSUTCDATETIME()
+          WHERE seq = @seq
+        `);
+    }
+    await transaction.commit();
+  } catch (err) {
+    await transaction.rollback();
+    throw err;
+  }
+
+  return { ok: true, count: seqs.length };
 }

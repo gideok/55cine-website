@@ -147,13 +147,15 @@ async function insertArticle(pool, row) {
     .query(`
       INSERT INTO dbo.web_magazine (
         section, is_past, title, movie_title, subtitle,
-        published_label, published_at, created_at, body_html,
+        published_label, published_at, created_at, list_order, body_html,
         img_thumb, img_cover, source_url
       )
       OUTPUT INSERTED.seq
       VALUES (
         @section, @isPast, @title, @movieTitle, @subtitle,
-        @publishedLabel, @publishedAt, @createdAt, @bodyHtml,
+        @publishedLabel, @publishedAt, @createdAt,
+        (SELECT ISNULL(MAX(list_order), 0) + 1 FROM dbo.web_magazine),
+        @bodyHtml,
         @imgThumb, @imgCover, @sourceUrl
       )
     `);

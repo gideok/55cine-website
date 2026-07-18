@@ -67,12 +67,13 @@ type MagazineRow = {
   img_thumb: string | null;
   img_cover: string | null;
   source_url: string | null;
+  list_order: number;
 };
 
 const MAGAZINE_SELECT = `
   seq, section, is_past, title, movie_title, subtitle,
   published_label, published_at, created_at, updated_at, body_html,
-  img_thumb, img_cover, source_url
+  img_thumb, img_cover, source_url, list_order
 `;
 
 function detailPagePath(row: Pick<MagazineRow, "section" | "seq" | "is_past">): string {
@@ -171,7 +172,7 @@ export async function getMagazineListPage(opts: {
     SELECT ${MAGAZINE_SELECT}
     FROM dbo.web_magazine
     WHERE ${whereSql}
-    ORDER BY created_at DESC, seq DESC
+    ORDER BY list_order DESC, seq DESC
     OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY
   `);
 
@@ -188,7 +189,7 @@ async function fetchNeighbor(
   pool: sql.ConnectionPool,
   whereSql: string,
   inputs: Array<{ name: string; type: sql.ISqlTypeFactoryWithNoParams; value: unknown }>,
-  createdAt: Date,
+  listOrder: number,
   seq: number,
   direction: "prev" | "next"
 ): Promise<MagazineNeighbor | null> {
@@ -196,18 +197,18 @@ async function fetchNeighbor(
   for (const inp of inputs) {
     req.input(inp.name, inp.type, inp.value);
   }
-  req.input("createdAt", sql.DateTime2, createdAt);
+  req.input("listOrder", sql.Int, listOrder);
   req.input("seq", sql.Int, seq);
 
-  // prev = 이전 글(더 오래됨), next = 다음 글(더 최근)
+  // prev = 목록에서 아래(더 낮은 list_order), next = 위(더 높은 list_order)
   const cmp =
     direction === "prev"
-      ? `(created_at < @createdAt OR (created_at = @createdAt AND seq < @seq))`
-      : `(created_at > @createdAt OR (created_at = @createdAt AND seq > @seq))`;
+      ? `(list_order < @listOrder OR (list_order = @listOrder AND seq < @seq))`
+      : `(list_order > @listOrder OR (list_order = @listOrder AND seq > @seq))`;
   const order =
     direction === "prev"
-      ? `created_at DESC, seq DESC`
-      : `created_at ASC, seq ASC`;
+      ? `list_order DESC, seq DESC`
+      : `list_order ASC, seq ASC`;
 
   const res = await req.query<MagazineRow>(`
     SELECT TOP 1 seq, title, img_thumb, img_cover
@@ -242,8 +243,8 @@ export async function getMagazineDetail(seq: number): Promise<MagazineDetail | n
     : listWhereClause({ section: row.section as MagazineSection, isPast: false });
 
   const [prev, next] = await Promise.all([
-    fetchNeighbor(pool, where.sql, where.inputs, row.created_at, row.seq, "prev"),
-    fetchNeighbor(pool, where.sql, where.inputs, row.created_at, row.seq, "next")
+    fetchNeighbor(pool, where.sql, where.inputs, row.list_order, row.seq, "prev"),
+    fetchNeighbor(pool, where.sql, where.inputs, row.list_order, row.seq, "next")
   ]);
 
   const cover = row.img_cover?.trim() || row.img_thumb?.trim() || "";

@@ -40,7 +40,8 @@ import {
   updateAdminMagazine,
   deleteAdminMagazine,
   markMagazineAsPast,
-  restoreMagazineFromPast
+  restoreMagazineFromPast,
+  reorderAdminMagazineList
 } from "../../services/admin/magazine-admin.service.js";
 import {
   getAdminNoticeList,
@@ -682,6 +683,26 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "MAGAZINE_LIST_FAILED", "매거진 목록 조회 실패");
+    }
+  });
+
+  app.put("/admin/magazine/reorder", async (request, reply) => {
+    const body = z
+      .object({
+        seqs: z.array(z.coerce.number().int().positive()).min(2).max(200)
+      })
+      .safeParse(request.body);
+    if (!body.success) {
+      return sendError(reply, 400, "INVALID_BODY", "seqs 배열(2개 이상)이 필요합니다.");
+    }
+    try {
+      return await reorderAdminMagazineList(body.data.seqs);
+    } catch (err) {
+      request.log.error(err);
+      const code = err instanceof Error && err.message === "REORDER_SEQ_MISMATCH" ? 400 : 500;
+      const msg =
+        code === 400 ? "순서 변경 대상 기사가 올바르지 않습니다." : "매거진 순서 변경 실패";
+      return sendError(reply, code, "MAGAZINE_REORDER_FAILED", msg);
     }
   });
 
