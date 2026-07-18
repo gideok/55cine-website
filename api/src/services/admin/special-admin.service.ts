@@ -558,3 +558,63 @@ export async function deleteAdminSpecial(seq: number): Promise<boolean> {
   }
   return deleted;
 }
+
+/**
+ * 화면 표시 순서(위→아래)로 seq 배열을 받아 list_order를 재할당.
+ * 해당 seq들의 기존 list_order 값(내림차순)을 그대로 재사용한다.
+ */
+export async function reorderAdminSpecialList(orderedSeqs: number[]): Promise<{ ok: true; count: number }> {
+  const seqs = Array.from(
+    new Set(
+      orderedSeqs
+        .map((n) => Number(n))
+        .filter((n) => Number.isInteger(n) && n > 0)
+    )
+  );
+  if (seqs.length < 2) {
+    return { ok: true, count: seqs.length };
+  }
+
+  const pool = await getPool();
+  const req = pool.request();
+  const placeholders = seqs.map((_, i) => {
+    const name = `seq${i}`;
+    req.input(name, sql.Int, seqs[i]);
+    return `@${name}`;
+  });
+
+  const current = await req.query<{ seq: number; list_order: number }>(`
+    SELECT seq, list_order
+    FROM dbo.web_special
+    WHERE seq IN (${placeholders.join(", ")})
+  `);
+
+  if (current.recordset.length !== seqs.length) {
+    throw new Error("REORDER_SEQ_MISMATCH");
+  }
+
+  const orders = current.recordset
+    .map((r) => Number(r.list_order) || 0)
+    .sort((a, b) => b - a);
+
+  const transaction = new sql.Transaction(pool);
+  await transaction.begin();
+  try {
+    for (let i = 0; i < seqs.length; i++) {
+      await new sql.Request(transaction)
+        .input("seq", sql.Int, seqs[i])
+        .input("listOrder", sql.Int, orders[i])
+        .query(`
+          UPDATE dbo.web_special
+          SET list_order = @listOrder, updated_at = SYSUTCDATETIME()
+          WHERE seq = @seq
+        `);
+    }
+    await transaction.commit();
+  } catch (err) {
+    await transaction.rollback();
+    throw err;
+  }
+
+  return { ok: true, count: seqs.length };
+}

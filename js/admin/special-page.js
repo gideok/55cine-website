@@ -75,13 +75,92 @@
     }
   }
 
+  function collectPageSeqs(tbody) {
+    return Array.prototype.map
+      .call(tbody.querySelectorAll("tr[data-seq]"), function (tr) {
+        return Number(tr.getAttribute("data-seq"));
+      })
+      .filter(function (n) {
+        return Number.isInteger(n) && n > 0;
+      });
+  }
+
+  function bindListDragDrop(tbody) {
+    if (!tbody) return;
+    var dragSeq = null;
+
+    tbody.querySelectorAll("tr[data-seq]").forEach(function (row) {
+      var handle = row.querySelector(".admin-mz-drag");
+      if (!handle) return;
+
+      handle.addEventListener("dragstart", function (e) {
+        dragSeq = Number(row.getAttribute("data-seq"));
+        row.classList.add("is-dragging");
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", String(dragSeq));
+        }
+      });
+
+      handle.addEventListener("dragend", function () {
+        row.classList.remove("is-dragging");
+        tbody.querySelectorAll(".is-drag-over").forEach(function (el) {
+          el.classList.remove("is-drag-over");
+        });
+        dragSeq = null;
+      });
+
+      row.addEventListener("dragover", function (e) {
+        if (dragSeq == null) return;
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+        row.classList.add("is-drag-over");
+      });
+
+      row.addEventListener("dragleave", function () {
+        row.classList.remove("is-drag-over");
+      });
+
+      row.addEventListener("drop", function (e) {
+        e.preventDefault();
+        row.classList.remove("is-drag-over");
+        var targetSeq = Number(row.getAttribute("data-seq"));
+        if (!dragSeq || !targetSeq || dragSeq === targetSeq) return;
+
+        var fromRow = tbody.querySelector('tr[data-seq="' + dragSeq + '"]');
+        if (!fromRow || fromRow === row) return;
+
+        var rect = row.getBoundingClientRect();
+        var before = e.clientY < rect.top + rect.height / 2;
+        if (before) tbody.insertBefore(fromRow, row);
+        else tbody.insertBefore(fromRow, row.nextSibling);
+
+        var seqs = collectPageSeqs(tbody);
+        TiAdminApi.reorderSpecialList(seqs)
+          .then(function () {
+            loadList();
+          })
+          .catch(function (err) {
+            alert(err.message || "순서 변경에 실패했습니다.");
+            loadList();
+          });
+      });
+    });
+  }
+
   function renderList(data) {
     if (!listEl) return;
 
-    var rows = (data.items || [])
+    var items = data.items || [];
+    var rows = items
       .map(function (item) {
         return (
-          "<tr>" +
+          '<tr data-seq="' +
+          item.seq +
+          '">' +
+          '<td class="admin-mz-drag-cell">' +
+          '<button type="button" class="admin-mz-drag" draggable="true" aria-label="순서 변경" title="드래그하여 순서 변경">⋮⋮</button>' +
+          "</td>" +
           "<td>" +
           item.seq +
           "</td>" +
@@ -107,14 +186,16 @@
       .join("");
 
     listEl.innerHTML =
-      '<div class="admin-table-wrap"><table class="admin-table">' +
-      "<thead><tr><th>seq</th><th>구분</th><th>제목</th><th>일정</th><th></th></tr></thead><tbody>" +
-      (rows || '<tr><td colspan="5">데이터 없음</td></tr>') +
+      '<p class="field-hint admin-mz-order-hint">왼쪽 ⋮⋮ 핸들을 드래그하여 목록 순서를 변경할 수 있습니다. (현재 페이지 기준)</p>' +
+      '<div class="admin-table-wrap"><table class="admin-table admin-table--mz-order">' +
+      '<thead><tr><th class="admin-mz-drag-cell"></th><th>seq</th><th>구분</th><th>제목</th><th>일정</th><th></th></tr></thead><tbody>' +
+      (rows || '<tr><td colspan="6">데이터 없음</td></tr>') +
       "</tbody></table></div>" +
       TiAdminList.renderPagerHtml(data, PAGER_PREFIX);
 
     TiAdminList.bindPager(PAGER_PREFIX, state, data, loadList);
     TiAdminList.bindEditLinks(listEl, LIST_KEY, state);
+    bindListDragDrop(listEl.querySelector("tbody"));
 
     listEl.querySelectorAll("[data-del]").forEach(function (btn) {
       btn.onclick = function () {

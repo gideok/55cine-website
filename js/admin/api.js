@@ -201,6 +201,9 @@
     deleteSpecial: function (seq) {
       return apiJson("DELETE", "/admin/special/" + encodeURIComponent(String(seq)));
     },
+    reorderSpecialList: function (seqs) {
+      return apiJson("PUT", "/admin/special/reorder", { seqs: seqs || [] });
+    },
     getMagazineList: function (opts) {
       opts = opts || {};
       var parts = [

@@ -31,7 +31,8 @@ import {
   getAdminSpecialList,
   createAdminSpecial,
   updateAdminSpecial,
-  deleteAdminSpecial
+  deleteAdminSpecial,
+  reorderAdminSpecialList
 } from "../../services/admin/special-admin.service.js";
 import {
   getAdminMagazineList,
@@ -588,6 +589,26 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "SPECIAL_LIST_FAILED", "기획전·행사 목록 조회 실패");
+    }
+  });
+
+  app.put("/admin/special/reorder", async (request, reply) => {
+    const body = z
+      .object({
+        seqs: z.array(z.coerce.number().int().positive()).min(2).max(200)
+      })
+      .safeParse(request.body);
+    if (!body.success) {
+      return sendError(reply, 400, "INVALID_BODY", "seqs 배열(2개 이상)이 필요합니다.");
+    }
+    try {
+      return await reorderAdminSpecialList(body.data.seqs);
+    } catch (err) {
+      request.log.error(err);
+      const code = err instanceof Error && err.message === "REORDER_SEQ_MISMATCH" ? 400 : 500;
+      const msg =
+        code === 400 ? "순서 변경 대상이 올바르지 않습니다." : "기획전·행사 순서 변경 실패";
+      return sendError(reply, code, "SPECIAL_REORDER_FAILED", msg);
     }
   });
 
