@@ -283,11 +283,13 @@ body.exhibition-poster-lightbox-open {
   padding-bottom: 0;
   aspect-ratio: 390 / 220;
   object-fit: contain;
-  object-position: left center;
+  /* TEMP 2026-07-18: 상영작 포스터 섹션 중앙 정렬 — 롤백 시 left center / flex-start */
+  object-position: center center;
   border: none;
   background: transparent;
   box-sizing: border-box;
-  align-self: flex-start;
+  align-self: center;
+  margin-inline: auto;
 }
 
 .ti .exhibition-film-meta {
