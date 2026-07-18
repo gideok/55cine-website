@@ -10,11 +10,10 @@
   var listEl = null;
   var searchTimer = null;
   var SEARCH_DELAY_MS = 350;
-  var state = { section: "preview", isPast: false, q: "", page: 1, pageSize: 20 };
+  var state = { section: "", isPast: false, q: "", page: 1, pageSize: 20 };
   var restoreModalSeq = null;
 
   TiAdminList.restoreState(LIST_KEY, state, STATE_FIELDS);
-  if (!state.isPast && !state.section) state.section = "preview";
 
   function esc(s) {
     return String(s || "")
@@ -34,7 +33,7 @@
   function applyFilterFromUi() {
     var v = document.getElementById("mzFilter").value;
     state.isPast = v === "past";
-    state.section = state.isPast ? "" : v || "preview";
+    state.section = state.isPast ? "" : v;
     state.q = document.getElementById("mzSearch").value.trim();
     state.page = 1;
     loadList();
@@ -56,7 +55,7 @@
     var addLink = document.getElementById("mzAddLink");
 
     if (filter) {
-      filter.value = state.isPast ? "past" : state.section || "preview";
+      filter.value = state.isPast ? "past" : state.section || "";
       filter.onchange = applyFilterFromUi;
     }
     if (search) {
@@ -263,7 +262,7 @@
     TiAdminList.syncUrl("magazine.html", LIST_KEY, state, STATE_FIELDS);
     listEl.innerHTML = "<p>불러오는 중…</p>";
     TiAdminApi.getMagazineList({
-      section: state.isPast ? undefined : state.section || "preview",
+      section: state.isPast || !state.section ? undefined : state.section,
       isPast: state.isPast,
       q: state.q,
       page: state.page,
@@ -281,6 +280,7 @@
       '<div class="admin-toolbar admin-toolbar--split">' +
       '<div class="admin-toolbar__col admin-toolbar__col--filter">' +
       '<select id="mzFilter">' +
+      '<option value="">전체</option>' +
       '<option value="preview">프리뷰</option>' +
       '<option value="serial">연재</option>' +
       '<option value="gv-moment">GV모먼트</option>' +

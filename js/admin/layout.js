@@ -35,6 +35,13 @@
     );
   }
 
+  function siteHomeUrl() {
+    if (global.TiSiteRoot && typeof global.TiSiteRoot.resolve === "function") {
+      return global.TiSiteRoot.resolve("index.html");
+    }
+    return "../index.html";
+  }
+
   function renderSidebarHtml(currentKey) {
     var nav = NAV.map(function (item) {
       var cls = item.key === currentKey ? ' class="is-current"' : "";
@@ -45,6 +52,9 @@
       '<div class="admin-sidebar__brand">55CINE 관리자</div>' +
       '<nav class="admin-sidebar__nav">' +
       nav +
+      '<a href="' +
+      esc(siteHomeUrl()) +
+      '" class="admin-sidebar__home" id="adminSiteHomeLink" target="_blank" rel="noopener noreferrer">사용자 HOME</a>' +
       '<button type="button" class="admin-sidebar__logout" id="adminLogoutBtn">로그아웃</button>' +
       "</nav>" +
       "</aside>"
@@ -129,6 +139,26 @@
     else if (mq.addListener) mq.addListener(onViewportChange);
   }
 
+  function bindSiteHome() {
+    var homeLink = document.getElementById("adminSiteHomeLink");
+    if (!homeLink || homeLink.dataset.bound === "1") return;
+    homeLink.dataset.bound = "1";
+    homeLink.addEventListener("click", function (e) {
+      var href = homeLink.getAttribute("href");
+      if (!href) return;
+      e.preventDefault();
+      var win = global.open(href, "_blank");
+      if (win) {
+        try {
+          win.opener = null;
+          win.focus();
+        } catch (err) {
+          /* ignore */
+        }
+      }
+    });
+  }
+
   function bindLogout() {
     var logoutBtn = document.getElementById("adminLogoutBtn");
     if (!logoutBtn || logoutBtn.dataset.bound === "1") return;
@@ -159,6 +189,7 @@
       "</main>";
 
     syncSidebarPlacement();
+    bindSiteHome();
     bindLogout();
   }
 

@@ -2856,6 +2856,17 @@ body.admin-modal-open {
   font-size: 0.9rem;
 }
 
+.admin-sidebar nav a.admin-sidebar__home {
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 0.75rem;
+  color: #a5f3fc;
+}
+
+.admin-sidebar nav a.admin-sidebar__home:hover {
+  color: #cffafe;
+}
+
 .admin-sidebar__logout {
   display: block;
   width: 100%;
