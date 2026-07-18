@@ -4,6 +4,7 @@ import {
   formatMovieDetailDateLabel,
   formatTimeLabel,
   getServerToday,
+  parseFlagsFromProgLabel,
   toDateOnly
 } from "./schedule-flags.js";
 import { formatReleaseDate, gradeToRating } from "./movie-grade.js";
@@ -33,7 +34,15 @@ export type MovieDetailRecord = {
   releaseDate: string;
   synopsis: string;
   trailerYoutubeId: string;
-  screenings: Array<{ dateLabel: string; timeLabel: string; bookingUrl?: string }>;
+  screenings: Array<{
+    dateLabel: string;
+    timeLabel: string;
+    bookingUrl?: string;
+    opening?: boolean;
+    closing?: boolean;
+    gv?: boolean;
+    ct?: boolean;
+  }>;
   bookingUrl?: string;
 };
 
@@ -149,7 +158,33 @@ type ProgDailyScreeningRow = {
   prog_id: number;
   date_sc: unknown;
   time_sc: unknown;
+  prog_label: string | null;
+  is_opening: boolean | number | null;
+  is_closing: boolean | number | null;
+  is_gv: boolean | number | null;
+  is_ct: boolean | number | null;
 };
+
+function coerceBit(value: boolean | number | null | undefined): boolean {
+  return value === true || value === 1;
+}
+
+function resolveScreeningFlags(row: ProgDailyScreeningRow) {
+  const hasWebFlags =
+    row.is_opening != null ||
+    row.is_closing != null ||
+    row.is_gv != null ||
+    row.is_ct != null;
+  if (hasWebFlags) {
+    return {
+      opening: coerceBit(row.is_opening),
+      closing: coerceBit(row.is_closing),
+      gv: coerceBit(row.is_gv),
+      ct: coerceBit(row.is_ct)
+    };
+  }
+  return parseFlagsFromProgLabel(row.prog_label);
+}
 
 function mapScreeningRows(rows: ProgDailyScreeningRow[]): MovieDetailRecord["screenings"] {
   const screenings: MovieDetailRecord["screenings"] = [];
@@ -158,9 +193,14 @@ function mapScreeningRows(rows: ProgDailyScreeningRow[]): MovieDetailRecord["scr
     if (!date) continue;
     const timeLabel = formatTimeLabel(row.time_sc);
     if (!timeLabel) continue;
+    const flags = resolveScreeningFlags(row);
     screenings.push({
       dateLabel: formatMovieDetailDateLabel(date),
-      timeLabel
+      timeLabel,
+      opening: flags.opening,
+      closing: flags.closing,
+      gv: flags.gv,
+      ct: flags.ct
     });
   }
   return screenings;
@@ -180,8 +220,14 @@ async function fetchScreeningsFromProgDaily(
       SELECT
         pd.prog_id,
         pd.date_sc,
-        pd.time_sc
+        pd.time_sc,
+        pd.prog_label,
+        wps.is_opening,
+        wps.is_closing,
+        wps.is_gv,
+        wps.is_ct
       FROM dbo.prog_daily AS pd
+      LEFT JOIN dbo.web_program_schedule AS wps ON wps.prog_daily_seq = pd.seq
       WHERE pd.prog_id = @progId
         AND NULLIF(LTRIM(RTRIM(pd.date_sc)), '') IS NOT NULL
         AND TRY_CONVERT(date, LTRIM(RTRIM(pd.date_sc))) IS NOT NULL

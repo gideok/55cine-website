@@ -236,7 +236,24 @@
     var timeLabel = screening.timeLabel || "";
     var href = screening.bookingUrl || bookingUrl;
     var displayDate = formatScreeningDateLabel(dateLabel);
-    var aria = movieTitle + " " + displayDate + " " + timeLabel + " 예매";
+    var normalized =
+      typeof window.normalizeWeekScheduleEntry === "function"
+        ? window.normalizeWeekScheduleEntry(screening)
+        : null;
+    var badges = (normalized && normalized.badges) || [];
+    var badgeText = badges
+      .map(function (b) {
+        return b.label;
+      })
+      .join(" ");
+    var aria =
+      movieTitle +
+      " " +
+      displayDate +
+      " " +
+      timeLabel +
+      (badgeText ? " " + badgeText : "") +
+      " 예매";
 
     var link = document.createElement("a");
     link.className = "md-schedule-slot";
@@ -245,15 +262,31 @@
     link.rel = "noopener noreferrer";
     link.setAttribute("aria-label", aria);
 
+    var dateRow = document.createElement("span");
+    dateRow.className = "md-schedule-slot__date-row";
+
     var dateSpan = document.createElement("span");
     dateSpan.className = "md-schedule-slot__date";
     dateSpan.textContent = displayDate;
+    dateRow.appendChild(dateSpan);
+
+    if (badges.length) {
+      var badgesWrap = document.createElement("span");
+      badgesWrap.className = "badges";
+      badges.forEach(function (badgeInfo) {
+        var badge = document.createElement("span");
+        badge.className = "badge" + (badgeInfo.tiClass ? " " + badgeInfo.tiClass : "");
+        badge.textContent = badgeInfo.label;
+        badgesWrap.appendChild(badge);
+      });
+      dateRow.appendChild(badgesWrap);
+    }
 
     var timeSpan = document.createElement("span");
     timeSpan.className = "md-schedule-slot__time";
     timeSpan.textContent = timeLabel;
 
-    link.appendChild(dateSpan);
+    link.appendChild(dateRow);
     link.appendChild(timeSpan);
     return link;
   }
