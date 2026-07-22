@@ -95,22 +95,31 @@
     };
   }
 
+  function fetchStatusFromStatic() {
+    return fetch(resolveAssetUrl("data/cat-treasure-event.json"), { cache: "no-store" }).then(
+      function (res) {
+        if (!res.ok) throw new Error("event config fetch failed");
+        return res.json().then(statusFromConfig);
+      }
+    );
+  }
+
   function fetchStatus() {
+    var apiPromise;
     if (global.TiApi && typeof global.TiApi.apiGet === "function") {
-      return global.TiApi.apiGet("/events/cat-treasure");
+      apiPromise = global.TiApi.apiGet("/events/cat-treasure");
+    } else {
+      apiPromise = fetch(apiBase() + "/events/cat-treasure", {
+        credentials: "same-origin",
+        headers: { Accept: "application/json" },
+        cache: "no-store"
+      }).then(function (res) {
+        if (!res.ok) throw new Error("event api " + res.status);
+        return res.json();
+      });
     }
-    return fetch(apiBase() + "/events/cat-treasure", {
-      credentials: "same-origin",
-      headers: { Accept: "application/json" },
-      cache: "no-store"
-    }).then(function (res) {
-      if (res.ok) return res.json();
-      return fetch(resolveAssetUrl("data/cat-treasure-event.json"), { cache: "no-store" }).then(
-        function (r2) {
-          if (!r2.ok) throw new Error("event config fetch failed");
-          return r2.json().then(statusFromConfig);
-        }
-      );
+    return apiPromise.catch(function () {
+      return fetchStatusFromStatic();
     });
   }
 

@@ -1,6 +1,6 @@
 {
-  "startAt": "2026-07-24 12:00",
-  "appearProbability": 0.05,
+  "startAt": "2026-07-20 12:00",
+  "appearProbability": 1.05,
   "totalWinners": 20,
   "currentWinners": 0,
   "fadeMs": 7000,
