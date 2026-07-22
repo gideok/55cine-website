@@ -11,6 +11,7 @@ import { registerSpecialRoutes } from "./routes/special.js";
 import { registerMagazineRoutes } from "./routes/magazine.js";
 import { registerNoticeRoutes } from "./routes/notice.js";
 import { registerSiteSettingsRoutes } from "./routes/site-settings.js";
+import { registerSitemapRoutes } from "./routes/sitemap.js";
 import { registerAdminRoutes } from "./routes/admin/index.js";
 
 const app = Fastify({
@@ -41,6 +42,7 @@ await app.register(
     await registerMagazineRoutes(api);
     await registerNoticeRoutes(api);
     await registerSiteSettingsRoutes(api);
+    await registerSitemapRoutes(api);
 
     // admin 인증 훅이 공개 API에 적용되지 않도록 별도 플러그인으로 분리
     await api.register(async (adminApi) => {

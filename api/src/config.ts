@@ -14,6 +14,8 @@ export type AppConfig = {
   host: string;
   port: number;
   apiPrefix: string;
+  /** 공개 사이트 절대 URL (sitemap · robots용). 예: https://55cine.com */
+  siteUrl: string;
   repoRoot: string;
   timezone: string;
   scheduleUseMock: boolean;
@@ -109,10 +111,20 @@ const adminSessionSecret =
   process.env.ADMIN_SESSION_SECRET?.trim() ||
   (adminId && adminPassword ? `${adminId}:${adminPassword}` : null);
 
+function normalizeSiteUrl(raw: string | undefined): string {
+  const fallback = "https://55cine.com";
+  const value = (raw || fallback).trim().replace(/\/+$/, "");
+  if (!/^https?:\/\//i.test(value)) {
+    return `https://${value.replace(/^\/+/, "")}`;
+  }
+  return value;
+}
+
 export const config: AppConfig = {
   host: process.env.API_HOST || "0.0.0.0",
   port: Number(process.env.API_PORT || 3000),
   apiPrefix: (process.env.API_PREFIX || "/api/v1").replace(/\/$/, ""),
+  siteUrl: normalizeSiteUrl(process.env.SITE_URL || process.env.PUBLIC_SITE_URL),
   repoRoot: path.resolve(__dirname, "../.."),
   timezone: process.env.TZ || "Asia/Seoul",
   scheduleUseMock: parseBool(process.env.SCHEDULE_USE_MOCK, false),
