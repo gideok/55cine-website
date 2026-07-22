@@ -502,6 +502,14 @@
 
     bindMovieDetailTabs(slug);
     setStatus("");
+
+    if (
+      getCatalogSection() === "now-playing" &&
+      window.TiCatTreasureEvent &&
+      typeof window.TiCatTreasureEvent.tryStart === "function"
+    ) {
+      window.TiCatTreasureEvent.tryStart(posterWrap);
+    }
   }
 
   function setStatus(message, isError) {

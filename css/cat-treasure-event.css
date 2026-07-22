@@ -1,0 +1,137 @@
+/* 현재상영작 상세 — 고양이 보물찾기 이벤트 */
+
+.ti .md-theme .md-poster-wrap {
+  position: relative;
+}
+
+/* 보더 위로 걸치는 고양이가 잘리지 않도록 */
+.ti .md-theme .md-poster-wrap.md-poster-wrap--cat-treasure,
+.ti .md-theme .md-hero:has(.md-poster-wrap--cat-treasure),
+.ti .md-theme .md-body:has(.md-poster-wrap--cat-treasure) {
+  overflow: visible;
+}
+
+.cat-treasure-hit {
+  position: absolute;
+  /* 포스터 밖 90% / 안 10% — 상단 보더에 살짝 걸침 */
+  top: 0;
+  left: 50%;
+  z-index: 6;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translate(-50%, -90%);
+  -webkit-tap-highlight-color: transparent;
+  animation: cat-treasure-fade var(--cat-treasure-fade-ms, 5000ms) linear forwards;
+  touch-action: manipulation;
+}
+
+/* cat-2: 포스터 밖 70% / 안 30% (기존 대비 약 10% 하향) */
+.cat-treasure-hit--cat2 {
+  transform: translate(-50%, -70%);
+}
+
+.cat-treasure-hit__img {
+  display: block;
+  width: clamp(28px, 9vw, 44px);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+}
+
+/* cat-2.png 만 2배 */
+.cat-treasure-hit__img--lg {
+  width: clamp(56px, 18vw, 88px);
+}
+
+.cat-treasure-hit.is-claimed {
+  pointer-events: none;
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes cat-treasure-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.cat-treasure-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.cat-treasure-modal__panel {
+  position: relative;
+  width: min(92vw, 480px);
+  max-height: min(90vh, 640px);
+  overflow: auto;
+  padding-top: 44px;
+  box-sizing: border-box;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.cat-treasure-modal__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cat-treasure-modal__close {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #111;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .cat-treasure-hit {
+    transform: translate(-50%, -90%);
+  }
+
+  .cat-treasure-hit--cat2 {
+    transform: translate(-50%, -70%);
+  }
+
+  .cat-treasure-hit__img {
+    width: clamp(26px, 11vw, 36px);
+  }
+
+  .cat-treasure-hit__img--lg {
+    width: clamp(52px, 22vw, 72px);
+  }
+
+  .cat-treasure-modal {
+    padding: 12px;
+  }
+
+  .cat-treasure-modal__panel {
+    width: min(96vw, 420px);
+  }
+}
