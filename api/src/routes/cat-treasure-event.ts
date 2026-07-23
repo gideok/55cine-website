@@ -1,6 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import {
   claimCatTreasureWin,
+  clientIpFromRequest,
   getCatTreasureStatus
 } from "../services/cat-treasure-event.service.js";
 
@@ -20,7 +21,11 @@ export async function registerCatTreasureEventRoutes(app: FastifyInstance): Prom
 
   app.post("/events/cat-treasure/claim", async (request, reply) => {
     try {
-      const result = await claimCatTreasureWin();
+      const ip = clientIpFromRequest(
+        request.headers as Record<string, unknown>,
+        request.ip
+      );
+      const result = await claimCatTreasureWin(ip);
       reply.header("Cache-Control", "no-store");
       if (!result.ok) {
         return reply.code(result.code === "SOLD_OUT" ? 409 : 400).send({

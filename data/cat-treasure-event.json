@@ -7,6 +7,7 @@
   "enabled": true,
   "preventSameBrowserReWin": true,
   "blockOnPageRefresh": true,
+  "winners": [],
   "notes": {
     "startAt": "이벤트 시작일시 (YYYY-MM-DD HH:MM, Asia/Seoul)",
     "appearProbability": "상세 페이지 로드 시 고양이 등장 확률 (0.05 = 5%)",
@@ -15,6 +16,7 @@
     "fadeMs": "고양이 페이드아웃 시간(ms)",
     "enabled": "false 이면 즉시 비활성",
     "preventSameBrowserReWin": "true 이면 같은 브라우저(localStorage) 재당첨 방지. 테스트 시 false 권장",
-    "blockOnPageRefresh": "true 이면 브라우저 새로고침(F5 등) 시 고양이 미출연. 현재 false"
+    "blockOnPageRefresh": "true 이면 브라우저 새로고침(F5 등) 시 고양이 미출연",
+    "winners": "당첨 기록 배열 [{ clickedAt: YYYY-MM-DD HH:MM:SS, ip }]"
   }
 }
