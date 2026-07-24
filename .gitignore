@@ -41,6 +41,9 @@ dist/
 api/dist/
 release/
 .cache/
+data/analytics.sqlite
+data/analytics.sqlite-*
+data/analytics.json
 api/.cache-nowshowing-urls.json
 api/.tmp-*.html
 api/migrate-archive.log

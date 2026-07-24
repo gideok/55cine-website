@@ -26,6 +26,12 @@ export type AppConfig = {
     sessionSecret: string | null;
     secureCookie: boolean;
   };
+  analytics: {
+    enabled: boolean;
+    dbPath: string;
+    ipHashSecret: string | null;
+    allowLocal: boolean;
+  };
   db: {
     server: string;
     port: number;
@@ -138,6 +144,21 @@ export const config: AppConfig = {
     sessionSecret: adminSessionSecret,
     // 현재 운영 Nginx는 HTTP 80으로 서비스한다. HTTPS 적용 시 .env에서 true로 명시한다.
     secureCookie: parseBool(process.env.ADMIN_SECURE_COOKIE, false)
+  },
+  analytics: {
+    enabled: parseBool(process.env.ANALYTICS_ENABLED, true),
+    dbPath:
+      process.env.ANALYTICS_DB_PATH?.trim() ||
+      path.join(path.resolve(__dirname, "../.."), "data", "analytics.sqlite"),
+    ipHashSecret:
+      process.env.ANALYTICS_IP_HASH_SECRET?.trim() ||
+      adminSessionSecret ||
+      null,
+    // 운영 기본 false. 로컬 개발은 ANALYTICS_ALLOW_LOCAL=true 또는 non-production 기본 허용
+    allowLocal: parseBool(
+      process.env.ANALYTICS_ALLOW_LOCAL,
+      process.env.NODE_ENV !== "production"
+    )
   },
   db: dbFromEnv()
 };

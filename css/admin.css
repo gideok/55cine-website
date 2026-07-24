@@ -228,6 +228,69 @@
   border-color: #8b5cf6;
 }
 
+.admin-card--analytics {
+  background: #ecfdf5;
+  border-color: #6ee7b7;
+}
+
+.admin-card--analytics.admin-card--link:hover {
+  background: #d1fae5;
+  border-color: #10b981;
+}
+
+.admin-analytics-summary {
+  margin-bottom: 1rem;
+}
+
+.admin-analytics-toolbar {
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.admin-analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.admin-panel {
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.admin-panel__title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.admin-analytics-day-row {
+  cursor: pointer;
+}
+
+.admin-analytics-day-row:hover {
+  background: #f4f4f5;
+}
+
+.admin-analytics-day-row.is-selected {
+  background: #ecfdf5;
+}
+
+.admin-muted {
+  color: #71717a;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 960px) {
+  .admin-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .admin-toolbar {
   display: flex;
   flex-wrap: wrap;

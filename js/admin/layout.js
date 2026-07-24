@@ -1,6 +1,7 @@
 (function (global) {
   var NAV = [
     { href: "dashboard.html", label: "대시보드", key: "dashboard" },
+    { href: "analytics.html", label: "접속 통계", key: "analytics" },
     { href: "programs.html", label: "상영작 관리", key: "programs" },
     { href: "special.html", label: "기획전·행사 관리", key: "special" },
     { href: "magazine.html", label: "매거진 관리", key: "magazine" },

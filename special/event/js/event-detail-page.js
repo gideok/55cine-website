@@ -179,6 +179,9 @@
     body.appendChild(createBookingButton(pageTitle, bookingUrl, "md-booking-btn--mobile"));
     root.appendChild(body);
     setStatus("");
+    if (window.TiAnalytics && typeof window.TiAnalytics.pageview === "function") {
+      window.TiAnalytics.pageview({ pageKey: String(data.id || "") });
+    }
   }
 
   function boot() {

@@ -94,6 +94,22 @@
     getDashboard: function () {
       return apiJson("GET", "/admin/dashboard");
     },
+    getAnalyticsSummary: function (from, to) {
+      var path = "/admin/analytics/summary?";
+      var q = [];
+      if (from) q.push("from=" + encodeURIComponent(from));
+      if (to) q.push("to=" + encodeURIComponent(to));
+      return apiJson("GET", path + q.join("&"));
+    },
+    getAnalyticsPages: function (opts) {
+      opts = opts || {};
+      var q = [];
+      if (opts.day) q.push("day=" + encodeURIComponent(opts.day));
+      if (opts.from) q.push("from=" + encodeURIComponent(opts.from));
+      if (opts.to) q.push("to=" + encodeURIComponent(opts.to));
+      if (opts.limit) q.push("limit=" + encodeURIComponent(String(opts.limit)));
+      return apiJson("GET", "/admin/analytics/pages?" + q.join("&"));
+    },
     getWorkSchedule: function (year, month) {
       return apiJson(
         "GET",

@@ -4,6 +4,7 @@ import cookie from "@fastify/cookie";
 import { config } from "./config.js";
 import { isAdminAuthConfigured } from "./services/admin-session.service.js";
 import { closePool } from "./db/pool.js";
+import { closeAnalyticsDb } from "./db/analytics-db.js";
 import { registerHealthRoutes } from "./routes/health.js";
 import { registerScheduleRoutes } from "./routes/schedule.js";
 import { registerMovieRoutes } from "./routes/movies.js";
@@ -13,6 +14,7 @@ import { registerNoticeRoutes } from "./routes/notice.js";
 import { registerSiteSettingsRoutes } from "./routes/site-settings.js";
 import { registerSitemapRoutes } from "./routes/sitemap.js";
 import { registerCatTreasureEventRoutes } from "./routes/cat-treasure-event.js";
+import { registerAnalyticsRoutes } from "./routes/analytics.js";
 import { registerAdminRoutes } from "./routes/admin/index.js";
 
 const app = Fastify({
@@ -45,6 +47,7 @@ await app.register(
     await registerSiteSettingsRoutes(api);
     await registerSitemapRoutes(api);
     await registerCatTreasureEventRoutes(api);
+    await registerAnalyticsRoutes(api);
 
     // admin 인증 훅이 공개 API에 적용되지 않도록 별도 플러그인으로 분리
     await api.register(async (adminApi) => {
@@ -56,6 +59,7 @@ await app.register(
 
 const shutdown = async () => {
   await closePool();
+  closeAnalyticsDb();
   await app.close();
 };
 

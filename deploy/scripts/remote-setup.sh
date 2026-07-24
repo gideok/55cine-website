@@ -56,6 +56,13 @@ chmod 640 /var/log/55cine-db-backup.log
 chown -R www-data:www-data "$APP_ROOT"
 chmod 640 "$APP_ROOT/.env" || true
 
+# 접속 통계 SQLite (MSSQL 비사용)
+mkdir -p "$APP_ROOT/data"
+touch "$APP_ROOT/data/analytics.sqlite" 2>/dev/null || true
+chown -R www-data:www-data "$APP_ROOT/data"
+chmod 775 "$APP_ROOT/data"
+chmod 664 "$APP_ROOT/data/analytics.sqlite" 2>/dev/null || true
+
 cd "$APP_ROOT/api"
 npm ci --omit=dev
 

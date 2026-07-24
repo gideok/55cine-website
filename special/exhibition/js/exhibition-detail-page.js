@@ -592,6 +592,10 @@
 
     setStatus("");
 
+    if (window.TiAnalytics && typeof window.TiAnalytics.pageview === "function") {
+      window.TiAnalytics.pageview({ pageKey: String(data.id || data.publicId || "") });
+    }
+
     root.querySelectorAll(".exhibition-film-poster, .exhibition-detail-poster").forEach(function (img) {
       if (img.complete) return;
       img.addEventListener("load", scheduleEqualizeFilmRows, { once: true });

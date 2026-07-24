@@ -12,6 +12,10 @@ import {
 } from "../../services/admin-session.service.js";
 import { getAdminDashboardStats } from "../../services/admin/dashboard.service.js";
 import {
+  getAnalyticsPages,
+  getAnalyticsSummary
+} from "../../services/analytics.service.js";
+import {
   getAdminProgramList,
   getAdminProgramBySeq,
   getAdminProgramByProgId,
@@ -276,6 +280,53 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "DASHBOARD_FAILED", "대시보드 조회 실패");
+    }
+  });
+
+  app.get("/admin/analytics/summary", async (request, reply) => {
+    const parsed = z
+      .object({
+        from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+        to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()
+      })
+      .safeParse(request.query);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_QUERY", "from/to 는 YYYY-MM-DD 형식");
+    }
+    try {
+      reply.header("Cache-Control", "no-store");
+      return getAnalyticsSummary(parsed.data.from, parsed.data.to);
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "ANALYTICS_SUMMARY_FAILED", "접속 통계 요약 조회 실패");
+    }
+  });
+
+  app.get("/admin/analytics/pages", async (request, reply) => {
+    const parsed = z
+      .object({
+        day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+        from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+        to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+        limit: z.coerce.number().int().min(1).max(200).optional()
+      })
+      .safeParse(request.query);
+    if (!parsed.success) {
+      return sendError(reply, 400, "INVALID_QUERY", "day/from/to 쿼리 확인");
+    }
+    try {
+      reply.header("Cache-Control", "no-store");
+      return {
+        items: getAnalyticsPages({
+          day: parsed.data.day,
+          from: parsed.data.from,
+          to: parsed.data.to,
+          limit: parsed.data.limit
+        })
+      };
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "ANALYTICS_PAGES_FAILED", "페이지별 통계 조회 실패");
     }
   });
 

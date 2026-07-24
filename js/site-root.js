@@ -261,4 +261,28 @@
   };
 
   global.TI_SITE_ROOT_PREFIX = detectedRoot;
+
+  // 공개 페이지 접속 통계 — admin 경로는 스크립트 내부에서 스킵
+  function loadAnalyticsCollector() {
+    try {
+      var path = (global.location.pathname || "").toLowerCase();
+      if (path.indexOf("/admin/") !== -1) return;
+      if (document.querySelector('script[data-ti-analytics="1"]')) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.setAttribute("data-ti-analytics", "1");
+      var prefix =
+        typeof relativePrefixFromPage === "function" ? relativePrefixFromPage() : "";
+      s.src = prefix + "js/analytics-pageview.js";
+      (document.head || document.documentElement).appendChild(s);
+    } catch (_e) {
+      /* ignore */
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadAnalyticsCollector, { once: true });
+  } else {
+    loadAnalyticsCollector();
+  }
 })(window);

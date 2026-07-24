@@ -510,6 +510,10 @@
     ) {
       window.TiCatTreasureEvent.tryStart(posterWrap);
     }
+
+    if (window.TiAnalytics && typeof window.TiAnalytics.pageview === "function") {
+      window.TiAnalytics.pageview({ pageKey: slug || movie.slug || "" });
+    }
   }
 
   function setStatus(message, isError) {

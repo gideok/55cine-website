@@ -177,6 +177,9 @@
     renderPrevNext(neighbors);
 
     document.title = (pageTitle || "연재") + " — 55CINE";
+    if (window.TiAnalytics && typeof window.TiAnalytics.pageview === "function") {
+      window.TiAnalytics.pageview({ pageKey: String(article.seq || article.id || "") });
+    }
   }
 
   function showError(message) {

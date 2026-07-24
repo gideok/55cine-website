@@ -185,6 +185,9 @@
     renderPrevNext(neighbors);
 
     document.title = (article.title || pageTitle || "프리뷰") + " — 55CINE";
+    if (window.TiAnalytics && typeof window.TiAnalytics.pageview === "function") {
+      window.TiAnalytics.pageview({ pageKey: String(article.seq || article.id || "") });
+    }
   }
 
   function showError(message) {

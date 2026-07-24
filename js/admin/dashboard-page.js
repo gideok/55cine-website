@@ -104,7 +104,36 @@
 
   TiAdminApi.getDashboard()
     .then(function (stats) {
+      return TiAdminApi.getAnalyticsSummary()
+        .then(function (analytics) {
+          return { stats: stats, analytics: analytics };
+        })
+        .catch(function () {
+          return { stats: stats, analytics: null };
+        });
+    })
+    .then(function (payload) {
+      var stats = payload.stats;
+      var todayUv =
+        payload.analytics && payload.analytics.today ? payload.analytics.today.uv : "—";
+      var todayPv =
+        payload.analytics && payload.analytics.today ? payload.analytics.today.pv : "—";
+
       var cardGroups = [
+        [
+          {
+            label: "오늘 접속자(UV)",
+            value: todayUv,
+            href: "analytics.html",
+            tone: "analytics"
+          },
+          {
+            label: "오늘 페이지뷰(PV)",
+            value: todayPv,
+            href: "analytics.html",
+            tone: "analytics"
+          }
+        ],
         [
           { label: "총상영작", value: stats.programs.total, tone: "total" },
           { label: "현재 상영", value: stats.movies.nowPlaying },
@@ -134,6 +163,7 @@
         renderNowPlayingGrid(stats.nowPlayingPrograms || []) +
         renderCardRows(cardGroups) +
         '<div class="admin-toolbar">' +
+        '<a class="admin-btn admin-btn--primary" href="analytics.html">접속 통계</a>' +
         '<a class="admin-btn admin-btn--primary" href="programs.html">상영작 관리</a>' +
         '<a class="admin-btn admin-btn--primary" href="special.html">기획전·행사 관리</a>' +
         '<a class="admin-btn admin-btn--primary" href="magazine.html">매거진 관리</a>' +
