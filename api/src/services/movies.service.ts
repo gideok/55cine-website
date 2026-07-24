@@ -390,6 +390,44 @@ export async function getMovieDetail(
   return mapDetail(row, screenings);
 }
 
+/** slug → 한국어 제목 맵 (접속 통계 pageKey 표시용) */
+export async function getMovieTitlesBySlugs(slugs: string[]): Promise<Map<string, string>> {
+  const unique = [
+    ...new Set(
+      slugs
+        .map((s) => String(s || "").trim().toLowerCase())
+        .filter(Boolean)
+    )
+  ];
+  const map = new Map<string, string>();
+  if (!unique.length) return map;
+
+  const pool = await getPool();
+  const chunkSize = 50;
+  for (let i = 0; i < unique.length; i += chunkSize) {
+    const chunk = unique.slice(i, i + chunkSize);
+    const req = pool.request();
+    const placeholders = chunk
+      .map((slug, idx) => {
+        req.input(`s${idx}`, sql.NVarChar, slug);
+        return `@s${idx}`;
+      })
+      .join(", ");
+    const result = await req.query<{ slug: string; name: string }>(`
+      SELECT LOWER(LTRIM(RTRIM(wp.slug))) AS slug,
+             LTRIM(RTRIM(pb.name)) AS name
+      FROM dbo.web_program AS wp
+      INNER JOIN dbo.prog_base AS pb ON pb.prog_id = wp.prog_id
+      WHERE LOWER(LTRIM(RTRIM(wp.slug))) IN (${placeholders})
+    `);
+    for (const row of result.recordset) {
+      const title = String(row.name || "").trim();
+      if (title) map.set(String(row.slug || "").toLowerCase(), title);
+    }
+  }
+  return map;
+}
+
 export async function getAllMovieDetails(): Promise<MovieDetailRecord[]> {
   const pool = await getPool();
   const result = await pool.request().query<ProgRow>(`

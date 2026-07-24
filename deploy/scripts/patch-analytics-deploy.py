@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""접속통계(analytics) + 최신 API dist 실서버 배포."""
+"""접속통계(analytics) + 최신 API dist 실서버 배포.
+
+pageKey 영화제목 표시 등 API/수집 JS 변경 시 이 스크립트로 배포하세요.
+일반 정적 배포만으로는 api/dist·systemd 재기동이 빠질 수 있습니다.
+"""
 from __future__ import annotations
 
 import getpass
-import json
 import os
+import subprocess
 import sys
 import tarfile
 import tempfile
@@ -144,9 +148,32 @@ def merge_env(client: paramiko.SSHClient) -> None:
     )
 
 
+def ensure_api_build() -> None:
+    print("[build] npm run build (api)")
+    subprocess.check_call(
+        ["npm", "run", "build"],
+        cwd=ROOT / "api",
+        shell=os.name == "nt",
+    )
+    need = [
+        DIST / "routes" / "analytics.js",
+        DIST / "services" / "analytics.service.js",
+        DIST / "services" / "movies.service.js",
+    ]
+    for p in need:
+        if not p.is_file():
+            raise SystemExit(f"missing after build: {p}")
+    movies_js = (DIST / "services" / "movies.service.js").read_text(encoding="utf-8")
+    analytics_js = (DIST / "services" / "analytics.service.js").read_text(encoding="utf-8")
+    if "getMovieTitlesBySlugs" not in movies_js:
+        raise SystemExit("dist movies.service.js missing getMovieTitlesBySlugs")
+    if "enrichMoviePageKeys" not in analytics_js:
+        raise SystemExit("dist analytics.service.js missing enrichMoviePageKeys")
+    print("[build] pageKey title enrichment markers ok")
+
+
 def main() -> None:
-    if not (DIST / "routes" / "analytics.js").is_file():
-        raise SystemExit("api/dist missing analytics — run: cd api && npm run build")
+    ensure_api_build()
 
     tar_path = pack()
     password = os.environ.get("DEPLOY_PASSWORD")
@@ -197,6 +224,10 @@ def main() -> None:
         f"{APP}/special {APP}/data {APP}/deploy/scripts && "
         f"chmod 775 {APP}/data && chmod 664 {APP}/data/analytics.sqlite && "
         f"test -f {APP}/api/dist/routes/analytics.js && echo 'analytics route ok' && "
+        f"grep -q getMovieTitlesBySlugs {APP}/api/dist/services/movies.service.js && "
+        f"grep -q enrichMoviePageKeys {APP}/api/dist/services/analytics.service.js && "
+        f"grep -q isMovieDetailPath {APP}/js/analytics-pageview.js && "
+        f"echo 'pageKey title patch ok' && "
         f"rm -rf /tmp/55cine-an",
     )
 

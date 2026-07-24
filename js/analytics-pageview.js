@@ -29,7 +29,14 @@
     return path + (keep.length ? "?" + keep.join("&") : "");
   }
 
+  function isMovieDetailPath() {
+    var path = ((global.location && global.location.pathname) || "").toLowerCase();
+    return /movie-detail\.html/i.test(path);
+  }
+
   function inferPageKey() {
+    // 영화 상세는 제목을 pageKey로 쓰므로 자동 수집(slug)을 건너뛴다.
+    if (isMovieDetailPath()) return "";
     var params = new URLSearchParams((global.location && global.location.search) || "");
     return params.get("slug") || params.get("id") || "";
   }
@@ -84,6 +91,8 @@
 
   function autoTrack() {
     if (isAdminPath()) return;
+    // 영화 상세: 렌더 후 titleKo로 명시 전송 (slug 자동 수집·이중 PV 방지)
+    if (isMovieDetailPath()) return;
     if (document.documentElement.getAttribute(AUTO_FLAG) === "1") return;
     if (global.__TI_ANALYTICS_MANUAL__) return;
     document.documentElement.setAttribute(AUTO_FLAG, "1");

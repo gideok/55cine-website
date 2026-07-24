@@ -512,7 +512,9 @@
     }
 
     if (window.TiAnalytics && typeof window.TiAnalytics.pageview === "function") {
-      window.TiAnalytics.pageview({ pageKey: slug || movie.slug || "" });
+      window.TiAnalytics.pageview({
+        pageKey: String(movie.titleKo || movie.slug || slug || "").trim()
+      });
     }
   }
 

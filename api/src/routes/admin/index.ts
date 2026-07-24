@@ -318,7 +318,7 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     try {
       reply.header("Cache-Control", "no-store");
       return {
-        items: getAnalyticsPages({
+        items: await getAnalyticsPages({
           day: parsed.data.day,
           from: parsed.data.from,
           to: parsed.data.to,

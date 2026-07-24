@@ -124,10 +124,12 @@ def main() -> None:
         print("DEPLOY_PASSWORD 또는 --password 필요", file=sys.stderr)
         sys.exit(1)
 
-    api_dist = ROOT / "api" / "dist"
-    if not api_dist.is_dir():
-        print("[build] npm run build (api)")
-        subprocess.check_call(["npm", "run", "build"], cwd=ROOT / "api", shell=os.name == "nt")
+    # 항상 최신 API dist로 패키징 (소스만 바꾸고 dist가 남으면 운영에 반영되지 않음)
+    print("[build] npm run build (api)")
+    subprocess.check_call(["npm", "run", "build"], cwd=ROOT / "api", shell=os.name == "nt")
+    if not (ROOT / "api" / "dist" / "index.js").is_file():
+        print("api/dist/index.js 없음 — 빌드 실패", file=sys.stderr)
+        sys.exit(1)
 
     if args.tar:
         tar_path = Path(args.tar)

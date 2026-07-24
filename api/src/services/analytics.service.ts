@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { config } from "../config.js";
 import { getAnalyticsDb, hashIp, hashUa } from "../db/analytics-db.js";
+import { getMovieTitlesBySlugs } from "./movies.service.js";
 
 const VISITOR_COOKIE = "ti_vid";
 const ASSET_EXT =
@@ -227,18 +228,50 @@ export function getAnalyticsSummary(fromDay?: string, toDay?: string): Analytics
   };
 }
 
-export function getAnalyticsPages(opts: {
+function isMovieDetailPath(path: string): boolean {
+  return /movie-detail\.html/i.test(path || "");
+}
+
+/** 영화 상세 pageKey(slug)를 한국어 제목으로 치환. 이미 제목이면 그대로 둔다. */
+async function enrichMoviePageKeys(items: DailyPageRow[]): Promise<DailyPageRow[]> {
+  const slugs = [
+    ...new Set(
+      items
+        .filter((i) => isMovieDetailPath(i.path) && i.pageKey)
+        .map((i) => i.pageKey)
+    )
+  ];
+  if (!slugs.length) return items;
+
+  let titleBySlug: Map<string, string>;
+  try {
+    titleBySlug = await getMovieTitlesBySlugs(slugs);
+  } catch {
+    return items;
+  }
+  if (!titleBySlug.size) return items;
+
+  return items.map((item) => {
+    if (!isMovieDetailPath(item.path) || !item.pageKey) return item;
+    const title = titleBySlug.get(item.pageKey.trim().toLowerCase());
+    return title ? { ...item, pageKey: title } : item;
+  });
+}
+
+export async function getAnalyticsPages(opts: {
   day?: string;
   from?: string;
   to?: string;
   limit?: number;
-}): DailyPageRow[] {
+}): Promise<DailyPageRow[]> {
   const today = seoulDay();
   const limit = Math.min(200, Math.max(1, Math.floor(opts.limit || 50)));
   const database = getAnalyticsDb();
 
+  let items: DailyPageRow[];
+
   if (opts.day && isValidDay(opts.day)) {
-    return (
+    items = (
       database
         .prepare(
           `SELECT day_seoul AS day, path, page_key AS pageKey, pv
@@ -254,26 +287,28 @@ export function getAnalyticsPages(opts: {
       pageKey: r.pageKey || "",
       pv: Number(r.pv) || 0
     }));
+  } else {
+    const to = opts.to && isValidDay(opts.to) ? opts.to : today;
+    const from = opts.from && isValidDay(opts.from) ? opts.from : to;
+
+    items = (
+      database
+        .prepare(
+          `SELECT ? AS day, path, page_key AS pageKey, SUM(pv) AS pv
+           FROM daily_page
+           WHERE day_seoul >= ? AND day_seoul <= ?
+           GROUP BY path, page_key
+           ORDER BY pv DESC, path ASC
+           LIMIT ?`
+        )
+        .all(`${from}~${to}`, from, to, limit) as DailyPageRow[]
+    ).map((r) => ({
+      day: r.day,
+      path: r.path,
+      pageKey: r.pageKey || "",
+      pv: Number(r.pv) || 0
+    }));
   }
 
-  const to = opts.to && isValidDay(opts.to) ? opts.to : today;
-  const from = opts.from && isValidDay(opts.from) ? opts.from : to;
-
-  return (
-    database
-      .prepare(
-        `SELECT ? AS day, path, page_key AS pageKey, SUM(pv) AS pv
-         FROM daily_page
-         WHERE day_seoul >= ? AND day_seoul <= ?
-         GROUP BY path, page_key
-         ORDER BY pv DESC, path ASC
-         LIMIT ?`
-      )
-      .all(`${from}~${to}`, from, to, limit) as DailyPageRow[]
-  ).map((r) => ({
-    day: r.day,
-    path: r.path,
-    pageKey: r.pageKey || "",
-    pv: Number(r.pv) || 0
-  }));
+  return enrichMoviePageKeys(items);
 }
