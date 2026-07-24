@@ -15,6 +15,7 @@ import {
   getAnalyticsPages,
   getAnalyticsSummary
 } from "../../services/analytics.service.js";
+import { getCatTreasureAdminDetail } from "../../services/cat-treasure-event.service.js";
 import {
   getAdminProgramList,
   getAdminProgramBySeq,
@@ -327,6 +328,16 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (err) {
       request.log.error(err);
       return sendError(reply, 500, "ANALYTICS_PAGES_FAILED", "페이지별 통계 조회 실패");
+    }
+  });
+
+  app.get("/admin/events/cat-treasure", async (request, reply) => {
+    try {
+      reply.header("Cache-Control", "no-store");
+      return await getCatTreasureAdminDetail();
+    } catch (err) {
+      request.log.error(err);
+      return sendError(reply, 500, "CAT_TREASURE_ADMIN_FAILED", "고양이 이벤트 설정 조회 실패");
     }
   });
 

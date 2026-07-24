@@ -185,6 +185,21 @@ export async function getCatTreasureStatus(): Promise<CatTreasurePublicStatus> {
   return buildPublicStatus(cfg);
 }
 
+/** 관리자 읽기 전용 — 설정 + winners 전체 */
+export async function getCatTreasureAdminDetail(): Promise<{
+  config: CatTreasureEventConfig;
+  status: CatTreasurePublicStatus;
+  notes: unknown;
+}> {
+  const stored = await readStoredFile();
+  const cfg = normalize(stored);
+  return {
+    config: cfg,
+    status: buildPublicStatus(cfg),
+    notes: stored.notes ?? null
+  };
+}
+
 export type ClaimResult =
   | {
       ok: true;

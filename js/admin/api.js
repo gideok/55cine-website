@@ -110,6 +110,9 @@
       if (opts.limit) q.push("limit=" + encodeURIComponent(String(opts.limit)));
       return apiJson("GET", "/admin/analytics/pages?" + q.join("&"));
     },
+    getCatTreasureEvent: function () {
+      return apiJson("GET", "/admin/events/cat-treasure");
+    },
     getWorkSchedule: function (year, month) {
       return apiJson(
         "GET",
