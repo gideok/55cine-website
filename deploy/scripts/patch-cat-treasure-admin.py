@@ -30,7 +30,12 @@ def run(client: paramiko.SSHClient, cmd: str, *, check: bool = True) -> str:
     code = stdout.channel.recv_exit_status()
     text = (out or "") + (("\n" + err) if err.strip() else "")
     if text.strip():
-        print(text.rstrip())
+        try:
+            print(text.rstrip())
+        except UnicodeEncodeError:
+            print(text.rstrip().encode(sys.stdout.encoding or "utf-8", errors="replace").decode(
+                sys.stdout.encoding or "utf-8", errors="replace"
+            ))
     if check and code != 0:
         raise RuntimeError(f"exit {code}: {cmd}")
     return out
@@ -100,6 +105,8 @@ def main() -> None:
         f"chown -R www-data:www-data {APP}/api/dist {APP}/admin/cat-treasure.html "
         f"{APP}/js/admin {APP}/css/admin.css && "
         f"grep -q getCatTreasureAdminDetail {APP}/api/dist/services/cat-treasure-event.service.js && "
+        f"grep -q localOnly {APP}/js/admin/layout.js && "
+        f"grep -q isLocalAdminHost {APP}/js/admin/layout.js && "
         f"test -f {APP}/admin/cat-treasure.html && echo 'cat-treasure admin ok' && "
         f"rm -rf /tmp/55cine-cta",
     )

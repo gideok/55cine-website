@@ -2,7 +2,12 @@
   var NAV = [
     { href: "dashboard.html", label: "대시보드", key: "dashboard" },
     { href: "analytics.html", label: "접속 통계", key: "analytics" },
-    { href: "cat-treasure.html", label: "고양이 이벤트", key: "cat-treasure" },
+    {
+      href: "cat-treasure.html",
+      label: "고양이 이벤트",
+      key: "cat-treasure",
+      localOnly: true
+    },
     { href: "programs.html", label: "상영작 관리", key: "programs" },
     { href: "special.html", label: "기획전·행사 관리", key: "special" },
     { href: "magazine.html", label: "매거진 관리", key: "magazine" },
@@ -20,6 +25,18 @@
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+  }
+
+  /** 로컬 테스트(localhost / 127.0.0.1)에서만 true */
+  function isLocalAdminHost() {
+    var host = String((global.location && global.location.hostname) || "").toLowerCase();
+    return host === "localhost" || host === "127.0.0.1" || host === "0.0.0.0";
+  }
+
+  function visibleNavItems() {
+    return NAV.filter(function (item) {
+      return !item.localOnly || isLocalAdminHost();
+    });
   }
 
   function isMobileViewport() {
@@ -45,10 +62,12 @@
   }
 
   function renderSidebarHtml(currentKey) {
-    var nav = NAV.map(function (item) {
-      var cls = item.key === currentKey ? ' class="is-current"' : "";
-      return '<a href="' + item.href + '"' + cls + ">" + esc(item.label) + "</a>";
-    }).join("");
+    var nav = visibleNavItems()
+      .map(function (item) {
+        var cls = item.key === currentKey ? ' class="is-current"' : "";
+        return '<a href="' + item.href + '"' + cls + ">" + esc(item.label) + "</a>";
+      })
+      .join("");
     return (
       '<aside class="admin-sidebar" id="adminSidebar" aria-label="관리자 메뉴">' +
       '<div class="admin-sidebar__brand">55CINE 관리자</div>' +

@@ -41,7 +41,12 @@ def run(client: paramiko.SSHClient, cmd: str, *, check: bool = True) -> str:
     code = stdout.channel.recv_exit_status()
     text = (out or "") + (("\n" + err) if err.strip() else "")
     if text.strip():
-        print(text.rstrip())
+        try:
+            print(text.rstrip())
+        except UnicodeEncodeError:
+            print(text.rstrip().encode(sys.stdout.encoding or "utf-8", errors="replace").decode(
+                sys.stdout.encoding or "utf-8", errors="replace"
+            ))
     if check and code != 0:
         raise RuntimeError(f"exit {code}: {cmd}")
     return out
