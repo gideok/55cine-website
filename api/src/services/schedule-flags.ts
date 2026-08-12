@@ -106,7 +106,7 @@ export function getServerToday(timezone = "Asia/Seoul"): Date {
       day: "2-digit"
     }).format(new Date());
     const [y, m, d] = iso.split("-").map((v) => Number(v));
-    return new Date(y, m - 1, d);
+    return new Date(Date.UTC(y, m - 1, d));
   } catch {
     return stripTime(new Date());
   }
