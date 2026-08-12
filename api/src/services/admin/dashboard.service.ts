@@ -1,6 +1,7 @@
 import sql from "mssql";
 import { getPool } from "../../db/pool.js";
 import { getServerToday } from "../schedule-flags.js";
+import { excludeScreeningEndedClause, screeningEndedExistsClause } from "../movies.service.js";
 
 export type AdminDashboardNowPlayingItem = {
   seq: number;
@@ -52,11 +53,15 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
       SELECT COUNT(*) AS total
       FROM dbo.web_program wp
       INNER JOIN dbo.prog_base pb ON pb.prog_id = wp.prog_id
-      WHERE @today >= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open)))
+      WHERE wp.slug IS NOT NULL
+        AND LTRIM(RTRIM(wp.slug)) <> ''
+        AND TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open))) IS NOT NULL
+        AND @today >= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open)))
         AND (
           NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NULL
           OR @today <= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
         )
+        ${excludeScreeningEndedClause()}
     `),
     pool.request().input("today", sql.Date, today).query<{
       seq: number;
@@ -71,11 +76,15 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
         wp.img1
       FROM dbo.web_program wp
       INNER JOIN dbo.prog_base pb ON pb.prog_id = wp.prog_id
-      WHERE @today >= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open)))
+      WHERE wp.slug IS NOT NULL
+        AND LTRIM(RTRIM(wp.slug)) <> ''
+        AND TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open))) IS NOT NULL
+        AND @today >= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open)))
         AND (
           NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NULL
           OR @today <= TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
         )
+        ${excludeScreeningEndedClause()}
       ORDER BY
         TRY_CONVERT(date, LTRIM(RTRIM(pb.date_open))) DESC,
         pb.name
@@ -90,8 +99,13 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
       SELECT COUNT(*) AS total
       FROM dbo.web_program wp
       INNER JOIN dbo.prog_base pb ON pb.prog_id = wp.prog_id
-      WHERE NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NOT NULL
-        AND @today > TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
+      WHERE (
+        (
+          NULLIF(LTRIM(RTRIM(pb.date_close)), '') IS NOT NULL
+          AND @today > TRY_CONVERT(date, LTRIM(RTRIM(pb.date_close)))
+        )
+        OR (${screeningEndedExistsClause().trim()})
+      )
     `),
     pool.request().query<{ kind: string; cnt: number }>(`
       SELECT kind, COUNT(*) AS cnt FROM dbo.web_special GROUP BY kind

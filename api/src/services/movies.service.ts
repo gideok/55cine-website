@@ -86,7 +86,8 @@ const PROG_WEB_SELECT = `
 const PROG_STATE_DIV_CODE = "040";
 const PROG_STATE_ENDED_NAME = "상영종료";
 
-function screeningEndedExistsClause(): string {
+/** pb 별칭의 prog_base 를 참조하는 쿼리에서만 사용 가능 */
+export function screeningEndedExistsClause(): string {
   return `
     EXISTS (
       SELECT 1
@@ -98,7 +99,7 @@ function screeningEndedExistsClause(): string {
   `;
 }
 
-function excludeScreeningEndedClause(): string {
+export function excludeScreeningEndedClause(): string {
   return `AND NOT (${screeningEndedExistsClause().trim()})`;
 }
 
