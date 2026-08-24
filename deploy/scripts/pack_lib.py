@@ -13,7 +13,12 @@ EXCLUDE_DIRS = {
     "deploy/.cache",
     "release",
 }
-EXCLUDE_FILES = {".env", ".env.local"}
+EXCLUDE_FILES = {
+    ".env",
+    ".env.local",
+    # 운영 서버 이벤트 상태(당첨자 수·로그) — 로컬 파일로 덮어쓰지 않음
+    "data/cat-treasure-event.json",
+}
 
 
 def should_skip(rel: str, *, exclude_images: bool = False) -> bool:

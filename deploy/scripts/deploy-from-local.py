@@ -17,6 +17,8 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[2]
 APP_ROOT = "/var/www/55cine"
+EVENT_JSON_REL = "data/cat-treasure-event.json"
+EVENT_JSON_KEEP = "/tmp/55cine-cat-treasure-event.json.keep"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pack_lib import build_tarball  # noqa: E402
@@ -52,6 +54,16 @@ def upload_and_extract(
 
     ssh_run(client, f"mkdir -p {APP_ROOT}")
 
+    # 서버 이벤트 JSON 유지 — tarball 미포함·전체 폴더 교체 모두에서 덮어쓰기 방지
+    ssh_run(
+        client,
+        f"rm -f {EVENT_JSON_KEEP}; "
+        f"if [ -f {APP_ROOT}/{EVENT_JSON_REL} ]; then "
+        f"cp -a {APP_ROOT}/{EVENT_JSON_REL} {EVENT_JSON_KEEP} && "
+        f"echo '[deploy] kept server {EVENT_JSON_REL}'; "
+        f"fi",
+    )
+
     preserve = not no_preserve_images and not no_images
     if preserve:
         ssh_run(
@@ -82,6 +94,16 @@ def upload_and_extract(
 
     ssh_run(client, f"tar -xzf {remote_tar} -C {APP_ROOT}")
     ssh_run(client, f"rm -f {remote_tar}")
+
+    ssh_run(
+        client,
+        f"if [ -f {EVENT_JSON_KEEP} ]; then "
+        f"mkdir -p {APP_ROOT}/data && "
+        f"cp -a {EVENT_JSON_KEEP} {APP_ROOT}/{EVENT_JSON_REL} && "
+        f"rm -f {EVENT_JSON_KEEP} && "
+        f"echo '[deploy] restored server {EVENT_JSON_REL}'; "
+        f"fi",
+    )
 
     ssh_run(client, f"chmod +x {APP_ROOT}/deploy/scripts/*.sh")
     ssh_run(client, f"sed -i 's/\\r$//' {APP_ROOT}/deploy/scripts/*.sh")
