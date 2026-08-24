@@ -9,6 +9,7 @@
   "blockOnPageRefresh": true,
   "winners": [],
   "notes": {
+    "copy": "이 파일을 data/cat-treasure-event.json 으로 복사한 뒤 값을 수정하세요. cat-treasure-event.json 은 git에 올리지 않습니다.",
     "startAt": "이벤트 시작일시 (YYYY-MM-DD HH:MM, Asia/Seoul)",
     "appearProbability": "상세 페이지 로드 시 고양이 등장 확률 (0.05 = 5%)",
     "totalWinners": "총당첨자수 — currentWinners 가 이 값에 도달하면 이벤트 종료",
